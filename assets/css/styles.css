@@ -28517,7 +28517,6 @@ html[data-boxed-layout="boxed"] .container-xxl {
 }
 .side-mini-panel .mini-nav .mini-nav-item > a:hover:before {
     content: "";
-    background: var(--bs-primary-bg-subtle);
     width: 48px;
     height: 48px;
     display: block;
@@ -28534,9 +28533,8 @@ html[data-boxed-layout="boxed"] .container-xxl {
 }
 .side-mini-panel .mini-nav .mini-nav-item.selected > a:before {
     content: "";
-    background: var(--bs-primary);
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
     display: block;
     position: absolute;
     left: 0;

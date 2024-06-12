@@ -45,6 +45,7 @@ CREATE TABLE password_history (
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     password_change_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
     FOREIGN KEY (user_account_id) REFERENCES user_account(user_account_id)
 );
 

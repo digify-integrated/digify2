@@ -21,7 +21,7 @@ date_default_timezone_set('Asia/Manila');
 # -------------------------------------------------------------
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'digifydb');
+define('DB_NAME', 'digify');
 define('DB_USER', 'modernize');
 define('DB_PASS', 'qKHJpbkgC6t93nQr');
 
