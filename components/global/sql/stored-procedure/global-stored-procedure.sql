@@ -42,7 +42,7 @@ END //
 
 CREATE PROCEDURE buildAppModule(IN p_user_account_id INT)
 BEGIN
-    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, app_logo, app_version, redirect_link
+    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, app_logo
     FROM app_module am
     JOIN menu_item mi ON mi.app_module_id = am.app_module_id
     WHERE EXISTS (

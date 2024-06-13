@@ -22,9 +22,6 @@ function appModuleForm(){
             app_module_description: {
                 required: true
             },
-            redirect_link: {
-                required: true
-            },
             order_sequence: {
                 required: true
             }
@@ -35,9 +32,6 @@ function appModuleForm(){
             },
             app_module_description: {
                 required: 'Please enter the description'
-            },
-            redirect_link: {
-                required: 'Please enter the redirect link'
             },
             order_sequence: {
                 required: 'Please enter the order sequence'

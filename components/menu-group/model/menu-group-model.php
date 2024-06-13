@@ -23,16 +23,20 @@ class MenuGroupModel {
     # Parameters:
     # - $p_menu_group_id (int): The menu group ID.
     # - $p_menu_group_name (string): The menu group name.
+    # - $p_app_module_id (int): The menu group ID.
+    # - $p_app_module_name (string): The menu group name.
     # - $p_order_sequence (int): The order sequence of menu group.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateMenuGroup($p_menu_group_id, $p_menu_group_name, $p_order_sequence, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateMenuGroup(:p_menu_group_id, :p_menu_group_name, :p_order_sequence, :p_last_log_by)');
+    public function updateMenuGroup($p_menu_group_id, $p_menu_group_name, $p_app_module_id, $p_app_module_name, $p_order_sequence, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateMenuGroup(:p_menu_group_id, :p_menu_group_name, :p_app_module_id, :p_app_module_name, :p_order_sequence, :p_last_log_by)');
         $stmt->bindValue(':p_menu_group_id', $p_menu_group_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_menu_group_name', $p_menu_group_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_app_module_id', $p_app_module_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_app_module_name', $p_app_module_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_order_sequence', $p_order_sequence, PDO::PARAM_INT);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
@@ -50,15 +54,19 @@ class MenuGroupModel {
     #
     # Parameters:
     # - $p_menu_group_name (string): The menu group name.
+    # - $p_app_module_id (int): The menu group ID.
+    # - $p_app_module_name (string): The menu group name.
     # - $p_order_sequence (int): The order sequence of menu group.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: String
     #
     # -------------------------------------------------------------
-    public function insertMenuGroup($p_menu_group_name, $p_order_sequence, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertMenuGroup(:p_menu_group_name, :p_order_sequence, :p_last_log_by, @p_menu_group_id)');
+    public function insertMenuGroup($p_menu_group_name, $p_app_module_id, $p_app_module_name, $p_order_sequence, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertMenuGroup(:p_menu_group_name, :p_app_module_id, :p_app_module_name, :p_order_sequence, :p_last_log_by, @p_menu_group_id)');
         $stmt->bindValue(':p_menu_group_name', $p_menu_group_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_app_module_id', $p_app_module_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_app_module_name', $p_app_module_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_order_sequence', $p_order_sequence, PDO::PARAM_INT);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();

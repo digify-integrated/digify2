@@ -18,10 +18,6 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "App Version: ", OLD.app_version, " -> ", NEW.app_version, "<br/>");
     END IF;
 
-    IF NEW.redirect_link <> OLD.redirect_link THEN
-        SET audit_log = CONCAT(audit_log, "Redirect Link: ", OLD.redirect_link, " -> ", NEW.redirect_link, "<br/>");
-    END IF;
-
     IF NEW.order_sequence <> OLD.order_sequence THEN
         SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
     END IF;
@@ -48,10 +44,6 @@ BEGIN
 
     IF NEW.app_version <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>App Version: ", NEW.app_version);
-    END IF;
-
-    IF NEW.redirect_link <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Redirect Link: ", NEW.redirect_link);
     END IF;
 
     IF NEW.order_sequence <> '' THEN

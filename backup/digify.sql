@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 12, 2024 at 02:24 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jun 13, 2024 at 11:32 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -26,7 +26,7 @@ DELIMITER $$
 -- Procedures
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `buildAppModule` (IN `p_user_account_id` INT)   BEGIN
-    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, app_logo, app_version, redirect_link
+    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, app_logo
     FROM app_module am
     JOIN menu_item mi ON mi.app_module_id = am.app_module_id
     WHERE EXISTS (
@@ -94,6 +94,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkLoginCredentialsExist` (IN `p_
 	SELECT COUNT(*) AS total
     FROM user_account
     WHERE user_account_id = p_user_account_id OR email = p_email;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMenuGroupExist` (IN `p_menu_group_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM menu_group
+    WHERE menu_group_id = p_menu_group_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMenuItemExist` (IN `p_menu_item_id` INT)   BEGIN
@@ -186,6 +192,19 @@ END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmailSetting` (IN `p_email_setting_id` INT)   BEGIN
    DELETE FROM email_setting WHERE email_setting_id = p_email_setting_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteMenuGroup` (IN `p_menu_group_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM menu_group WHERE menu_group_id = p_menu_group_id;
+
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteMenuItem` (IN `p_menu_item_id` INT)   BEGIN
@@ -308,6 +327,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateLogNotes` (IN `p_table_name
     FROM audit_log
     WHERE table_name = p_table_name AND reference_id  = p_reference_id
     ORDER BY changed_at DESC;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupOptions` ()   BEGIN
+	SELECT menu_group_id, menu_group_name 
+    FROM menu_group 
+    ORDER BY menu_group_name;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupTable` ()   BEGIN
+	SELECT menu_group_id, menu_group_name, app_module_name, order_sequence 
+    FROM menu_group 
+    ORDER BY menu_group_id;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemOptions` ()   BEGIN
@@ -504,6 +535,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getLoginCredentials` (IN `p_user_ac
     WHERE user_account_id = p_user_account_id OR email = p_email;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getMenuGroup` (IN `p_menu_group_id` INT)   BEGIN
+	SELECT * FROM menu_group
+	WHERE menu_group_id = p_menu_group_id;
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getMenuItem` (IN `p_menu_item_id` INT)   BEGIN
 	SELECT * FROM menu_item
 	WHERE menu_item_id = p_menu_item_id;
@@ -578,6 +614,13 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertInternalNotesAttachment` (IN `p_internal_notes_id` INT, IN `p_attachment_file_name` VARCHAR(500), IN `p_attachment_file_size` DOUBLE, IN `p_attachment_path_file` VARCHAR(500))   BEGIN
     INSERT INTO internal_notes_attachment (internal_notes_id, attachment_file_name, attachment_file_size, attachment_path_file) 
 	VALUES(p_internal_notes_id, p_attachment_file_name, p_attachment_file_size, p_attachment_path_file);
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMenuGroup` (IN `p_menu_group_name` VARCHAR(100), IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT, OUT `p_menu_group_id` INT)   BEGIN
+    INSERT INTO menu_group (menu_group_name, app_module_id, app_module_name, order_sequence, last_log_by) 
+	VALUES(p_menu_group_name, p_app_module_id, p_app_module_name, p_order_sequence, p_last_log_by);
+	
+    SET p_menu_group_id = LAST_INSERT_ID();
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMenuItem` (IN `p_menu_item_name` VARCHAR(100), IN `p_menu_item_url` VARCHAR(50), IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_parent_id` INT, IN `p_parent_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT, OUT `p_menu_item_id` INT)   BEGIN
@@ -737,6 +780,30 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateLoginAttempt` (IN `p_user_acc
 	UPDATE user_account 
     SET failed_login_attempts = p_failed_login_attempts, last_failed_login_attempt = p_last_failed_login_attempt
     WHERE user_account_id = p_user_account_id;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMenuGroup` (IN `p_menu_group_id` INT, IN `p_menu_group_name` VARCHAR(100), IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE menu_item
+    SET menu_group_name = p_menu_group_name,
+        last_log_by = p_last_log_by
+    WHERE menu_group_id = p_menu_group_id;
+
+    UPDATE menu_group
+    SET menu_group_name = p_menu_group_name,
+        app_module_id = p_app_module_id,
+        app_module_name = p_app_module_name,
+        order_sequence = p_order_sequence,
+        last_log_by = p_last_log_by
+    WHERE menu_group_id = p_menu_group_id;
+
+    COMMIT;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMenuItem` (IN `p_menu_item_id` INT, IN `p_menu_item_name` VARCHAR(100), IN `p_menu_item_url` VARCHAR(50), IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_parent_id` INT, IN `p_parent_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT)   BEGIN
@@ -1013,7 +1080,6 @@ CREATE TABLE `app_module` (
   `app_module_description` varchar(500) NOT NULL,
   `app_logo` varchar(500) DEFAULT NULL,
   `app_version` varchar(50) NOT NULL DEFAULT '1.0.0',
-  `redirect_link` varchar(50) NOT NULL,
   `order_sequence` tinyint(10) NOT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
@@ -1023,8 +1089,8 @@ CREATE TABLE `app_module` (
 -- Dumping data for table `app_module`
 --
 
-INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_description`, `app_logo`, `app_version`, `redirect_link`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/settings.png', '1.0.0', 'general-settings.php', 99, '2024-06-12 08:34:08', 1);
+INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_description`, `app_logo`, `app_version`, `order_sequence`, `created_date`, `last_log_by`) VALUES
+(1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 100, '2024-06-13 16:24:50', 1);
 
 --
 -- Triggers `app_module`
@@ -1043,10 +1109,6 @@ CREATE TRIGGER `app_module_trigger_insert` AFTER INSERT ON `app_module` FOR EACH
 
     IF NEW.app_version <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>App Version: ", NEW.app_version);
-    END IF;
-
-    IF NEW.redirect_link <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Redirect Link: ", NEW.redirect_link);
     END IF;
 
     IF NEW.order_sequence <> '' THEN
@@ -1072,10 +1134,6 @@ CREATE TRIGGER `app_module_trigger_update` AFTER UPDATE ON `app_module` FOR EACH
 
     IF NEW.app_version <> OLD.app_version THEN
         SET audit_log = CONCAT(audit_log, "App Version: ", OLD.app_version, " -> ", NEW.app_version, "<br/>");
-    END IF;
-
-    IF NEW.redirect_link <> OLD.redirect_link THEN
-        SET audit_log = CONCAT(audit_log, "Redirect Link: ", OLD.redirect_link, " -> ", NEW.redirect_link, "<br/>");
     END IF;
 
     IF NEW.order_sequence <> OLD.order_sequence THEN
@@ -1110,7 +1168,13 @@ CREATE TABLE `audit_log` (
 --
 
 INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `changed_by`, `changed_at`) VALUES
-(1, 'user_account', 2, 'Last Connection Date: 2024-06-12 08:50:11 -> 2024-06-12 20:13:12<br/>', 1, '2024-06-12 20:13:12');
+(1, 'user_account', 2, 'Last Connection Date: 2024-06-12 08:50:11 -> 2024-06-12 20:13:12<br/>', 1, '2024-06-12 20:13:12'),
+(2, 'user_account', 2, 'Last Connection Date: 2024-06-12 20:13:12 -> 2024-06-13 12:26:06<br/>', 1, '2024-06-13 12:26:06'),
+(3, 'user_account', 2, 'Last Connection Date: 2024-06-13 12:26:06 -> 2024-06-13 16:59:23<br/>', 1, '2024-06-13 16:59:23'),
+(4, 'role_permission', 1, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: User Interface<br/>Read Access: 1<br/>Date Assigned: 2024-06-13 17:08:16', 1, '2024-06-13 17:08:16'),
+(5, 'role_permission', 2, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Menu Group<br/>Read Access: 1<br/>Write Access: 1<br/>Create Access: 1<br/>Delete Access: 1<br/>Date Assigned: 2024-06-13 17:08:16', 1, '2024-06-13 17:08:16'),
+(6, 'role_permission', 3, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Menu Item<br/>Read Access: 1<br/>Write Access: 1<br/>Create Access: 1<br/>Delete Access: 1<br/>Date Assigned: 2024-06-13 17:08:16', 1, '2024-06-13 17:08:16'),
+(7, 'role_permission', 4, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: System Action<br/>Read Access: 1<br/>Write Access: 1<br/>Create Access: 1<br/>Delete Access: 1<br/>Date Assigned: 2024-06-13 17:08:16', 1, '2024-06-13 17:08:16');
 
 -- --------------------------------------------------------
 
@@ -1278,6 +1342,78 @@ CREATE TABLE `internal_notes_attachment` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `menu_group`
+--
+
+CREATE TABLE `menu_group` (
+  `menu_group_id` int(10) UNSIGNED NOT NULL,
+  `menu_group_name` varchar(100) NOT NULL,
+  `app_module_id` int(10) UNSIGNED NOT NULL,
+  `app_module_name` varchar(100) NOT NULL,
+  `order_sequence` tinyint(10) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `menu_group`
+--
+
+INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `app_module_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
+(1, 'Technical', 1, 'Settings', 100, '2024-06-13 16:36:53', 1),
+(2, 'Administration', 1, 'Settings', 99, '2024-06-13 16:36:53', 1);
+
+--
+-- Triggers `menu_group`
+--
+DELIMITER $$
+CREATE TRIGGER `menu_group_trigger_insert` AFTER INSERT ON `menu_group` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Menu group created. <br/>';
+
+    IF NEW.menu_group_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Menu Group Name: ", NEW.menu_group_name);
+    END IF;
+
+    IF NEW.app_module_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>App Module: ", NEW.app_module_name);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('menu_group', NEW.menu_group_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `menu_group_trigger_update` AFTER UPDATE ON `menu_group` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.menu_group_name <> OLD.menu_group_name THEN
+        SET audit_log = CONCAT(audit_log, "Menu Group Name: ", OLD.menu_group_name, " -> ", NEW.menu_group_name, "<br/>");
+    END IF;
+    
+      IF NEW.app_module_name <> OLD.app_module_name THEN
+        SET audit_log = CONCAT(audit_log, "App Module: ", OLD.app_module_name, " -> ", NEW.app_module_name, "<br/>");
+    END IF;
+
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('menu_group', NEW.menu_group_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `menu_item`
 --
 
@@ -1285,6 +1421,9 @@ CREATE TABLE `menu_item` (
   `menu_item_id` int(10) UNSIGNED NOT NULL,
   `menu_item_name` varchar(100) NOT NULL,
   `menu_item_url` varchar(50) DEFAULT NULL,
+  `menu_item_icon` varchar(50) DEFAULT NULL,
+  `menu_group_id` int(10) UNSIGNED NOT NULL,
+  `menu_group_name` varchar(100) NOT NULL,
   `app_module_id` int(10) UNSIGNED NOT NULL,
   `app_module_name` varchar(100) NOT NULL,
   `parent_id` int(10) UNSIGNED DEFAULT NULL,
@@ -1298,72 +1437,11 @@ CREATE TABLE `menu_item` (
 -- Dumping data for table `menu_item`
 --
 
-INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `app_module_id`, `app_module_name`, `parent_id`, `parent_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'General Settings', 'general-settings.php', 1, 'Settings', 0, '', 21, '2024-06-12 08:35:00', 1);
-
---
--- Triggers `menu_item`
---
-DELIMITER $$
-CREATE TRIGGER `menu_item_trigger_insert` AFTER INSERT ON `menu_item` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Menu Item created. <br/>';
-
-    IF NEW.menu_item_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Menu Item Name: ", NEW.menu_item_name);
-    END IF;
-
-    IF NEW.menu_item_url <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Menu Item URL: ", NEW.menu_item_url);
-    END IF;
-
-    IF NEW.app_module_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>App Module: ", NEW.app_module_name);
-    END IF;
-
-    IF NEW.parent_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Parent: ", NEW.parent_name);
-    END IF;
-
-    IF NEW.order_sequence <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
-    END IF;
-
-    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('menu_item', NEW.menu_item_id, audit_log, NEW.last_log_by, NOW());
-END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `menu_item_trigger_update` AFTER UPDATE ON `menu_item` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT '';
-
-    IF NEW.menu_item_name <> OLD.menu_item_name THEN
-        SET audit_log = CONCAT(audit_log, "Menu Item Name: ", OLD.menu_item_name, " -> ", NEW.menu_item_name, "<br/>");
-    END IF;
-
-    IF NEW.menu_item_url <> OLD.menu_item_url THEN
-        SET audit_log = CONCAT(audit_log, "Menu Item URL: ", OLD.menu_item_url, " -> ", NEW.menu_item_url, "<br/>");
-    END IF;
-
-    IF NEW.app_module_name <> OLD.app_module_name THEN
-        SET audit_log = CONCAT(audit_log, "App Module: ", OLD.app_module_name, " -> ", NEW.app_module_name, "<br/>");
-    END IF;
-
-    IF NEW.parent_name <> OLD.parent_name THEN
-        SET audit_log = CONCAT(audit_log, "Parent: ", OLD.parent_name, " -> ", NEW.parent_name, "<br/>");
-    END IF;
-
-    IF NEW.order_sequence <> OLD.order_sequence THEN
-        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
-    END IF;
-    
-    IF LENGTH(audit_log) > 0 THEN
-        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('menu_item', NEW.menu_item_id, audit_log, NEW.last_log_by, NOW());
-    END IF;
-END
-$$
-DELIMITER ;
+INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `menu_item_icon`, `menu_group_id`, `menu_group_name`, `app_module_id`, `app_module_name`, `parent_id`, `parent_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
+(1, 'User Interface', '', 'ti ti-template', 1, 'Technical', 1, 'Settings', 0, '', 21, '2024-06-13 16:55:37', 1),
+(2, 'Menu Group', 'menu-group.php', '', 1, 'Technical', 1, 'Settings', 1, 'User Interface', 13, '2024-06-13 16:55:37', 1),
+(3, 'Menu Item', 'menu-item.php', '', 1, 'Technical', 1, 'Settings', 1, 'User Interface', 13, '2024-06-13 16:55:37', 1),
+(4, 'System Action', 'system-action.php', '', 1, 'Technical', 1, 'Settings', 1, 'User Interface', 19, '2024-06-13 16:55:37', 1);
 
 -- --------------------------------------------------------
 
@@ -1704,7 +1782,10 @@ CREATE TABLE `role_permission` (
 --
 
 INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `menu_item_id`, `menu_item_name`, `read_access`, `write_access`, `create_access`, `delete_access`, `date_assigned`, `created_date`, `last_log_by`) VALUES
-(1, 1, 'Administrator', 1, 'General Setting', 1, 0, 0, 0, '2024-06-12 08:41:57', '2024-06-12 08:41:57', 1);
+(1, 1, 'Administrator', 1, 'User Interface', 1, 0, 0, 0, '2024-06-13 17:08:16', '2024-06-13 17:08:16', 1),
+(2, 1, 'Administrator', 1, 'Menu Group', 1, 1, 1, 1, '2024-06-13 17:08:16', '2024-06-13 17:08:16', 1),
+(3, 1, 'Administrator', 1, 'Menu Item', 1, 1, 1, 1, '2024-06-13 17:08:16', '2024-06-13 17:08:16', 1),
+(4, 1, 'Administrator', 1, 'System Action', 1, 1, 1, 1, '2024-06-13 17:08:16', '2024-06-13 17:08:16', 1);
 
 --
 -- Triggers `role_permission`
@@ -2090,7 +2171,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmids@christianmotors.ph', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-12 08:28:55', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-12 20:13:12', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'e8JyXXOswnDxsYLkFJBeIQC0251hX%2FEMMfNX7%2FQXZos%3D', '2024-06-12 08:28:55', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-13 16:59:23', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'l07qj%2BNCAqJZT3HSyvIEzT5DcFXqDrnSUjl8EUkjLJY%3D', '2024-06-12 08:28:55', 1);
 
 --
 -- Triggers `user_account`
@@ -2269,6 +2350,14 @@ ALTER TABLE `internal_notes_attachment`
   ADD KEY `internal_notes_attachment_index_table_name` (`internal_notes_id`);
 
 --
+-- Indexes for table `menu_group`
+--
+ALTER TABLE `menu_group`
+  ADD PRIMARY KEY (`menu_group_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `menu_group_index_menu_group_id` (`menu_group_id`);
+
+--
 -- Indexes for table `menu_item`
 --
 ALTER TABLE `menu_item`
@@ -2398,7 +2487,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `email_setting`
@@ -2419,10 +2508,16 @@ ALTER TABLE `internal_notes_attachment`
   MODIFY `internal_notes_attachment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `menu_group`
+--
+ALTER TABLE `menu_group`
+  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -2464,7 +2559,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -2531,11 +2626,19 @@ ALTER TABLE `internal_notes_attachment`
   ADD CONSTRAINT `internal_notes_attachment_ibfk_1` FOREIGN KEY (`internal_notes_id`) REFERENCES `internal_notes` (`internal_notes_id`);
 
 --
+-- Constraints for table `menu_group`
+--
+ALTER TABLE `menu_group`
+  ADD CONSTRAINT `menu_group_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
+  ADD CONSTRAINT `menu_group_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `app_module` (`app_module_id`);
+
+--
 -- Constraints for table `menu_item`
 --
 ALTER TABLE `menu_item`
   ADD CONSTRAINT `menu_item_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
-  ADD CONSTRAINT `menu_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `app_module` (`app_module_id`);
+  ADD CONSTRAINT `menu_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `menu_group` (`menu_group_id`),
+  ADD CONSTRAINT `menu_item_ibfk_3` FOREIGN KEY (`last_log_by`) REFERENCES `app_module` (`app_module_id`);
 
 --
 -- Constraints for table `notification_setting`

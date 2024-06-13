@@ -102,9 +102,6 @@ function appModuleForm(){
             app_module_description: {
                 required: true
             },
-            redirect_link: {
-                required: true
-            },
             order_sequence: {
                 required: true
             }
@@ -115,9 +112,6 @@ function appModuleForm(){
             },
             app_module_description: {
                 required: 'Please enter the description'
-            },
-            redirect_link: {
-                required: 'Please enter the redirect link'
             },
             order_sequence: {
                 required: 'Please enter the order sequence'
@@ -294,14 +288,12 @@ function displayDetails(transaction){
                     if (response.success) {
                         $('#app_module_name').val(response.appModuleName);
                         $('#app_module_description').val(response.appModuleDescription);
-                        $('#redirect_link').val(response.redirectLink);
                         $('#order_sequence').val(response.orderSequence);
 
                         document.getElementById('app_module_logo').src = response.appLogo;
                         
                         $('#app_module_name_summary').text(response.appModuleName);
                         $('#app_module_description_summary').text(response.appModuleDescription);
-                        $('#redirect_link_summary').text(response.redirectLink);
                         $('#order_sequence_summary').text(response.orderSequence);
                     } 
                     else {

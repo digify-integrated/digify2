@@ -65,14 +65,6 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Redirect Link:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="redirect_link_summary">--</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
                             <label class="form-label col-md-5">Order Sequence:</label>
                             <div class="col-md-7">
                                 <p class="form-control-static" id="order_sequence_summary">--</p>
@@ -109,12 +101,6 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="mb-3">
-                                <label class="col-sm-4 form-label" for="redirect_link">Redirect Link <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control maxlength" id="redirect_link" name="redirect_link" maxlength="50" autocomplete="off">
-                            </div>
-                        </div>
                         <div class="col-lg-6">
                             <div class="mb-3">
                                 <label class="form-label" for="order_sequence">Order Sequence <span class="text-danger">*</span></label>

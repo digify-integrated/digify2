@@ -17,9 +17,17 @@
                                 <input type="text" class="form-control maxlength" id="menu_group_name" name="menu_group_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="app_module_id">App Module <span class="text-danger">*</span></label>
+                            <div class="mb-3">
+                                <select id="app_module_id" name="app_module_id" class="select2 form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="col-sm-4 form-label" for="order_sequence">Order Sequence <span class="text-danger">*</span></label>
+                                <label class="form-label" for="order_sequence">Order Sequence <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="order_sequence" name="order_sequence" min="0">
                             </div>
                         </div>

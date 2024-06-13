@@ -9,6 +9,10 @@ BEGIN
     IF NEW.menu_group_name <> OLD.menu_group_name THEN
         SET audit_log = CONCAT(audit_log, "Menu Group Name: ", OLD.menu_group_name, " -> ", NEW.menu_group_name, "<br/>");
     END IF;
+    
+      IF NEW.app_module_name <> OLD.app_module_name THEN
+        SET audit_log = CONCAT(audit_log, "App Module: ", OLD.app_module_name, " -> ", NEW.app_module_name, "<br/>");
+    END IF;
 
     IF NEW.order_sequence <> OLD.order_sequence THEN
         SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
@@ -28,6 +32,10 @@ BEGIN
 
     IF NEW.menu_group_name <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Menu Group Name: ", NEW.menu_group_name);
+    END IF;
+
+    IF NEW.app_module_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>App Module: ", NEW.app_module_name);
     END IF;
 
     IF NEW.order_sequence <> '' THEN

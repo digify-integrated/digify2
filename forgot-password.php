@@ -1,10 +1,10 @@
 <?php
     require('components/global/config/config.php');
     require('components/global/model/database-model.php');
+    require('components/global/model/security-model.php');
 
     $databaseModel = new DatabaseModel();
     $securityModel = new SecurityModel();
-    $authenticationModel = new AuthenticationModel($databaseModel);
 
     $pageTitle = 'Forgot Password';
 

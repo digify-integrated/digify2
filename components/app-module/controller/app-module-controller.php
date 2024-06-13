@@ -177,11 +177,10 @@ class AppModuleController {
             return;
         }
 
-        if (isset($_POST['app_module_name']) && !empty($_POST['app_module_name']) && isset($_POST['app_module_description']) && !empty($_POST['app_module_description']) && isset($_POST['redirect_link']) && !empty($_POST['redirect_link']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
+        if (isset($_POST['app_module_name']) && !empty($_POST['app_module_name']) && isset($_POST['app_module_description']) && !empty($_POST['app_module_description']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
             $userID = $_SESSION['user_account_id'];
             $appModuleName = $_POST['app_module_name'];
             $appModuleDescription = $_POST['app_module_description'];
-            $redirectLink = $_POST['redirect_link'];
             $orderSequence = htmlspecialchars($_POST['order_sequence'], ENT_QUOTES, 'UTF-8');
         
             $appModuleID = $this->appModuleModel->insertAppModule($appModuleName, $appModuleDescription, $redirectLink, $orderSequence, $userID);
@@ -231,12 +230,11 @@ class AppModuleController {
             return;
         }
         
-        if (isset($_POST['app_module_id']) && !empty($_POST['app_module_id']) && isset($_POST['app_module_name']) && !empty($_POST['app_module_name']) && isset($_POST['app_module_description']) && !empty($_POST['app_module_description']) && isset($_POST['redirect_link']) && !empty($_POST['redirect_link']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
+        if (isset($_POST['app_module_id']) && !empty($_POST['app_module_id']) && isset($_POST['app_module_name']) && !empty($_POST['app_module_name']) && isset($_POST['app_module_description']) && !empty($_POST['app_module_description']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
             $userID = $_SESSION['user_account_id'];
             $appModuleID = htmlspecialchars($_POST['app_module_id'], ENT_QUOTES, 'UTF-8');
             $appModuleName = $_POST['app_module_name'];
             $appModuleDescription = $_POST['app_module_description'];
-            $redirectLink = $_POST['redirect_link'];
             $orderSequence = htmlspecialchars($_POST['order_sequence'], ENT_QUOTES, 'UTF-8');
         
             $checkAppModuleExist = $this->appModuleModel->checkAppModuleExist($appModuleID);
@@ -649,7 +647,6 @@ class AppModuleController {
                 'success' => true,
                 'appModuleName' => $appModuleDetails['app_module_name'] ?? null,
                 'appModuleDescription' => $appModuleDetails['app_module_description'] ?? null,
-                'redirectLink' => $appModuleDetails['redirect_link'] ?? null,
                 'orderSequence' => $appModuleDetails['order_sequence'] ?? null,
                 'appLogo' => $appLogo
             ];

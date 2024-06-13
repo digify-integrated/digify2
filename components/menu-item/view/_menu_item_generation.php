@@ -44,6 +44,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
             foreach ($options as $row) {
                 $menuItemID = $row['menu_item_id'];
                 $menuItemName = $row['menu_item_name'];
+                $menuGroupName = $row['menu_group_name'];
                 $appModuleName = $row['app_module_name'];
                 $orderSequence = $row['order_sequence'];
 
@@ -59,6 +60,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $response[] = [
                     'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $menuItemID .'">',
                     'MENU_ITEM_NAME' => $menuItemName,
+                    'MENU_GROUP_NAME' => $menuGroupName,
                     'APP_MODULE_NAME' => $appModuleName,
                     'ORDER_SEQUENCE' => $orderSequence,
                     'ACTION' => '<div class="action-btn">

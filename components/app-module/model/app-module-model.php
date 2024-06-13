@@ -24,19 +24,17 @@ class AppModuleModel {
     # - $p_app_module_id (int): The app module ID.
     # - $p_app_module_name (string): The app module name.
     # - $p_app_module_description (string): The app module description.
-    # - $p_redirect_link (string): The redirect link of the app module.
     # - $p_order_sequence (int): The order sequence of app module.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateAppModule($p_app_module_id, $p_app_module_name, $p_app_module_description, $p_redirect_link, $p_order_sequence, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateAppModule(:p_app_module_id, :p_app_module_name, :p_app_module_description, :p_redirect_link, :p_order_sequence, :p_last_log_by)');
+    public function updateAppModule($p_app_module_id, $p_app_module_name, $p_app_module_description, $p_order_sequence, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateAppModule(:p_app_module_id, :p_app_module_name, :p_app_module_description, :p_order_sequence, :p_last_log_by)');
         $stmt->bindValue(':p_app_module_id', $p_app_module_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_app_module_name', $p_app_module_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_app_module_description', $p_app_module_description, PDO::PARAM_STR);
-        $stmt->bindValue(':p_redirect_link', $p_redirect_link, PDO::PARAM_STR);
         $stmt->bindValue(':p_order_sequence', $p_order_sequence, PDO::PARAM_INT);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
@@ -76,18 +74,16 @@ class AppModuleModel {
     # Parameters:
     # - $p_app_module_name (string): The app module name.
     # - $p_app_module_description (string): The app module description.
-    # - $p_redirect_link (string): The redirect link of the app module.
     # - $p_order_sequence (int): The order sequence of app module.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: String
     #
     # -------------------------------------------------------------
-    public function insertAppModule($p_app_module_name, $p_app_module_description, $p_redirect_link, $p_order_sequence, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertAppModule(:p_app_module_name, :p_app_module_description, :p_redirect_link, :p_order_sequence, :p_last_log_by, @p_app_module_id)');
+    public function insertAppModule($p_app_module_name, $p_app_module_description, $p_order_sequence, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertAppModule(:p_app_module_name, :p_app_module_description, :p_order_sequence, :p_last_log_by, @p_app_module_id)');
         $stmt->bindValue(':p_app_module_name', $p_app_module_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_app_module_description', $p_app_module_description, PDO::PARAM_STR);
-        $stmt->bindValue(':p_redirect_link', $p_redirect_link, PDO::PARAM_STR);
         $stmt->bindValue(':p_order_sequence', $p_order_sequence, PDO::PARAM_INT);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();

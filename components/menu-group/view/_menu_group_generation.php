@@ -42,6 +42,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
             foreach ($options as $row) {
                 $menuGroupID = $row['menu_group_id'];
                 $menuGroupName = $row['menu_group_name'];
+                $appModuleName = $row['app_module_name'];
                 $orderSequence = $row['order_sequence'];
 
                 $menuGroupIDEncrypted = $securityModel->encryptData($menuGroupID);
@@ -56,6 +57,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $response[] = [
                     'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $menuGroupID .'">',
                     'MENU_GROUP_NAME' => $menuGroupName,
+                    'APP_MODULE_NAME' => $appModuleName,
                     'ORDER_SEQUENCE' => $orderSequence,
                     'ACTION' => '<div class="d-flex gap-2">
                                     <a href="'. $pageLink .'&id='. $menuGroupIDEncrypted .'" class="text-info" title="View Details">

@@ -13,10 +13,10 @@ END //
 
 /* Insert Stored Procedure */
 
-CREATE PROCEDURE insertAppModule(IN p_app_module_name VARCHAR(100), IN p_app_module_description VARCHAR(500), IN p_redirect_link VARCHAR(50), IN p_order_sequence TINYINT(10), IN p_last_log_by INT, OUT p_app_module_id INT)
+CREATE PROCEDURE insertAppModule(IN p_app_module_name VARCHAR(100), IN p_app_module_description VARCHAR(500), IN p_order_sequence TINYINT(10), IN p_last_log_by INT, OUT p_app_module_id INT)
 BEGIN
-    INSERT INTO app_module (app_module_name, app_module_description, redirect_link, order_sequence, last_log_by) 
-	VALUES(p_app_module_name, p_app_module_description, p_redirect_link, p_order_sequence, p_last_log_by);
+    INSERT INTO app_module (app_module_name, app_module_description, order_sequence, last_log_by) 
+	VALUES(p_app_module_name, p_app_module_description, p_order_sequence, p_last_log_by);
 	
     SET p_app_module_id = LAST_INSERT_ID();
 END //
@@ -25,7 +25,7 @@ END //
 
 /* Update Stored Procedure */
 
-CREATE PROCEDURE updateAppModule(IN p_app_module_id INT, IN p_app_module_name VARCHAR(100), IN p_app_module_description VARCHAR(500), IN p_redirect_link VARCHAR(50), IN p_order_sequence TINYINT(10), IN p_last_log_by INT)
+CREATE PROCEDURE updateAppModule(IN p_app_module_id INT, IN p_app_module_name VARCHAR(100), IN p_app_module_description VARCHAR(500), IN p_order_sequence TINYINT(10), IN p_last_log_by INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -33,6 +33,11 @@ BEGIN
     END;
 
     START TRANSACTION;
+
+    UPDATE menu_group
+    SET app_module_name = p_app_module_name,
+        last_log_by = p_last_log_by
+    WHERE app_module_id = p_app_module_id;
 
     UPDATE menu_item
     SET app_module_name = p_app_module_name,
@@ -42,7 +47,6 @@ BEGIN
     UPDATE app_module
     SET app_module_name = p_app_module_name,
         app_module_description = p_app_module_description,
-        redirect_link = p_redirect_link,
         order_sequence = p_order_sequence,
         last_log_by = p_last_log_by
     WHERE app_module_id = p_app_module_id;

@@ -32,6 +32,7 @@
                                         </div>
                                     </th>
                                     <th>Menu Group</th>
+                                    <th>App Module</th>
                                     <th>Order Sequence</th>
                                     <th>Actions</th>
                                 </tr>
