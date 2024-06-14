@@ -3,10 +3,12 @@
     require('components/global/model/database-model.php');
     require('components/global/model/system-model.php');
     require('components/global/model/security-model.php');
+    require('components/menu-item/model/menu-item-model.php');
 
     $databaseModel = new DatabaseModel();
     $systemModel = new SystemModel();
     $securityModel = new SecurityModel();
+    $menuItemModel = new MenuItemModel($databaseModel);
 
     $pageTitle = 'Apps';
 
@@ -28,7 +30,7 @@
                         <?php
                             $apps = '';
                             
-                            $sql = $databaseModel->getConnection()->prepare('CALL buildAppModule(:userID)');
+                            $sql = $databaseModel->getConnection()->prepare('CALL buildAppModuleStack(:userID)');
                             $sql->bindValue(':userID', $userID, PDO::PARAM_INT);
                             $sql->execute();
                             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
@@ -38,20 +40,23 @@
                                 $appModuleID = $row['app_module_id'];
                                 $appModuleName = $row['app_module_name'];
                                 $appVersion = $row['app_version'];
-                                $redirectLink = $row['redirect_link'];
+                                $menuItemID = $row['menu_item_id'];
                                 $appLogo = $systemModel->checkImage($row['app_logo'], 'app module logo');
+
+                                $menuItemDetails = $menuItemModel->getMenuItem($menuItemID);
+                                $menuItemURL = $menuItemDetails['menu_item_url'];
                                     
                                 $apps .= '<div class="col-lg-2">
-                                            <a href="'. $redirectLink .'?app_module_id='. $securityModel->encryptData($appModuleID) .'">
-                                                <div class="card border-0 zoom-in bg-light-subtle shadow-none">
-                                                    <div class="card-body">
-                                                        <div class="text-center">
-                                                            <img src="'. $appLogo .'" width="50" height="50" class="mb-3" alt="app-logo">
-                                                            <p class="fw-semibold fs-3 text-dark mb-1">'. $appModuleName .'</p> 
+                                            <a href="'. $menuItemURL .'?app_module_id='. $securityModel->encryptData($appModuleID) .'&page_id='. $securityModel->encryptData($menuItemID) .'">
+                                                <div class="card light-gradient">
+                                                    <div class="card-body text-center px-3 pb-4">
+                                                        <div class="d-flex align-items-center justify-content-center round-48 rounded flex-shrink-0 mb-2 mx-auto">
+                                                            <img src="'. $appLogo .'" width="55" height="55" class="mb-2" alt="app-logo">
                                                         </div>
+                                                        <h5 class="d-flex align-items-center text-dark justify-content-center gap-1">'. $appModuleName .'</h5>
                                                     </div>
                                                 </div>
-                                                </a>
+                                            </a>
                                         </div>';
                             }
                         

@@ -22,9 +22,6 @@ CREATE TABLE menu_item (
 CREATE INDEX menu_item_index_menu_item_id ON menu_item(menu_item_id);
 CREATE INDEX menu_item_index_app_module_id ON menu_item(app_module_id);
 
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('User Interface', '', 'ti ti-template', 1, 'Technical', 1, 'Settings', '', 21, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Menu Group', 'menu-group.php', '', 1, 'Technical', 1, 'Settings', 1, 'User Interface', 13, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Menu Item', 'menu-item.php', '', 1, 'Technical', 1, 'Settings', 1, 'User Interface', 13, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('System Action', 'system-action.php', '', 1, 'Technical', 1, 'Settings', 1, 'User Interface', 19, 1);
+INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('General Settings', 'general-settings.php', 'ti ti-settings', 1, 'Technical', 1, 'Settings', '', '', 21, 1);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

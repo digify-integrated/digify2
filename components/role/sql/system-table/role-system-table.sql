@@ -39,10 +39,7 @@ CREATE INDEX role_permission_index_role_permission_id ON role_permission(role_pe
 CREATE INDEX role_permission_index_menu_item_id ON role_permission(menu_item_id);
 CREATE INDEX role_permission_index_role_id ON role_permission(role_id);
 
-INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 1, 'User Interface', 1, 0, 0, 0, '1');
-INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 1, 'Menu Group', 1, 1, 1, 1, '1');
-INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 1, 'Menu Item', 1, 1, 1, 1, '1');
-INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 1, 'System Action', 1, 1, 1, 1, '1');
+INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 1, 'General Setting', 1, 0, 0, 0, '1');
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 

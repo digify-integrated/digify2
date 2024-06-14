@@ -152,6 +152,7 @@ class GlobalModel {
                 $menuItemName = $row['menu_item_name'];
                 $menuItemURL = $row['menu_item_url'] ?? null;
                 $parentID = $row['parent_id'];
+                $appModuleID = $row['app_module_id'];
                 $menuItemIcon = !empty($row['menu_item_icon']) ? $row['menu_item_icon'] : null;
 
                 $menuItem = [
@@ -160,6 +161,7 @@ class GlobalModel {
                     'MENU_ITEM_URL' => $menuItemURL,
                     'PARENT_ID' => $parentID,
                     'MENU_ITEM_ICON' => $menuItemIcon,
+                    'APP_MODULE_ID' => $appModuleID,
                     'CHILDREN' => []
                 ];
 
@@ -202,12 +204,13 @@ class GlobalModel {
     public function buildMenuItemHTML($menuItemDetails, $level = 1) {
         $html = '';
         $menuItemID = $this->securityModel->encryptData($menuItemDetails['MENU_ITEM_ID']);
+        $appModuleID = $this->securityModel->encryptData($menuItemDetails['APP_MODULE_ID']);
         $menuItemName = $menuItemDetails['MENU_ITEM_NAME'];
         $menuItemIcon = $menuItemDetails['MENU_ITEM_ICON'];
         $menuItemURL = $menuItemDetails['MENU_ITEM_URL'];
         $children = $menuItemDetails['CHILDREN'];
     
-        $menuItemURL = !empty($menuItemURL) ? (strpos($menuItemURL, '?page_id=') !== false ? $menuItemURL : $menuItemURL . '?page_id=' . $menuItemID) : 'javascript:void(0)';
+        $menuItemURL = !empty($menuItemURL) ? (strpos($menuItemURL, '?page_id=') !== false ? $menuItemURL : $menuItemURL . '?app_module_id=' . $appModuleID . '&page_id=' . $menuItemID) : 'javascript:void(0)';
     
         if ($level === 1) {
             if (empty($children)) {
@@ -219,7 +222,8 @@ class GlobalModel {
                                 <span class="hide-menu">'. $menuItemName .'</span>
                                 </a>
                             </li>';
-            } else {
+            }
+            else {
                 $html .= ' <li class="sidebar-item">
                                 <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                     <span class="d-flex">
@@ -236,7 +240,8 @@ class GlobalModel {
                 $html .= '</ul>
                         </li>';
             }
-        } else {
+        }
+        else {
             if (empty($children)) {
                 $html .= '<li class="sidebar-item">
                                 <a href="'. $menuItemURL .'" class="sidebar-link">
@@ -246,7 +251,8 @@ class GlobalModel {
                                 <span class="hide-menu">'. $menuItemName .'</span>
                                 </a>
                             </li>';
-            } else {
+            }
+            else {
                 $html .= '<li class="sidebar-item">
                                 <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
                                     <div class="round-16 d-flex align-items-center justify-content-center">

@@ -28372,6 +28372,7 @@ body {
     width: 100%;
     transition: 0.2s ease-in;
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 .page-wrapper .container-fluid,
 .page-wrapper .container-lg,

@@ -40,9 +40,9 @@ END //
 
 /* Build Stored Procedure */
 
-CREATE PROCEDURE buildAppModule(IN p_user_account_id INT)
+CREATE PROCEDURE buildAppModuleStack(IN p_user_account_id INT)
 BEGIN
-    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, app_logo
+    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, am.menu_item_id, app_logo, app_version
     FROM app_module am
     JOIN menu_item mi ON mi.app_module_id = am.app_module_id
     WHERE EXISTS (
@@ -59,9 +59,28 @@ BEGIN
     ORDER BY am.order_sequence;
 END //
 
+CREATE PROCEDURE buildMenuGroup(IN p_user_account_id INT)
+BEGIN
+    SELECT DISTINCT(mg.menu_group_id) as menu_group_id, mg.menu_group_name
+    FROM menu_group mg
+    JOIN menu_item mi ON mi.menu_group_id = mg.menu_group_id
+    WHERE EXISTS (
+        SELECT 1
+        FROM role_permission mar
+        WHERE mar.menu_item_id = mi.menu_item_id
+        AND mar.read_access = 1
+        AND mar.role_id IN (
+            SELECT role_id
+            FROM role_user_account
+            WHERE user_account_id = p_user_account_id
+        )
+    )
+    ORDER BY mg.order_sequence;
+END //
+
 CREATE PROCEDURE buildMenuItem(IN p_user_account_id INT, IN p_app_module_id INT)
 BEGIN
-    SELECT mi.menu_item_id, mi.menu_item_name, mi.app_module_id, mi.menu_item_url, mi.parent_id
+    SELECT mi.menu_item_id, mi.menu_item_name, mi.app_module_id, mi.menu_item_url, mi.parent_id, mi.app_module_id, mi.menu_item_icon
     FROM menu_item AS mi
     INNER JOIN role_permission AS mar ON mi.menu_item_id = mar.menu_item_id
     INNER JOIN role_user_account AS ru ON mar.role_id = ru.role_id

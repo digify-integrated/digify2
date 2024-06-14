@@ -5,6 +5,7 @@
 <script src="./assets/js/theme/app.init.js"></script>
 <script src="./assets/js/theme/theme.js"></script>
 <script src="./assets/js/theme/app.min.js"></script>
+<script src="./assets/js/theme/sidebarmenu.js"></script>
 
 <script src="./assets/libs/sweetalert2/dist/sweetalert2.min.js"></script>
 <script src="./assets/libs/jquery-validation/dist/jquery.validate.min.js"></script>
