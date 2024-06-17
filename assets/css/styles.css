@@ -16367,7 +16367,6 @@ textarea.form-control.is-valid {
 .form-control.is-invalid,
 .was-validated .form-control:invalid {
     border-color: var(--bs-form-invalid-border-color);
-    padding-right: calc(1.5em + 20px);
     background-repeat: no-repeat;
     background-position: right calc(0.375em + 5px) center;
     background-size: calc(0.75em + 10px) calc(0.75em + 10px);

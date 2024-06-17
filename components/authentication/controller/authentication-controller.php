@@ -190,7 +190,7 @@ class AuthenticationController {
 
         $response = [
             'success' => true,
-            'redirectLink' => 'dashboard.php'
+            'redirectLink' => 'apps.php'
         ];
         
         echo json_encode($response);
@@ -333,7 +333,7 @@ class AuthenticationController {
 
         $response = [
             'success' => true,
-            'redirectLink' => 'dashboard.php'
+            'redirectLink' => 'apps.php'
         ];
         
         echo json_encode($response);

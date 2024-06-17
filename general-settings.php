@@ -31,7 +31,8 @@
     include_once('components/global/view/_error_modal.php');
     include_once('components/global/view/_global_js.php');
   ?>
-  <script src="./components/role/js/general-settings.js?v=<?php echo rand(); ?>"></script>
+  <script src="./assets/libs/max-length/bootstrap-maxlength.min.js"></script>
+  <script src="./components/general-settings/js/general-settings.js?v=<?php echo rand(); ?>"></script>
 </body>
 
 </html>

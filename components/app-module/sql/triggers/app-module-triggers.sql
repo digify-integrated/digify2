@@ -18,6 +18,10 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "App Version: ", OLD.app_version, " -> ", NEW.app_version, "<br/>");
     END IF;
 
+    IF NEW.menu_item_name <> OLD.menu_item_name THEN
+        SET audit_log = CONCAT(audit_log, "Menu Item Name: ", OLD.menu_item_name, " -> ", NEW.menu_item_name, "<br/>");
+    END IF;
+
     IF NEW.order_sequence <> OLD.order_sequence THEN
         SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
     END IF;
@@ -44,6 +48,10 @@ BEGIN
 
     IF NEW.app_version <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>App Version: ", NEW.app_version);
+    END IF;
+
+    IF NEW.menu_item_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Menu Item Name: ", NEW.menu_item_name);
     END IF;
 
     IF NEW.order_sequence <> '' THEN
