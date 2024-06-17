@@ -121,20 +121,11 @@ class SecuritySettingController {
             $transaction = isset($_POST['transaction']) ? $_POST['transaction'] : null;
 
             switch ($transaction) {
-                case 'add security setting':
-                    $this->addSecuritySetting();
-                    break;
-                case 'update security setting':
+                case 'update security settings':
                     $this->updateSecuritySetting();
                     break;
                 case 'get security setting details':
                     $this->getSecuritySettingDetails();
-                    break;
-                case 'delete security setting':
-                    $this->deleteSecuritySetting();
-                    break;
-                case 'delete multiple security setting':
-                    $this->deleteMultipleSecuritySetting();
                     break;
                 default:
                     $response = [
@@ -147,59 +138,6 @@ class SecuritySettingController {
                     echo json_encode($response);
                     break;
             }
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #   Add methods
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: addSecuritySetting
-    # Description: 
-    # Inserts a security setting.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function addSecuritySetting() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        if (isset($_POST['security_setting_name']) && !empty($_POST['security_setting_name']) && isset($_POST['security_setting_description']) && !empty($_POST['security_setting_description']) && isset($_POST['value']) && !empty($_POST['value'])) {
-            $userID = $_SESSION['user_account_id'];
-            $securitySettingName = htmlspecialchars($_POST['security_setting_name'], ENT_QUOTES, 'UTF-8');
-            $securitySettingDescription = htmlspecialchars($_POST['security_setting_description'], ENT_QUOTES, 'UTF-8');
-            $value = $_POST['value'];
-        
-            $securitySettingID = $this->securitySettingModel->insertSecuritySetting($securitySettingName, $securitySettingDescription, $value, $userID);
-    
-            $response = [
-                'success' => true,
-                'securitySettingID' => $this->securityModel->encryptData($securitySettingID),
-                'title' => 'Insert Security Setting Success',
-                'message' => 'The security setting has been inserted successfully.',
-                'messageType' => 'success'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Transaction Error',
-                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
         }
     }
     # -------------------------------------------------------------
@@ -224,152 +162,22 @@ class SecuritySettingController {
             return;
         }
         
-        if (isset($_POST['security_setting_id']) && !empty($_POST['security_setting_id']) && isset($_POST['security_setting_name']) && !empty($_POST['security_setting_name']) && isset($_POST['security_setting_description']) && !empty($_POST['security_setting_description']) && isset($_POST['value']) && !empty($_POST['value'])) {
+        if (isset($_POST['max_failed_login']) && !empty($_POST['max_failed_login']) && isset($_POST['max_failed_otp_attempt']) && !empty($_POST['max_failed_otp_attempt']) && isset($_POST['password_expiry_duration']) && !empty($_POST['password_expiry_duration']) && isset($_POST['otp_duration']) && !empty($_POST['otp_duration']) && isset($_POST['reset_password_token_duration']) && !empty($_POST['reset_password_token_duration']) && isset($_POST['session_inactivity_limit']) && !empty($_POST['session_inactivity_limit']) && isset($_POST['password_recovery_link']) && !empty($_POST['password_recovery_link'])) {
             $userID = $_SESSION['user_account_id'];
-            $securitySettingID = htmlspecialchars($_POST['security_setting_id'], ENT_QUOTES, 'UTF-8');
-            $securitySettingName = htmlspecialchars($_POST['security_setting_name'], ENT_QUOTES, 'UTF-8');
-            $securitySettingDescription = htmlspecialchars($_POST['security_setting_description'], ENT_QUOTES, 'UTF-8');
-            $value = $_POST['value'];
-        
-            $checkSecuritySettingExist = $this->securitySettingModel->checkSecuritySettingExist($securitySettingID);
-            $total = $checkSecuritySettingExist['total'] ?? 0;
+            $maxFailedLogin = htmlspecialchars($_POST['max_failed_login'], ENT_QUOTES, 'UTF-8');
+            $max_FailedOTPAttempt = htmlspecialchars($_POST['max_failed_otp_attempt'], ENT_QUOTES, 'UTF-8');
+            $passwordExpiryDuration = htmlspecialchars($_POST['password_expiry_duration'], ENT_QUOTES, 'UTF-8');
+            $otpDuration = htmlspecialchars($_POST['otp_duration'], ENT_QUOTES, 'UTF-8');
+            $resetPasswordTokenDuration = htmlspecialchars($_POST['reset_password_token_duration'], ENT_QUOTES, 'UTF-8');
+            $sessionInactivityLimit = htmlspecialchars($_POST['session_inactivity_limit'], ENT_QUOTES, 'UTF-8');
+            $passwordRecoveryLink = $_POST['password_recovery_link'];
 
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'notExist' => true,
-                    'title' => 'Update Security Setting Error',
-                    'message' => 'The security setting does not exist.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-
-            $this->securitySettingModel->updateSecuritySetting($securitySettingID, $securitySettingName, $securitySettingDescription, $value, $userID);
+            $this->securitySettingModel->updateSecuritySetting($maxFailedLogin, $max_FailedOTPAttempt, $passwordExpiryDuration, $otpDuration, $resetPasswordTokenDuration, $sessionInactivityLimit, $passwordRecoveryLink, $userID);
                 
             $response = [
                 'success' => true,
                 'title' => 'Update Security Setting Success',
                 'message' => 'The security setting has been updated successfully.',
-                'messageType' => 'success'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Transaction Error',
-                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #   Delete methods
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: deleteSecuritySetting
-    # Description: 
-    # Delete the security setting if it exists; otherwise, return an error message.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function deleteSecuritySetting() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        if (isset($_POST['security_setting_id']) && !empty($_POST['security_setting_id'])) {
-            $securitySettingID = htmlspecialchars($_POST['security_setting_id'], ENT_QUOTES, 'UTF-8');
-        
-            $checkSecuritySettingExist = $this->securitySettingModel->checkSecuritySettingExist($securitySettingID);
-            $total = $checkSecuritySettingExist['total'] ?? 0;
-
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'notExist' => true,
-                    'title' => 'Delete Security Setting Error',
-                    'message' => 'The security setting does not exist.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-
-            $this->securitySettingModel->deleteSecuritySetting($securitySettingID);
-                
-            $response = [
-                'success' => true,
-                'title' => 'Delete Security Setting Success',
-                'message' => 'The security setting has been deleted successfully.',
-                'messageType' => 'success'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Transaction Error',
-                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: deleteMultipleSecuritySetting
-    # Description: 
-    # Delete the selected security settings if it exists; otherwise, skip it.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function deleteMultipleSecuritySetting() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        if (isset($_POST['security_setting_id']) && !empty($_POST['security_setting_id'])) {
-            $securitySettingIDs = $_POST['security_setting_id'];
-    
-            foreach($securitySettingIDs as $securitySettingID){
-                $checkSecuritySettingExist = $this->securitySettingModel->checkSecuritySettingExist($securitySettingID);
-                $total = $checkSecuritySettingExist['total'] ?? 0;
-
-                if($total > 0){
-                    $this->securitySettingModel->deleteSecuritySetting($securitySettingID);
-                }
-            }
-                
-            $response = [
-                'success' => true,
-                'title' => 'Delete Multiple Security Setting Success',
-                'message' => 'The selected security settings have been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -410,49 +218,19 @@ class SecuritySettingController {
             return;
         }
     
-        if (isset($_POST['security_setting_id']) && !empty($_POST['security_setting_id'])) {
-            $userID = $_SESSION['user_account_id'];
-            $securitySettingID = htmlspecialchars($_POST['security_setting_id'], ENT_QUOTES, 'UTF-8');
+        $userID = $_SESSION['user_account_id'];
 
-            $checkSecuritySettingExist = $this->securitySettingModel->checkSecuritySettingExist($securitySettingID);
-            $total = $checkSecuritySettingExist['total'] ?? 0;
+        $securitySettingDetails = $this->securitySettingModel->getSecuritySetting($securitySettingID);
 
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'notExist' => true,
-                    'title' => 'Get Security Setting Details Error',
-                    'message' => 'The security setting does not exist.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-    
-            $securitySettingDetails = $this->securitySettingModel->getSecuritySetting($securitySettingID);
+        $response = [
+            'success' => true,
+            'securitySettingName' => $securitySettingDetails['security_setting_name'] ?? null,
+            'securitySettingDescription' => $securitySettingDetails['security_setting_description'] ?? null,
+            'value' => $securitySettingDetails['value'] ?? null
+        ];
 
-            $response = [
-                'success' => true,
-                'securitySettingName' => $securitySettingDetails['security_setting_name'] ?? null,
-                'securitySettingDescription' => $securitySettingDetails['security_setting_description'] ?? null,
-                'value' => $securitySettingDetails['value'] ?? null
-            ];
-
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Transaction Error',
-                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
+        echo json_encode($response);
+        exit;
     }
     # -------------------------------------------------------------
 }
@@ -465,7 +243,7 @@ require_once '../../global/model/system-model.php';
 require_once '../../security-setting/model/security-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new SecuritySettingController(new securitySettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new SecuritySettingController(new SecuritySettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>

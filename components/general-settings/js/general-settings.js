@@ -83,12 +83,12 @@ function securitySettingsForm(){
             }
         },
         submitHandler: function(form) {
-            const transaction = 'add menu group';
+            const transaction = 'update security settings';
             const page_link = document.getElementById('page-link').getAttribute('href');
           
             $.ajax({
                 type: 'POST',
-                url: 'components/security-settings/controller/security-settings-controller.php',
+                url: 'components/general-settings/controller/security-settings-controller.php',
                 data: $(form).serialize() + '&transaction=' + transaction,
                 dataType: 'json',
                 beforeSend: function() {

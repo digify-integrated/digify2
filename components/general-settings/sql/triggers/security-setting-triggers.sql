@@ -10,10 +10,6 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "Security Setting Name: ", OLD.security_setting_name, " -> ", NEW.security_setting_name, "<br/>");
     END IF;
 
-    IF NEW.security_setting_description <> OLD.security_setting_description THEN
-        SET audit_log = CONCAT(audit_log, "Security Setting Description: ", OLD.security_setting_description, " -> ", NEW.security_setting_description, "<br/>");
-    END IF;
-
     IF NEW.value <> OLD.value THEN
         SET audit_log = CONCAT(audit_log, "Value: ", OLD.value, " -> ", NEW.value, "<br/>");
     END IF;
@@ -32,10 +28,6 @@ BEGIN
 
     IF NEW.security_setting_name <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Security Setting Name: ", NEW.security_setting_name);
-    END IF;
-
-    IF NEW.security_setting_description <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Security Setting Description: ", NEW.security_setting_description);
     END IF;
 
     IF NEW.value <> '' THEN
