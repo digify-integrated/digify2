@@ -34,17 +34,17 @@
       <div class="card-body">
         <form id="security-settings-form" method="post" action="#">
           <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-6">
               <h4 class="card-title mb-0">Max Failed Login Attempt</h4>
               <p class="mb-3">Maximum number of unsuccessful login attempts</p>
               <input class="form-control mb-3" type="number" id="max_failed_login" name="max_failed_login" min="1">
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
               <h4 class="card-title mb-0">Max Failed OTP Validation Attempt</h4>
               <p class="mb-3">Maximum number of incorrect OTP attempts allowed</p>
               <input class="form-control mb-3" type="number" id="max_failed_otp_attempt" name="max_failed_otp_attempt" min="1">
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
               <h4 class="card-title mb-0">Password Validity Period</h4>
               <p class="mb-3">Sets the duration of the password expiry</p>
               <div class="input-group mb-3">
@@ -52,7 +52,7 @@
               <span class="input-group-text">day(s)</span>
               </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
               <h4 class="card-title mb-0">One-Time Password Validity Period</h4>
               <p class="mb-3">The time window during which a one-time password (OTP) is valid</p>
               <div class="input-group mb-3">
@@ -60,7 +60,7 @@
                 <span class="input-group-text">minute(s)</span>
               </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
               <h4 class="card-title mb-0">Password Reset Token Validity Period</h4>
               <p class="mb-3">The time window during which a reset password token remains valid</p>
               <div class="input-group mb-3">
@@ -68,7 +68,7 @@
                 <span class="input-group-text">minute(s)</span>
               </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
               <h4 class="card-title mb-0">Session Inactivity Limit</h4>
               <p class="mb-3">Time before inactive sessions end</p>
               <div class="input-group mb-3">
@@ -76,7 +76,7 @@
                 <span class="input-group-text">minute(s)</span>
               </div>
             </div>
-            <div class="col-lg-4">
+            <div class="col-lg-6">
               <h4 class="card-title mb-0">Password Recovery Link</h4>
               <p class="mb-3">The default URL used for resetting user account password</p>
               <input class="form-control mb-3" type="text" id="password_recovery_link" name="password_recovery_link" maxlength="500">
@@ -85,6 +85,12 @@
         </form>
       </div>
       <hr class="m-0" />
+      <div class="card-body d-flex align-items-center">
+        <h5 class="card-title mb-0">System Settings</h5>
+        <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+          <button type="submit" form="system-settings-form" class="btn btn-success mb-0" id="submit-system-setting-data">Save</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

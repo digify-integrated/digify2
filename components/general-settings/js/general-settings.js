@@ -4,6 +4,7 @@
     $(function() {
         if($('#security-settings-form').length){
             securitySettingsForm();
+            displayDetails('get security setting details');
         }
 
         $(document).on('click','#discard-create',function() {
@@ -88,7 +89,7 @@ function securitySettingsForm(){
           
             $.ajax({
                 type: 'POST',
-                url: 'components/general-settings/controller/security-settings-controller.php',
+                url: 'components/general-settings/controller/security-setting-controller.php',
                 data: $(form).serialize() + '&transaction=' + transaction,
                 dataType: 'json',
                 beforeSend: function() {
@@ -96,8 +97,7 @@ function securitySettingsForm(){
                 },
                 success: function (response) {
                     if (response.success) {
-                        setNotification(response.title, response.message, response.messageType);
-                        window.location = page_link + '&id=' + response.securitySettingsID;
+                        showNotification(response.title, response.message, response.messageType);
                     }
                     else {
                         if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -124,4 +124,52 @@ function securitySettingsForm(){
             return false;
         }
     });
+}
+
+function displayDetails(transaction){
+    switch (transaction) {
+        case 'get security setting details':
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/general-settings/controller/security-setting-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    transaction : transaction
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#max_failed_login').val(response.maxFailedLogin);
+                        $('#max_failed_otp_attempt').val(response.maxFailedOTPAttempt);
+                        $('#password_expiry_duration').val(response.passwordExpiryDuration);
+                        $('#otp_duration').val(response.otpDuration);
+                        $('#reset_password_token_duration').val(response.resetPasswordTokenDuration);
+                        $('#session_inactivity_limit').val(response.sessionInactivityLimit);
+                        $('#password_recovery_link').val(response.passwordRecoveryLink);
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+    }
 }

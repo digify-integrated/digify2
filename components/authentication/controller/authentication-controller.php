@@ -1139,7 +1139,7 @@ require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
 require_once '../../authentication/model/authentication-model.php';
-require_once '../../security-setting/model/security-setting-model.php';
+require_once '../../general-settings/model/security-setting-model.php';
 require_once '../../email-setting/model/email-setting-model.php';
 require_once '../../notification-setting/model/notification-setting-model.php';
 require_once '../../../assets/libs/phpmailer/src/PHPMailer.php';
