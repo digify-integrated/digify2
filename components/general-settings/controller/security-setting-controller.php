@@ -220,13 +220,15 @@ class SecuritySettingController {
     
         $userID = $_SESSION['user_account_id'];
 
-        $securitySettingDetails = $this->securitySettingModel->getSecuritySetting($securitySettingID);
-
         $response = [
             'success' => true,
-            'securitySettingName' => $securitySettingDetails['security_setting_name'] ?? null,
-            'securitySettingDescription' => $securitySettingDetails['security_setting_description'] ?? null,
-            'value' => $securitySettingDetails['value'] ?? null
+            'maxFailedLogin' => $this->securitySettingModel->getSecuritySetting(1)['value'] ?? MAX_FAILED_LOGIN_ATTEMPTS,
+            'maxFailedOTPAttempt' => $this->securitySettingModel->getSecuritySetting(2)['value'] ?? MAX_FAILED_OTP_ATTEMPTS,
+            'passwordRecoveryLink' => $this->securitySettingModel->getSecuritySetting(3)['value'] ?? DEFAULT_PASSWORD_RECOVERY_LINK,
+            'passwordExpiryDuration' => $this->securitySettingModel->getSecuritySetting(4)['value'] ?? DEFAULT_PASSWORD_DURATION,
+            'sessionInactivityLimit' => $this->securitySettingModel->getSecuritySetting(5)['value'] ?? DEFAULT_SESSION_INACTIVITY,
+            'otpDuration' => $this->securitySettingModel->getSecuritySetting(6)['value'] ?? DEFAULT_OTP_DURATION,
+            'resetPasswordTokenDuration' => $this->securitySettingModel->getSecuritySetting(7)['value'] ?? RESET_PASSWORD_TOKEN_DURATION
         ];
 
         echo json_encode($response);
@@ -240,7 +242,7 @@ require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../security-setting/model/security-setting-model.php';
+require_once '../../general-settings/model/security-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
 $controller = new SecuritySettingController(new SecuritySettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());

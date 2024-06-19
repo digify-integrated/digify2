@@ -23,6 +23,13 @@
           </div>
         </div>
       </div>
+      <!-- <hr class="m-0" />
+      <div class="card-body d-flex align-items-center">
+        <h5 class="card-title mb-0">System Settings</h5>
+        <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+          <button type="submit" form="system-settings-form" class="btn btn-success mb-0" id="submit-system-setting-data">Save</button>
+        </div>
+      </div> -->
       <hr class="m-0" />
       <div class="card-body d-flex align-items-center">
         <h5 class="card-title mb-0">Security Settings</h5>
@@ -83,13 +90,6 @@
             </div>
           </div>
         </form>
-      </div>
-      <hr class="m-0" />
-      <div class="card-body d-flex align-items-center">
-        <h5 class="card-title mb-0">System Settings</h5>
-        <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-          <button type="submit" form="system-settings-form" class="btn btn-success mb-0" id="submit-system-setting-data">Save</button>
-        </div>
       </div>
     </div>
   </div>
