@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-scrollable modal-xl">
         <div class="modal-content">
             <div class="modal-header modal-colored-header bg-danger text-white">
-                <h4 class="modal-title text-white" id="system-error-modalLabel">System Error</h4>
+                <h5 class="modal-title text-white" id="system-error-modalLabel">System Error</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -17,7 +17,7 @@
                 </div>
                 <div class="row align-items-center mb-3">
                     <div class="col">
-                        <div class="alert alert-danger" role="alert" id="error-dialog"></div>
+                        <div class="alert alert-danger text-danger" role="alert" id="error-dialog"></div>
                     </div>
                 </div>
             </div>

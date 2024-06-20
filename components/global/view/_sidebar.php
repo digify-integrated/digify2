@@ -14,11 +14,41 @@
             </a>
           </li>
           <?php
-            echo '<li class="mini-nav-item" id="mini-1">
-                    <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="'. $appModuleName .'">
-                      <img src="'. $appLogo .'" width="40" height="40" alt="app-logo">
-                    </a>
-                  </li>';
+            $apps = '';
+
+            $sql = $databaseModel->getConnection()->prepare('CALL buildAppModuleStack(:userID)');
+            $sql->bindValue(':userID', $userID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $sql->closeCursor();
+            
+            foreach ($options as $row) {
+              $appModuleSidebarID = $row['app_module_id'];
+              $appModuleName = $row['app_module_name'];
+              $appVersion = $row['app_version'];
+              $menuItemID = $row['menu_item_id'];
+              $appLogo = $systemModel->checkImage($row['app_logo'], 'app module logo');
+
+              $menuItemDetails = $menuItemModel->getMenuItem($menuItemID);
+              $menuItemURL = $menuItemDetails['menu_item_url'];
+
+              if($appModuleSidebarID == $appModuleID){
+                $apps .= '<li class="mini-nav-item" id="mini-1">
+                            <a href="javascript:void(0)" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="'. $appModuleName .'">
+                              <img src="'. $appLogo .'" width="40" height="40" alt="app-logo">
+                            </a>
+                          </li>';
+              }
+              else{
+                $apps .= '<li class="mini-nav-item" id="mini-1">
+                            <a href="'. $menuItemURL .'" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="'. $appModuleName .'">
+                              <img src="'. $appLogo .'" width="40" height="40" alt="app-logo">
+                            </a>
+                          </li>';
+              }
+            }
+
+            echo $apps;
           ?>
         </ul>
       </div>
@@ -32,26 +62,30 @@
           <ul class="sidebar-menu" id="sidebarnav">
             <?php
               $menu = '';
-                
-              $sql = $databaseModel->getConnection()->prepare('CALL buildMenuGroup(:userID)');
+
+              $sql = $databaseModel->getConnection()->prepare('CALL buildMenuGroup(:userID, :appModuleID)');
               $sql->bindValue(':userID', $userID, PDO::PARAM_INT);
+              $sql->bindValue(':appModuleID', $appModuleID, PDO::PARAM_INT);
               $sql->execute();
               $options = $sql->fetchAll(PDO::FETCH_ASSOC);
               $sql->closeCursor();
-            
+
+              $menuGroups = [];
+
               foreach ($options as $row) {
-                $menuGroupID = $row['menu_group_id'];
-                $menuGroupName = $row['menu_group_name'];
-        
-                        $menu .= '<li class="nav-small-cap">
-                                    <span class="hide-menu text-primary">'. $menuGroupName .'</span>
-                                  </li>';
-        
-                        $menu .= $globalModel->buildMenuItem($userID, $menuGroupID);
-                    }
-            
-                    echo $menu;
-                ?>
+                  $menuGroups[$row['menu_group_id']] = $row['menu_group_name'];
+              }
+
+              foreach ($menuGroups as $menuGroupID => $menuGroupName) {
+                  $menu .= '<li class="nav-small-cap">
+                                <span class="hide-menu">' . $menuGroupName . '</span>
+                              </li>';
+
+                  $menu .= $globalModel->buildMenuItem($userID, $menuGroupID);
+              }
+
+              echo $menu;
+            ?>
           </ul>
         </nav>
       </div>

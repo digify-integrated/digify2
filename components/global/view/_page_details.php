@@ -16,9 +16,16 @@
     $appModuleName = $appModuleDetails['app_module_name'];
     $appLogo = $systemModel->checkImage($appModuleDetails['app_logo'], 'app module logo');
 
+    $pageAccess = $globalModel->checkAccessRights($userID, $pageID, 'read');
+
+    if ($pageAccess['total'] == 0) {
+        header('location: 404.php');
+        exit;
+    }
+
     if(isset($_GET['id'])){
         if(empty($_GET['id'])){
-            header('location: ' . $pageURL);
+            header('location: apps.php');
             exit;
         }
     

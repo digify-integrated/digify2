@@ -16365,8 +16365,8 @@ textarea.form-control.is-valid {
     display: block;
 }
 .form-control.is-invalid,
-.was-validated .form-control:invalid {
-    border-color: var(--bs-form-invalid-border-color);
+.was-validated .form-control:invalid, .select2-selection.is-invalid {
+    border-color: var(--bs-form-invalid-border-color) !important;
     background-repeat: no-repeat;
     background-position: right calc(0.375em + 5px) center;
     background-size: calc(0.75em + 10px) calc(0.75em + 10px);
@@ -16381,10 +16381,9 @@ textarea.form-control.is-invalid {
     padding-right: calc(1.5em + 20px);
     background-position: top calc(0.375em + 5px) right calc(0.375em + 5px);
 }
-.form-select.is-invalid,
-.was-validated .form-select:invalid {
-    border-color: var(--bs-form-invalid-border-color);
-}
+.was-validated .form-select:invalid, .form-select.is-invalid, body .select2-container--default .select2-selection--single .select2-selection__rendered.is-invalid {
+    border-color: var(--bs-form-invalid-border-color) !important;
+  }
 .form-select.is-invalid:not([multiple]):not([size]),
 .form-select.is-invalid:not([multiple])[size="1"],
 .was-validated .form-select:invalid:not([multiple]):not([size]),
@@ -28581,11 +28580,11 @@ html[data-boxed-layout="boxed"] .container-xxl {
 }
 .sidebar-nav ul .sidebar-item .sidebar-link {
     display: flex;
-    font-size: 15px;
+    font-size: 14px;
     white-space: nowrap;
     align-items: center;
     position: relative;
-    padding: 11px 16px;
+    padding: 11px 10px;
     border-radius: 12px;
     gap: 10px;
     text-decoration: none;
@@ -28740,15 +28739,15 @@ html[data-boxed-layout="boxed"] .container-xxl {
 .sidebar-nav .has-arrow::after {
     position: absolute;
     content: "";
-    width: 9px;
-    height: 9px;
+    width: 8px;
+    height: 8px;
     border-width: 1px 0 0 1px;
     border-style: solid;
     border-color: var(--bs-dark-text-emphasis);
     margin-left: 10px;
     transform: rotate(-135deg) translate(0, -50%);
     transform-origin: top;
-    top: 21px;
+    top: 20px;
     right: 16px;
     transition: all 0.3s ease-out;
 }
@@ -37667,4 +37666,9 @@ h6 {
     background-attachment: fixed;
     background-color: #e7e9ed;
     background-image: url(../images/backgrounds/background-light.svg);
+}
+
+body .select2-container--classic .select2-selection--single, body .select2-container--classic .select2-selection--single .select2-selection__arrow, body .select2-container--classic .select2-selection--single .select2-selection__rendered, body .select2-container--default .select2-selection--multiple, body .select2-container--default .select2-selection--single, body .select2-container--default .select2-selection--single .select2-selection__arrow, body .select2-container--default .select2-selection--single .select2-selection__rendered{
+    color: var(--bs-heading-color);
+    padding-left: 8px;
 }

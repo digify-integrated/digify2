@@ -1,3 +1,29 @@
+<?php
+  $userAccountPageAccess = $globalModel->checkAccessRights($userID, 3, 'read');
+  $companyPageAccess = $globalModel->checkAccessRights($userID, 4, 'read');
+
+  $userAccountButton = '';
+  if ($userAccountPageAccess['total'] > 0) {
+    $userAccountPageDetails = $menuItemModel->getMenuItem(3);
+    $userAccountPageID = $userAccountPageDetails['menu_item_id'] ?? null;
+    $userAccountAppModuleID = $userAccountPageDetails['app_module_id'] ?? null;
+    $userAccountPageURL = $userAccountPageDetails['menu_item_url'] ?? null;
+    $userAccountPageLink = $userAccountPageURL . '?app_module_id=' . $securityModel->encryptData($userAccountAppModuleID) . '&page_id=' . $securityModel->encryptData($userAccountPageID);
+
+    $userAccountButton = '<a href="'. $userAccountPageLink .'" class="btn btn-primary mb-4">Manage Users</a>';
+  }
+
+  $companyButton = '';
+  if ($companyPageAccess['total'] > 0) {
+    $companyPageDetails = $menuItemModel->getMenuItem(3);
+    $companyPageID = $companyPageDetails['menu_item_id'] ?? null;
+    $companyAppModuleID = $companyPageDetails['app_module_id'] ?? null;
+    $companyPageURL = $companyPageDetails['menu_item_url'] ?? null;
+    $companyPageLink = $companyPageURL . '?app_module_id=' . $securityModel->encryptData($companyAppModuleID) . '&page_id=' . $securityModel->encryptData($companyPageID);
+
+    $companyButton = '<a href="'. $companyPageLink .'" class="btn btn-primary mb-4">Manage Company</a>';
+  }
+?>
 <div class="card">
   <div class="form-horizontal">
     <div class="form-body">
@@ -12,24 +38,17 @@
               <i class="ti ti-users text-primary d-block fs-7" width="22" height="22"></i>
             </div>
             <h4 class="card-title mb-3">2 Active Users</h4>
-            <button class="btn btn-primary mb-4">Manage Users</button>
+            <?php echo $userAccountButton; ?>
           </div>
           <div class="col-md-6">
             <div class="text-bg-light rounded-1 p-6 d-inline-flex align-items-center justify-content-center mb-3">
               <i class="ti ti-building text-primary d-block fs-7" width="22" height="22"></i>
             </div>
             <h4 class="card-title mb-3">1 Company</h4>
-            <button class="btn btn-primary mb-4">Manage Companies</button>
+            <?php echo $companyButton; ?>
           </div>
         </div>
       </div>
-      <!-- <hr class="m-0" />
-      <div class="card-body d-flex align-items-center">
-        <h5 class="card-title mb-0">System Settings</h5>
-        <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-          <button type="submit" form="system-settings-form" class="btn btn-success mb-0" id="submit-system-setting-data">Save</button>
-        </div>
-      </div> -->
       <hr class="m-0" />
       <div class="card-body d-flex align-items-center">
         <h5 class="card-title mb-0">Security Settings</h5>

@@ -146,6 +146,7 @@ function appModuleTable(datatable_name, buttons = false, show_all = false){
     const column = [ 
         { 'data' : 'CHECK_BOX' },
         { 'data' : 'APP_MODULE_NAME' },
+        { 'data' : 'APP_VERSION' },
         { 'data' : 'ORDER_SEQUENCE' },
         { 'data' : 'ACTION' }
     ];
@@ -154,7 +155,8 @@ function appModuleTable(datatable_name, buttons = false, show_all = false){
         { 'width': '1%', 'bSortable': false, 'aTargets': 0 },
         { 'width': 'auto', 'aTargets': 1 },
         { 'width': 'auto', 'aTargets': 2 },
-        { 'width': '15%', 'bSortable': false, 'aTargets': 3 }
+        { 'width': 'auto', 'aTargets': 3 },
+        { 'width': '15%', 'bSortable': false, 'aTargets': 4 }
     ];
 
     const length_menu = show_all ? [[-1], ['All']] : [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']];
@@ -194,8 +196,8 @@ function appModuleTable(datatable_name, buttons = false, show_all = false){
     };
 
     if (buttons) {
-        settings.dom = "<'row'<'col-sm-6'f><'col-sm-6 text-right'B>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>";
-        settings.buttons = ['csv', 'excel', 'pdf'];
+        settings.dom = 'Bfrtip';
+        settings.buttons = ['copy', 'csv', 'excel', 'pdf', 'print'];
     }
 
     destroyDatatable(datatable_name);

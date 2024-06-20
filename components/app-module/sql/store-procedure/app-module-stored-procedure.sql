@@ -87,7 +87,7 @@ END //
 
 CREATE PROCEDURE generateAppModuleTable()
 BEGIN
-	SELECT app_module_id, app_module_name, app_module_description, order_sequence 
+	SELECT app_module_id, app_module_name, app_module_description, app_version, app_logo, order_sequence 
     FROM app_module 
     ORDER BY app_module_id;
 END //

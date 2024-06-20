@@ -2,6 +2,8 @@
     'use strict';
 
     $(function() {
+        generateDropdownOptions('menu item options');
+
         if($('#app-module-form').length){
             appModuleForm();
         }
@@ -22,6 +24,12 @@ function appModuleForm(){
             app_module_description: {
                 required: true
             },
+            app_version: {
+                required: true
+            },
+            menu_item_id: {
+                required: true
+            },
             order_sequence: {
                 required: true
             }
@@ -33,6 +41,12 @@ function appModuleForm(){
             app_module_description: {
                 required: 'Please enter the description'
             },
+            app_version: {
+                required: 'Please enter the app version'
+            },
+            menu_item_id: {
+                required: 'Please choose the default page'
+            },
             order_sequence: {
                 required: 'Please enter the order sequence'
             }
@@ -43,7 +57,7 @@ function appModuleForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -52,7 +66,7 @@ function appModuleForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
@@ -100,4 +114,34 @@ function appModuleForm(){
             return false;
         }
     });
+}
+
+function generateDropdownOptions(type){
+    switch (type) {
+        case 'menu item options':
+            
+            $.ajax({
+                url: 'components/menu-item/view/_menu_item_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#menu_item_id').select2({
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+    }
 }

@@ -216,19 +216,17 @@ class GlobalModel {
             if (empty($children)) {
                 $html .= '<li class="sidebar-item">
                                 <a class="sidebar-link" href="'. $menuItemURL .'" aria-expanded="false">
-                                <span>
-                                    <i class="'. $menuItemIcon .'"></i>
-                                </span>
-                                <span class="hide-menu">'. $menuItemName .'</span>
+                                    <span>
+                                        <i class="'. $menuItemIcon .'"></i>
+                                    </span>
+                                    <span class="hide-menu">'. $menuItemName .'</span>
                                 </a>
                             </li>';
             }
             else {
-                $html .= ' <li class="sidebar-item">
+                $html .= '<li class="sidebar-item">
                                 <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
-                                    <span class="d-flex">
-                                        <i class="'. $menuItemIcon .'"></i>
-                                    </span>
+                                    <i class="'. $menuItemIcon .'"></i>
                                     <span class="hide-menu">'. $menuItemName .'</span>
                                 </a>
                                 <ul aria-expanded="false" class="collapse first-level">';
@@ -244,20 +242,16 @@ class GlobalModel {
         else {
             if (empty($children)) {
                 $html .= '<li class="sidebar-item">
-                                <a href="'. $menuItemURL .'" class="sidebar-link">
-                                <div class="round-16 d-flex align-items-center justify-content-center">
-                                    <i class="ti ti-circle"></i>
-                                </div>
-                                <span class="hide-menu">'. $menuItemName .'</span>
+                                <a class="sidebar-link" href="'. $menuItemURL .'">
+                                    <span class="icon-small"></span>
+                                    '. $menuItemName .'
                                 </a>
                             </li>';
             }
             else {
-                $html .= '<li class="sidebar-item">
+                $html .= ' <li class="sidebar-item">
                                 <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false">
-                                    <div class="round-16 d-flex align-items-center justify-content-center">
-                                        <i class="ti ti-circle"></i>
-                                    </div>
+                                    <span class="icon-small"></span>
                                     <span class="hide-menu">'. $menuItemName .'</span>
                                 </a>
                                 <ul aria-expanded="false" class="collapse two-level">';

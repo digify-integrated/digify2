@@ -10,11 +10,11 @@
 <html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
 
 <head>
-    <?php include_once('components/global/view/_head.php'); ?>
+    <?php require_once('components/global/view/_head.php'); ?>
 </head>
 
 <body>
-    <?php include_once('components/global/view/_preloader.php'); ?>
+    <?php require_once('components/global/view/_preloader.php'); ?>
     <div id="main-wrapper">
         <div class="position-relative overflow-hidden min-vh-100 w-100 d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center justify-content-center w-100">
@@ -33,8 +33,8 @@
     </div>
     <div class="dark-transparent sidebartoggler"></div>
     <?php 
-        include_once('./components/global/view/_error_modal.php');
-        include_once('./components/global/view/_global_js.php');
+        require_once('./components/global/view/_error_modal.php');
+        require_once('./components/global/view/_global_js.php');
     ?>
 </body>
 

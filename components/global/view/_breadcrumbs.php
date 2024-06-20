@@ -7,7 +7,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item d-flex align-items-center">
                             <a class="text-muted text-decoration-none d-flex" href="apps.php">
-                                <iconify-icon icon="solar:home-2-line-duotone" class="fs-6"></iconify-icon>
+                                <iconify-icon icon="solar:smartphone-broken" class="fs-6"></iconify-icon>
                             </a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">
@@ -24,6 +24,7 @@
                         ?>
                     </ol>
                 </nav>
+                <input type="hidden" id="page-id" value="<?php echo $pageID; ?>">
             </div>
         </div>
     </div>

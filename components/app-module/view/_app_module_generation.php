@@ -1,5 +1,5 @@
 <?php
-require_once '../../../session.php';
+require_once '../../global/config/session.php';
 require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/system-model.php';
@@ -42,7 +42,10 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
             foreach ($options as $row) {
                 $appModuleID = $row['app_module_id'];
                 $appModuleName = $row['app_module_name'];
+                $appModuleDescription = $row['app_module_description'];
+                $appVersion = $row['app_version'];
                 $orderSequence = $row['order_sequence'];
+                $appLogo = $systemModel->checkImage($row['app_logo'], 'app module logo');
 
                 $appModuleIDEncrypted = $securityModel->encryptData($appModuleID);
 
@@ -55,7 +58,16 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $response[] = [
                     'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $appModuleID .'">',
-                    'APP_MODULE_NAME' => $appModuleName,
+                    'APP_MODULE_NAME' => '<div class="d-flex align-items-center">
+                                            <img src="'. $appLogo .'" alt="app-logo" width="35" />
+                                            <div class="ms-3">
+                                                <div class="user-meta-info">
+                                                    <h6 class="mb-0">'. $appModuleName .'</h6>
+                                                    <small class="text-wrap">'. $appModuleDescription .'</small>
+                                                </div>
+                                            </div>
+                                        </div>',
+                    'APP_VERSION' => $appVersion,
                     'ORDER_SEQUENCE' => $orderSequence,
                     'ACTION' => '<div class="d-flex gap-2">
                                     <a href="'. $pageLink .'&id='. $appModuleIDEncrypted .'" class="text-info" title="View Details">

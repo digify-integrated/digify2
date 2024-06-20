@@ -27,6 +27,7 @@ INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group
 INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Users & Companies', '', 'ti ti-users', 2, 'Administration', 1, 'Settings', '', '', 1, 1);
 
 INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('User Account', 'user-account.php', '', 2, 'Administration', 1, 'Settings', 2, 'Users & Companies', 1, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Company', 'company.php', '', 2, 'Administration', 1, 'Settings', 2, 'Users & Companies', 1, 1);
+INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Company', 'company.php', '', 2, 'Administration', 1, 'Settings', 2, 'Users & Companies', 3, 1);
+INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('App Module', 'app-module.php', 'ti ti-box', 1, 'Technical', 1, 'Settings', '', '', 1, 1);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
