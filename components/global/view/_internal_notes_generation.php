@@ -1,5 +1,5 @@
 <?php
-require_once '../../../session.php';
+require_once '../../global/config/session.php';
 require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/system-model.php';
@@ -69,10 +69,10 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                             if(file_exists(str_replace('./components/', '../../', $attachmentPathFile))){
                                 $fileExtension = pathinfo($attachmentPathFile, PATHINFO_EXTENSION);                                
-                                $attachmentImage = ' <img src="'. $systemModel->getFileExtensionIcon($fileExtension) .'" class="rounded" alt="album" width="30">';
+                                $attachmentImage = ' <img src="'. $systemModel->getFileExtensionIcon($fileExtension) .'" alt="attachment" width="30">';
         
                                 $attachment .= '<a href="'. $attachmentPathFile .'" target="_blank">
-                                                    <div class="mt-4 card p-3 rounded shadow-none border">
+                                                    <div class="mt-2 mb-0 card p-3 rounded shadow-none border">
                                                         <div class="d-flex align-items-center">
                                                             <div class="position-relative">
                                                                 '. $attachmentImage .'

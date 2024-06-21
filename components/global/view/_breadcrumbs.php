@@ -7,7 +7,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item d-flex align-items-center">
                             <a class="text-muted text-decoration-none d-flex" href="apps.php">
-                                <iconify-icon icon="solar:smartphone-broken" class="fs-6"></iconify-icon>
+                                <iconify-icon icon="solar:home-2-line-duotone" class="fs-6"></iconify-icon>
                             </a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">
@@ -15,7 +15,7 @@
                         </li>
                         <?php
                             if(!$newRecord && !empty($detailID)){
-                                echo '<li class="breadcrumb-item" id="security-setting-id">'. $detailID .'</li>';
+                                echo '<li class="breadcrumb-item" id="details-id">'. $detailID .'</li>';
                             }
 
                             if($newRecord){

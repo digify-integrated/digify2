@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 17, 2024 at 03:47 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jun 21, 2024 at 11:36 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -45,8 +45,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `buildAppModuleStack` (IN `p_user_ac
 END$$
 
 DROP PROCEDURE IF EXISTS `buildMenuGroup`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuGroup` (IN `p_user_account_id` INT)   BEGIN
-    SELECT DISTINCT(mg.menu_group_id) as menu_group_id, mg.menu_group_name
+CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuGroup` (IN `p_user_account_id` INT, IN `p_app_module_id` INT)   BEGIN
+    SELECT DISTINCT(mg.menu_group_id) as menu_group_id, mg.menu_group_name as menu_group_name
     FROM menu_group mg
     JOIN menu_item mi ON mi.menu_group_id = mg.menu_group_id
     WHERE EXISTS (
@@ -60,16 +60,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuGroup` (IN `p_user_account
             WHERE user_account_id = p_user_account_id
         )
     )
+    AND mg.app_module_id = p_app_module_id
     ORDER BY mg.order_sequence;
 END$$
 
 DROP PROCEDURE IF EXISTS `buildMenuItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuItem` (IN `p_user_account_id` INT, IN `p_app_module_id` INT)   BEGIN
-    SELECT mi.menu_item_id, mi.menu_item_name, mi.app_module_id, mi.menu_item_url, mi.parent_id, mi.app_module_id, mi.menu_item_icon
+CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuItem` (IN `p_user_account_id` INT, IN `p_menu_group_id` INT)   BEGIN
+    SELECT mi.menu_item_id, mi.menu_item_name, mi.menu_group_id, mi.menu_item_url, mi.parent_id, mi.app_module_id, mi.menu_item_icon
     FROM menu_item AS mi
     INNER JOIN role_permission AS mar ON mi.menu_item_id = mar.menu_item_id
     INNER JOIN role_user_account AS ru ON mar.role_id = ru.role_id
-    WHERE mar.read_access = 1 AND ru.user_account_id = p_user_account_id AND mi.app_module_id = p_app_module_id
+    WHERE mar.read_access = 1 AND ru.user_account_id = p_user_account_id AND mi.menu_group_id = p_menu_group_id
     ORDER BY mi.order_sequence;
 END$$
 
@@ -199,6 +200,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSystemNotificationTemplateExis
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkUploadSettingExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUploadSettingExist` (IN `p_upload_setting_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM upload_setting
+    WHERE upload_setting_id = p_upload_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkUploadSettingFileExtensionExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUploadSettingFileExtensionExist` (IN `p_upload_setting_file_extension_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM upload_setting_file_extension
+    WHERE upload_setting_file_extension_id = p_upload_setting_file_extension_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkUserAccountEmailExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountEmailExist` (IN `p_email` VARCHAR(255))   BEGIN
 	SELECT COUNT(*) AS total
@@ -322,6 +337,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSystemAction` (IN `p_system_a
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteUploadSetting`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUploadSetting` (IN `p_upload_setting_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM upload_setting_file_extension WHERE upload_setting_id = p_upload_setting_id;
+    DELETE FROM upload_setting WHERE upload_setting_id = p_upload_setting_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteUploadSettingFileExtension`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUploadSettingFileExtension` (IN `p_upload_setting_file_extension_id` INT)   BEGIN
+    DELETE FROM upload_setting_file_extension WHERE upload_setting_file_extension_id = p_upload_setting_file_extension_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserAccount` (IN `p_user_account_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -347,7 +382,7 @@ END$$
 
 DROP PROCEDURE IF EXISTS `generateAppModuleTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAppModuleTable` ()   BEGIN
-	SELECT app_module_id, app_module_name, app_module_description, order_sequence 
+	SELECT app_module_id, app_module_name, app_module_description, app_version, app_logo, order_sequence 
     FROM app_module 
     ORDER BY app_module_id;
 END$$
@@ -527,6 +562,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionTable` ()   BEG
     ORDER BY system_action_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateUploadSettingTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUploadSettingTable` ()   BEGIN
+    SELECT upload_setting_id, upload_setting_name, upload_setting_description, max_file_size 
+    FROM upload_setting
+    ORDER BY upload_setting_name;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateUserAccountRoleDualListBoxOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountRoleDualListBoxOptions` (IN `p_user_account_id` INT)   BEGIN
 	SELECT role_id, role_name 
@@ -659,6 +701,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getSystemNotificationTemplate` (IN 
 	WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getUploadSetting`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUploadSetting` (IN `p_upload_setting_id` INT)   BEGIN
+	SELECT * FROM upload_setting
+	WHERE upload_setting_id = p_upload_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getUploadSettingFileExtension`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUploadSettingFileExtension` (IN `p_upload_setting_id` INT)   BEGIN
+	SELECT * FROM upload_setting_file_extension
+	WHERE upload_setting_id = p_upload_setting_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserAccount` (IN `p_user_account_id` INT, IN `p_email` VARCHAR(255))   BEGIN
 	SELECT * FROM user_account
@@ -666,9 +720,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserAccount` (IN `p_user_account
 END$$
 
 DROP PROCEDURE IF EXISTS `insertAppModule`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAppModule` (IN `p_app_module_name` VARCHAR(100), IN `p_app_module_description` VARCHAR(500), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT, OUT `p_app_module_id` INT)   BEGIN
-    INSERT INTO app_module (app_module_name, app_module_description, order_sequence, last_log_by) 
-	VALUES(p_app_module_name, p_app_module_description, p_order_sequence, p_last_log_by);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAppModule` (IN `p_app_module_name` VARCHAR(100), IN `p_app_module_description` VARCHAR(500), IN `p_menu_item_id` INT, IN `p_menu_item_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT, OUT `p_app_module_id` INT)   BEGIN
+    INSERT INTO app_module (app_module_name, app_module_description, menu_item_id, menu_item_name, order_sequence, last_log_by) 
+	VALUES(p_app_module_name, p_app_module_description, p_menu_item_id, p_menu_item_name, p_order_sequence, p_last_log_by);
 	
     SET p_app_module_id = LAST_INSERT_ID();
 END$$
@@ -777,6 +831,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSystemNotificationTemplate` (
 	VALUES(p_notification_setting_id, p_system_notification_title, p_system_notification_message, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertUploadSetting`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUploadSetting` (IN `p_upload_setting_name` VARCHAR(100), IN `p_upload_setting_description` VARCHAR(200), IN `p_max_file_size` DOUBLE, IN `p_last_log_by` INT, OUT `p_upload_setting_id` INT)   BEGIN
+    INSERT INTO upload_setting (upload_setting_name, upload_setting_description, max_file_size, last_log_by) 
+	VALUES(p_upload_setting_name, p_upload_setting_description, p_max_file_size, p_last_log_by);
+	
+    SET p_upload_setting_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertUploadSettingFileExtension`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUploadSettingFileExtension` (IN `p_upload_setting_id` INT, IN `p_upload_setting_name` VARCHAR(100), IN `p_file_extension_id` INT, IN `p_file_extension_name` VARCHAR(100), IN `p_file_extension` VARCHAR(10), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) 
+	VALUES(p_upload_setting_id, p_upload_setting_name, p_file_extension_id, p_file_extension_name, p_file_extension, p_last_log_by);
+END$$
+
 DROP PROCEDURE IF EXISTS `insertUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUserAccount` (IN `p_file_as` VARCHAR(300), IN `p_email` VARCHAR(255), IN `p_password` VARCHAR(255), IN `p_password_expiry_date` DATE, IN `p_last_password_change` DATETIME, IN `p_last_log_by` INT, OUT `p_user_account_id` INT)   BEGIN
     INSERT INTO user_account (file_as, email, password, password_expiry_date, last_password_change, last_log_by) 
@@ -801,7 +869,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppLogo` (IN `p_app_module_id
 END$$
 
 DROP PROCEDURE IF EXISTS `updateAppModule`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppModule` (IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_app_module_description` VARCHAR(500), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppModule` (IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_app_module_description` VARCHAR(500), IN `p_menu_item_id` INT, IN `p_menu_item_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -822,6 +890,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppModule` (IN `p_app_module_
     UPDATE app_module
     SET app_module_name = p_app_module_name,
         app_module_description = p_app_module_description,
+        menu_item_id = p_menu_item_id,
+        menu_item_name = p_menu_item_name,
         order_sequence = p_order_sequence,
         last_log_by = p_last_log_by
     WHERE app_module_id = p_app_module_id;
@@ -1164,6 +1234,30 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTwoFactorAuthenticationStatus
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateUploadSetting`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUploadSetting` (IN `p_upload_setting_id` INT, IN `p_upload_setting_name` VARCHAR(100), IN `p_upload_setting_description` VARCHAR(200), IN `p_max_file_size` DOUBLE, IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE upload_setting_file_extension
+    SET upload_setting_name = p_upload_setting_name,
+        last_log_by = p_last_log_by
+    WHERE upload_setting_id = p_upload_setting_id;
+
+    UPDATE upload_setting
+    SET upload_setting_name = p_upload_setting_name,
+        upload_setting_description = p_upload_setting_description,
+        max_file_size = p_max_file_size,
+        last_log_by = p_last_log_by
+    WHERE upload_setting_id = p_upload_setting_id;
+
+    COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccount` (IN `p_user_account_id` INT, IN `p_file_as` VARCHAR(300), IN `p_email` VARCHAR(255), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1260,7 +1354,7 @@ CREATE TABLE `app_module` (
 --
 
 INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_description`, `app_logo`, `app_version`, `menu_item_id`, `menu_item_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 1, 'General Settings', 100, '2024-06-15 18:11:25', 1);
+(1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 1, 'General Settings', 100, '2024-06-15 18:11:25', 2);
 
 --
 -- Triggers `app_module`
@@ -1354,7 +1448,38 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3, 'user_account', 2, 'Failed Login Attempts: 0 -> 1<br/>', 1, '2024-06-16 21:25:39'),
 (4, 'user_account', 2, 'Failed Login Attempts: 1 -> 0<br/>', 1, '2024-06-16 21:25:44'),
 (5, 'user_account', 2, 'Last Connection Date: 2024-06-16 15:14:41 -> 2024-06-16 21:25:44<br/>', 1, '2024-06-16 21:25:44'),
-(6, 'user_account', 2, 'Last Connection Date: 2024-06-16 21:25:44 -> 2024-06-17 21:00:05<br/>', 1, '2024-06-17 21:00:05');
+(6, 'user_account', 2, 'Last Connection Date: 2024-06-16 21:25:44 -> 2024-06-17 21:00:05<br/>', 1, '2024-06-17 21:00:05'),
+(7, 'user_account', 2, 'Last Connection Date: 2024-06-17 21:00:05 -> 2024-06-18 16:22:10<br/>', 1, '2024-06-18 16:22:10'),
+(8, 'user_account', 2, 'Last Connection Date: 2024-06-18 16:22:10 -> 2024-06-18 16:49:43<br/>', 1, '2024-06-18 16:49:43'),
+(9, 'security_setting', 5, 'Value: 240 -> 30<br/>', 2, '2024-06-18 16:53:48'),
+(10, 'user_account', 2, 'Last Connection Date: 2024-06-18 16:49:43 -> 2024-06-19 16:56:51<br/>', 1, '2024-06-19 16:56:51'),
+(11, 'user_account', 2, 'Last Connection Date: 2024-06-19 16:56:51 -> 2024-06-19 17:03:03<br/>', 1, '2024-06-19 17:03:03'),
+(12, 'menu_item', 2, 'Menu Item created. <br/><br/>Menu Item Name: Users & Companies<br/>Menu Item Icon: ti ti-users<br/>Menu Group Name: Administration<br/>App Module: Settings<br/>Order Sequence: 1', 1, '2024-06-19 17:25:04'),
+(13, 'role_permission', 2, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Users & Companies<br/>Read Access: 1<br/>Date Assigned: 2024-06-19 17:25:30', 1, '2024-06-19 17:25:30'),
+(14, 'menu_item', 3, 'Menu Item created. <br/><br/>Menu Item Name: User Account<br/>Menu Item URL: user-account.php<br/>Menu Group Name: Administration<br/>App Module: Settings<br/>Parent: Users & Companies<br/>Order Sequence: 1', 1, '2024-06-19 17:30:37'),
+(15, 'menu_item', 4, 'Menu Item created. <br/><br/>Menu Item Name: Company<br/>Menu Item URL: company.php<br/>Menu Group Name: Administration<br/>App Module: Settings<br/>Parent: Users & Companies<br/>Order Sequence: 1', 1, '2024-06-19 17:30:37'),
+(16, 'role_permission', 3, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: User Account<br/>Read Access: 1<br/>Write Access: 1<br/>Create Access: 1<br/>Delete Access: 1<br/>Date Assigned: 2024-06-19 17:30:37', 1, '2024-06-19 17:30:37'),
+(17, 'role_permission', 4, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Company<br/>Read Access: 1<br/>Write Access: 1<br/>Create Access: 1<br/>Delete Access: 1<br/>Date Assigned: 2024-06-19 17:30:37', 1, '2024-06-19 17:30:37'),
+(18, 'user_account', 2, 'Last Connection Date: 2024-06-19 17:03:03 -> 2024-06-20 08:47:43<br/>', 1, '2024-06-20 08:47:43'),
+(19, 'menu_item', 4, 'Order Sequence: 1 -> 2<br/>', 1, '2024-06-20 09:09:18'),
+(20, 'menu_item', 4, 'Order Sequence: 2 -> 3<br/>', 1, '2024-06-20 09:09:25'),
+(21, 'menu_item', 5, 'Menu Item created. <br/><br/>Menu Item Name: App Module<br/>Menu Item URL: app-module.php<br/>Menu Item Icon: ti ti-box<br/>Menu Group Name: Technical<br/>App Module: Settings<br/>Order Sequence: 1', 1, '2024-06-20 11:37:17'),
+(22, 'role_permission', 5, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: App Module<br/>Read Access: 1<br/>Write Access: 1<br/>Create Access: 1<br/>Delete Access: 1<br/>Date Assigned: 2024-06-20 11:37:17', 1, '2024-06-20 11:37:17'),
+(23, 'user_account', 2, 'Last Connection Date: 2024-06-20 08:47:43 -> 2024-06-21 08:36:23<br/>', 1, '2024-06-21 08:36:23'),
+(24, 'app_module', 2, 'App module created. <br/><br/>App Module Name: test<br/>App Module Description: test<br/>App Version: 1.0.0<br/>Menu Item Name: App Module<br/>Order Sequence: 1', 2, '2024-06-21 09:54:29'),
+(25, 'upload_setting', 2, 'Upload Setting created. <br/><br/>Upload Setting Name: Internal Notes Attachment<br/>Upload Setting Description: Sets the upload setting when uploading internal notes attachement.<br/>Max File Size: 800', 1, '2024-06-21 12:26:58'),
+(26, 'upload_setting_file_extension', 4, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Internal Notes Attachment<br/>File Extension Name: PNG<br/>File Extension: png<br/>Date Assigned: 2024-06-21 12:26:58', 1, '2024-06-21 12:26:58'),
+(27, 'upload_setting_file_extension', 5, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Internal Notes Attachment<br/>File Extension Name: JPG<br/>File Extension: jpg<br/>Date Assigned: 2024-06-21 12:26:58', 1, '2024-06-21 12:26:58'),
+(28, 'upload_setting_file_extension', 6, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Internal Notes Attachment<br/>File Extension Name: JPEG<br/>File Extension: jpeg<br/>Date Assigned: 2024-06-21 12:26:58', 1, '2024-06-21 12:26:58'),
+(29, 'upload_setting_file_extension', 7, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Internal Notes Attachment<br/>File Extension Name: PDF<br/>File Extension: pdf<br/>Date Assigned: 2024-06-21 12:26:58', 1, '2024-06-21 12:26:58'),
+(30, 'app_module', 1, 'Order Sequence: 100 -> 1<br/>', 1, '2024-06-21 13:58:51'),
+(31, 'app_module', 1, 'Order Sequence: 1 -> 100<br/>', 2, '2024-06-21 14:03:01'),
+(32, 'app_module', 1, 'Order Sequence: 100 -> 1<br/>', 2, '2024-06-21 14:09:46'),
+(33, 'app_module', 1, 'App Module Name: Settings -> Setting<br/>', 2, '2024-06-21 14:09:50'),
+(41, 'app_module', 1, 'App Module Name: Setting -> Settings<br/>Order Sequence: 1 -> 100<br/>', 2, '2024-06-21 15:18:51'),
+(42, 'app_module', 1, 'Order Sequence: 100 -> 102<br/>', 2, '2024-06-21 16:54:13'),
+(43, 'app_module', 1, 'Order Sequence: 102 -> 101<br/>', 2, '2024-06-21 17:13:01'),
+(44, 'app_module', 1, 'Order Sequence: 101 -> 100<br/>', 2, '2024-06-21 17:23:19');
 
 -- --------------------------------------------------------
 
@@ -1509,6 +1634,20 @@ CREATE TABLE `internal_notes` (
   `internal_note_date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `internal_notes`
+--
+
+INSERT INTO `internal_notes` (`internal_notes_id`, `table_name`, `reference_id`, `internal_note`, `internal_note_by`, `internal_note_date`) VALUES
+(1, 'app_module', 2, 'ads', 2, '2024-06-21 12:25:36'),
+(2, 'app_module', 2, 'ads', 2, '2024-06-21 12:27:01'),
+(3, 'app_module', 1, 'asd', 2, '2024-06-21 16:38:39'),
+(4, 'app_module', 1, 'asdasd', 2, '2024-06-21 16:40:15'),
+(5, 'app_module', 1, 'asd', 2, '2024-06-21 17:08:42'),
+(6, 'app_module', 1, 'asd', 2, '2024-06-21 17:09:36'),
+(7, 'app_module', 1, 'asdasd', 2, '2024-06-21 17:09:53'),
+(8, 'app_module', 1, 'ssdfd', 2, '2024-06-21 17:13:22');
+
 -- --------------------------------------------------------
 
 --
@@ -1523,6 +1662,15 @@ CREATE TABLE `internal_notes_attachment` (
   `attachment_file_size` double NOT NULL,
   `attachment_path_file` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `internal_notes_attachment`
+--
+
+INSERT INTO `internal_notes_attachment` (`internal_notes_attachment_id`, `internal_notes_id`, `attachment_file_name`, `attachment_file_size`, `attachment_path_file`) VALUES
+(1, 3, 'Agulto', 212362, './components/global/files/internal_notes/3/Agulto.png'),
+(2, 3, 'download', 222999, './components/global/files/internal_notes/3/download.jpg'),
+(3, 5, 'download', 222999, './components/global/files/internal_notes/5/download.jpg');
 
 -- --------------------------------------------------------
 
@@ -1546,58 +1694,8 @@ CREATE TABLE `menu_group` (
 --
 
 INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `app_module_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'Technical', 1, 'Settings', 100, '2024-06-15 18:14:02', 1),
-(2, 'Administration', 1, 'Settings', 99, '2024-06-15 18:14:02', 1);
-
---
--- Triggers `menu_group`
---
-DROP TRIGGER IF EXISTS `menu_group_trigger_insert`;
-DELIMITER $$
-CREATE TRIGGER `menu_group_trigger_insert` AFTER INSERT ON `menu_group` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Menu group created. <br/>';
-
-    IF NEW.menu_group_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Menu Group Name: ", NEW.menu_group_name);
-    END IF;
-
-    IF NEW.app_module_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>App Module: ", NEW.app_module_name);
-    END IF;
-
-    IF NEW.order_sequence <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
-    END IF;
-
-    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('menu_group', NEW.menu_group_id, audit_log, NEW.last_log_by, NOW());
-END
-$$
-DELIMITER ;
-DROP TRIGGER IF EXISTS `menu_group_trigger_update`;
-DELIMITER $$
-CREATE TRIGGER `menu_group_trigger_update` AFTER UPDATE ON `menu_group` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT '';
-
-    IF NEW.menu_group_name <> OLD.menu_group_name THEN
-        SET audit_log = CONCAT(audit_log, "Menu Group Name: ", OLD.menu_group_name, " -> ", NEW.menu_group_name, "<br/>");
-    END IF;
-    
-      IF NEW.app_module_name <> OLD.app_module_name THEN
-        SET audit_log = CONCAT(audit_log, "App Module: ", OLD.app_module_name, " -> ", NEW.app_module_name, "<br/>");
-    END IF;
-
-    IF NEW.order_sequence <> OLD.order_sequence THEN
-        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
-    END IF;
-    
-    IF LENGTH(audit_log) > 0 THEN
-        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('menu_group', NEW.menu_group_id, audit_log, NEW.last_log_by, NOW());
-    END IF;
-END
-$$
-DELIMITER ;
+(1, 'Technical', 1, 'Settings', 100, '2024-06-21 15:16:45', 2),
+(2, 'Administration', 1, 'Settings', 99, '2024-06-21 15:16:45', 2);
 
 -- --------------------------------------------------------
 
@@ -1627,89 +1725,11 @@ CREATE TABLE `menu_item` (
 --
 
 INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `menu_item_icon`, `menu_group_id`, `menu_group_name`, `app_module_id`, `app_module_name`, `parent_id`, `parent_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'General Settings', 'general-settings.php', 'ti ti-settings', 1, 'Technical', 1, 'Settings', 0, '', 21, '2024-06-15 18:14:31', 1);
-
---
--- Triggers `menu_item`
---
-DROP TRIGGER IF EXISTS `menu_item_trigger_insert`;
-DELIMITER $$
-CREATE TRIGGER `menu_item_trigger_insert` AFTER INSERT ON `menu_item` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Menu Item created. <br/>';
-
-    IF NEW.menu_item_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Menu Item Name: ", NEW.menu_item_name);
-    END IF;
-
-    IF NEW.menu_item_url <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Menu Item URL: ", NEW.menu_item_url);
-    END IF;
-
-    IF NEW.menu_item_icon <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Menu Item Icon: ", NEW.menu_item_icon);
-    END IF;
-
-    IF NEW.menu_group_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Menu Group Name: ", NEW.menu_group_name);
-    END IF;
-
-    IF NEW.app_module_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>App Module: ", NEW.app_module_name);
-    END IF;
-
-    IF NEW.parent_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Parent: ", NEW.parent_name);
-    END IF;
-
-    IF NEW.order_sequence <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
-    END IF;
-
-    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('menu_item', NEW.menu_item_id, audit_log, NEW.last_log_by, NOW());
-END
-$$
-DELIMITER ;
-DROP TRIGGER IF EXISTS `menu_item_trigger_update`;
-DELIMITER $$
-CREATE TRIGGER `menu_item_trigger_update` AFTER UPDATE ON `menu_item` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT '';
-
-    IF NEW.menu_item_name <> OLD.menu_item_name THEN
-        SET audit_log = CONCAT(audit_log, "Menu Item Name: ", OLD.menu_item_name, " -> ", NEW.menu_item_name, "<br/>");
-    END IF;
-
-    IF NEW.menu_item_url <> OLD.menu_item_url THEN
-        SET audit_log = CONCAT(audit_log, "Menu Item URL: ", OLD.menu_item_url, " -> ", NEW.menu_item_url, "<br/>");
-    END IF;
-
-    IF NEW.menu_item_icon <> OLD.menu_item_icon THEN
-        SET audit_log = CONCAT(audit_log, "Menu Item Icon: ", OLD.menu_item_icon, " -> ", NEW.menu_item_icon, "<br/>");
-    END IF;
-
-    IF NEW.menu_group_name <> OLD.menu_group_name THEN
-        SET audit_log = CONCAT(audit_log, "Menu Group Name: ", OLD.menu_group_name, " -> ", NEW.menu_group_name, "<br/>");
-    END IF;
-
-    IF NEW.app_module_name <> OLD.app_module_name THEN
-        SET audit_log = CONCAT(audit_log, "App Module: ", OLD.app_module_name, " -> ", NEW.app_module_name, "<br/>");
-    END IF;
-
-    IF NEW.parent_name <> OLD.parent_name THEN
-        SET audit_log = CONCAT(audit_log, "Parent: ", OLD.parent_name, " -> ", NEW.parent_name, "<br/>");
-    END IF;
-
-    IF NEW.order_sequence <> OLD.order_sequence THEN
-        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
-    END IF;
-    
-    IF LENGTH(audit_log) > 0 THEN
-        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('menu_item', NEW.menu_item_id, audit_log, NEW.last_log_by, NOW());
-    END IF;
-END
-$$
-DELIMITER ;
+(1, 'General Settings', 'general-settings.php', 'ti ti-settings', 1, 'Technical', 1, 'Settings', 0, '', 21, '2024-06-21 15:18:43', 2),
+(2, 'Users & Companies', '', 'ti ti-users', 2, 'Administration', 1, 'Settings', 0, '', 1, '2024-06-21 15:18:43', 2),
+(3, 'User Account', 'user-account.php', '', 2, 'Administration', 1, 'Settings', 2, 'Users & Companies', 1, '2024-06-21 15:18:43', 2),
+(4, 'Company', 'company.php', '', 2, 'Administration', 1, 'Settings', 2, 'Users & Companies', 3, '2024-06-21 15:18:43', 2),
+(5, 'App Module', 'app-module.php', 'ti ti-box', 1, 'Technical', 1, 'Settings', 0, '', 1, '2024-06-21 15:18:43', 2);
 
 -- --------------------------------------------------------
 
@@ -2067,7 +2087,11 @@ CREATE TABLE `role_permission` (
 --
 
 INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `menu_item_id`, `menu_item_name`, `read_access`, `write_access`, `create_access`, `delete_access`, `date_assigned`, `created_date`, `last_log_by`) VALUES
-(1, 1, 'Administrator', 1, 'General Setting', 1, 0, 0, 0, '2024-06-15 18:15:35', '2024-06-15 18:15:35', 1);
+(1, 1, 'Administrator', 1, 'General Setting', 1, 0, 0, 0, '2024-06-15 18:15:35', '2024-06-15 18:15:35', 1),
+(2, 1, 'Administrator', 2, 'Users & Companies', 1, 0, 0, 0, '2024-06-19 17:25:30', '2024-06-19 17:25:30', 1),
+(3, 1, 'Administrator', 3, 'User Account', 1, 1, 1, 1, '2024-06-19 17:30:37', '2024-06-19 17:30:37', 1),
+(4, 1, 'Administrator', 4, 'Company', 1, 1, 1, 1, '2024-06-19 17:30:37', '2024-06-19 17:30:37', 1),
+(5, 1, 'Administrator', 5, 'App Module', 1, 1, 1, 1, '2024-06-20 11:37:17', '2024-06-20 11:37:17', 1);
 
 --
 -- Triggers `role_permission`
@@ -2311,13 +2335,13 @@ CREATE TABLE `security_setting` (
 --
 
 INSERT INTO `security_setting` (`security_setting_id`, `security_setting_name`, `value`, `created_date`, `last_log_by`) VALUES
-(1, 'Max Failed Login Attempt', '5', '2024-06-17 21:34:43', 1),
-(2, 'Max Failed OTP Attempt', '5', '2024-06-17 21:34:43', 1),
-(3, 'Default Forgot Password Link', 'http://localhost/modernize/password-reset.php?id=', '2024-06-17 21:34:43', 1),
-(4, 'Password Expiry Duration', '180', '2024-06-17 21:34:43', 1),
-(5, 'Session Timeout Duration', '240', '2024-06-17 21:34:43', 1),
-(6, 'OTP Duration', '5', '2024-06-17 21:34:43', 1),
-(7, 'Reset Password Token Duration', '10', '2024-06-17 21:34:43', 1);
+(1, 'Max Failed Login Attempt', '5', '2024-06-17 21:34:43', 2),
+(2, 'Max Failed OTP Attempt', '5', '2024-06-17 21:34:43', 2),
+(3, 'Default Forgot Password Link', 'http://localhost/modernize/password-reset.php?id=', '2024-06-17 21:34:43', 2),
+(4, 'Password Expiry Duration', '180', '2024-06-17 21:34:43', 2),
+(5, 'Session Timeout Duration', '30', '2024-06-17 21:34:43', 2),
+(6, 'OTP Duration', '5', '2024-06-17 21:34:43', 2),
+(7, 'Reset Password Token Duration', '10', '2024-06-17 21:34:43', 2);
 
 --
 -- Triggers `security_setting`
@@ -2421,6 +2445,141 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `upload_setting`
+--
+
+DROP TABLE IF EXISTS `upload_setting`;
+CREATE TABLE `upload_setting` (
+  `upload_setting_id` int(10) UNSIGNED NOT NULL,
+  `upload_setting_name` varchar(100) NOT NULL,
+  `upload_setting_description` varchar(200) NOT NULL,
+  `max_file_size` double NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `upload_setting`
+--
+
+INSERT INTO `upload_setting` (`upload_setting_id`, `upload_setting_name`, `upload_setting_description`, `max_file_size`, `created_date`, `last_log_by`) VALUES
+(1, 'User Account Profile Picture', 'Sets the upload setting when uploading user account profile picture.', 800, '2024-06-21 12:11:40', 1),
+(2, 'Internal Notes Attachment', 'Sets the upload setting when uploading internal notes attachement.', 800, '2024-06-21 12:26:58', 1);
+
+--
+-- Triggers `upload_setting`
+--
+DROP TRIGGER IF EXISTS `upload_setting_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `upload_setting_trigger_insert` AFTER INSERT ON `upload_setting` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Upload Setting created. <br/>';
+
+    IF NEW.upload_setting_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Upload Setting Name: ", NEW.upload_setting_name);
+    END IF;
+
+    IF NEW.upload_setting_description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Upload Setting Description: ", NEW.upload_setting_description);
+    END IF;
+
+    IF NEW.max_file_size <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Max File Size: ", NEW.max_file_size);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('upload_setting', NEW.upload_setting_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `upload_setting_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `upload_setting_trigger_update` AFTER UPDATE ON `upload_setting` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.upload_setting_name <> OLD.upload_setting_name THEN
+        SET audit_log = CONCAT(audit_log, "Upload Setting Name: ", OLD.upload_setting_name, " -> ", NEW.upload_setting_name, "<br/>");
+    END IF;
+
+    IF NEW.upload_setting_description <> OLD.upload_setting_description THEN
+        SET audit_log = CONCAT(audit_log, "Upload Setting Description: ", OLD.upload_setting_description, " -> ", NEW.upload_setting_description, "<br/>");
+    END IF;
+
+    IF NEW.max_file_size <> OLD.max_file_size THEN
+        SET audit_log = CONCAT(audit_log, "Max File Size: ", OLD.max_file_size, " -> ", NEW.max_file_size, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('upload_setting', NEW.upload_setting_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `upload_setting_file_extension`
+--
+
+DROP TABLE IF EXISTS `upload_setting_file_extension`;
+CREATE TABLE `upload_setting_file_extension` (
+  `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL,
+  `upload_setting_id` int(10) UNSIGNED NOT NULL,
+  `upload_setting_name` varchar(100) NOT NULL,
+  `file_extension_id` int(10) UNSIGNED NOT NULL,
+  `file_extension_name` varchar(100) NOT NULL,
+  `file_extension` varchar(10) NOT NULL,
+  `date_assigned` datetime DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `upload_setting_file_extension`
+--
+
+INSERT INTO `upload_setting_file_extension` (`upload_setting_file_extension_id`, `upload_setting_id`, `upload_setting_name`, `file_extension_id`, `file_extension_name`, `file_extension`, `date_assigned`, `last_log_by`) VALUES
+(1, 1, 'User Account Profile Picture', 1, 'PNG', 'png', '2024-06-21 12:11:40', 1),
+(2, 1, 'User Account Profile Picture', 2, 'JPG', 'jpg', '2024-06-21 12:11:40', 1),
+(3, 1, 'User Account Profile Picture', 3, 'JPEG', 'jpeg', '2024-06-21 12:11:40', 1),
+(4, 2, 'Internal Notes Attachment', 1, 'PNG', 'png', '2024-06-21 12:26:58', 1),
+(5, 2, 'Internal Notes Attachment', 2, 'JPG', 'jpg', '2024-06-21 12:26:58', 1),
+(6, 2, 'Internal Notes Attachment', 3, 'JPEG', 'jpeg', '2024-06-21 12:26:58', 1),
+(7, 2, 'Internal Notes Attachment', 4, 'PDF', 'pdf', '2024-06-21 12:26:58', 1);
+
+--
+-- Triggers `upload_setting_file_extension`
+--
+DROP TRIGGER IF EXISTS `upload_setting_file_extension_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `upload_setting_file_extension_trigger_insert` AFTER INSERT ON `upload_setting_file_extension` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Upload Setting File Extension created. <br/>';
+
+    IF NEW.upload_setting_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Upload Setting Name: ", NEW.upload_setting_name);
+    END IF;
+
+    IF NEW.file_extension_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>File Extension Name: ", NEW.file_extension_name);
+    END IF;
+
+    IF NEW.file_extension <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>File Extension: ", NEW.file_extension);
+    END IF;
+
+    IF NEW.date_assigned <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Date Assigned: ", NEW.date_assigned);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('upload_setting_file_extension', NEW.upload_setting_file_extension_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user_account`
 --
 
@@ -2459,7 +2618,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmids@christianmotors.ph', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-15 18:08:25', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-17 21:00:05', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '3w3mi9SU6rcSAp6qXH%2FvD87KAcZXV8zKA%2FA743oSYWc%3D', '2024-06-15 18:08:25', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-21 08:36:23', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'EoQR4mnkrl0P2jXw2SK1WkJR84C2adnCVGdzeL8lWYw%3D', '2024-06-15 18:08:25', 1);
 
 --
 -- Triggers `user_account`
@@ -2646,6 +2805,7 @@ ALTER TABLE `internal_notes_attachment`
 ALTER TABLE `menu_group`
   ADD PRIMARY KEY (`menu_group_id`),
   ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `app_module_id` (`app_module_id`),
   ADD KEY `menu_group_index_menu_group_id` (`menu_group_id`);
 
 --
@@ -2654,6 +2814,7 @@ ALTER TABLE `menu_group`
 ALTER TABLE `menu_item`
   ADD PRIMARY KEY (`menu_item_id`),
   ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `menu_group_id` (`menu_group_id`),
   ADD KEY `menu_item_index_menu_item_id` (`menu_item_id`),
   ADD KEY `menu_item_index_app_module_id` (`app_module_id`);
 
@@ -2756,6 +2917,24 @@ ALTER TABLE `system_action`
   ADD KEY `system_action_index_system_action_id` (`system_action_id`);
 
 --
+-- Indexes for table `upload_setting`
+--
+ALTER TABLE `upload_setting`
+  ADD PRIMARY KEY (`upload_setting_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `upload_setting_index_upload_setting_id` (`upload_setting_id`);
+
+--
+-- Indexes for table `upload_setting_file_extension`
+--
+ALTER TABLE `upload_setting_file_extension`
+  ADD PRIMARY KEY (`upload_setting_file_extension_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `upload_setting_file_ext_index_upload_setting_file_extension_id` (`upload_setting_file_extension_id`),
+  ADD KEY `upload_setting_file_ext_index_upload_setting_id` (`upload_setting_id`),
+  ADD KEY `upload_setting_file_ext_index_file_extension_id` (`file_extension_id`);
+
+--
 -- Indexes for table `user_account`
 --
 ALTER TABLE `user_account`
@@ -2772,13 +2951,13 @@ ALTER TABLE `user_account`
 -- AUTO_INCREMENT for table `app_module`
 --
 ALTER TABLE `app_module`
-  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `email_setting`
@@ -2790,13 +2969,13 @@ ALTER TABLE `email_setting`
 -- AUTO_INCREMENT for table `internal_notes`
 --
 ALTER TABLE `internal_notes`
-  MODIFY `internal_notes_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `internal_notes_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `internal_notes_attachment`
 --
 ALTER TABLE `internal_notes_attachment`
-  MODIFY `internal_notes_attachment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `internal_notes_attachment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `menu_group`
@@ -2808,7 +2987,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -2850,7 +3029,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -2875,6 +3054,18 @@ ALTER TABLE `security_setting`
 --
 ALTER TABLE `system_action`
   MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `upload_setting`
+--
+ALTER TABLE `upload_setting`
+  MODIFY `upload_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `upload_setting_file_extension`
+--
+ALTER TABLE `upload_setting_file_extension`
+  MODIFY `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `user_account`
@@ -2921,15 +3112,15 @@ ALTER TABLE `internal_notes_attachment`
 --
 ALTER TABLE `menu_group`
   ADD CONSTRAINT `menu_group_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
-  ADD CONSTRAINT `menu_group_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `app_module` (`app_module_id`);
+  ADD CONSTRAINT `menu_group_ibfk_2` FOREIGN KEY (`app_module_id`) REFERENCES `app_module` (`app_module_id`);
 
 --
 -- Constraints for table `menu_item`
 --
 ALTER TABLE `menu_item`
   ADD CONSTRAINT `menu_item_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
-  ADD CONSTRAINT `menu_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `menu_group` (`menu_group_id`),
-  ADD CONSTRAINT `menu_item_ibfk_3` FOREIGN KEY (`last_log_by`) REFERENCES `app_module` (`app_module_id`);
+  ADD CONSTRAINT `menu_item_ibfk_2` FOREIGN KEY (`menu_group_id`) REFERENCES `menu_group` (`menu_group_id`),
+  ADD CONSTRAINT `menu_item_ibfk_3` FOREIGN KEY (`app_module_id`) REFERENCES `app_module` (`app_module_id`);
 
 --
 -- Constraints for table `notification_setting`
@@ -3005,6 +3196,18 @@ ALTER TABLE `security_setting`
 --
 ALTER TABLE `system_action`
   ADD CONSTRAINT `system_action_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `upload_setting`
+--
+ALTER TABLE `upload_setting`
+  ADD CONSTRAINT `upload_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `upload_setting_file_extension`
+--
+ALTER TABLE `upload_setting_file_extension`
+  ADD CONSTRAINT `upload_setting_file_extension_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `user_account`

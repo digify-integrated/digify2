@@ -8,6 +8,7 @@
 <script src="./assets/js/theme/sidebarmenu.js"></script>
 
 <script src="./assets/libs/sweetalert2/dist/sweetalert2.min.js"></script>
+
 <script src="./assets/libs/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="./assets/libs/jquery-validation/validation/form-validation-rules.js?v=<?php echo rand(); ?>"></script>
 

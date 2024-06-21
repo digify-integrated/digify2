@@ -254,6 +254,20 @@ function logNotes(databaseTable, referenceID){
     });
 }
 
+function logNotesMain(databaseTable, referenceID){
+    const type = 'log notes main';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/global/view/_log_notes_generation.php',
+        dataType: 'json',
+        data: { type: type, 'database_table': databaseTable, 'reference_id': referenceID },
+        success: function (result) {
+            document.getElementById('log-notes-main').innerHTML = result[0].LOG_NOTE;
+        }
+    });
+}
+
 function internalNotes(databaseTable, referenceID){
     const type = 'internal notes';
 
@@ -361,7 +375,7 @@ function internalNotesForm(databaseTable, referenceID){
                 success: function (response) {
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
-                        internalNotes(databaseTable, referenceID)
+                        internalNotes(databaseTable, referenceID);
                         $('#internal-notes-modal').modal('hide');
                     }
                     else {
@@ -387,6 +401,7 @@ function internalNotesForm(databaseTable, referenceID){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-internal-notes');
+                    resetModalForm('internal-notes-form');
                 }
             });
         

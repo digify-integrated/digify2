@@ -59,7 +59,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $response[] = [
                     'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $appModuleID .'">',
                     'APP_MODULE_NAME' => '<div class="d-flex align-items-center">
-                                            <img src="'. $appLogo .'" alt="app-logo" width="35" />
+                                            <img src="'. $appLogo .'" alt="app-logo" width="45" />
                                             <div class="ms-3">
                                                 <div class="user-meta-info">
                                                     <h6 class="mb-0">'. $appModuleName .'</h6>

@@ -15,8 +15,8 @@ CREATE TABLE menu_item (
     created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id),
-    FOREIGN KEY (last_log_by) REFERENCES menu_group(menu_group_id),
-    FOREIGN KEY (last_log_by) REFERENCES app_module(app_module_id)
+    FOREIGN KEY (menu_group_id) REFERENCES menu_group(menu_group_id),
+    FOREIGN KEY (app_module_id) REFERENCES app_module(app_module_id)
 );
 
 CREATE INDEX menu_item_index_menu_item_id ON menu_item(menu_item_id);

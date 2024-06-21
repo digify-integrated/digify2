@@ -2,10 +2,16 @@
     'use strict';
 
     $(function() {
+        generateDropdownOptions('menu item options');
+
         displayDetails('get app module details');
 
         if($('#app-module-form').length){
             appModuleForm();
+        }
+
+        if($('#app-logo-form').length){
+            updateAppLogoForm();
         }
 
         $(document).on('click','#edit-details',function() {
@@ -13,7 +19,7 @@
         });
 
         $(document).on('click','#delete-app-module',function() {
-            const app_module_id = $('#app-module-id').text();
+            const app_module_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'delete app module';
     
@@ -71,22 +77,20 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const app_module_id = $('#app-module-id').text();
+        if($('#log-notes-main').length && $('#view-log-notes').length){
+            const app_module_id = $('#details-id').text();
 
-                logNotes('app_module', app_module_id);
-            });
+            logNotesMain('app_module', app_module_id);
         }
 
         if($('#internal-notes').length){
-            const app_module_id = $('#app-module-id').text();
+            const app_module_id = $('#details-id').text();
 
             internalNotes('app_module', app_module_id);
         }
 
         if($('#internal-notes-form').length){
-            const app_module_id = $('#app-module-id').text();
+            const app_module_id = $('#details-id').text();
 
             internalNotesForm('app_module', app_module_id);
         }
@@ -102,6 +106,9 @@ function appModuleForm(){
             app_module_description: {
                 required: true
             },
+            menu_item_id: {
+                required: true
+            },
             order_sequence: {
                 required: true
             }
@@ -112,6 +119,9 @@ function appModuleForm(){
             },
             app_module_description: {
                 required: 'Please enter the description'
+            },
+            menu_item_id: {
+                required: 'Please choose the default page'
             },
             order_sequence: {
                 required: 'Please enter the order sequence'
@@ -139,7 +149,7 @@ function appModuleForm(){
             }
         },
         submitHandler: function(form) {
-            const app_module_id = $('#app-module-id').text();
+            const app_module_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update app module';
           
@@ -180,6 +190,7 @@ function appModuleForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('app_module', app_module_id);
                 }
             });
         
@@ -222,7 +233,7 @@ function updateAppLogoForm(){
             }
         },
         submitHandler: function(form) {
-            const app_module_id = $('#app-module-id').text();
+            const app_module_id = $('#details-id').text();
             const transaction = 'update app logo';
             var formData = new FormData(form);
             formData.append('app_module_id', app_module_id);
@@ -270,7 +281,7 @@ function updateAppLogoForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get app module details':
-            var app_module_id = $('#app-module-id').text();
+            var app_module_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             
             $.ajax({
@@ -289,11 +300,16 @@ function displayDetails(transaction){
                         $('#app_module_name').val(response.appModuleName);
                         $('#app_module_description').val(response.appModuleDescription);
                         $('#order_sequence').val(response.orderSequence);
+                        $('#app_version').val(response.appVersion);
+
+                        $('#menu_item_id').val(response.menuItemID).trigger('change');
 
                         document.getElementById('app_module_logo').src = response.appLogo;
                         
                         $('#app_module_name_summary').text(response.appModuleName);
                         $('#app_module_description_summary').text(response.appModuleDescription);
+                        $('#menu_item_summary').text(response.menuItemName);
+                        $('#app_version_summary').text(response.appVersion);
                         $('#order_sequence_summary').text(response.orderSequence);
                     } 
                     else {
@@ -309,6 +325,37 @@ function displayDetails(transaction){
                             showNotification(response.title, response.message, response.messageType);
                         }
                     }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+    }
+}
+
+function generateDropdownOptions(type){
+    switch (type) {
+        case 'menu item options':
+            
+            $.ajax({
+                url: 'components/menu-item/view/_menu_item_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#menu_item_id').select2({
+                        data: response,
+                        dropdownParent: $('#menu_item_id').closest('.modal')
+                    }).on('change', function (e) {
+                        $(e.target).valid()
+                    });
                 },
                 error: function(xhr, status, error) {
                     var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;

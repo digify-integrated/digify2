@@ -24,9 +24,6 @@ function appModuleForm(){
             app_module_description: {
                 required: true
             },
-            app_version: {
-                required: true
-            },
             menu_item_id: {
                 required: true
             },
@@ -40,9 +37,6 @@ function appModuleForm(){
             },
             app_module_description: {
                 required: 'Please enter the description'
-            },
-            app_version: {
-                required: 'Please enter the app version'
             },
             menu_item_id: {
                 required: 'Please choose the default page'

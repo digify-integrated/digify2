@@ -15,6 +15,8 @@ session_start();
 class AppModuleController {
     private $appModuleModel;
     private $authenticationModel;
+    private $menuItemModel;
+    private $uploadSettingModel;
     private $securityModel;
     private $systemModel;
 
@@ -28,15 +30,19 @@ class AppModuleController {
     # Parameters:
     # - @param AppModuleModel $appModuleModel     The AppModuleModel instance for app module related operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
+    # - @param MenuItemModel $menuItemModel     The MenuItemModel instance for menu item related operations.
+    # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
     # - @param SystemModel $systemModel   The SystemModel instance for system related operations.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(AppModuleModel $appModuleModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
+    public function __construct(AppModuleModel $appModuleModel, AuthenticationModel $authenticationModel, MenuItemModel $menuItemModel, UploadSettingModel $uploadSettingModel, SecurityModel $securityModel, SystemModel $systemModel) {
         $this->appModuleModel = $appModuleModel;
         $this->authenticationModel = $authenticationModel;
+        $this->menuItemModel = $menuItemModel;
+        $this->uploadSettingModel = $uploadSettingModel;
         $this->securityModel = $securityModel;
         $this->systemModel = $systemModel;
     }
@@ -177,13 +183,17 @@ class AppModuleController {
             return;
         }
 
-        if (isset($_POST['app_module_name']) && !empty($_POST['app_module_name']) && isset($_POST['app_module_description']) && !empty($_POST['app_module_description']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
+        if (isset($_POST['app_module_name']) && !empty($_POST['app_module_name']) && isset($_POST['app_module_description']) && !empty($_POST['app_module_description']) && isset($_POST['menu_item_id']) && !empty($_POST['menu_item_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
             $userID = $_SESSION['user_account_id'];
             $appModuleName = $_POST['app_module_name'];
             $appModuleDescription = $_POST['app_module_description'];
+            $menuItemID = htmlspecialchars($_POST['menu_item_id'], ENT_QUOTES, 'UTF-8');
             $orderSequence = htmlspecialchars($_POST['order_sequence'], ENT_QUOTES, 'UTF-8');
+
+            $menuItemDetails = $this->menuItemModel->getMenuItem($menuItemID);
+            $menuItemName = $menuItemDetails['menu_item_name'];
         
-            $appModuleID = $this->appModuleModel->insertAppModule($appModuleName, $appModuleDescription, $redirectLink, $orderSequence, $userID);
+            $appModuleID = $this->appModuleModel->insertAppModule($appModuleName, $appModuleDescription, $menuItemID, $menuItemName, $orderSequence, $userID);
     
             $response = [
                 'success' => true,
@@ -235,6 +245,7 @@ class AppModuleController {
             $appModuleID = htmlspecialchars($_POST['app_module_id'], ENT_QUOTES, 'UTF-8');
             $appModuleName = $_POST['app_module_name'];
             $appModuleDescription = $_POST['app_module_description'];
+            $menuItemID = htmlspecialchars($_POST['menu_item_id'], ENT_QUOTES, 'UTF-8');
             $orderSequence = htmlspecialchars($_POST['order_sequence'], ENT_QUOTES, 'UTF-8');
         
             $checkAppModuleExist = $this->appModuleModel->checkAppModuleExist($appModuleID);
@@ -253,7 +264,10 @@ class AppModuleController {
                 exit;
             }
 
-            $this->appModuleModel->updateAppModule($appModuleID, $appModuleName, $appModuleDescription, $redirectLink, $orderSequence, $userID);
+            $menuItemDetails = $this->menuItemModel->getMenuItem($menuItemID);
+            $menuItemName = $menuItemDetails['menu_item_name'];
+
+            $this->appModuleModel->updateAppModule($appModuleID, $appModuleName, $appModuleDescription, $menuItemID, $menuItemName, $orderSequence, $userID);
                 
             $response = [
                 'success' => true,
@@ -300,8 +314,8 @@ class AppModuleController {
 
             $appModuleID = htmlspecialchars($_POST['app_module_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkAppExist = $this->appModel->checkAppExist($appModuleID);
-            $total = $checkAppExist['total'] ?? 0;
+            $checkAppModuleExist = $this->appModuleModel->checkAppModuleExist($appModuleID);
+            $total = $checkAppModuleExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
@@ -323,10 +337,10 @@ class AppModuleController {
             $appLogoFileExtension = explode('.', $appLogoFileName);
             $appLogoActualFileExtension = strtolower(end($appLogoFileExtension));
 
-            $uploadSetting = $this->uploadSettingModel->getUploadSetting(4);
+            $uploadSetting = $this->uploadSettingModel->getUploadSetting(1);
             $maxFileSize = $uploadSetting['max_file_size'];
 
-            $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(4);
+            $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(1);
             $allowedFileExtensions = [];
 
             foreach ($uploadSettingFileExtension as $row) {
@@ -434,7 +448,7 @@ class AppModuleController {
                 exit;           
             }
 
-            $this->appModel->updateAppLogo($appModuleID, $filePath, $userID);
+            $this->appModuleModel->updateAppLogo($appModuleID, $filePath, $userID);
 
             $response = [
                 'success' => true,
@@ -647,6 +661,9 @@ class AppModuleController {
                 'success' => true,
                 'appModuleName' => $appModuleDetails['app_module_name'] ?? null,
                 'appModuleDescription' => $appModuleDetails['app_module_description'] ?? null,
+                'menuItemID' => $appModuleDetails['menu_item_id'] ?? null,
+                'menuItemName' => $appModuleDetails['menu_item_name'] ?? null,
+                'appVersion' => $appModuleDetails['app_version'] ?? null,
                 'orderSequence' => $appModuleDetails['order_sequence'] ?? null,
                 'appLogo' => $appLogo
             ];
@@ -675,9 +692,11 @@ require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
 require_once '../../app-module/model/app-module-model.php';
+require_once '../../menu-item/model/menu-item-model.php';
+require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new AppModuleController(new AppModuleModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
+$controller = new AppModuleController(new AppModuleModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new MenuItemModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new SecurityModel(), new SystemModel());
 $controller->handleRequest();
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-require_once '../../../session.php';
+require_once '../../global/config/session.php';
 require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/system-model.php';
