@@ -1,4 +1,14 @@
-<div  class="datatables">
+<?php
+    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
+
+    $activateUserAccount = $globalModel->checkSystemActionAccessRights($userID, 3);
+    $deactivateUserAccount = $globalModel->checkSystemActionAccessRights($userID, 4);
+    $lockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 5);
+    $unlockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 6);
+?>
+
+<div class="datatables">
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -6,7 +16,7 @@
                     <h5 class="card-title mb-0">User Account List</h5>
                     <div class="card-actions cursor-pointer ms-auto d-flex button-group">
                         <?php
-                            if($userAccountDeleteAccess['total'] > 0 || $activateUserAccount['total'] > 0 || $deactivateUserAccount['total'] > 0 || $lockUserAccount['total'] > 0 || $unlockUserAccount['total'] > 0){
+                            if($deleteAccess['total'] > 0 || $activateUserAccount['total'] > 0 || $deactivateUserAccount['total'] > 0 || $lockUserAccount['total'] > 0 || $unlockUserAccount['total'] > 0){
                                 $dropdown = '<button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0 d-none" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                                 <ul class="dropdown-menu dropdown-menu-end">';
 
@@ -18,7 +28,7 @@
 
                                 $dropdown .= $lockUserAccount['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="lock-user-account">Lock User Account</button></li>' : '';
 
-                                $dropdown .= $userAccountDeleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-user-account">Delete User Account</button></li>' : '';
+                                $dropdown .= $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-user-account">Delete User Account</button></li>' : '';
 
                                 $dropdown .= '</ul>';
 
@@ -28,7 +38,7 @@
                     </div>
                     <div class="card-actions cursor-pointer ms-auto d-flex button-group">
                         <?php
-                            echo $userAccountCreateAccess['total'] > 0 ?
+                            echo $createAccess['total'] > 0 ?
                             '<a href="' . $pageLink . '&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
                         ?>
                         <button type="button" class="btn btn-warning mb-0 px-4" data-bs-toggle="offcanvas" data-bs-target="#filter-offcanvas" aria-controls="filter-offcanvas">Filter</a>

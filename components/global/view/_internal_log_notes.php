@@ -1,5 +1,5 @@
 <div class="form-with-tabs">
-    <div class="card">
+    <div class="card mb-0">
         <ul class="nav nav-pills user-profile-tab border-bottom" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link position-relative rounded-0 active d-flex align-items-center justify-content-center bg-transparent fs-3 py-6 fw-bold" id="pills-internal-notes-tab" data-bs-toggle="pill" data-bs-target="#pills-internal-notes" type="button" role="tab" aria-controls="pills-internal-notes" aria-selected="true">Internal Notes</button>

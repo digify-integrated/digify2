@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 21, 2024 at 11:36 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jun 23, 2024 at 04:15 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1354,7 +1354,7 @@ CREATE TABLE `app_module` (
 --
 
 INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_description`, `app_logo`, `app_version`, `menu_item_id`, `menu_item_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 1, 'General Settings', 100, '2024-06-15 18:11:25', 2);
+(1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control.', './components/app-module/image/logo/1/setting.png', '1.0.0', 1, 'General Settings', 101, '2024-06-15 18:11:25', 2);
 
 --
 -- Triggers `app_module`
@@ -1479,7 +1479,44 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (41, 'app_module', 1, 'App Module Name: Setting -> Settings<br/>Order Sequence: 1 -> 100<br/>', 2, '2024-06-21 15:18:51'),
 (42, 'app_module', 1, 'Order Sequence: 100 -> 102<br/>', 2, '2024-06-21 16:54:13'),
 (43, 'app_module', 1, 'Order Sequence: 102 -> 101<br/>', 2, '2024-06-21 17:13:01'),
-(44, 'app_module', 1, 'Order Sequence: 101 -> 100<br/>', 2, '2024-06-21 17:23:19');
+(44, 'app_module', 1, 'Order Sequence: 101 -> 100<br/>', 2, '2024-06-21 17:23:19'),
+(45, 'user_account', 2, 'Last Connection Date: 2024-06-21 08:36:23 -> 2024-06-22 10:30:22<br/>', 1, '2024-06-22 10:30:22'),
+(46, 'app_module', 1, 'Order Sequence: 100 -> 101<br/>', 2, '2024-06-22 10:45:49'),
+(47, 'app_module', 1, 'App Module Description: Centralized management hub for comprehensive organizational oversight and control -> Centralized management hub for comprehensive organizational oversight and control.<br/>', 2, '2024-06-22 10:46:06'),
+(48, 'user_account', 2, 'Last Connection Date: 2024-06-22 10:30:22 -> 2024-06-22 16:46:07<br/>', 1, '2024-06-22 16:46:07'),
+(49, 'system_action', 1, 'System action created. <br/><br/>System Action Name: Update System Settings<br/>System Action Description: Access to update the system settings.', 1, '2024-06-22 17:54:16'),
+(50, 'system_action', 2, 'System action created. <br/><br/>System Action Name: Update Security Settings<br/>System Action Description: Access to update the security settings.', 1, '2024-06-22 17:54:16'),
+(51, 'system_action', 3, 'System action created. <br/><br/>System Action Name: Activate User Account<br/>System Action Description: Access to activate the user account.', 1, '2024-06-22 17:54:16'),
+(52, 'system_action', 4, 'System action created. <br/><br/>System Action Name: Deactivate User Account<br/>System Action Description: Access to deactivate the user account.', 1, '2024-06-22 17:54:16'),
+(53, 'system_action', 5, 'System action created. <br/><br/>System Action Name: Lock User Account<br/>System Action Description: Access to lock the user account.', 1, '2024-06-22 17:54:16'),
+(54, 'system_action', 6, 'System action created. <br/><br/>System Action Name: Unlock User Account<br/>System Action Description: Access to unlock the user account.', 1, '2024-06-22 17:54:16'),
+(55, 'system_action', 7, 'System action created. <br/><br/>System Action Name: Add Role User Account<br/>System Action Description: Access to assign roles to user account.', 1, '2024-06-22 17:54:16'),
+(56, 'system_action', 8, 'System action created. <br/><br/>System Action Name: Delete Role User Account<br/>System Action Description: Access to delete roles to user account.', 1, '2024-06-22 17:54:16'),
+(57, 'system_action', 9, 'System action created. <br/><br/>System Action Name: Add Role Access<br/>System Action Description: Access to add role access.', 1, '2024-06-22 17:54:16'),
+(58, 'system_action', 10, 'System action created. <br/><br/>System Action Name: Update Role Access<br/>System Action Description: Access to update role access.', 1, '2024-06-22 17:54:16'),
+(59, 'system_action', 11, 'System action created. <br/><br/>System Action Name: Delete Role Access<br/>System Action Description: Access to delete role access.', 1, '2024-06-22 17:54:16'),
+(60, 'system_action', 12, 'System action created. <br/><br/>System Action Name: Add Role System Action Access<br/>System Action Description: Access to add the role system action access.', 1, '2024-06-22 17:54:16'),
+(61, 'system_action', 13, 'System action created. <br/><br/>System Action Name: Update Role System Action Access<br/>System Action Description: Access to update the role system action access.', 1, '2024-06-22 17:54:16'),
+(62, 'system_action', 14, 'System action created. <br/><br/>System Action Name: Delete Role System Action Access<br/>System Action Description: Access to delete the role system action access.', 1, '2024-06-22 17:54:16'),
+(63, 'system_action', 15, 'System action created. <br/><br/>System Action Name: Add File Extension Access<br/>System Action Description: Access to assign the file extension to the upload setting.', 1, '2024-06-22 17:54:16'),
+(64, 'system_action', 16, 'System action created. <br/><br/>System Action Name: Delete File Extension Access<br/>System Action Description: Access to delete the file extension to the upload setting.', 1, '2024-06-22 17:54:16'),
+(65, 'role_system_action_permission', 1, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Update System Settings<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:16', 1, '2024-06-22 17:54:16'),
+(66, 'role_system_action_permission', 2, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Update Security Settings<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:16', 1, '2024-06-22 17:54:16'),
+(67, 'role_system_action_permission', 3, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Activate User Account<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:16', 1, '2024-06-22 17:54:16'),
+(68, 'role_system_action_permission', 4, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Deactivate User Account<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:16', 1, '2024-06-22 17:54:16'),
+(69, 'role_system_action_permission', 5, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Lock User Account<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:16', 1, '2024-06-22 17:54:16'),
+(70, 'role_system_action_permission', 6, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Unlock User Account<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:16', 1, '2024-06-22 17:54:16'),
+(71, 'role_system_action_permission', 7, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Add Role User Account<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(72, 'role_system_action_permission', 8, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Delete Role User Account<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(73, 'role_system_action_permission', 9, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Add Role Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(74, 'role_system_action_permission', 10, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Update Role Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(75, 'role_system_action_permission', 11, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Delete Role Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(76, 'role_system_action_permission', 12, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Add Role System Action Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(77, 'role_system_action_permission', 13, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Update Role System Action Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(78, 'role_system_action_permission', 14, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Delete Role System Action Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(79, 'role_system_action_permission', 15, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Add File Extension Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(80, 'role_system_action_permission', 16, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Delete File Extension Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
+(81, 'user_account', 2, 'Last Connection Date: 2024-06-22 16:46:07 -> 2024-06-23 16:00:39<br/>', 1, '2024-06-23 16:00:39');
 
 -- --------------------------------------------------------
 
@@ -1646,7 +1683,8 @@ INSERT INTO `internal_notes` (`internal_notes_id`, `table_name`, `reference_id`,
 (5, 'app_module', 1, 'asd', 2, '2024-06-21 17:08:42'),
 (6, 'app_module', 1, 'asd', 2, '2024-06-21 17:09:36'),
 (7, 'app_module', 1, 'asdasd', 2, '2024-06-21 17:09:53'),
-(8, 'app_module', 1, 'ssdfd', 2, '2024-06-21 17:13:22');
+(8, 'app_module', 1, 'ssdfd', 2, '2024-06-21 17:13:22'),
+(9, 'app_module', 1, 'test\r\n', 2, '2024-06-22 10:34:32');
 
 -- --------------------------------------------------------
 
@@ -2191,6 +2229,28 @@ CREATE TABLE `role_system_action_permission` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `role_system_action_permission`
+--
+
+INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`, `role_id`, `role_name`, `system_action_id`, `system_action_name`, `system_action_access`, `date_assigned`, `created_date`, `last_log_by`) VALUES
+(1, 1, 'Administrator', 1, 'Update System Settings', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
+(2, 1, 'Administrator', 2, 'Update Security Settings', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
+(3, 1, 'Administrator', 3, 'Activate User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
+(4, 1, 'Administrator', 4, 'Deactivate User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
+(5, 1, 'Administrator', 5, 'Lock User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
+(6, 1, 'Administrator', 6, 'Unlock User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
+(7, 1, 'Administrator', 7, 'Add Role User Account', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(8, 1, 'Administrator', 8, 'Delete Role User Account', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(9, 1, 'Administrator', 9, 'Add Role Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(10, 1, 'Administrator', 10, 'Update Role Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(11, 1, 'Administrator', 11, 'Delete Role Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(12, 1, 'Administrator', 12, 'Add Role System Action Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(13, 1, 'Administrator', 13, 'Update Role System Action Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(14, 1, 'Administrator', 14, 'Delete Role System Action Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(15, 1, 'Administrator', 15, 'Add File Extension Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(16, 1, 'Administrator', 16, 'Delete File Extension Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1);
+
+--
 -- Triggers `role_system_action_permission`
 --
 DROP TRIGGER IF EXISTS `role_system_action_permission_trigger_insert`;
@@ -2399,6 +2459,28 @@ CREATE TABLE `system_action` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `system_action`
+--
+
+INSERT INTO `system_action` (`system_action_id`, `system_action_name`, `system_action_description`, `created_date`, `last_log_by`) VALUES
+(1, 'Update System Settings', 'Access to update the system settings.', '2024-06-22 17:54:16', 1),
+(2, 'Update Security Settings', 'Access to update the security settings.', '2024-06-22 17:54:16', 1),
+(3, 'Activate User Account', 'Access to activate the user account.', '2024-06-22 17:54:16', 1),
+(4, 'Deactivate User Account', 'Access to deactivate the user account.', '2024-06-22 17:54:16', 1),
+(5, 'Lock User Account', 'Access to lock the user account.', '2024-06-22 17:54:16', 1),
+(6, 'Unlock User Account', 'Access to unlock the user account.', '2024-06-22 17:54:16', 1),
+(7, 'Add Role User Account', 'Access to assign roles to user account.', '2024-06-22 17:54:16', 1),
+(8, 'Delete Role User Account', 'Access to delete roles to user account.', '2024-06-22 17:54:16', 1),
+(9, 'Add Role Access', 'Access to add role access.', '2024-06-22 17:54:16', 1),
+(10, 'Update Role Access', 'Access to update role access.', '2024-06-22 17:54:16', 1),
+(11, 'Delete Role Access', 'Access to delete role access.', '2024-06-22 17:54:16', 1),
+(12, 'Add Role System Action Access', 'Access to add the role system action access.', '2024-06-22 17:54:16', 1),
+(13, 'Update Role System Action Access', 'Access to update the role system action access.', '2024-06-22 17:54:16', 1),
+(14, 'Delete Role System Action Access', 'Access to delete the role system action access.', '2024-06-22 17:54:16', 1),
+(15, 'Add File Extension Access', 'Access to assign the file extension to the upload setting.', '2024-06-22 17:54:16', 1),
+(16, 'Delete File Extension Access', 'Access to delete the file extension to the upload setting.', '2024-06-22 17:54:16', 1);
 
 --
 -- Triggers `system_action`
@@ -2618,7 +2700,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmids@christianmotors.ph', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-15 18:08:25', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-21 08:36:23', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'EoQR4mnkrl0P2jXw2SK1WkJR84C2adnCVGdzeL8lWYw%3D', '2024-06-15 18:08:25', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-23 16:00:39', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'jhQSkzCC5Svd%2B7A4GTQH%2BtcA2g558o5ZzYMvIvVCD7I%3D', '2024-06-15 18:08:25', 1);
 
 --
 -- Triggers `user_account`
@@ -2957,7 +3039,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `email_setting`
@@ -2969,7 +3051,7 @@ ALTER TABLE `email_setting`
 -- AUTO_INCREMENT for table `internal_notes`
 --
 ALTER TABLE `internal_notes`
-  MODIFY `internal_notes_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `internal_notes_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `internal_notes_attachment`
@@ -3035,7 +3117,7 @@ ALTER TABLE `role_permission`
 -- AUTO_INCREMENT for table `role_system_action_permission`
 --
 ALTER TABLE `role_system_action_permission`
-  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `role_user_account`
@@ -3053,7 +3135,7 @@ ALTER TABLE `security_setting`
 -- AUTO_INCREMENT for table `system_action`
 --
 ALTER TABLE `system_action`
-  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `upload_setting`

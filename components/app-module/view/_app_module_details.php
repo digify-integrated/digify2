@@ -15,11 +15,8 @@
                             if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
                                 echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create App Module</a></li>' : '';
                                 echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-app-module">Delete App Module</button></li>' : '';
-                                
-                                echo '<li><hr class="dropdown-divider"></li>';
                             }
                         ?>
-                        <li><button class="dropdown-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" id="view-log-notes">View Log Notes</button></li>
                     </ul>
                 </div>
                 <?php
@@ -105,7 +102,7 @@
 </div>
 
 <div class="modal fade" id="app-module-modal" tabindex="-1" aria-labelledby="app-module-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-r">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title fw-8">Edit App Module Details</h5>
@@ -155,7 +152,7 @@
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8">Edit App Logo</h5>
+                <h5 class="modal-title fw-8">Update App Logo</h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

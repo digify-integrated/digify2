@@ -1,6 +1,11 @@
 <?php
   $userAccountPageAccess = $globalModel->checkAccessRights($userID, 3, 'read');
   $companyPageAccess = $globalModel->checkAccessRights($userID, 4, 'read');
+  
+  $updateSecuritySetting = $globalModel->checkSystemActionAccessRights($userID, 2);
+
+  $securitySettingUpdate = $updateSecuritySetting['total'] == 0 ? 'disabled' : '';
+  $securitySettingUpdateButton = $updateSecuritySetting['total'] > 0 ? '<button type="submit" form="security-settings-form" class="btn btn-success mb-0" id="submit-security-setting-data">Save</button>' : null;
 
   $userAccountButton = '';
   if ($userAccountPageAccess['total'] > 0) {
@@ -53,7 +58,9 @@
       <div class="card-body d-flex align-items-center">
         <h5 class="card-title mb-0">Security Settings</h5>
         <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-          <button type="submit" form="security-settings-form" class="btn btn-success mb-0" id="submit-security-setting-data">Save</button>
+          <?php
+            echo $securitySettingUpdateButton;
+          ?>
         </div>
       </div>
       <hr class="m-0" />
@@ -63,18 +70,18 @@
             <div class="col-lg-6">
               <h4 class="card-title mb-0">Max Failed Login Attempt</h4>
               <p class="mb-3">Maximum number of unsuccessful login attempts</p>
-              <input class="form-control mb-3" type="number" id="max_failed_login" name="max_failed_login" min="1">
+              <input class="form-control mb-3" type="number" id="max_failed_login" name="max_failed_login" min="1" <?php echo $securitySettingUpdate; ?>>
             </div>
             <div class="col-lg-6">
               <h4 class="card-title mb-0">Max Failed OTP Validation Attempt</h4>
               <p class="mb-3">Maximum number of incorrect OTP attempts allowed</p>
-              <input class="form-control mb-3" type="number" id="max_failed_otp_attempt" name="max_failed_otp_attempt" min="1">
+              <input class="form-control mb-3" type="number" id="max_failed_otp_attempt" name="max_failed_otp_attempt" min="1" <?php echo $securitySettingUpdate; ?>>
             </div>
             <div class="col-lg-6">
               <h4 class="card-title mb-0">Password Validity Period</h4>
               <p class="mb-3">Sets the duration of the password expiry</p>
               <div class="input-group mb-3">
-                <input class="form-control" type="number" id="password_expiry_duration" name="password_expiry_duration" min="1">
+                <input class="form-control" type="number" id="password_expiry_duration" name="password_expiry_duration" min="1" <?php echo $securitySettingUpdate; ?>>
               <span class="input-group-text">day(s)</span>
               </div>
             </div>
@@ -82,7 +89,7 @@
               <h4 class="card-title mb-0">One-Time Password Validity Period</h4>
               <p class="mb-3">The time window during which a one-time password (OTP) is valid</p>
               <div class="input-group mb-3">
-                <input class="form-control" type="number" id="otp_duration" name="otp_duration" min="1">
+                <input class="form-control" type="number" id="otp_duration" name="otp_duration" min="1" <?php echo $securitySettingUpdate; ?>>
                 <span class="input-group-text">minute(s)</span>
               </div>
             </div>
@@ -90,7 +97,7 @@
               <h4 class="card-title mb-0">Password Reset Token Validity Period</h4>
               <p class="mb-3">The time window during which a reset password token remains valid</p>
               <div class="input-group mb-3">
-                <input class="form-control" type="number" id="reset_password_token_duration" name="reset_password_token_duration" min="1">
+                <input class="form-control" type="number" id="reset_password_token_duration" name="reset_password_token_duration" min="1" <?php echo $securitySettingUpdate; ?>>
                 <span class="input-group-text">minute(s)</span>
               </div>
             </div>
@@ -98,14 +105,14 @@
               <h4 class="card-title mb-0">Session Inactivity Limit</h4>
               <p class="mb-3">Time before inactive sessions end</p>
               <div class="input-group mb-3">
-                <input class="form-control" type="number" id="session_inactivity_limit" name="session_inactivity_limit" min="1">
+                <input class="form-control" type="number" id="session_inactivity_limit" name="session_inactivity_limit" min="1" <?php echo $securitySettingUpdate; ?>>
                 <span class="input-group-text">minute(s)</span>
               </div>
             </div>
             <div class="col-lg-6">
               <h4 class="card-title mb-0">Password Recovery Link</h4>
               <p class="mb-3">The default URL used for resetting user account password</p>
-              <input class="form-control mb-3" type="text" id="password_recovery_link" name="password_recovery_link" maxlength="500">
+              <input class="form-control mb-3" type="text" id="password_recovery_link" name="password_recovery_link" maxlength="500" <?php echo $securitySettingUpdate; ?>>
             </div>
           </div>
         </form>

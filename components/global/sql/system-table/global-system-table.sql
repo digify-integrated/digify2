@@ -7,6 +7,7 @@ CREATE TABLE audit_log (
     log TEXT NOT NULL,
     changed_by INT UNSIGNED NOT NULL,
     changed_at DATETIME NOT NULL,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
     FOREIGN KEY (changed_by) REFERENCES user_account(user_account_id)
 );
 
@@ -26,6 +27,7 @@ CREATE TABLE internal_notes (
     internal_note VARCHAR(5000) NOT NULL,
     internal_note_by INT UNSIGNED NOT NULL,
     internal_note_date DATETIME NOT NULL DEFAULT NOW(),
+    created_date DATETIME NOT NULL DEFAULT NOW(),
     FOREIGN KEY (internal_note_by) REFERENCES user_account(user_account_id)
 );
 
@@ -43,6 +45,7 @@ CREATE TABLE internal_notes_attachment (
     attachment_file_name VARCHAR(500) NOT NULL,
     attachment_file_size DOUBLE NOT NULL,
     attachment_path_file VARCHAR(500) NOT NULL,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
     FOREIGN KEY (internal_notes_id) REFERENCES internal_notes(internal_notes_id)
 );
 

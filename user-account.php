@@ -9,6 +9,7 @@
     <?php require_once('components/global/view/_head.php'); ?>
     <link rel="stylesheet" href="./assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="./assets/libs/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="./assets/libs/daterangepicker/daterangepicker.css">
 </head>
 <body>
     <?php require_once('components/global/view/_preloader.php'); ?>
@@ -22,13 +23,13 @@
                         require_once('components/global/view/_breadcrumbs.php'); 
 
                         if($newRecord){
-                            require_once('components/user-account/view/_app_module_new.php');
+                            require_once('components/user-account/view/_user_account_new.php');
                         }
                         else if(!empty($detailID)){
-                            require_once('components/user-account/view/_app_module_details.php');
+                            require_once('components/user-account/view/_user_account_details.php');
                         }
                         else{
-                            require_once('components/user-account/view/_app_module.php');
+                            require_once('components/user-account/view/_user_account.php');
                         }
                     ?>
                 </div>
@@ -47,6 +48,8 @@
     <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
+    <script src="./assets/js/extra-libs/moment/moment.min.js"></script>
+    <script src="./assets/libs/daterangepicker/daterangepicker.js"></script>
 
     <?php
         $scriptLink = 'user-account.js';

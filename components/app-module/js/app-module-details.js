@@ -77,7 +77,7 @@
             });
         });
 
-        if($('#log-notes-main').length && $('#view-log-notes').length){
+        if($('#log-notes-main').length){
             const app_module_id = $('#details-id').text();
 
             logNotesMain('app_module', app_module_id);
