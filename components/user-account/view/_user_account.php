@@ -8,46 +8,52 @@
     $unlockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 6);
 ?>
 
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-4 col-xl-3">
+            <div class="position-relative">
+                <input type="text" class="form-control product-search ps-5" id="datatable-search" placeholder="Search..." />
+                <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+            </div>
+        </div>
+        <div class="col-md-8 col-xl-9 text-end d-flex justify-content-md-end justify-content-center mt-3 mt-md-0">
+            <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                <?php
+                    if($deleteAccess['total'] > 0 || $activateUserAccount['total'] > 0 || $deactivateUserAccount['total'] > 0 || $lockUserAccount['total'] > 0 || $unlockUserAccount['total'] > 0){
+                        $dropdown = '<button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0 d-none" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
+                                <ul class="dropdown-menu dropdown-menu-end">';
+
+                        $dropdown .= $deactivateUserAccount['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="deactivate-user-account">Deactivate User Account</button></li>' : '';
+
+                        $dropdown .= $activateUserAccount['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="activate-user-account">Activate User Account</button></li>' : '';
+
+                        $dropdown .= $unlockUserAccount['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="unlock-user-account">Unlock User Account</button></li>' : '';
+
+                        $dropdown .= $lockUserAccount['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="lock-user-account">Lock User Account</button></li>' : '';
+
+                        $dropdown .= $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-user-account">Delete User Account</button></li>' : '';
+
+                        $dropdown .= '</ul>';
+
+                        echo $dropdown;
+                    }
+
+                    echo $createAccess['total'] > 0 ?
+                    '<a href="' . $pageLink . '&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
+                ?>
+                <button type="button" class="btn btn-warning mb-0 px-4" data-bs-toggle="offcanvas" data-bs-target="#filter-offcanvas" aria-controls="filter-offcanvas">Filter</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="datatables">
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header d-flex align-items-center">
-                    <h5 class="card-title mb-0">User Account List</h5>
-                    <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                        <?php
-                            if($deleteAccess['total'] > 0 || $activateUserAccount['total'] > 0 || $deactivateUserAccount['total'] > 0 || $lockUserAccount['total'] > 0 || $unlockUserAccount['total'] > 0){
-                                $dropdown = '<button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0 d-none" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
-                                <ul class="dropdown-menu dropdown-menu-end">';
-
-                                $dropdown .= $deactivateUserAccount['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="deactivate-user-account">Deactivate User Account</button></li>' : '';
-
-                                $dropdown .= $activateUserAccount['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="activate-user-account">Activate User Account</button></li>' : '';
-
-                                $dropdown .= $unlockUserAccount['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="unlock-user-account">Unlock User Account</button></li>' : '';
-
-                                $dropdown .= $lockUserAccount['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="lock-user-account">Lock User Account</button></li>' : '';
-
-                                $dropdown .= $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-user-account">Delete User Account</button></li>' : '';
-
-                                $dropdown .= '</ul>';
-
-                                echo $dropdown;
-                            }
-                        ?>                        
-                    </div>
-                    <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                        <?php
-                            echo $createAccess['total'] > 0 ?
-                            '<a href="' . $pageLink . '&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
-                        ?>
-                        <button type="button" class="btn btn-warning mb-0 px-4" data-bs-toggle="offcanvas" data-bs-target="#filter-offcanvas" aria-controls="filter-offcanvas">Filter</a>
-                    </div>
-                </div>
                 <div class="card-body">
-                    <input type="hidden" id="page-id" value="<?php echo $pageID; ?>">
-                    <div class="table-responsive">
-                        <table id="user-account-table" class="table border table-striped table-hover align-middle text-nowrap mb-0">
+                    <div class="table-responsive overflow-x-auto">
+                        <table id="user-account-table" class="table align-middle text-nowrap mb-4">
                             <thead class="text-dark">
                                 <tr>
                                     <th class="all">

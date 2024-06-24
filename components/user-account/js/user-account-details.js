@@ -33,7 +33,7 @@
         });
 
         $(document).on('click','#delete-user-account',function() {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete user account';
     
@@ -150,7 +150,7 @@
         });
 
         $(document).on('click','#activate-user-account',function() {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'activate user account';
     
@@ -201,6 +201,9 @@
                                 fullErrorMessage += `, Response: ${xhr.responseText}`;
                             }
                             showErrorDialog(fullErrorMessage);
+                        },
+                        complete: function(){
+                            logNotesMain('user_account', user_account_id);
                         }
                     });
                     return false;
@@ -209,7 +212,7 @@
         });
 
         $(document).on('click','#deactivate-user-account',function() {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'deactivate user account';
     
@@ -260,6 +263,9 @@
                                 fullErrorMessage += `, Response: ${xhr.responseText}`;
                             }
                             showErrorDialog(fullErrorMessage);
+                        },
+                        complete: function(){
+                            logNotesMain('user_account', user_account_id);
                         }
                     });
                     return false;
@@ -268,7 +274,7 @@
         });
 
         $(document).on('click','#lock-user-account',function() {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'lock user account';
     
@@ -319,6 +325,9 @@
                                 fullErrorMessage += `, Response: ${xhr.responseText}`;
                             }
                             showErrorDialog(fullErrorMessage);
+                        },
+                        complete: function(){
+                            logNotesMain('user_account', user_account_id);
                         }
                     });
                     return false;
@@ -327,7 +336,7 @@
         });
 
         $(document).on('click','#unlock-user-account',function() {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'unlock user account';
     
@@ -378,6 +387,9 @@
                                 fullErrorMessage += `, Response: ${xhr.responseText}`;
                             }
                             showErrorDialog(fullErrorMessage);
+                        },
+                        complete: function(){
+                            logNotesMain('user_account', user_account_id);
                         }
                     });
                     return false;
@@ -386,7 +398,7 @@
         });
 
         $(document).on('change','#two-factor-authentication',function() {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             var checkbox = document.getElementById('two-factor-authentication');
             var transaction = (checkbox).checked ? 'enable two factor authentication' : 'disable two factor authentication';
@@ -423,12 +435,15 @@
                         fullErrorMessage += `, Response: ${xhr.responseText}`;
                     }
                     showErrorDialog(fullErrorMessage);
+                },
+                complete: function(){
+                    logNotesMain('user_account', user_account_id);
                 }
             });
         });
 
         $(document).on('change','#multiple-login-sessions',function() {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             var checkbox = document.getElementById('multiple-login-sessions');
             var transaction = (checkbox).checked ? 'enable multiple login sessions' : 'disable multiple login sessions';
@@ -465,6 +480,9 @@
                         fullErrorMessage += `, Response: ${xhr.responseText}`;
                     }
                     showErrorDialog(fullErrorMessage);
+                },
+                complete: function(){
+                    logNotesMain('user_account', user_account_id);
                 }
             });
         });
@@ -479,20 +497,26 @@
 
         if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
             $(document).on('click','#view-log-notes',function() {
-                const user_account_id = $('#user-account-id').text();
+                const user_account_id = $('#details-id').text();
 
                 logNotes('user_account', user_account_id);
             });
         }
 
+        if($('#log-notes-main').length){
+            const user_account_id = $('#details-id').text();
+
+            logNotesMain('user_account', user_account_id);
+        }
+
         if($('#internal-notes').length){
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
 
             internalNotes('user_account', user_account_id);
         }
 
         if($('#internal-notes-form').length){
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
 
             internalNotesForm('user_account', user_account_id);
         }
@@ -539,7 +563,7 @@ function userAccountForm(){
             }
         },
         submitHandler: function(form) {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const transaction = 'update user account';
           
             $.ajax({
@@ -575,6 +599,7 @@ function userAccountForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('user_account', user_account_id);
                 }
             });
         
@@ -626,7 +651,7 @@ function changePasswordForm(){
             }
         },
         submitHandler: function(form) {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const transaction = 'change password';
     
             $.ajax({
@@ -700,7 +725,7 @@ function updateUserAccountProfilPictureForm(){
             }
         },
         submitHandler: function(form) {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const transaction = 'update user account profile picture';
             var formData = new FormData(form);
             formData.append('user_account_id', user_account_id);
@@ -769,7 +794,7 @@ function userAccountAssignmentForm(){
             }
         },
         submitHandler: function(form) {
-            const user_account_id = $('#user-account-id').text();
+            const user_account_id = $('#details-id').text();
             const transaction = 'assign user account role';
           
             $.ajax({
@@ -818,7 +843,7 @@ function userAccountAssignmentForm(){
 }
 
 function roleList(){
-    const user_account_id = $('#user-account-id').text();
+    const user_account_id = $('#details-id').text();
     const type = 'assigned role user account list';
 
     $.ajax({
@@ -835,7 +860,7 @@ function roleList(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get user account details':
-            var user_account_id = $('#user-account-id').text();
+            var user_account_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
@@ -895,7 +920,7 @@ function displayDetails(transaction){
 function generateDropdownOptions(type){
     switch (type) {
         case 'user account role dual listbox options':
-            var user_account_id = $('#user-account-id').text();
+            var user_account_id = $('#details-id').text();
 
             $.ajax({
                 url: 'components/role/view/_role_generation.php',

@@ -781,7 +781,7 @@ function assignedUserAccountTable(datatable_name, buttons = false, show_all = fa
     };
 
     if (buttons) {
-        settings.dom = "<'row'<'col-sm-6'f><'col-sm-6 text-right'B>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>";
+        settings.dom = 'Bfrtip';
         settings.buttons = ['csv', 'excel', 'pdf'];
     }
 
@@ -846,7 +846,7 @@ function assignedRolePermissionTable(datatable_name, buttons = false, show_all =
     };
 
     if (buttons) {
-        settings.dom = "<'row'<'col-sm-6'f><'col-sm-6 text-right'B>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>";
+        settings.dom = 'Bfrtip';
         settings.buttons = ['csv', 'excel', 'pdf'];
     }
 
@@ -905,7 +905,7 @@ function assignedRoleSystemActionPermissionTable(datatable_name, buttons = false
     };
 
     if (buttons) {
-        settings.dom = "<'row'<'col-sm-6'f><'col-sm-6 text-right'B>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>";
+        settings.dom = 'Bfrtip';
         settings.buttons = ['csv', 'excel', 'pdf'];
     }
 

@@ -1,3 +1,24 @@
+<?php
+    require('components/user-account/model/user-account-model.php');
+
+    $userAccountModel = new UserAccountModel($databaseModel);
+
+    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
+
+    $activateUserAccount = $globalModel->checkSystemActionAccessRights($userID, 3);
+    $deactivateUserAccount = $globalModel->checkSystemActionAccessRights($userID, 4);
+    $lockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 5);
+    $unlockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 6);
+    $addRoleUserAccount  = $globalModel->checkSystemActionAccessRights($userID, 7);
+
+    if(isset($_GET['id'])){
+        $userAccountDetails = $userAccountModel->getUserAccount($detailID, null);
+        $userAccountActive = $userAccountDetails['active'];
+        $userAccountLocked = $userAccountDetails['locked'];
+    }
+?>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -34,7 +55,7 @@
                                         <div class="text-center">
                                             <img src="./assets/images/profile/user-1.jpg" alt="" id="user_account_profile_picture" class="rounded-circle" width="100" height="100">
                                             <?php
-                                                echo $userAccountWriteAccess['total'] > 0 ? 
+                                                echo $writeAccess['total'] > 0 ? 
                                                 '<div class="d-flex align-items-center justify-content-center my-4 gap-6">
                                                     <button class="btn btn-primary" data-bs-toggle="modal" id="update-user-account-profile-picture" data-bs-target="#user-account-profile-picture-modal">Upload</button>
                                                 </div>' : '';
@@ -52,10 +73,10 @@
                                             <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <?php
-                                                    if($userAccountCreateAccess['total'] > 0 || $userAccountDeleteAccess['total'] > 0 || $activateUserAccount['total'] > 0 || $deactivateUserAccount['total'] > 0 || $lockUserAccount['total'] > 0 || $unlockUserAccount['total'] > 0){
-                                                        echo $userAccountWriteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" data-bs-toggle="modal" id="change-password" data-bs-target="#change-password-modal">Change Password</button></li>' : '';
+                                                    if($createAccess['total'] > 0 || $deleteAccess['total'] > 0 || $activateUserAccount['total'] > 0 || $deactivateUserAccount['total'] > 0 || $lockUserAccount['total'] > 0 || $unlockUserAccount['total'] > 0){
+                                                        echo $writeAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" data-bs-toggle="modal" id="change-password" data-bs-target="#change-password-modal">Change Password</button></li>' : '';
                                                         
-                                                        echo $userAccountCreateAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create User Account</a></li>' : '';
+                                                        echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create User Account</a></li>' : '';
 
                                                         if($userAccountActive == 'Yes' && $deactivateUserAccount['total'] > 0){
                                                             echo '<li><button class="dropdown-item" type="button" id="deactivate-user-account">Deactivate User Account</button></li>';
@@ -71,7 +92,7 @@
                                                             echo '<li><button class="dropdown-item" type="button" id="lock-user-account">Lock User Account</button></li>';
                                                         }
 
-                                                        echo $userAccountDeleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-user-account">Delete User Account</button></li>' : '';
+                                                        echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-user-account">Delete User Account</button></li>' : '';
                                                         
                                                         echo '<li><hr class="dropdown-divider"></li>';
                                                     }
@@ -79,7 +100,7 @@
                                                 <li><button class="dropdown-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" id="view-log-notes">View Log Notes</button></li>
                                             </ul>
                                             <?php
-                                                echo $userAccountWriteAccess['total'] > 0 ? 
+                                                echo $writeAccess['total'] > 0 ? 
                                                 '<button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#user-account-modal">Edit</button>' : '';
                                             ?>
                                         </div>
@@ -202,7 +223,7 @@
                                                 </div>
                                                 <div class="form-check form-switch mb-0">
                                                     <?php
-                                                        $checkboxAttributes = ($userAccountWriteAccess['total'] > 0) ? '' : 'disabled';
+                                                        $checkboxAttributes = ($writeAccess['total'] > 0) ? '' : 'disabled';
 
                                                         echo '<input class="form-check-input" type="checkbox" role="switch" id="two-factor-authentication" ' . $checkboxAttributes . '>';
                                                     ?>
@@ -220,7 +241,7 @@
                                                 </div>
                                                 <div class="form-check form-switch mb-0">
                                                     <?php
-                                                        $checkboxAttributes = ($userAccountWriteAccess['total'] > 0) ? '' : 'disabled';
+                                                        $checkboxAttributes = ($writeAccess['total'] > 0) ? '' : 'disabled';
                                                         
                                                         echo '<input class="form-check-input" type="checkbox" role="switch" id="multiple-login-sessions" ' . $checkboxAttributes . '>';
                                                     ?>
@@ -312,7 +333,7 @@
                                 <label class="col-sm-4 form-label" for="new_password">New Password <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="new_password" name="new_password">
-                                    <button class="btn bg-info-subtle text-info  rounded-end d-flex align-items-center password-addon" type="button">
+                                    <button class="btn btn-dark rounded-end d-flex align-items-center password-addon" type="button">
                                         <i class="ti ti-eye"></i>
                                     </button>
                                 </div>
@@ -325,7 +346,7 @@
                                 <label class="col-sm-4 form-label" for="confirm_password">Confirm Password <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="confirm_password" name="confirm_password">
-                                    <button class="btn bg-info-subtle text-info  rounded-end d-flex align-items-center password-addon" type="button">
+                                    <button class="btn btn-dark rounded-end d-flex align-items-center password-addon" type="button">
                                         <i class="ti ti-eye"></i>
                                     </button>
                                 </div>
@@ -366,5 +387,4 @@
     </div>
 </div>
 
-<?php require_once('components/global/view/_internal_notes.php'); ?>
-<?php require_once('components/global/view/_log_notes_offcanvas.php'); ?>
+<?php require_once('components/global/view/_internal_log_notes.php'); ?>

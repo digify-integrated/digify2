@@ -397,6 +397,11 @@
             userAccountTable('#user-account-table');
             $('#filter-offcanvas').offcanvas('hide');
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#user-account-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -457,6 +462,8 @@ function userAccountTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {
@@ -466,14 +473,15 @@ function userAccountTable(datatable_name, buttons = false, show_all = false){
         'lengthMenu': length_menu,
         'language': {
             'emptyTable': 'No data found',
-            'searchPlaceholder': 'Search...',
+            'sLengthMenu': '_MENU_',
+            'searchPlaceholder': 'Search',
             'search': '',
+            'info': '_START_ - _END_ of _TOTAL_ items',
             'loadingRecords': 'Just a moment while we fetch your data...'
-        },
+        }
     };
 
     if (buttons) {
-        settings.dom = "<'row'<'col-sm-6'f><'col-sm-6 text-right'B>>" + "<'row'<'col-sm-12'tr>>" + "<'row'<'col-sm-5'i><'col-sm-7'p>>";
         settings.buttons = ['csv', 'excel', 'pdf'];
     }
 

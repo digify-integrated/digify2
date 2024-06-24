@@ -132,6 +132,11 @@
                 showNotification('Deletion Multiple App Module Error', 'Please select the app modules you wish to delete.', 'danger');
             }
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#app-module-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -180,6 +185,8 @@ function appModuleTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {
@@ -189,10 +196,12 @@ function appModuleTable(datatable_name, buttons = false, show_all = false){
         'lengthMenu': length_menu,
         'language': {
             'emptyTable': 'No data found',
-            'searchPlaceholder': 'Search...',
+            'sLengthMenu': '_MENU_',
+            'searchPlaceholder': 'Search',
             'search': '',
+            'info': '_START_ - _END_ of _TOTAL_ items',
             'loadingRecords': 'Just a moment while we fetch your data...'
-        },
+        }
     };
 
     if (buttons) {

@@ -2,29 +2,36 @@
     $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
     $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
 ?>
+<div class="card card-body">
+    <div class="row">
+        <div class="col-md-4 col-xl-3">
+            <div class="position-relative">
+                <input type="text" class="form-control product-search ps-5" id="datatable-search" placeholder="Search..." />
+                <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y fs-6 text-dark ms-3"></i>
+            </div>
+        </div>
+        <div class="col-md-8 col-xl-9 text-end d-flex justify-content-md-end justify-content-center mt-3 mt-md-0">
+            <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                <?php
+                    echo $deleteAccess['total'] > 0 ? '<button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0 d-none" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><button class="dropdown-item" type="button" id="delete-app-module">Delete App Module</button></li>
+                            </ul>' : '';
+
+                    echo $createAccess['total'] > 0 ? '<a href="' . $pageLink . '&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div  class="datatables">
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header d-flex align-items-center">
-                    <h5 class="card-title mb-0">App Module List</h5>
-                    <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                        <?php
-                            echo $deleteAccess['total'] > 0 ? '<button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0 d-none" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><button class="dropdown-item" type="button" id="delete-app-module">Delete App Module</button></li>
-                            </ul>' : '';
-                        ?>
-                    </div>
-                    <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                        <?php
-                            echo $createAccess['total'] > 0 ? '<a href="' . $pageLink . '&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
-                        ?>
-                    </div>
-                </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="app-module-table" class="table align-middle text-nowrap mb-0">
+                        <table id="app-module-table" class="table search-table align-middle text-nowrap mb-4">
                             <thead class="text-dark">
                                 <tr>
                                     <th class="all">

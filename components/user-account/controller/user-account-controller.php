@@ -1726,7 +1726,7 @@ require_once '../../user-account/model/user-account-model.php';
 require_once '../../role/model/role-model.php';
 require_once '../../authentication/model/authentication-model.php';
 require_once '../../upload-setting/model/upload-setting-model.php';
-require_once '../../security-setting/model/security-setting-model.php';
+require_once '../../general-settings/model/security-setting-model.php';
 
 $controller = new UserAccountController(new UserAccountModel(new DatabaseModel), new RoleModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecuritySettingModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new SecurityModel(), new SystemModel());
 $controller->handleRequest();

@@ -13459,7 +13459,7 @@
     --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
     --bs-body-font-family: var(--bs-font-sans-serif);
-    --bs-body-font-size: 0.875rem;
+    --bs-body-font-size: 13px;
     --bs-body-font-weight: 400;
     --bs-body-line-height: 1.5;
     --bs-body-color: #98a4ae;
@@ -15555,37 +15555,38 @@ progress {
 .table-responsive {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-}
-@media (max-width: 575.98px) {
+  }
+  
+  @media (max-width: 575.98px) {
     .table-responsive-sm {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
-}
-@media (max-width: 767.98px) {
+  }
+  @media (max-width: 767.98px) {
     .table-responsive-md {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
-}
-@media (max-width: 991.98px) {
+  }
+  @media (max-width: 991.98px) {
     .table-responsive-lg {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
-}
-@media (max-width: 1299.98px) {
+  }
+  @media (max-width: 1299.98px) {
     .table-responsive-xl {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
-}
-@media (max-width: 1399.98px) {
+  }
+  @media (max-width: 1399.98px) {
     .table-responsive-xxl {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
-}
+  }
 .form-label {
     margin-bottom: 0.5rem;
     font-weight: 600;
@@ -18363,7 +18364,7 @@ fieldset:disabled .btn {
 .badge {
     --bs-badge-padding-x: 10px;
     --bs-badge-padding-y: 5px;
-    --bs-badge-font-size: 0.8125rem;
+    --bs-badge-font-size: 0.70rem;
     --bs-badge-font-weight: 600;
     --bs-badge-color: #fff;
     --bs-badge-border-radius: 6px;
@@ -35039,43 +35040,42 @@ body .apexcharts-tooltip-title {
 }
 @media (min-width: 992px) {
     .datatables .table-responsive {
-        overflow-x: clip;
+        overflow-x: visible;
     }
 }
 .table-responsive .dataTables_wrapper .dataTables_length select {
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-    padding-left: 0.5rem;
-    padding-right: 0.625rem;
-    font-size: 0.765625rem;
-    border-radius: 5px;
-    border-color: var(--bs-border-color);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.625rem;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  border-color: var(--bs-border-color);
 }
 .table-responsive .dataTables_wrapper .dataTables_filter {
-    margin-bottom: 25px;
+  margin-bottom: 25px;
 }
 .table-responsive .dataTables_wrapper .dataTables_filter input {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.765625rem;
-    border-radius: 5px;
-    border: 1px solid var(--bs-border-color);
+  padding: 0.5rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  border: 1px solid var(--bs-border-color);
 }
 .table-responsive .dataTables_wrapper .dataTables_paginate .paginate_button {
-    cursor: pointer;
-    padding: 6px 12px;
-    border: 1px solid var(--bs-border-color);
-    border-radius: var(--bs-border-radius-sm);
-    margin: 0 3px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border: 1px solid var(--bs-border-color);
 }
 .table-responsive .dataTables_wrapper .dataTables_paginate .paginate_button .previous {
-    border-radius: 7px 0 0 7px;
-    background-color: var(--bs-gray-200);
+  border-radius: 7px 0 0 7px;
+  background-color: var(--bs-gray-200);
 }
 .table-responsive .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    color: #fff;
-    background-color: var(--bs-primary);
-    border-color: var(--bs-primary);
+  color: #fff;
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
 }
+
 .wizard {
     display: block;
     width: 100%;
@@ -37671,4 +37671,26 @@ h6 {
 body .select2-container--classic .select2-selection--single, body .select2-container--classic .select2-selection--single .select2-selection__arrow, body .select2-container--classic .select2-selection--single .select2-selection__rendered, body .select2-container--default .select2-selection--multiple, body .select2-container--default .select2-selection--single, body .select2-container--default .select2-selection--single .select2-selection__arrow, body .select2-container--default .select2-selection--single .select2-selection__rendered{
     color: var(--bs-heading-color);
     padding-left: 8px;
+}
+
+.dataTables_info,.dataTables_paginate {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.dataTables_paginate {
+    float: right;
+    margin-top: 10px; 
+}
+
+div.dataTables_wrapper div.dataTables_paginate {
+    margin-top: 10px !important;
+}
+
+.dataTables_length {
+    float: left;
+}
+
+.dataTables_filter {
+    float: right;
 }
