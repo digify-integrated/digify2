@@ -50,7 +50,7 @@
                                 <label class="form-label" for="mail_password">Email Password <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="mail_password" name="mail_password">
-                                    <button class="btn bg-info-subtle text-info  rounded-end d-flex align-items-center password-addon" type="button">
+                                    <button class="btn btn-dark rounded-end d-flex align-items-center password-addon" type="button">
                                         <i class="ti ti-eye"></i>
                                     </button>
                                 </div>

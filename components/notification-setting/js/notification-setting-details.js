@@ -212,7 +212,7 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
+        if($('#log-notes-offcanvas').length){
             $(document).on('click','#view-email-notification-template-log-notes',function() {
                 const notification_setting_id = $('#details-id').text();
 

@@ -7,6 +7,7 @@ CREATE TABLE city (
     state_name VARCHAR(100) NOT NULL,
     country_id INT UNSIGNED NOT NULL,
     country_name VARCHAR(100) NOT NULL,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
     FOREIGN KEY (country_id) REFERENCES country(country_id),
     FOREIGN KEY (state_id) REFERENCES state(state_id),

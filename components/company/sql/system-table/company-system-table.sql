@@ -20,6 +20,7 @@ CREATE TABLE company (
     email VARCHAR(500),
     website VARCHAR(500),
     company_logo VARCHAR(500),
+    created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
 );

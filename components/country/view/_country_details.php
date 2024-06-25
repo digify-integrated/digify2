@@ -16,11 +16,8 @@
                             if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
                                 echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Country</a></li>' : '';
                                 echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-country">Delete Country</button></li>' : '';
-                                
-                                echo '<li><hr class="dropdown-divider"></li>';
                             }
                         ?>
-                        <li><button class="dropdown-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" id="view-log-notes">View Log Notes</button></li>
                     </ul>
                 </div>
                 <?php

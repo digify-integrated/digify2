@@ -5,25 +5,6 @@
 ?>
 
 <div class="row">
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Change Company Logo</h5>
-            </div>
-            <div class="card-body p-4">
-                <div class="text-center">
-                    <img src="./assets/images/default/default-company-logo.png" alt="" id="company_logo" class="rounded-circle" width="100" height="100">
-                    <?php
-                        echo $writeAccess['total'] > 0 ? 
-                        '<div class="d-flex align-items-center justify-content-center my-4 gap-6">
-                            <button class="btn btn-primary" data-bs-toggle="modal" id="update-company-logo" data-bs-target="#company-logo-modal">Upload</button>
-                        </div>' : '';
-                    ?>
-                    <p class="mb-0 mt-2">Allowed JPG, JPEG or PNG. Max size of 500kb</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="col-md-8">
         <div class="card">
             <div class="card-header d-flex align-items-center">
@@ -48,94 +29,123 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Display Name:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">Display Name:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="company_name_summary">--</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Legal Name:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">Legal Name:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="legal_name_summary">--</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Address:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">Address:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="address_summary">--</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">City:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">City:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="city_name_summary">--</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Currency:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">Currency:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="currency_name_summary">--</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Tax ID:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">Tax ID:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="tax_id_summary">--</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Phone:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">Phone:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="phone_summary">--</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Mobile:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">Mobile:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="mobile_summary">--</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Email:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">Email:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="email_summary">--</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Website:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-4">Website:</label>
+                            <div class="col-md-8">
                                 <p class="form-control-static" id="website_summary">--</p>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Change Company Logo</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center">
+                    <img src="./assets/images/default/default-company-logo.png" alt="" id="company_logo" class="rounded-circle" width="100" height="100">
+                    <?php
+                        echo $writeAccess['total'] > 0 ? 
+                        '<div class="d-flex align-items-center justify-content-center my-4 gap-6">
+                            <button class="btn btn-primary" data-bs-toggle="modal" id="update-company-logo" data-bs-target="#company-logo-modal">Upload</button>
+                        </div>' : '';
+                    ?>
+                    <p class="mb-0 mt-2">Allowed JPG, JPEG or PNG. Max size of 500kb</p>
                 </div>
             </div>
         </div>

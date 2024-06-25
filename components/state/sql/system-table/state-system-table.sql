@@ -5,6 +5,7 @@ CREATE TABLE state (
     state_name VARCHAR(100) NOT NULL,
     country_id INT UNSIGNED NOT NULL,
     country_name VARCHAR(100) NOT NULL,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
     FOREIGN KEY (country_id) REFERENCES country(country_id),
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)

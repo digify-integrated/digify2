@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 25, 2024 at 11:33 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jun 25, 2024 at 04:33 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -102,6 +102,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAppModuleExist` (IN `p_app_mod
     WHERE app_module_id = p_app_module_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkCityExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCityExist` (IN `p_city_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM city
+    WHERE city_id = p_city_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCompanyExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCompanyExist` (IN `p_company_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM company
+    WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCountryExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCountryExist` (IN `p_country_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM country
+    WHERE country_id = p_country_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCurrencyExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCurrencyExist` (IN `p_currency_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM currency
+    WHERE currency_id = p_currency_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkEmailNotificationTemplateExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmailNotificationTemplateExist` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -114,6 +142,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmailSettingExist` (IN `p_emai
 	SELECT COUNT(*) AS total
     FROM email_setting
     WHERE email_setting_id = p_email_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkFileExtensionExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkFileExtensionExist` (IN `p_file_extension_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM file_extension
+    WHERE file_extension_id = p_file_extension_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkFileTypeExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkFileTypeExist` (IN `p_file_type_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM file_type
+    WHERE file_type_id = p_file_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkLoginCredentialsExist`$$
@@ -179,6 +221,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSMSNotificationTemplateExist` 
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkStateExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkStateExist` (IN `p_state_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM state
+    WHERE state_id = p_state_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkSystemActionAccessRights`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSystemActionAccessRights` (IN `p_user_account_id` INT, IN `p_system_action_id` INT)   BEGIN
     SELECT COUNT(role_id) AS total
@@ -240,9 +289,71 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAppModule` (IN `p_app_module_
     DELETE FROM app_module WHERE app_module_id = p_app_module_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteCity`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCity` (IN `p_city_id` INT)   BEGIN
+    DELETE FROM city WHERE city_id = p_city_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCompany`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompany` (IN `p_company_id` INT)   BEGIN
+    DELETE FROM company WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCountry`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCountry` (IN `p_country_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM city WHERE country_id = p_country_id;
+    DELETE FROM state WHERE country_id = p_country_id;
+    DELETE FROM country WHERE country_id = p_country_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCurrency`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCurrency` (IN `p_currency_id` INT)   BEGIN
+    DELETE FROM currency WHERE currency_id = p_currency_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteEmailSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmailSetting` (IN `p_email_setting_id` INT)   BEGIN
    DELETE FROM email_setting WHERE email_setting_id = p_email_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteFileExtension`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFileExtension` (IN `p_file_extension_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM upload_setting_file_extension WHERE file_extension_id = p_file_extension_id;
+    DELETE FROM file_extension WHERE file_extension_id = p_file_extension_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteFileType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFileType` (IN `p_file_type_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM upload_setting_file_extension WHERE file_extension_id IN (SELECT file_extension_id FROM file_extension WHERE file_type_id = p_file_type_id);
+    DELETE FROM file_extension WHERE file_type_id = p_file_type_id;
+    DELETE FROM file_type WHERE file_type_id = p_file_type_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteMenuGroup`$$
@@ -322,6 +433,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRoleUserAccount` (IN `p_role_
    DELETE FROM role_user_account WHERE role_user_account_id = p_role_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteState`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteState` (IN `p_state_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM city WHERE state_id = p_state_id;
+    DELETE FROM state WHERE state_id = p_state_id;
+
+    COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteSystemAction`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSystemAction` (IN `p_system_action_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -387,11 +513,144 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAppModuleTable` ()   BEGIN
     ORDER BY app_module_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCityOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCityOptions` ()   BEGIN
+	SELECT city_id, city_name, state_name, country_name 
+    FROM city 
+    ORDER BY city_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCityTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCityTable` (IN `p_filter_by_state` INT, IN `p_filter_by_country` INT)   BEGIN
+    DECLARE query VARCHAR(5000);
+
+    SET query = CONCAT('
+        SELECT city_id, city_name, state_name, country_name
+        FROM city 
+        WHERE 1');
+
+    IF p_filter_by_state IS NOT NULL THEN
+        SET query = CONCAT(query, ' AND state_id = ', p_filter_by_state);
+    END IF;
+
+    IF p_filter_by_country IS NOT NULL THEN
+        SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY city_name');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCompanyOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyOptions` ()   BEGIN
+	SELECT company_id, company_name 
+    FROM company 
+    ORDER BY company_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCompanyTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyTable` (IN `p_filter_by_city` INT, IN `p_filter_by_state` INT, IN `p_filter_by_country` INT)   BEGIN
+    DECLARE query VARCHAR(5000);
+
+    SET query = CONCAT('
+        SELECT company_id, company_name, address, city_name, state_name, country_name, company_logo
+        FROM company 
+        WHERE 1');
+
+    IF p_filter_by_city IS NOT NULL THEN
+        SET query = CONCAT(query, ' AND city_id = ', p_filter_by_city);
+    END IF;
+
+    IF p_filter_by_state IS NOT NULL THEN
+        SET query = CONCAT(query, ' AND state_id = ', p_filter_by_state);
+    END IF;
+
+    IF p_filter_by_country IS NOT NULL THEN
+        SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY company_name');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCountryOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCountryOptions` ()   BEGIN
+	SELECT country_id, country_name 
+    FROM country 
+    ORDER BY country_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCountryTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCountryTable` ()   BEGIN
+	SELECT country_id, country_name 
+    FROM country 
+    ORDER BY country_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCurrencyOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCurrencyOptions` ()   BEGIN
+	SELECT currency_id, currency_name, currency_symbol FROM currency 
+    ORDER BY currency_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCurrencyTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCurrencyTable` ()   BEGIN
+    SELECT currency_id, currency_name, currency_symbol FROM currency;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateEmailSettingTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmailSettingTable` ()   BEGIN
     SELECT email_setting_id, email_setting_name, email_setting_description 
     FROM email_setting
     ORDER BY email_setting_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateFileExtensionDualListBoxOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileExtensionDualListBoxOptions` (IN `p_upload_setting_id` INT)   BEGIN
+	SELECT file_extension_id, file_extension_name, file_extension
+    FROM file_extension 
+    WHERE file_extension_id NOT IN (SELECT file_extension_id FROM upload_setting_file_extension WHERE upload_setting_id = p_upload_setting_id)
+    ORDER BY file_extension_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateFileExtensionTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileExtensionTable` (IN `p_filter_by_file_type` INT)   BEGIN
+    DECLARE query VARCHAR(5000);
+
+    SET query = CONCAT('
+        SELECT file_extension_id, file_extension_name, file_extension, file_type_name 
+        FROM file_extension 
+        WHERE 1');
+
+    IF p_filter_by_file_type IS NOT NULL THEN
+        SET query = CONCAT(query, ' AND file_type_id = ', p_filter_by_file_type);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY file_extension_name');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateFileTypeOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileTypeOptions` ()   BEGIN
+	SELECT file_type_id, file_type_name 
+    FROM file_type 
+    ORDER BY file_type_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateFileTypeTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileTypeTable` ()   BEGIN
+	SELECT file_type_id, file_type_name 
+    FROM file_type 
+    ORDER BY file_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateInternalNotes`$$
@@ -546,6 +805,33 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleUserAccountTable` (IN `
     ORDER BY file_as;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateStateOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateStateOptions` ()   BEGIN
+	SELECT state_id, state_name, country_name
+    FROM state 
+    ORDER BY state_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateStateTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateStateTable` (IN `p_filter_by_country` INT)   BEGIN
+    DECLARE query VARCHAR(5000);
+
+    SET query = CONCAT('
+        SELECT state_id, state_name, country_name 
+        FROM state 
+        WHERE 1');
+
+    IF p_filter_by_country IS NOT NULL THEN
+        SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY state_name');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateSubmenuItemTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSubmenuItemTable` (IN `p_parent_id` INT)   BEGIN
 	SELECT * FROM menu_item
@@ -573,6 +859,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionTable` ()   BEG
 	SELECT system_action_id, system_action_name, system_action_description
     FROM system_action 
     ORDER BY system_action_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateUploadSettingFileExtensionTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUploadSettingFileExtensionTable` (IN `p_upload_setting_id` INT)   BEGIN
+    SELECT upload_setting_file_extension_id, file_extension_name, file_extension 
+    FROM upload_setting_file_extension 
+    WHERE upload_setting_id = p_upload_setting_id
+    ORDER BY file_extension_name;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateUploadSettingTable`$$
@@ -636,6 +930,30 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppModule` (IN `p_app_module_id`
 	WHERE app_module_id = p_app_module_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCity`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCity` (IN `p_city_id` INT)   BEGIN
+	SELECT * FROM city
+	WHERE city_id = p_city_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCompany`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompany` (IN `p_company_id` INT)   BEGIN
+	SELECT * FROM company
+	WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCountry`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCountry` (IN `p_country_id` INT)   BEGIN
+	SELECT * FROM country
+	WHERE country_id = p_country_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCurrency`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCurrency` (IN `p_currency_id` INT)   BEGIN
+	SELECT * FROM currency
+	WHERE currency_id = p_currency_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getEmailNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmailNotificationTemplate` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT * FROM notification_setting_email_template
@@ -646,6 +964,18 @@ DROP PROCEDURE IF EXISTS `getEmailSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmailSetting` (IN `p_email_setting_id` INT)   BEGIN
 	SELECT * FROM email_setting
     WHERE email_setting_id = p_email_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getFileExtension`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFileExtension` (IN `p_file_extension_id` INT)   BEGIN
+	SELECT * FROM file_extension
+	WHERE file_extension_id = p_file_extension_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getFileType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFileType` (IN `p_file_type_id` INT)   BEGIN
+	SELECT * FROM file_type
+	WHERE file_type_id = p_file_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getInternalNotesAttachment`$$
@@ -702,6 +1032,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getSMSNotificationTemplate` (IN `p_
 	WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getState`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getState` (IN `p_state_id` INT)   BEGIN
+	SELECT * FROM state
+	WHERE state_id = p_state_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getSystemAction`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getSystemAction` (IN `p_system_action_id` INT)   BEGIN
 	SELECT * FROM system_action
@@ -740,6 +1076,38 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAppModule` (IN `p_app_module_
     SET p_app_module_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertCity`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCity` (IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_city_id` INT)   BEGIN
+    INSERT INTO city (city_name, state_id, state_name, country_id, country_name, last_log_by) 
+	VALUES(p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_last_log_by);
+	
+    SET p_city_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCompany`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCompany` (IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_company_id` INT)   BEGIN
+    INSERT INTO company (company_name, legal_name, address, city_id, city_name, state_id, state_name, country_id, country_name, currency_id, currency_name, currency_symbol, tax_id, phone, mobile, email, website, last_log_by) 
+	VALUES(p_company_name, p_legal_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_currency_id, p_currency_name, p_currency_symbol, p_tax_id, p_phone, p_mobile, p_email, p_website, p_last_log_by);
+	
+    SET p_company_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCountry`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCountry` (IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_country_id` INT)   BEGIN
+    INSERT INTO country (country_name, last_log_by) 
+	VALUES(p_country_name, p_last_log_by);
+	
+    SET p_country_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCurrency`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCurrency` (IN `p_currency_name` VARCHAR(100), IN `p_currency_symbol` VARCHAR(10), IN `p_last_log_by` INT, OUT `p_currency_id` INT)   BEGIN
+    INSERT INTO currency (currency_name, currency_symbol, last_log_by) 
+	VALUES(p_currency_name, p_currency_symbol, p_last_log_by);
+	
+    SET p_currency_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertEmailNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmailNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_email_notification_subject` VARCHAR(200), IN `p_email_notification_body` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
     INSERT INTO notification_setting_email_template (notification_setting_id, email_notification_subject, email_notification_body, last_log_by) 
@@ -752,6 +1120,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmailSetting` (IN `p_email_se
 	VALUES(p_email_setting_name, p_email_setting_description, p_mail_host, p_port, p_smtp_auth, p_smtp_auto_tls, p_mail_username, p_mail_password, p_mail_encryption, p_mail_from_name, p_mail_from_email, p_last_log_by);
 	
     SET p_email_setting_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertFileExtension`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFileExtension` (IN `p_file_extension_name` VARCHAR(100), IN `p_file_extension` VARCHAR(10), IN `p_file_type_id` INT, IN `p_file_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_file_extension_id` INT)   BEGIN
+    INSERT INTO file_extension (file_extension_name, file_extension, file_type_id, file_type_name, last_log_by) 
+	VALUES(p_file_extension_name, p_file_extension, p_file_type_id, p_file_type_name, p_last_log_by);
+	
+    SET p_file_extension_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertFileType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFileType` (IN `p_file_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_file_type_id` INT)   BEGIN
+    INSERT INTO file_type (file_type_name, last_log_by) 
+	VALUES(p_file_type_name, p_last_log_by);
+	
+    SET p_file_type_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertInternalNotes`$$
@@ -828,6 +1212,14 @@ DROP PROCEDURE IF EXISTS `insertSMSNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSMSNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_sms_notification_message` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO notification_setting_sms_template (notification_setting_id, sms_notification_message, last_log_by) 
 	VALUES(p_notification_setting_id, p_sms_notification_message, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertState`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertState` (IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_state_id` INT)   BEGIN
+    INSERT INTO state (state_name, country_id, country_name, last_log_by) 
+	VALUES(p_state_name, p_country_id, p_country_name, p_last_log_by);
+	
+    SET p_state_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertSystemAction`$$
@@ -912,6 +1304,133 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppModule` (IN `p_app_module_
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCity`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCity` (IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE company
+    SET city_name = p_city_name,
+        state_id = p_state_id,
+        state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE city_id = p_city_id;
+
+    UPDATE city
+    SET city_name = p_city_name,
+        state_id = p_state_id,
+        state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE city_id = p_city_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCompany`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompany` (IN `p_company_id` INT, IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE company
+    SET company_name = p_company_name,
+        legal_name = p_legal_name,
+        address = p_address,
+        city_id = p_city_id,
+        city_name = p_city_name,
+        state_id = p_state_id,
+        state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        currency_id = p_currency_id,
+        currency_name = p_currency_name,
+        currency_symbol = p_currency_symbol,
+        tax_id = p_tax_id,
+        phone = p_phone,
+        mobile = p_mobile,
+        email = p_email,
+        website = p_website,
+        last_log_by = p_last_log_by
+    WHERE company_id = p_company_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCompanyLogo`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyLogo` (IN `p_company_id` INT, IN `p_company_logo` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    UPDATE company
+    SET company_logo = p_company_logo,
+        last_log_by = p_last_log_by
+    WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCountry`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCountry` (IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE company
+    SET country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE country_id = p_country_id;
+
+    UPDATE city
+    SET country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE country_id = p_country_id;
+
+    UPDATE state
+    SET country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE country_id = p_country_id;
+
+    UPDATE country
+    SET country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE country_id = p_country_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCurrency`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCurrency` (IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(100), IN `p_currency_symbol` VARCHAR(10), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE company
+    SET currency_name = p_currency_name,
+        currency_symbol = p_currency_symbol,
+        last_log_by = p_last_log_by
+    WHERE currency_id = p_currency_id;
+
+    UPDATE currency
+    SET currency_name = p_currency_name,
+        currency_symbol = p_currency_symbol,
+        last_log_by = p_last_log_by
+    WHERE currency_id = p_currency_id;
+
+    COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateEmailNotificationChannelStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailNotificationChannelStatus` (IN `p_notification_setting_id` INT, IN `p_email_notification` INT(1), IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting
@@ -952,6 +1471,54 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFailedOTPAttempts` (IN `p_use
 	UPDATE user_account 
     SET failed_otp_attempts = p_failed_otp_attempts
     WHERE user_account_id = p_user_account_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateFileExtension`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFileExtension` (IN `p_file_extension_id` INT, IN `p_file_extension_name` VARCHAR(100), IN `p_file_extension` VARCHAR(10), IN `p_file_type_id` INT, IN `p_file_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE upload_setting_file_extension
+    SET file_extension_name = p_file_extension_name,
+        file_extension = p_file_extension,
+        last_log_by = p_last_log_by
+    WHERE file_extension_id = p_file_extension_id;
+
+    UPDATE file_extension
+    SET file_extension_name = p_file_extension_name,
+        file_extension = p_file_extension,
+        file_type_id = p_file_type_id,
+        file_type_name = p_file_type_name,
+        last_log_by = p_last_log_by
+    WHERE file_extension_id = p_file_extension_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateFileType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFileType` (IN `p_file_type_id` INT, IN `p_file_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE file_extension
+    SET file_type_name = p_file_type_name,
+        last_log_by = p_last_log_by
+    WHERE file_type_id = p_file_type_id;
+
+    UPDATE file_type
+    SET file_type_name = p_file_type_name,
+        last_log_by = p_last_log_by
+    WHERE file_type_id = p_file_type_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateLastConnection`$$
@@ -1197,6 +1764,39 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSMSNotificationTemplate` (IN 
     SET sms_notification_message = p_sms_notification_message,
         last_log_by = p_last_log_by
     WHERE notification_setting_id = p_notification_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateState`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateState` (IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE company
+    SET state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE state_id = p_state_id;
+
+    UPDATE city
+    SET state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE state_id = p_state_id;
+
+    UPDATE state
+    SET state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE state_id = p_state_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateSystemAction`$$
@@ -1587,7 +2187,427 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (136, 'role_permission', 15, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 17:31:10'),
 (137, 'role_permission', 15, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 17:31:12'),
 (138, 'role_permission', 15, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 17:31:12'),
-(139, 'role_permission', 15, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 17:31:13');
+(139, 'role_permission', 15, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 17:31:13'),
+(140, 'user_account', 2, 'Last Connection Date: 2024-06-25 09:19:26 -> 2024-06-25 19:30:44<br/>', 2, '2024-06-25 19:30:44'),
+(141, 'currency', 1, 'Currency created. <br/><br/>Currency Name: PHP<br/>Currency Symbol: Php', 2, '2024-06-25 19:47:52'),
+(142, 'currency', 1, 'Currency Name: PHP -> PHP2<br/>Currency Symbol: Php -> 2<br/>', 2, '2024-06-25 19:48:05'),
+(143, 'currency', 2, 'Currency created. <br/><br/>Currency Name: PHP<br/>Currency Symbol: Php', 2, '2024-06-25 19:48:21'),
+(144, 'country', 1, 'Country created. <br/><br/>Country Name: Philippines', 2, '2024-06-25 20:02:11'),
+(145, 'country', 1, 'Country Name: Philippines -> Philippiness<br/>', 2, '2024-06-25 20:02:17'),
+(146, 'country', 1, 'Country Name: Philippiness -> Philippines<br/>', 2, '2024-06-25 20:02:20'),
+(147, 'state', 1, 'State created. <br/><br/>State Name: Nueva Ecija<br/>Country: Philippines', 2, '2024-06-25 20:02:49'),
+(148, 'state', 1, 'State Name: Nueva Ecija -> Nueva Ecijas<br/>', 2, '2024-06-25 20:02:56'),
+(149, 'state', 1, 'State Name: Nueva Ecijas -> Nueva Ecija<br/>', 2, '2024-06-25 20:03:00'),
+(150, 'city', 1, 'City created. <br/><br/>City Name: Cabanatuan<br/>State: Nueva Ecija<br/>Country: Philippines', 2, '2024-06-25 20:03:37'),
+(151, 'city', 1, 'City Name: Cabanatuan -> Cabanatuans<br/>', 2, '2024-06-25 20:04:07'),
+(152, 'city', 1, 'City Name: Cabanatuans -> Cabanatuan<br/>', 2, '2024-06-25 20:04:12'),
+(153, 'company', 1, 'Company created. <br/><br/>Company Name: asd<br/>Legal Name: asd<br/>Address: asdasd<br/>City: Cabanatuan<br/>State: Nueva Ecija<br/>Country: Philippines<br/>Currency: PHP<br/>Currency Symbol: Php', 2, '2024-06-25 20:10:14'),
+(154, 'company', 1, 'Tax ID:  -> 112<br/>Phone:  -> 1212<br/>Mobile:  -> 1212<br/>Email:  -> a@gmail.com<br/>Website:  -> 121212<br/>', 2, '2024-06-25 20:27:04'),
+(155, 'role_permission', 16, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: File Configuration<br/>Date Assigned: 2024-06-25 20:46:46', 2, '2024-06-25 20:46:46'),
+(156, 'role_permission', 16, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 20:46:47'),
+(157, 'role_permission', 17, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Upload Setting<br/>Date Assigned: 2024-06-25 20:48:37', 2, '2024-06-25 20:48:37'),
+(158, 'role_permission', 17, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 20:48:38'),
+(159, 'role_permission', 17, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 20:48:39'),
+(160, 'role_permission', 17, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 20:48:41'),
+(161, 'role_permission', 17, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 20:48:42'),
+(162, 'role_permission', 18, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: File Type<br/>Date Assigned: 2024-06-25 20:49:20', 2, '2024-06-25 20:49:20'),
+(163, 'role_permission', 18, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 20:49:22'),
+(164, 'role_permission', 18, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 20:49:23'),
+(165, 'role_permission', 18, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 20:49:24'),
+(166, 'role_permission', 18, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 20:49:25'),
+(167, 'role_permission', 19, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: File Extension<br/>Date Assigned: 2024-06-25 20:49:49', 2, '2024-06-25 20:49:49'),
+(168, 'role_permission', 19, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 20:49:52'),
+(169, 'role_permission', 19, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 20:49:53'),
+(170, 'role_permission', 19, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 20:49:55'),
+(171, 'role_permission', 19, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 20:49:56'),
+(172, 'upload_setting', 3, 'Upload Setting created. <br/><br/>Upload Setting Name: Company Logo<br/>Upload Setting Description: Sets the upload setting when uploading company logo.<br/>Max File Size: 800', 2, '2024-06-25 20:59:00'),
+(173, 'upload_setting_file_extension', 8, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Company Logo<br/>File Extension Name: JPEG<br/>File Extension: jpeg<br/>Date Assigned: 2024-06-25 20:59:13', 2, '2024-06-25 20:59:13'),
+(174, 'upload_setting_file_extension', 9, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Company Logo<br/>File Extension Name: JPG<br/>File Extension: jpg<br/>Date Assigned: 2024-06-25 20:59:13', 2, '2024-06-25 20:59:13'),
+(175, 'upload_setting_file_extension', 10, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Company Logo<br/>File Extension Name: PNG<br/>File Extension: png<br/>Date Assigned: 2024-06-25 20:59:13', 2, '2024-06-25 20:59:13'),
+(176, 'file_extension', 5, 'File Extension created. <br/><br/>File Extension Name: DOCX<br/>File Extension: .docx<br/>File Type: Document', 2, '2024-06-25 21:05:38'),
+(177, 'menu_item', 20, 'Menu Item created. <br/><br/>Menu Item Name: Email Setting<br/>Menu Item URL: email-setting.php<br/>Menu Item Icon: ti ti-mail-forward<br/>Menu Group Name: Technical<br/>App Module: Settings<br/>Order Sequence: 5', 2, '2024-06-25 21:16:26'),
+(178, 'role_permission', 20, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Email Setting<br/>Date Assigned: 2024-06-25 21:16:34', 2, '2024-06-25 21:16:34'),
+(179, 'role_permission', 20, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 21:16:36'),
+(180, 'role_permission', 20, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 21:16:37'),
+(181, 'role_permission', 20, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 21:16:38'),
+(182, 'role_permission', 20, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 21:16:40'),
+(183, 'email_setting', 1, 'Email Setting Description: \r\nEmail setting for security emails. -> Email setting for security emails.<br/>', 2, '2024-06-25 21:29:12'),
+(184, 'menu_item', 21, 'Menu Item created. <br/><br/>Menu Item Name: Notification Setting<br/>Menu Item URL: notification-setting.php<br/>Menu Item Icon: ti ti-bell<br/>Menu Group Name: Technical<br/>App Module: Settings<br/>Order Sequence: 14', 2, '2024-06-25 21:34:21'),
+(185, 'role_permission', 21, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Notification Setting<br/>Date Assigned: 2024-06-25 21:34:30', 2, '2024-06-25 21:34:30'),
+(186, 'role_permission', 21, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 21:34:32'),
+(187, 'role_permission', 21, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 21:34:33'),
+(188, 'role_permission', 21, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 21:34:34'),
+(189, 'role_permission', 21, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 21:34:35'),
+(190, 'notification_setting', 1, 'Notification Setting created. <br/><br/>Notification Setting Name: Forgot Password<br/>Notification Setting Description: Notification setting for forgot password<br/>System Notification: 1', 2, '2024-06-25 21:36:35'),
+(191, 'notification_setting_system_template', 1, 'System Notification Template created. <br/><br/>System Notification Title: asd<br/>System Notification Message: asdasd', 2, '2024-06-25 22:18:42'),
+(192, 'notification_setting_email_template', 1, 'Email Notification Template created. <br/><br/>Email Notification Subject: asd<br/>Email Notification Body: <p>asdasd</p>', 2, '2024-06-25 22:18:51'),
+(193, 'notification_setting_sms_template', 1, 'SMS Notification Template created. <br/><br/>SMS Notification Message: asdasd', 2, '2024-06-25 22:18:57'),
+(194, 'notification_setting_email_template', 1, 'Email Notification Body: <p>asdasd</p> -> <p>asdasdasdasd</p><br/>', 2, '2024-06-25 22:19:45'),
+(195, 'user_account', 2, 'Last Connection Date: 2024-06-25 19:30:44 -> 2024-06-25 22:22:34<br/>', 2, '2024-06-25 22:22:34'),
+(196, 'role_system_action_permission', 8, 'System Action Access: 1 -> 0<br/>', 2, '2024-06-25 22:23:39'),
+(197, 'role_system_action_permission', 8, 'System Action Access: 0 -> 1<br/>', 2, '2024-06-25 22:23:40'),
+(198, 'notification_setting', 1, 'Email Notification: 0 -> 1<br/>', 2, '2024-06-25 22:24:38'),
+(199, 'notification_setting', 1, 'Email Notification: 1 -> 0<br/>', 2, '2024-06-25 22:24:39');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `city`
+--
+
+DROP TABLE IF EXISTS `city`;
+CREATE TABLE `city` (
+  `city_id` int(10) UNSIGNED NOT NULL,
+  `city_name` varchar(100) NOT NULL,
+  `state_id` int(10) UNSIGNED NOT NULL,
+  `state_name` varchar(100) NOT NULL,
+  `country_id` int(10) UNSIGNED NOT NULL,
+  `country_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `city`
+--
+
+INSERT INTO `city` (`city_id`, `city_name`, `state_id`, `state_name`, `country_id`, `country_name`, `created_date`, `last_log_by`) VALUES
+(1, 'Cabanatuan', 1, 'Nueva Ecija', 1, 'Philippines', '2024-06-25 20:03:37', 2);
+
+--
+-- Triggers `city`
+--
+DROP TRIGGER IF EXISTS `city_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `city_trigger_insert` AFTER INSERT ON `city` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'City created. <br/>';
+
+    IF NEW.city_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>City Name: ", NEW.city_name);
+    END IF;
+
+    IF NEW.state_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>State: ", NEW.state_name);
+    END IF;
+
+    IF NEW.country_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Country: ", NEW.country_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('city', NEW.city_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `city_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `city_trigger_update` AFTER UPDATE ON `city` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.city_name <> OLD.city_name THEN
+        SET audit_log = CONCAT(audit_log, "City Name: ", OLD.city_name, " -> ", NEW.city_name, "<br/>");
+    END IF;
+
+    IF NEW.state_name <> OLD.state_name THEN
+        SET audit_log = CONCAT(audit_log, "State: ", OLD.state_name, " -> ", NEW.state_name, "<br/>");
+    END IF;
+
+    IF NEW.country_name <> OLD.country_name THEN
+        SET audit_log = CONCAT(audit_log, "Country: ", OLD.country_name, " -> ", NEW.country_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('city', NEW.city_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `company`
+--
+
+DROP TABLE IF EXISTS `company`;
+CREATE TABLE `company` (
+  `company_id` int(10) UNSIGNED NOT NULL,
+  `company_name` varchar(100) NOT NULL,
+  `legal_name` varchar(100) NOT NULL,
+  `address` varchar(500) NOT NULL,
+  `city_id` int(10) UNSIGNED NOT NULL,
+  `city_name` varchar(100) NOT NULL,
+  `state_id` int(10) UNSIGNED NOT NULL,
+  `state_name` varchar(100) NOT NULL,
+  `country_id` int(10) UNSIGNED NOT NULL,
+  `country_name` varchar(100) NOT NULL,
+  `currency_id` int(10) UNSIGNED NOT NULL,
+  `currency_name` varchar(100) NOT NULL,
+  `currency_symbol` varchar(10) NOT NULL,
+  `tax_id` varchar(50) DEFAULT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `email` varchar(500) DEFAULT NULL,
+  `website` varchar(500) DEFAULT NULL,
+  `company_logo` varchar(500) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `company`
+--
+
+INSERT INTO `company` (`company_id`, `company_name`, `legal_name`, `address`, `city_id`, `city_name`, `state_id`, `state_name`, `country_id`, `country_name`, `currency_id`, `currency_name`, `currency_symbol`, `tax_id`, `phone`, `mobile`, `email`, `website`, `company_logo`, `created_date`, `last_log_by`) VALUES
+(1, 'asd', 'asd', 'asdasd', 1, 'Cabanatuan', 1, 'Nueva Ecija', 1, 'Philippines', 2, 'PHP', 'Php', '112', '1212', '1212', 'a@gmail.com', '121212', './components/company/image/logo/1/TTV0.jpg', '2024-06-25 20:10:14', 2);
+
+--
+-- Triggers `company`
+--
+DROP TRIGGER IF EXISTS `company_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `company_trigger_insert` AFTER INSERT ON `company` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Company created. <br/>';
+
+    IF NEW.company_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Company Name: ", NEW.company_name);
+    END IF;
+
+    IF NEW.legal_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Legal Name: ", NEW.legal_name);
+    END IF;
+
+    IF NEW.address <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Address: ", NEW.address);
+    END IF;
+
+    IF NEW.city_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>City: ", NEW.city_name);
+    END IF;
+
+    IF NEW.state_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>State: ", NEW.state_name);
+    END IF;
+
+    IF NEW.country_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Country: ", NEW.country_name);
+    END IF;
+
+    IF NEW.currency_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Currency: ", NEW.currency_name);
+    END IF;
+
+    IF NEW.currency_symbol <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Currency Symbol: ", NEW.currency_symbol);
+    END IF;
+
+    IF NEW.tax_id <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Tax ID: ", NEW.tax_id);
+    END IF;
+
+    IF NEW.phone <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Phone: ", NEW.phone);
+    END IF;
+
+    IF NEW.mobile <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Mobile: ", NEW.mobile);
+    END IF;
+
+    IF NEW.email <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Email: ", NEW.email);
+    END IF;
+
+    IF NEW.website <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Website: ", NEW.website);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('company', NEW.company_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `company_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `company_trigger_update` AFTER UPDATE ON `company` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.company_name <> OLD.company_name THEN
+        SET audit_log = CONCAT(audit_log, "Company Name: ", OLD.company_name, " -> ", NEW.company_name, "<br/>");
+    END IF;
+
+    IF NEW.legal_name <> OLD.legal_name THEN
+        SET audit_log = CONCAT(audit_log, "Legal Name: ", OLD.legal_name, " -> ", NEW.legal_name, "<br/>");
+    END IF;
+
+    IF NEW.address <> OLD.address THEN
+        SET audit_log = CONCAT(audit_log, "Address: ", OLD.address, " -> ", NEW.address, "<br/>");
+    END IF;
+
+    IF NEW.city_name <> OLD.city_name THEN
+        SET audit_log = CONCAT(audit_log, "City: ", OLD.city_name, " -> ", NEW.city_name, "<br/>");
+    END IF;
+
+    IF NEW.state_name <> OLD.state_name THEN
+        SET audit_log = CONCAT(audit_log, "State: ", OLD.state_name, " -> ", NEW.state_name, "<br/>");
+    END IF;
+
+    IF NEW.country_name <> OLD.country_name THEN
+        SET audit_log = CONCAT(audit_log, "Country: ", OLD.country_name, " -> ", NEW.country_name, "<br/>");
+    END IF;
+
+    IF NEW.currency_name <> OLD.currency_name THEN
+        SET audit_log = CONCAT(audit_log, "Currency: ", OLD.currency_name, " -> ", NEW.currency_name, "<br/>");
+    END IF;
+
+    IF NEW.currency_symbol <> OLD.currency_symbol THEN
+        SET audit_log = CONCAT(audit_log, "Currency Symbol: ", OLD.currency_symbol, " -> ", NEW.currency_symbol, "<br/>");
+    END IF;
+
+    IF NEW.tax_id <> OLD.tax_id THEN
+        SET audit_log = CONCAT(audit_log, "Tax ID: ", OLD.tax_id, " -> ", NEW.tax_id, "<br/>");
+    END IF;
+
+    IF NEW.phone <> OLD.phone THEN
+        SET audit_log = CONCAT(audit_log, "Phone: ", OLD.phone, " -> ", NEW.phone, "<br/>");
+    END IF;
+
+    IF NEW.mobile <> OLD.mobile THEN
+        SET audit_log = CONCAT(audit_log, "Mobile: ", OLD.mobile, " -> ", NEW.mobile, "<br/>");
+    END IF;
+
+    IF NEW.email <> OLD.email THEN
+        SET audit_log = CONCAT(audit_log, "Email: ", OLD.email, " -> ", NEW.email, "<br/>");
+    END IF;
+
+    IF NEW.website <> OLD.website THEN
+        SET audit_log = CONCAT(audit_log, "Website: ", OLD.website, " -> ", NEW.website, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('company', NEW.company_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `country`
+--
+
+DROP TABLE IF EXISTS `country`;
+CREATE TABLE `country` (
+  `country_id` int(10) UNSIGNED NOT NULL,
+  `country_name` varchar(100) NOT NULL,
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `country`
+--
+
+INSERT INTO `country` (`country_id`, `country_name`, `last_log_by`) VALUES
+(1, 'Philippines', 2);
+
+--
+-- Triggers `country`
+--
+DROP TRIGGER IF EXISTS `country_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `country_trigger_insert` AFTER INSERT ON `country` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Country created. <br/>';
+
+    IF NEW.country_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Country Name: ", NEW.country_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('country', NEW.country_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `country_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `country_trigger_update` AFTER UPDATE ON `country` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.country_name <> OLD.country_name THEN
+        SET audit_log = CONCAT(audit_log, "Country Name: ", OLD.country_name, " -> ", NEW.country_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('country', NEW.country_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `currency`
+--
+
+DROP TABLE IF EXISTS `currency`;
+CREATE TABLE `currency` (
+  `currency_id` int(10) UNSIGNED NOT NULL,
+  `currency_name` varchar(100) NOT NULL,
+  `currency_symbol` varchar(10) NOT NULL,
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `currency`
+--
+
+INSERT INTO `currency` (`currency_id`, `currency_name`, `currency_symbol`, `last_log_by`) VALUES
+(2, 'PHP', 'Php', 2);
+
+--
+-- Triggers `currency`
+--
+DROP TRIGGER IF EXISTS `currency_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `currency_trigger_insert` AFTER INSERT ON `currency` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Currency created. <br/>';
+
+    IF NEW.currency_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Currency Name: ", NEW.currency_name);
+    END IF;
+
+    IF NEW.currency_symbol <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Currency Symbol: ", NEW.currency_symbol);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('currency', NEW.currency_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `currency_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `currency_trigger_update` AFTER UPDATE ON `currency` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.currency_name <> OLD.currency_name THEN
+        SET audit_log = CONCAT(audit_log, "Currency Name: ", OLD.currency_name, " -> ", NEW.currency_name, "<br/>");
+    END IF;
+
+    IF NEW.currency_symbol <> OLD.currency_symbol THEN
+        SET audit_log = CONCAT(audit_log, "Currency Symbol: ", OLD.currency_symbol, " -> ", NEW.currency_symbol, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('currency', NEW.currency_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1618,7 +2638,7 @@ CREATE TABLE `email_setting` (
 --
 
 INSERT INTO `email_setting` (`email_setting_id`, `email_setting_name`, `email_setting_description`, `mail_host`, `port`, `smtp_auth`, `smtp_auto_tls`, `mail_username`, `mail_password`, `mail_encryption`, `mail_from_name`, `mail_from_email`, `created_date`, `last_log_by`) VALUES
-(1, 'Security Email Setting', '\r\nEmail setting for security emails.', 'smtp.hostinger.com', '465', 1, 0, 'cgmi-noreply@christianmotors.ph', 'UsDpF0dYRC6M9v0tT3MHq%2BlrRJu01%2Fb95Dq%2BAeCfu2Y%3D', 'ssl', 'cgmi-noreply@christianmotors.ph', 'cgmi-noreply@christianmotors.ph', '2024-06-15 18:16:10', 1);
+(1, 'Security Email Setting', 'Email setting for security emails.', 'smtp.hostinger.com', '465', 1, 0, 'cgmi-noreply@christianmotors.ph', 'yVFPK7ZBpfBxkDMpCWHHqTC4SWBqBBHACThxc2117cE%3D', 'ssl', 'cgmi-noreply@christianmotors.ph', 'cgmi-noreply@christianmotors.ph', '2024-06-15 18:16:10', 2);
 
 --
 -- Triggers `email_setting`
@@ -1729,6 +2749,140 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `file_extension`
+--
+
+DROP TABLE IF EXISTS `file_extension`;
+CREATE TABLE `file_extension` (
+  `file_extension_id` int(10) UNSIGNED NOT NULL,
+  `file_extension_name` varchar(100) NOT NULL,
+  `file_extension` varchar(10) NOT NULL,
+  `file_type_id` int(11) NOT NULL,
+  `file_type_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `file_extension`
+--
+
+INSERT INTO `file_extension` (`file_extension_id`, `file_extension_name`, `file_extension`, `file_type_id`, `file_type_name`, `created_date`, `last_log_by`) VALUES
+(1, 'PNG', 'png', 1, 'Image', '2024-06-25 20:55:31', 1),
+(2, 'JPG', 'jpg', 1, 'Image', '2024-06-25 20:55:31', 1),
+(3, 'JPEG', 'jpeg', 1, 'Image', '2024-06-25 20:55:31', 1),
+(4, 'PDF', 'pdf', 2, 'Document', '2024-06-25 20:55:31', 1),
+(5, 'DOCX', '.docx', 2, 'Document', '2024-06-25 21:05:38', 2);
+
+--
+-- Triggers `file_extension`
+--
+DROP TRIGGER IF EXISTS `file_extension_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `file_extension_trigger_insert` AFTER INSERT ON `file_extension` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'File Extension created. <br/>';
+
+    IF NEW.file_extension_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>File Extension Name: ", NEW.file_extension_name);
+    END IF;
+
+    IF NEW.file_extension <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>File Extension: ", NEW.file_extension);
+    END IF;
+
+    IF NEW.file_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>File Type: ", NEW.file_type_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('file_extension', NEW.file_extension_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `file_extension_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `file_extension_trigger_update` AFTER UPDATE ON `file_extension` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.file_extension_name <> OLD.file_extension_name THEN
+        SET audit_log = CONCAT(audit_log, "File Extension Name: ", OLD.file_extension_name, " -> ", NEW.file_extension_name, "<br/>");
+    END IF;
+
+    IF NEW.file_extension <> OLD.file_extension THEN
+        SET audit_log = CONCAT(audit_log, "File Extension: ", OLD.file_extension, " -> ", NEW.file_extension, "<br/>");
+    END IF;
+
+    IF NEW.file_type_name <> OLD.file_type_name THEN
+        SET audit_log = CONCAT(audit_log, "File Type: ", OLD.file_type_name, " -> ", NEW.file_type_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('file_extension', NEW.file_extension_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `file_type`
+--
+
+DROP TABLE IF EXISTS `file_type`;
+CREATE TABLE `file_type` (
+  `file_type_id` int(10) UNSIGNED NOT NULL,
+  `file_type_name` varchar(100) NOT NULL,
+  `last_log_by` int(10) UNSIGNED NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `file_type`
+--
+
+INSERT INTO `file_type` (`file_type_id`, `file_type_name`, `last_log_by`, `created_date`) VALUES
+(1, 'Image', 1, '2024-06-25 20:56:04'),
+(2, 'Document', 1, '2024-06-25 20:56:04');
+
+--
+-- Triggers `file_type`
+--
+DROP TRIGGER IF EXISTS `file_type_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `file_type_trigger_insert` AFTER INSERT ON `file_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'File type created. <br/>';
+
+    IF NEW.file_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>File Type Name: ", NEW.file_type_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('file_type', NEW.file_type_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `file_type_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `file_type_trigger_update` AFTER UPDATE ON `file_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.file_type_name <> OLD.file_type_name THEN
+        SET audit_log = CONCAT(audit_log, "File Type Name: ", OLD.file_type_name, " -> ", NEW.file_type_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('file_type', NEW.file_type_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `internal_notes`
 --
 
@@ -1756,7 +2910,8 @@ INSERT INTO `internal_notes` (`internal_notes_id`, `table_name`, `reference_id`,
 (7, 'app_module', 1, 'asdasd', 2, '2024-06-21 17:09:53'),
 (8, 'app_module', 1, 'ssdfd', 2, '2024-06-21 17:13:22'),
 (9, 'app_module', 1, 'test\r\n', 2, '2024-06-22 10:34:32'),
-(10, 'user_account', 2, 'asd', 2, '2024-06-24 17:21:15');
+(10, 'user_account', 2, 'asd', 2, '2024-06-24 17:21:15'),
+(11, 'currency', 2, 'Test', 2, '2024-06-25 22:25:51');
 
 -- --------------------------------------------------------
 
@@ -1780,7 +2935,8 @@ CREATE TABLE `internal_notes_attachment` (
 INSERT INTO `internal_notes_attachment` (`internal_notes_attachment_id`, `internal_notes_id`, `attachment_file_name`, `attachment_file_size`, `attachment_path_file`) VALUES
 (1, 3, 'Agulto', 212362, './components/global/files/internal_notes/3/Agulto.png'),
 (2, 3, 'download', 222999, './components/global/files/internal_notes/3/download.jpg'),
-(3, 5, 'download', 222999, './components/global/files/internal_notes/5/download.jpg');
+(3, 5, 'download', 222999, './components/global/files/internal_notes/5/download.jpg'),
+(4, 11, 'Lawrence Resume', 85774, './components/global/files/internal_notes/11/Lawrence Resume.pdf');
 
 -- --------------------------------------------------------
 
@@ -1891,15 +3047,103 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (4, 'Company', 'company.php', '', 2, 'Administration', 1, 'Settings', 2, 'Users & Companies', 3, '2024-06-21 15:18:43', 2),
 (5, 'App Module', 'app-module.php', 'ti ti-box', 1, 'Technical', 1, 'Settings', 0, NULL, 1, '2024-06-21 15:18:43', 2),
 (6, 'User Interface', '', 'ti ti-layout-sidebar', 1, 'Technical', 1, 'Settings', 0, NULL, 4, '2024-06-25 11:43:13', 2),
-(7, 'Menu Group', 'menu-group.php', '', 1, 'Technical', 1, 'Settings', 6, 'User Interface', 1, '2024-06-25 11:43:13', 1),
-(8, 'Menu Item', 'menu-item.php', '', 1, 'Technical', 1, 'Settings', 6, 'User Interface', 2, '2024-06-25 11:43:13', 1),
+(7, 'Menu Group', 'menu-group.php', '', 1, 'Technical', 1, 'Settings', 6, 'User Interface', 1, '2024-06-25 11:43:13', 2),
+(8, 'Menu Item', 'menu-item.php', '', 1, 'Technical', 1, 'Settings', 6, 'User Interface', 2, '2024-06-25 11:43:13', 2),
 (9, 'Role', 'role.php', 'ti ti-hierarchy-2', 2, 'Administration', 1, 'Settings', 0, NULL, 2, '2024-06-25 16:51:04', 2),
 (10, 'System Action', 'system-action.php', '', 1, 'Technical', 1, 'Settings', 6, 'User Interface', 3, '2024-06-25 17:19:47', 2),
 (11, 'Localization', '', 'ti ti-map-pin', 1, 'Technical', 1, 'Settings', NULL, NULL, 2, '2024-06-25 17:25:32', 2),
 (12, 'State', 'state.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 10, '2024-06-25 17:28:43', 2),
 (13, 'Country', 'country.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 4, '2024-06-25 17:29:18', 2),
 (14, 'City', 'city.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 3, '2024-06-25 17:29:59', 2),
-(15, 'Currency', 'currency.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 2, '2024-06-25 17:31:04', 2);
+(15, 'Currency', 'currency.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 2, '2024-06-25 17:31:04', 2),
+(16, 'File Configuration', '', 'ti ti-file-symlink', 1, 'Technical', 1, 'Settings', 0, NULL, 6, '2024-06-25 20:46:41', 2),
+(17, 'Upload Setting', 'upload-setting.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 1, '2024-06-25 20:48:30', 2),
+(18, 'File Type', 'file-type.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 2, '2024-06-25 20:49:16', 2),
+(19, 'File Extension', 'file-extension.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 3, '2024-06-25 20:49:45', 2),
+(20, 'Email Setting', 'email-setting.php', 'ti ti-mail-forward', 1, 'Technical', 1, 'Settings', 0, NULL, 5, '2024-06-25 21:16:26', 2),
+(21, 'Notification Setting', 'notification-setting.php', 'ti ti-bell', 1, 'Technical', 1, 'Settings', 0, NULL, 14, '2024-06-25 21:34:21', 2);
+
+--
+-- Triggers `menu_item`
+--
+DROP TRIGGER IF EXISTS `menu_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `menu_item_trigger_insert` AFTER INSERT ON `menu_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Menu Item created. <br/>';
+
+    IF NEW.menu_item_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Menu Item Name: ", NEW.menu_item_name);
+    END IF;
+
+    IF NEW.menu_item_url <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Menu Item URL: ", NEW.menu_item_url);
+    END IF;
+
+    IF NEW.menu_item_icon <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Menu Item Icon: ", NEW.menu_item_icon);
+    END IF;
+
+    IF NEW.menu_group_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Menu Group Name: ", NEW.menu_group_name);
+    END IF;
+
+    IF NEW.app_module_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>App Module: ", NEW.app_module_name);
+    END IF;
+
+    IF NEW.parent_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Parent: ", NEW.parent_name);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('menu_item', NEW.menu_item_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `menu_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `menu_item_trigger_update` AFTER UPDATE ON `menu_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.menu_item_name <> OLD.menu_item_name THEN
+        SET audit_log = CONCAT(audit_log, "Menu Item Name: ", OLD.menu_item_name, " -> ", NEW.menu_item_name, "<br/>");
+    END IF;
+
+    IF NEW.menu_item_url <> OLD.menu_item_url THEN
+        SET audit_log = CONCAT(audit_log, "Menu Item URL: ", OLD.menu_item_url, " -> ", NEW.menu_item_url, "<br/>");
+    END IF;
+
+    IF NEW.menu_item_icon <> OLD.menu_item_icon THEN
+        SET audit_log = CONCAT(audit_log, "Menu Item Icon: ", OLD.menu_item_icon, " -> ", NEW.menu_item_icon, "<br/>");
+    END IF;
+
+    IF NEW.menu_group_name <> OLD.menu_group_name THEN
+        SET audit_log = CONCAT(audit_log, "Menu Group Name: ", OLD.menu_group_name, " -> ", NEW.menu_group_name, "<br/>");
+    END IF;
+
+    IF NEW.app_module_name <> OLD.app_module_name THEN
+        SET audit_log = CONCAT(audit_log, "App Module: ", OLD.app_module_name, " -> ", NEW.app_module_name, "<br/>");
+    END IF;
+
+    IF NEW.parent_name <> OLD.parent_name THEN
+        SET audit_log = CONCAT(audit_log, "Parent: ", OLD.parent_name, " -> ", NEW.parent_name, "<br/>");
+    END IF;
+
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('menu_item', NEW.menu_item_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -1918,6 +3162,13 @@ CREATE TABLE `notification_setting` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notification_setting`
+--
+
+INSERT INTO `notification_setting` (`notification_setting_id`, `notification_setting_name`, `notification_setting_description`, `system_notification`, `email_notification`, `sms_notification`, `created_date`, `last_log_by`) VALUES
+(1, 'Forgot Password', 'Notification setting for forgot password', 1, 0, 0, '2024-06-25 21:36:35', 2);
 
 --
 -- Triggers `notification_setting`
@@ -2002,6 +3253,13 @@ CREATE TABLE `notification_setting_email_template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `notification_setting_email_template`
+--
+
+INSERT INTO `notification_setting_email_template` (`notification_setting_email_id`, `notification_setting_id`, `email_notification_subject`, `email_notification_body`, `created_date`, `last_log_by`) VALUES
+(1, 1, 'asd', '<p>asdasdasdasd</p>', '2024-06-25 22:18:51', 2);
+
+--
 -- Triggers `notification_setting_email_template`
 --
 DROP TRIGGER IF EXISTS `notification_setting_email_template_trigger_insert`;
@@ -2059,6 +3317,13 @@ CREATE TABLE `notification_setting_sms_template` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `notification_setting_sms_template`
+--
+
+INSERT INTO `notification_setting_sms_template` (`notification_setting_sms_id`, `notification_setting_id`, `sms_notification_message`, `created_date`, `last_log_by`) VALUES
+(1, 1, 'asdasd', '2024-06-25 22:18:57', 2);
+
+--
 -- Triggers `notification_setting_sms_template`
 --
 DROP TRIGGER IF EXISTS `notification_setting_sms_template_trigger_insert`;
@@ -2107,6 +3372,13 @@ CREATE TABLE `notification_setting_system_template` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notification_setting_system_template`
+--
+
+INSERT INTO `notification_setting_system_template` (`notification_setting_system_id`, `notification_setting_id`, `system_notification_title`, `system_notification_message`, `created_date`, `last_log_by`) VALUES
+(1, 1, 'asd', 'asdasd', '2024-06-25 22:18:42', 2);
 
 --
 -- Triggers `notification_setting_system_template`
@@ -2271,7 +3543,13 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (12, 1, 'Administrator', 12, 'State', 1, 1, 1, 1, '2024-06-25 17:28:49', '2024-06-25 17:28:49', 2),
 (13, 1, 'Administrator', 13, 'Country', 1, 1, 1, 1, '2024-06-25 17:29:23', '2024-06-25 17:29:23', 2),
 (14, 1, 'Administrator', 14, 'City', 1, 1, 1, 1, '2024-06-25 17:30:03', '2024-06-25 17:30:03', 2),
-(15, 1, 'Administrator', 15, 'Currency', 1, 1, 1, 1, '2024-06-25 17:31:09', '2024-06-25 17:31:09', 2);
+(15, 1, 'Administrator', 15, 'Currency', 1, 1, 1, 1, '2024-06-25 17:31:09', '2024-06-25 17:31:09', 2),
+(16, 1, 'Administrator', 16, 'File Configuration', 1, 0, 0, 0, '2024-06-25 20:46:46', '2024-06-25 20:46:46', 2),
+(17, 1, 'Administrator', 17, 'Upload Setting', 1, 1, 1, 1, '2024-06-25 20:48:37', '2024-06-25 20:48:37', 2),
+(18, 1, 'Administrator', 18, 'File Type', 1, 1, 1, 1, '2024-06-25 20:49:20', '2024-06-25 20:49:20', 2),
+(19, 1, 'Administrator', 19, 'File Extension', 1, 1, 1, 1, '2024-06-25 20:49:49', '2024-06-25 20:49:49', 2),
+(20, 1, 'Administrator', 20, 'Email Setting', 1, 1, 1, 1, '2024-06-25 21:16:34', '2024-06-25 21:16:34', 2),
+(21, 1, 'Administrator', 21, 'Notification Setting', 1, 1, 1, 1, '2024-06-25 21:34:30', '2024-06-25 21:34:30', 2);
 
 --
 -- Triggers `role_permission`
@@ -2382,7 +3660,7 @@ INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`,
 (5, 1, 'Administrator', 5, 'Lock User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
 (6, 1, 'Administrator', 6, 'Unlock User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
 (7, 1, 'Administrator', 7, 'Add Role User Account', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
-(8, 1, 'Administrator', 8, 'Delete Role User Account', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
+(8, 1, 'Administrator', 8, 'Delete Role User Account', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 2),
 (9, 1, 'Administrator', 9, 'Add Role Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
 (10, 1, 'Administrator', 10, 'Update Role Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
 (11, 1, 'Administrator', 11, 'Delete Role Access', 1, '2024-06-22 17:54:17', '2024-06-22 17:54:17', 1),
@@ -2590,6 +3868,70 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `state`
+--
+
+DROP TABLE IF EXISTS `state`;
+CREATE TABLE `state` (
+  `state_id` int(10) UNSIGNED NOT NULL,
+  `state_name` varchar(100) NOT NULL,
+  `country_id` int(10) UNSIGNED NOT NULL,
+  `country_name` varchar(100) NOT NULL,
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `state`
+--
+
+INSERT INTO `state` (`state_id`, `state_name`, `country_id`, `country_name`, `last_log_by`) VALUES
+(1, 'Nueva Ecija', 1, 'Philippines', 2);
+
+--
+-- Triggers `state`
+--
+DROP TRIGGER IF EXISTS `state_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `state_trigger_insert` AFTER INSERT ON `state` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'State created. <br/>';
+
+    IF NEW.state_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>State Name: ", NEW.state_name);
+    END IF;
+
+    IF NEW.country_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Country: ", NEW.country_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('state', NEW.state_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `state_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `state_trigger_update` AFTER UPDATE ON `state` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.state_name <> OLD.state_name THEN
+        SET audit_log = CONCAT(audit_log, "State Name: ", OLD.state_name, " -> ", NEW.state_name, "<br/>");
+    END IF;
+
+    IF NEW.country_name <> OLD.country_name THEN
+        SET audit_log = CONCAT(audit_log, "Country: ", OLD.country_name, " -> ", NEW.country_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('state', NEW.state_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `system_action`
 --
 
@@ -2688,7 +4030,8 @@ CREATE TABLE `upload_setting` (
 
 INSERT INTO `upload_setting` (`upload_setting_id`, `upload_setting_name`, `upload_setting_description`, `max_file_size`, `created_date`, `last_log_by`) VALUES
 (1, 'User Account Profile Picture', 'Sets the upload setting when uploading user account profile picture.', 800, '2024-06-21 12:11:40', 1),
-(2, 'Internal Notes Attachment', 'Sets the upload setting when uploading internal notes attachement.', 800, '2024-06-21 12:26:58', 1);
+(2, 'Internal Notes Attachment', 'Sets the upload setting when uploading internal notes attachement.', 800, '2024-06-21 12:26:58', 1),
+(3, 'Company Logo', 'Sets the upload setting when uploading company logo.', 800, '2024-06-25 20:59:00', 2);
 
 --
 -- Triggers `upload_setting`
@@ -2769,7 +4112,10 @@ INSERT INTO `upload_setting_file_extension` (`upload_setting_file_extension_id`,
 (4, 2, 'Internal Notes Attachment', 1, 'PNG', 'png', '2024-06-21 12:26:58', 1),
 (5, 2, 'Internal Notes Attachment', 2, 'JPG', 'jpg', '2024-06-21 12:26:58', 1),
 (6, 2, 'Internal Notes Attachment', 3, 'JPEG', 'jpeg', '2024-06-21 12:26:58', 1),
-(7, 2, 'Internal Notes Attachment', 4, 'PDF', 'pdf', '2024-06-21 12:26:58', 1);
+(7, 2, 'Internal Notes Attachment', 4, 'PDF', 'pdf', '2024-06-21 12:26:58', 1),
+(8, 3, 'Company Logo', 3, 'JPEG', 'jpeg', '2024-06-25 20:59:13', 2),
+(9, 3, 'Company Logo', 2, 'JPG', 'jpg', '2024-06-25 20:59:13', 2),
+(10, 3, 'Company Logo', 1, 'PNG', 'png', '2024-06-25 20:59:13', 2);
 
 --
 -- Triggers `upload_setting_file_extension`
@@ -2842,7 +4188,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmids@christianmotors.ph', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-15 18:08:25', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-25 09:19:26', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'Oq7cMoCryByyHXHr6qJSDk9U%2BbeRBUc9E6U%2F20Wn%2FDc%3D', '2024-06-15 18:08:25', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-25 22:22:34', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '6ExTsbiwDQ%2FRcZKoJgwjFJSHlnix24r0LXM7KAT%2BIB8%3D', '2024-06-15 18:08:25', 2);
 
 --
 -- Triggers `user_account`
@@ -2998,12 +4344,67 @@ ALTER TABLE `audit_log`
   ADD KEY `audit_log_index_changed_by` (`changed_by`);
 
 --
+-- Indexes for table `city`
+--
+ALTER TABLE `city`
+  ADD PRIMARY KEY (`city_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `city_index_city_id` (`city_id`),
+  ADD KEY `city_index_state_id` (`state_id`),
+  ADD KEY `city_index_country_id` (`country_id`);
+
+--
+-- Indexes for table `company`
+--
+ALTER TABLE `company`
+  ADD PRIMARY KEY (`company_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `company_index_company_id` (`company_id`),
+  ADD KEY `company_index_city_id` (`city_id`),
+  ADD KEY `company_index_state_id` (`state_id`),
+  ADD KEY `company_index_country_id` (`country_id`),
+  ADD KEY `company_index_currency_id` (`currency_id`);
+
+--
+-- Indexes for table `country`
+--
+ALTER TABLE `country`
+  ADD PRIMARY KEY (`country_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `country_index_country_id` (`country_id`);
+
+--
+-- Indexes for table `currency`
+--
+ALTER TABLE `currency`
+  ADD PRIMARY KEY (`currency_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `currency_index_currency_id` (`currency_id`);
+
+--
 -- Indexes for table `email_setting`
 --
 ALTER TABLE `email_setting`
   ADD PRIMARY KEY (`email_setting_id`),
   ADD KEY `last_log_by` (`last_log_by`),
   ADD KEY `email_setting_index_email_setting_id` (`email_setting_id`);
+
+--
+-- Indexes for table `file_extension`
+--
+ALTER TABLE `file_extension`
+  ADD PRIMARY KEY (`file_extension_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `file_extension_index_file_extension_id` (`file_extension_id`),
+  ADD KEY `file_extension_index_file_type_id` (`file_type_id`);
+
+--
+-- Indexes for table `file_type`
+--
+ALTER TABLE `file_type`
+  ADD PRIMARY KEY (`file_type_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `file_type_index_file_type_id` (`file_type_id`);
 
 --
 -- Indexes for table `internal_notes`
@@ -3133,6 +4534,15 @@ ALTER TABLE `security_setting`
   ADD KEY `security_setting_index_security_setting_id` (`security_setting_id`);
 
 --
+-- Indexes for table `state`
+--
+ALTER TABLE `state`
+  ADD PRIMARY KEY (`state_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `state_index_state_id` (`state_id`),
+  ADD KEY `state_index_country_id` (`country_id`);
+
+--
 -- Indexes for table `system_action`
 --
 ALTER TABLE `system_action`
@@ -3181,7 +4591,31 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
+
+--
+-- AUTO_INCREMENT for table `city`
+--
+ALTER TABLE `city`
+  MODIFY `city_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `company`
+--
+ALTER TABLE `company`
+  MODIFY `company_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `country`
+--
+ALTER TABLE `country`
+  MODIFY `country_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `currency`
+--
+ALTER TABLE `currency`
+  MODIFY `currency_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `email_setting`
@@ -3190,16 +4624,28 @@ ALTER TABLE `email_setting`
   MODIFY `email_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `file_extension`
+--
+ALTER TABLE `file_extension`
+  MODIFY `file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `file_type`
+--
+ALTER TABLE `file_type`
+  MODIFY `file_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `internal_notes`
 --
 ALTER TABLE `internal_notes`
-  MODIFY `internal_notes_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `internal_notes_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `internal_notes_attachment`
 --
 ALTER TABLE `internal_notes_attachment`
-  MODIFY `internal_notes_attachment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `internal_notes_attachment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `menu_group`
@@ -3211,31 +4657,31 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
 --
 ALTER TABLE `notification_setting`
-  MODIFY `notification_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `notification_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `notification_setting_email_template`
 --
 ALTER TABLE `notification_setting_email_template`
-  MODIFY `notification_setting_email_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `notification_setting_email_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `notification_setting_sms_template`
 --
 ALTER TABLE `notification_setting_sms_template`
-  MODIFY `notification_setting_sms_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `notification_setting_sms_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `notification_setting_system_template`
 --
 ALTER TABLE `notification_setting_system_template`
-  MODIFY `notification_setting_system_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `notification_setting_system_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `password_history`
@@ -3253,7 +4699,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -3274,6 +4720,12 @@ ALTER TABLE `security_setting`
   MODIFY `security_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `state`
+--
+ALTER TABLE `state`
+  MODIFY `state_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `system_action`
 --
 ALTER TABLE `system_action`
@@ -3283,13 +4735,13 @@ ALTER TABLE `system_action`
 -- AUTO_INCREMENT for table `upload_setting`
 --
 ALTER TABLE `upload_setting`
-  MODIFY `upload_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `upload_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `upload_setting_file_extension`
 --
 ALTER TABLE `upload_setting_file_extension`
-  MODIFY `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user_account`
@@ -3314,10 +4766,48 @@ ALTER TABLE `audit_log`
   ADD CONSTRAINT `audit_log_ibfk_1` FOREIGN KEY (`changed_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `city`
+--
+ALTER TABLE `city`
+  ADD CONSTRAINT `city_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `country` (`country_id`),
+  ADD CONSTRAINT `city_ibfk_2` FOREIGN KEY (`state_id`) REFERENCES `state` (`state_id`),
+  ADD CONSTRAINT `city_ibfk_3` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `company`
+--
+ALTER TABLE `company`
+  ADD CONSTRAINT `company_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `country`
+--
+ALTER TABLE `country`
+  ADD CONSTRAINT `country_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `currency`
+--
+ALTER TABLE `currency`
+  ADD CONSTRAINT `currency_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `email_setting`
 --
 ALTER TABLE `email_setting`
   ADD CONSTRAINT `email_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `file_extension`
+--
+ALTER TABLE `file_extension`
+  ADD CONSTRAINT `file_extension_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `file_type`
+--
+ALTER TABLE `file_type`
+  ADD CONSTRAINT `file_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `internal_notes`
@@ -3414,6 +4904,13 @@ ALTER TABLE `role_user_account`
 --
 ALTER TABLE `security_setting`
   ADD CONSTRAINT `security_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `state`
+--
+ALTER TABLE `state`
+  ADD CONSTRAINT `state_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `country` (`country_id`),
+  ADD CONSTRAINT `state_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `system_action`

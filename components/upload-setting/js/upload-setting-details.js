@@ -141,7 +141,7 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
+        if($('#log-notes-offcanvas').length){
             $(document).on('click','.view-file-extension-log-notes',function() {
                 const upload_setting_file_extension_id = $(this).data('upload-setting-file-extension-id');
 
