@@ -13,7 +13,7 @@
         });
 
         $(document).on('click','#delete-email-setting',function() {
-            const email_setting_id = $('#email-setting-id').text();
+            const email_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete email setting';
     
@@ -71,22 +71,20 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const email_setting_id = $('#email-setting-id').text();
+        if($('#log-notes-main').length){
+            const email_setting_id = $('#details-id').text();
 
-                logNotes('email_setting', email_setting_id);
-            });
+            logNotesMain('email_setting', email_setting_id);
         }
 
         if($('#internal-notes').length){
-            const email_setting_id = $('#email-setting-id').text();
+            const email_setting_id = $('#details-id').text();
 
             internalNotes('email_setting', email_setting_id);
         }
 
         if($('#internal-notes-form').length){
-            const email_setting_id = $('#email-setting-id').text();
+            const email_setting_id = $('#details-id').text();
 
             internalNotesForm('email_setting', email_setting_id);
         }
@@ -169,7 +167,7 @@ function emailSettingForm(){
             }
         },
         submitHandler: function(form) {
-            const email_setting_id = $('#email-setting-id').text();
+            const email_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update email setting';
           
@@ -210,6 +208,7 @@ function emailSettingForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('email_setting', email_setting_id);
                 }
             });
         
@@ -221,7 +220,7 @@ function emailSettingForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get email setting details':
-            var email_setting_id = $('#email-setting-id').text();
+            var email_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({

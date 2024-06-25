@@ -31,7 +31,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="app-module-table" class="table search-table align-middle text-nowrap mb-4">
+                        <table id="app-module-table" class="table search-table align-middle text-nowrap w-100 mb-4">
                             <thead class="text-dark">
                                 <tr>
                                     <th class="all">

@@ -1,3 +1,9 @@
+<?php
+    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
+?>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -7,9 +13,9 @@
                     <button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            if($countryCreateAccess['total'] > 0 || $countryDeleteAccess['total'] > 0){
-                                echo $countryCreateAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Country</a></li>' : '';
-                                echo $countryDeleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-country">Delete Country</button></li>' : '';
+                            if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
+                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Country</a></li>' : '';
+                                echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-country">Delete Country</button></li>' : '';
                                 
                                 echo '<li><hr class="dropdown-divider"></li>';
                             }
@@ -18,7 +24,7 @@
                     </ul>
                 </div>
                 <?php
-                    echo $countryWriteAccess['total'] > 0 ? 
+                    echo $writeAccess['total'] > 0 ? 
                     '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
                         <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#country-modal">Edit</button>
                     </div>' : '';
@@ -67,5 +73,4 @@
     </div>
 </div>
 
-<?php require_once('components/global/view/_internal_notes.php'); ?>
-<?php require_once('components/global/view/_log_notes_offcanvas.php'); ?>
+<?php require_once('components/global/view/_internal_log_notes.php'); ?>

@@ -132,6 +132,11 @@
                 showNotification('Deletion Multiple Role Error', 'Please select the roles you wish to delete.', 'danger');
             }
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#role-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -176,6 +181,8 @@ function roleTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {

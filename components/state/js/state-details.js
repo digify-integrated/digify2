@@ -14,7 +14,7 @@
         });
 
         $(document).on('click','#delete-state',function() {
-            const state_id = $('#state-id').text();
+            const state_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete state';
     
@@ -72,22 +72,20 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const state_id = $('#state-id').text();
+        if($('#log-notes-main').length){
+            const state_id = $('#details-id').text();
 
-                logNotes('state', state_id);
-            });
+            logNotesMain('state', state_id);
         }
 
         if($('#internal-notes').length){
-            const state_id = $('#state-id').text();
+            const state_id = $('#details-id').text();
 
             internalNotes('state', state_id);
         }
 
         if($('#internal-notes-form').length){
-            const state_id = $('#state-id').text();
+            const state_id = $('#details-id').text();
 
             internalNotesForm('state', state_id);
         }
@@ -134,7 +132,7 @@ function stateForm(){
             }
         },
         submitHandler: function(form) {
-            const state_id = $('#state-id').text();
+            const state_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update state';
           
@@ -175,6 +173,7 @@ function stateForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('state', state_id);
                 }
             });
         
@@ -186,7 +185,7 @@ function stateForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get state details':
-            var state_id = $('#state-id').text();
+            var state_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({

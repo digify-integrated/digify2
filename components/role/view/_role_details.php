@@ -1,3 +1,13 @@
+<?php
+    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
+
+    $addRoleUserAccount = $globalModel->checkSystemActionAccessRights($userID, 7);
+    $addRoleAccess = $globalModel->checkSystemActionAccessRights($userID, 9);
+    $addRoleSystemActionAccess = $globalModel->checkSystemActionAccessRights($userID, 12);
+?>
+
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -7,18 +17,15 @@
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            if($roleCreateAccess['total'] > 0 || $roleDeleteAccess['total'] > 0){
-                                echo $roleCreateAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Role</a></li>' : '';
-                                echo $roleDeleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-role">Delete Role</button></li>' : '';
-                                
-                                echo '<li><hr class="dropdown-divider"></li>';
+                            if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
+                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Role</a></li>' : '';
+                                echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-role">Delete Role</button></li>' : '';
                             }
                         ?>
-                        <li><button class="dropdown-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" id="view-log-notes">View Log Notes</button></li>
                     </ul>
                 </div>
                 <?php
-                    echo $roleWriteAccess['total'] > 0 ? 
+                    echo $writeAccess['total'] > 0 ? 
                     '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
                         <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#role-modal">Edit</button>
                     </div>' : '';
@@ -257,5 +264,5 @@
     </div>
 </div>
 
-<?php require_once('components/global/view/_internal_notes.php'); ?>
 <?php require_once('components/global/view/_log_notes_offcanvas.php'); ?>
+<?php require_once('components/global/view/_internal_log_notes.php'); ?>

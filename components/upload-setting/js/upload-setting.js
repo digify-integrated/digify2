@@ -132,6 +132,11 @@
                 showNotification('Deletion Multiple Upload Setting Error', 'Please select the upload settings you wish to delete.', 'danger');
             }
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#upload-setting-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -179,6 +184,8 @@ function uploadSettingTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {

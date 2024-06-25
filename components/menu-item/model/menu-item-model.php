@@ -24,6 +24,7 @@ class MenuItemModel {
     # - $p_menu_item_id (int): The menu item ID.
     # - $p_menu_item_name (string): The menu item name.
     # - $p_menu_item_url (string): The menu item URL.
+    # - $p_menu_item_icon (string): The menu item icon.
     # - $p_menu_group_id (int): The menu group ID.
     # - $p_menu_group_name (string): The menu group name.
     # - $p_app_module_id (int): The menu group ID.
@@ -36,11 +37,12 @@ class MenuItemModel {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateMenuItem($p_menu_item_id, $p_menu_item_name, $p_menu_item_url, $p_menu_group_id, $p_menu_group_name, $p_app_module_id, $p_app_module_name, $p_parent_id, $p_parent_name, $p_order_sequence, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateMenuItem(:p_menu_item_id, :p_menu_item_name, :p_menu_item_url, :p_menu_group_id, :p_menu_group_name, :p_app_module_id, :p_app_module_name, :p_parent_id, :p_parent_name, :p_order_sequence, :p_last_log_by)');
+    public function updateMenuItem($p_menu_item_id, $p_menu_item_name, $p_menu_item_url, $p_menu_item_icon, $p_menu_group_id, $p_menu_group_name, $p_app_module_id, $p_app_module_name, $p_parent_id, $p_parent_name, $p_order_sequence, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateMenuItem(:p_menu_item_id, :p_menu_item_name, :p_menu_item_url, :p_menu_item_icon, :p_menu_group_id, :p_menu_group_name, :p_app_module_id, :p_app_module_name, :p_parent_id, :p_parent_name, :p_order_sequence, :p_last_log_by)');
         $stmt->bindValue(':p_menu_item_id', $p_menu_item_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_menu_item_name', $p_menu_item_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_menu_item_url', $p_menu_item_url, PDO::PARAM_STR);
+        $stmt->bindValue(':p_menu_item_icon', $p_menu_item_icon, PDO::PARAM_STR);
         $stmt->bindValue(':p_menu_group_id', $p_menu_group_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_menu_group_name', $p_menu_group_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_app_module_id', $p_app_module_id, PDO::PARAM_INT);
@@ -65,6 +67,7 @@ class MenuItemModel {
     # Parameters:
     # - $p_menu_item_name (string): The menu item name.
     # - $p_menu_item_url (string): The menu item URL.
+    # - $p_menu_item_icon (string): The menu item icon.
     # - $p_menu_group_id (int): The menu group ID.
     # - $p_menu_group_name (string): The menu group name.
     # - $p_app_module_id (int): The menu group ID.
@@ -77,10 +80,11 @@ class MenuItemModel {
     # Returns: String
     #
     # -------------------------------------------------------------
-    public function insertMenuItem($p_menu_item_name, $p_menu_item_url, $p_menu_group_id, $p_menu_group_name, $p_app_module_id, $p_app_module_name, $p_parent_id, $p_parent_name, $p_order_sequence, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertMenuItem(:p_menu_item_name, :p_menu_item_url, :p_menu_group_id, :p_menu_group_name, :p_app_module_id, :p_app_module_name, :p_parent_id, :p_parent_name, :p_order_sequence, :p_last_log_by, @p_menu_item_id)');
+    public function insertMenuItem($p_menu_item_name, $p_menu_item_url, $p_menu_item_icon, $p_menu_group_id, $p_menu_group_name, $p_app_module_id, $p_app_module_name, $p_parent_id, $p_parent_name, $p_order_sequence, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertMenuItem(:p_menu_item_name, :p_menu_item_url, :p_menu_item_icon, :p_menu_group_id, :p_menu_group_name, :p_app_module_id, :p_app_module_name, :p_parent_id, :p_parent_name, :p_order_sequence, :p_last_log_by, @p_menu_item_id)');
         $stmt->bindValue(':p_menu_item_name', $p_menu_item_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_menu_item_url', $p_menu_item_url, PDO::PARAM_STR);
+        $stmt->bindValue(':p_menu_item_icon', $p_menu_item_icon, PDO::PARAM_STR);
         $stmt->bindValue(':p_menu_group_id', $p_menu_group_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_menu_group_name', $p_menu_group_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_app_module_id', $p_app_module_id, PDO::PARAM_INT);

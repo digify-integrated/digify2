@@ -25,7 +25,7 @@ $(document).ready(function () {
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -34,7 +34,7 @@ $(document).ready(function () {
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');

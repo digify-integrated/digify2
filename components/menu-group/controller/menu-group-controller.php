@@ -14,6 +14,7 @@ session_start();
 # -------------------------------------------------------------
 class MenuGroupController {
     private $menuGroupModel;
+    private $appModuleModel;
     private $authenticationModel;
     private $securityModel;
 
@@ -26,14 +27,16 @@ class MenuGroupController {
     #
     # Parameters:
     # - @param MenuGroupModel $menuGroupModel     The MenuGroupModel instance for menu group related operations.
+    # - @param AppModuleModel $appModuleModel     The AppModuleModel instance for app module related operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(MenuGroupModel $menuGroupModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+    public function __construct(MenuGroupModel $menuGroupModel, AppModuleModel $appModuleModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
         $this->menuGroupModel = $menuGroupModel;
+        $this->appModuleModel = $appModuleModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
     }
@@ -171,12 +174,16 @@ class MenuGroupController {
             return;
         }
 
-        if (isset($_POST['menu_group_name']) && !empty($_POST['menu_group_name']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
+        if (isset($_POST['menu_group_name']) && !empty($_POST['menu_group_name']) && isset($_POST['app_module_id']) && !empty($_POST['app_module_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
             $userID = $_SESSION['user_account_id'];
             $menuGroupName = htmlspecialchars($_POST['menu_group_name'], ENT_QUOTES, 'UTF-8');
+            $appModuleID = htmlspecialchars($_POST['app_module_id'], ENT_QUOTES, 'UTF-8');
             $orderSequence = htmlspecialchars($_POST['order_sequence'], ENT_QUOTES, 'UTF-8');
+
+            $appModuleDetails = $this->appModuleModel->getAppModule($appModuleID);
+            $appModuleName = $appModuleDetails['app_module_name'];
         
-            $menuGroupID = $this->menuGroupModel->insertMenuGroup($menuGroupName, $orderSequence, $userID);
+            $menuGroupID = $this->menuGroupModel->insertMenuGroup($menuGroupName, $appModuleID, $appModuleName, $orderSequence, $userID);
     
             $response = [
                 'success' => true,
@@ -223,10 +230,11 @@ class MenuGroupController {
             return;
         }
         
-        if (isset($_POST['menu_group_id']) && !empty($_POST['menu_group_id']) && isset($_POST['menu_group_name']) && !empty($_POST['menu_group_name']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
+        if (isset($_POST['menu_group_name']) && !empty($_POST['menu_group_name']) && isset($_POST['app_module_id']) && !empty($_POST['app_module_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
             $userID = $_SESSION['user_account_id'];
             $menuGroupID = htmlspecialchars($_POST['menu_group_id'], ENT_QUOTES, 'UTF-8');
             $menuGroupName = htmlspecialchars($_POST['menu_group_name'], ENT_QUOTES, 'UTF-8');
+            $appModuleID = htmlspecialchars($_POST['app_module_id'], ENT_QUOTES, 'UTF-8');
             $orderSequence = htmlspecialchars($_POST['order_sequence'], ENT_QUOTES, 'UTF-8');
         
             $checkMenuGroupExist = $this->menuGroupModel->checkMenuGroupExist($menuGroupID);
@@ -245,7 +253,10 @@ class MenuGroupController {
                 exit;
             }
 
-            $this->menuGroupModel->updateMenuGroup($menuGroupID, $menuGroupName, $orderSequence, $userID);
+            $appModuleDetails = $this->appModuleModel->getAppModule($appModuleID);
+            $appModuleName = $appModuleDetails['app_module_name'];
+
+            $this->menuGroupModel->updateMenuGroup($menuGroupID, $menuGroupName, $appModuleID, $appModuleName, $orderSequence, $userID);
                 
             $response = [
                 'success' => true,
@@ -433,7 +444,9 @@ class MenuGroupController {
             $response = [
                 'success' => true,
                 'menuGroupName' => $menuGroupDetails['menu_group_name'] ?? null,
-                'orderSequence' => $menuGroupDetails['order_sequence'] ?? null
+                'appModuleID' => $menuGroupDetails['app_module_id'] ?? null,
+                'appModuleName' => $menuGroupDetails['app_module_name'] ?? null,
+                'orderSequence' => $menuGroupDetails['order_sequence'] ?? null,
             ];
 
             echo json_encode($response);
@@ -460,9 +473,10 @@ require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
 require_once '../../menu-group/model/menu-group-model.php';
+require_once '../../app-module/model/app-module-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new MenuGroupController(new MenuGroupModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new MenuGroupController(new MenuGroupModel(new DatabaseModel), new AppModuleModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>

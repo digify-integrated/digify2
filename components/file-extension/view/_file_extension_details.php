@@ -1,3 +1,9 @@
+<?php
+    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
+?>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -7,18 +13,15 @@
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            if($fileExtensionCreateAccess['total'] > 0 || $fileExtensionDeleteAccess['total'] > 0){
-                                echo $fileExtensionCreateAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create File Extension</a></li>' : '';
-                                echo $fileExtensionDeleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-file-extension">Delete File Extension</button></li>' : '';
-                                
-                                echo '<li><hr class="dropdown-divider"></li>';
+                            if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
+                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create File Extension</a></li>' : '';
+                                echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-file-extension">Delete File Extension</button></li>' : '';
                             }
                         ?>
-                        <li><button class="dropdown-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" id="view-log-notes">View Log Notes</button></li>
                     </ul>
                 </div>
                 <?php
-                    echo $fileExtensionWriteAccess['total'] > 0 ? 
+                    echo $writeAccess['total'] > 0 ? 
                     '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
                         <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#file-extension-modal" id="edit-details">Edit</button>
                     </div>' : '';
@@ -99,5 +102,4 @@
     </div>
 </div>
 
-<?php require_once('components/global/view/_internal_notes.php'); ?>
-<?php require_once('components/global/view/_log_notes_offcanvas.php'); ?>
+<?php require_once('components/global/view/_internal_log_notes.php'); ?>

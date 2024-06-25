@@ -94,15 +94,15 @@ BEGIN
     DECLARE query VARCHAR(5000);
 
     SET query = CONCAT('
-        SELECT menu_item_id, menu_item_name, menu_group_name, order_sequence 
+        SELECT menu_item_id, menu_item_name, menu_group_name, app_module_name, order_sequence 
         FROM menu_item 
         WHERE 1');
 
-    IF p_filter_by_menu_group IS NOT NULL THEN
+    IF p_filter_by_menu_group IS NOT NULL AND p_filter_by_menu_group <> '' THEN
         SET query = CONCAT(query, ' AND menu_group_id = ', p_filter_by_menu_group);
     END IF;
 
-    IF p_filter_by_app_module IS NOT NULL THEN
+    IF p_filter_by_app_module IS NOT NULL AND p_filter_by_app_module <> '' THEN
         SET query = CONCAT(query, ' AND app_module_id = ', p_filter_by_app_module);
     END IF;
 

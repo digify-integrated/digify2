@@ -140,6 +140,11 @@
             cityTable('#city-table');
             $('#filter-offcanvas').offcanvas('hide');
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#city-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -193,6 +198,8 @@ function cityTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {

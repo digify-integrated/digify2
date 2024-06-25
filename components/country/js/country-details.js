@@ -13,7 +13,7 @@
         });
 
         $(document).on('click','#delete-country',function() {
-            const country_id = $('#country-id').text();
+            const country_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'delete country';
     
@@ -71,22 +71,20 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const country_id = $('#country-id').text();
+        if($('#log-notes-main').length){
+            const country_id = $('#details-id').text();
 
-                logNotes('country', country_id);
-            });
+            logNotesMain('country', country_id);
         }
         
         if($('#internal-notes').length){
-            const country_id = $('#country-id').text();
+            const country_id = $('#details-id').text();
 
             internalNotes('country', country_id);
         }
 
         if($('#internal-notes-form').length){
-            const country_id = $('#country-id').text();
+            const country_id = $('#details-id').text();
 
             internalNotesForm('country', country_id);
         }
@@ -111,7 +109,7 @@ function countryForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -120,14 +118,14 @@ function countryForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const country_id = $('#country-id').text();
+            const country_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update country';
           
@@ -168,6 +166,7 @@ function countryForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('country', country_id);
                 }
             });
         
@@ -179,7 +178,7 @@ function countryForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get country details':
-            var country_id = $('#country-id').text();
+            var country_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             
             $.ajax({

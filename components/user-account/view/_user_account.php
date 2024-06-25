@@ -38,8 +38,7 @@
                         echo $dropdown;
                     }
 
-                    echo $createAccess['total'] > 0 ?
-                    '<a href="' . $pageLink . '&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
+                    echo $createAccess['total'] > 0 ? '<a href="'. $pageLink .'&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
                 ?>
                 <button type="button" class="btn btn-warning mb-0 px-4" data-bs-toggle="offcanvas" data-bs-target="#filter-offcanvas" aria-controls="filter-offcanvas">Filter</a>
             </div>
@@ -53,7 +52,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive overflow-x-auto">
-                        <table id="user-account-table" class="table align-middle text-nowrap mb-4">
+                        <table id="user-account-table" class="table align-middle text-nowrap w-100 mb-4">
                             <thead class="text-dark">
                                 <tr>
                                     <th class="all">
@@ -86,7 +85,7 @@
     <div class="offcanvas-body p-0">
         <div class="border-bottom rounded-0">
             <h6 class="mt-4 mb-2 mx-4 fw-semibold">By User Account Status</h6>
-            <div class="pb-2 px-4">
+            <div class="pb-2 px-4 text-dark">
                 <div class="form-check py-2 mb-0">
                     <input class="form-check-input warning" type="radio" name="filter-user-account-status" id="filter-user-account-status-all" value="" checked>
                     <label class="form-check-label" for="filter-user-account-status-all">All</label>
@@ -101,7 +100,7 @@
                 </div>
             </div>
             <h6 class="mb-2 mx-4 fw-semibold">By User Account Lock Status</h6>
-            <div class="pb-2 px-4">
+            <div class="pb-2 px-4 text-dark">
                 <div class="form-check py-2 mb-0">
                     <input class="form-check-input warning" type="radio" name="filter-user-account-lock-status" id="filter-user-account-status-lock-all" value="" checked>
                     <label class="form-check-label" for="filter-user-account-status-lock-all">All</label>
@@ -118,7 +117,7 @@
             <h6 class="mb-2 mx-4 fw-semibold">By Password Expiry Date</h6>
             <div class="pb-2 px-4">
                 <div class="input-group mb-3">
-                    <input type="text" id="filter-password-expiry-date" class="form-control filter-daterange" />
+                    <input type="text" id="filter-password-expiry-date" class="form-control filter-daterange" autocomplete="off" />
                     <span class="input-group-text">
                         <i class="ti ti-calendar fs-5"></i>
                     </span>
@@ -127,7 +126,7 @@
             <h6 class="mb-2 mx-4 fw-semibold">By Last Connection Date</h6>
             <div class="pb-2 px-4">
                 <div class="input-group mb-3">
-                    <input type="text" id="filter-last-connection-date" class="form-control filter-daterange" />
+                    <input type="text" id="filter-last-connection-date" class="form-control filter-daterange" autocomplete="off" />
                     <span class="input-group-text">
                         <i class="ti ti-calendar fs-5"></i>
                     </span>

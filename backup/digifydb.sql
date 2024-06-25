@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 23, 2024 at 04:15 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jun 25, 2024 at 11:33 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -418,10 +418,23 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupOptions` ()   BEGI
 END$$
 
 DROP PROCEDURE IF EXISTS `generateMenuGroupTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupTable` ()   BEGIN
-	SELECT menu_group_id, menu_group_name, app_module_name, order_sequence 
-    FROM menu_group 
-    ORDER BY menu_group_id;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupTable` (IN `p_filter_by_app_module` INT)   BEGIN
+    DECLARE query VARCHAR(5000);
+
+    SET query = CONCAT('
+        SELECT menu_group_id, menu_group_name, app_module_name, order_sequence 
+        FROM menu_group 
+        WHERE 1');
+
+    IF p_filter_by_app_module IS NOT NULL AND p_filter_by_app_module <> '' THEN
+        SET query = CONCAT(query, ' AND app_module_id = ', p_filter_by_app_module);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY menu_group_name');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateMenuItemOptions`$$
@@ -452,15 +465,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemTable` (IN `p_filte
     DECLARE query VARCHAR(5000);
 
     SET query = CONCAT('
-        SELECT menu_item_id, menu_item_name, menu_group_name, order_sequence 
+        SELECT menu_item_id, menu_item_name, menu_group_name, app_module_name, order_sequence 
         FROM menu_item 
         WHERE 1');
 
-    IF p_filter_by_menu_group IS NOT NULL THEN
+    IF p_filter_by_menu_group IS NOT NULL AND p_filter_by_menu_group <> '' THEN
         SET query = CONCAT(query, ' AND menu_group_id = ', p_filter_by_menu_group);
     END IF;
 
-    IF p_filter_by_app_module IS NOT NULL THEN
+    IF p_filter_by_app_module IS NOT NULL AND p_filter_by_app_module <> '' THEN
         SET query = CONCAT(query, ' AND app_module_id = ', p_filter_by_app_module);
     END IF;
 
@@ -1516,7 +1529,65 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (78, 'role_system_action_permission', 14, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Delete Role System Action Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
 (79, 'role_system_action_permission', 15, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Add File Extension Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
 (80, 'role_system_action_permission', 16, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Delete File Extension Access<br/>System Action Access: 1<br/>Date Assigned: 2024-06-22 17:54:17', 1, '2024-06-22 17:54:17'),
-(81, 'user_account', 2, 'Last Connection Date: 2024-06-22 16:46:07 -> 2024-06-23 16:00:39<br/>', 1, '2024-06-23 16:00:39');
+(81, 'user_account', 2, 'Last Connection Date: 2024-06-22 16:46:07 -> 2024-06-23 16:00:39<br/>', 1, '2024-06-23 16:00:39'),
+(82, 'user_account', 2, 'Multiple Session: Yes -> No<br/>', 2, '2024-06-24 17:05:14'),
+(83, 'user_account', 2, 'Multiple Session: No -> Yes<br/>', 2, '2024-06-24 17:05:15'),
+(84, 'user_account', 2, 'Two-Factor Authentication: No -> Yes<br/>', 2, '2024-06-24 17:15:00'),
+(85, 'user_account', 2, 'Two-Factor Authentication: Yes -> No<br/>', 2, '2024-06-24 17:15:04'),
+(86, 'user_account', 2, 'Last Connection Date: 2024-06-23 16:00:39 -> 2024-06-25 09:19:26<br/>', 2, '2024-06-25 09:19:26'),
+(87, 'user_account', 2, 'Two-Factor Authentication: No -> Yes<br/>', 2, '2024-06-25 10:19:06'),
+(88, 'user_account', 2, 'Two-Factor Authentication: Yes -> No<br/>', 2, '2024-06-25 10:19:07'),
+(89, 'role_user_account', 2, 'Role user account created. <br/><br/>Role Name: Administrator<br/>User Account Name: Administrator<br/>Date Assigned: 2024-06-25 10:43:09', 1, '2024-06-25 10:43:09'),
+(90, 'role_user_account', 3, 'Role user account created. <br/><br/>Role Name: Administrator<br/>User Account Name: Administrator<br/>Date Assigned: 2024-06-25 10:44:55', 1, '2024-06-25 10:44:55'),
+(91, 'security_setting', 3, 'Value: http://localhost/modernize/password-reset.php?id= -> http://localhost/digify2/password-reset.php?id=<br/>', 2, '2024-06-25 11:29:02'),
+(92, 'role_permission', 6, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: User Interface<br/>Read Access: 1<br/>Date Assigned: 2024-06-25 11:43:13', 1, '2024-06-25 11:43:13'),
+(93, 'role_permission', 7, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Menu Group<br/>Read Access: 1<br/>Write Access: 1<br/>Create Access: 1<br/>Delete Access: 1<br/>Date Assigned: 2024-06-25 11:43:13', 1, '2024-06-25 11:43:13'),
+(94, 'role_permission', 8, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Menu Item<br/>Read Access: 1<br/>Write Access: 1<br/>Create Access: 1<br/>Delete Access: 1<br/>Date Assigned: 2024-06-25 11:43:13', 1, '2024-06-25 11:43:13'),
+(95, 'menu_group', 2, 'Order Sequence: 100 -> 99<br/>', 2, '2024-06-25 15:34:07'),
+(96, 'role_permission', 5, 'Delete Access: 1 -> 0<br/>', 2, '2024-06-25 16:23:00'),
+(97, 'role_permission', 5, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 16:23:11'),
+(98, 'role_permission', 9, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Role<br/>Date Assigned: 2024-06-25 16:51:10', 2, '2024-06-25 16:51:10'),
+(99, 'role_permission', 9, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 16:51:11'),
+(100, 'role_permission', 9, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 16:51:12'),
+(101, 'role_permission', 9, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 16:51:12'),
+(102, 'role_permission', 9, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 16:51:13'),
+(103, 'role_permission', 10, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: System Action<br/>Date Assigned: 2024-06-25 17:20:10', 2, '2024-06-25 17:20:10'),
+(104, 'role_permission', 10, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 17:20:11'),
+(105, 'role_permission', 10, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 17:20:12'),
+(106, 'role_permission', 10, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 17:20:13'),
+(107, 'role_permission', 10, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 17:20:13'),
+(108, 'role_system_action_permission', 3, 'System Action Access: 1 -> 0<br/>', 2, '2024-06-25 17:21:17'),
+(109, 'role_system_action_permission', 3, 'System Action Access: 0 -> 1<br/>', 2, '2024-06-25 17:21:18'),
+(110, 'role_system_action_permission', 3, 'System Action Access: 1 -> 0<br/>', 2, '2024-06-25 17:22:47'),
+(111, 'role_system_action_permission', 3, 'System Action Access: 0 -> 1<br/>', 2, '2024-06-25 17:22:48'),
+(112, 'role_system_action_permission', 3, 'System Action Access: 1 -> 0<br/>', 2, '2024-06-25 17:22:48'),
+(113, 'role_system_action_permission', 3, 'System Action Access: 0 -> 1<br/>', 2, '2024-06-25 17:22:49'),
+(114, 'role_system_action_permission', 3, 'System Action Access: 1 -> 0<br/>', 2, '2024-06-25 17:22:49'),
+(115, 'role_system_action_permission', 3, 'System Action Access: 0 -> 1<br/>', 2, '2024-06-25 17:22:50'),
+(116, 'role_permission', 11, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Configuration<br/>Date Assigned: 2024-06-25 17:25:37', 2, '2024-06-25 17:25:37'),
+(117, 'role_permission', 11, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 17:25:38'),
+(118, 'role_permission', 11, 'Menu Item: Configuration -> Configurations<br/>', 2, '2024-06-25 17:25:43'),
+(119, 'role_permission', 11, 'Menu Item: Configurations -> Localization<br/>', 2, '2024-06-25 17:27:56'),
+(120, 'role_permission', 12, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: State<br/>Date Assigned: 2024-06-25 17:28:49', 2, '2024-06-25 17:28:49'),
+(121, 'role_permission', 12, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 17:28:50'),
+(122, 'role_permission', 12, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 17:28:51'),
+(123, 'role_permission', 12, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 17:28:52'),
+(124, 'role_permission', 12, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 17:28:53'),
+(125, 'role_permission', 13, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Country<br/>Date Assigned: 2024-06-25 17:29:23', 2, '2024-06-25 17:29:23'),
+(126, 'role_permission', 13, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 17:29:24'),
+(127, 'role_permission', 13, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 17:29:25'),
+(128, 'role_permission', 13, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 17:29:25'),
+(129, 'role_permission', 13, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 17:29:26'),
+(130, 'role_permission', 14, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: City<br/>Date Assigned: 2024-06-25 17:30:03', 2, '2024-06-25 17:30:03'),
+(131, 'role_permission', 14, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 17:30:04'),
+(132, 'role_permission', 14, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 17:30:05'),
+(133, 'role_permission', 14, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 17:30:06'),
+(134, 'role_permission', 14, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 17:30:07'),
+(135, 'role_permission', 15, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Currency<br/>Date Assigned: 2024-06-25 17:31:09', 2, '2024-06-25 17:31:09'),
+(136, 'role_permission', 15, 'Read Access: 0 -> 1<br/>', 2, '2024-06-25 17:31:10'),
+(137, 'role_permission', 15, 'Create Access: 0 -> 1<br/>', 2, '2024-06-25 17:31:12'),
+(138, 'role_permission', 15, 'Write Access: 0 -> 1<br/>', 2, '2024-06-25 17:31:12'),
+(139, 'role_permission', 15, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-25 17:31:13');
 
 -- --------------------------------------------------------
 
@@ -1684,7 +1755,8 @@ INSERT INTO `internal_notes` (`internal_notes_id`, `table_name`, `reference_id`,
 (6, 'app_module', 1, 'asd', 2, '2024-06-21 17:09:36'),
 (7, 'app_module', 1, 'asdasd', 2, '2024-06-21 17:09:53'),
 (8, 'app_module', 1, 'ssdfd', 2, '2024-06-21 17:13:22'),
-(9, 'app_module', 1, 'test\r\n', 2, '2024-06-22 10:34:32');
+(9, 'app_module', 1, 'test\r\n', 2, '2024-06-22 10:34:32'),
+(10, 'user_account', 2, 'asd', 2, '2024-06-24 17:21:15');
 
 -- --------------------------------------------------------
 
@@ -1735,6 +1807,56 @@ INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `
 (1, 'Technical', 1, 'Settings', 100, '2024-06-21 15:16:45', 2),
 (2, 'Administration', 1, 'Settings', 99, '2024-06-21 15:16:45', 2);
 
+--
+-- Triggers `menu_group`
+--
+DROP TRIGGER IF EXISTS `menu_group_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `menu_group_trigger_insert` AFTER INSERT ON `menu_group` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Menu group created. <br/>';
+
+    IF NEW.menu_group_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Menu Group Name: ", NEW.menu_group_name);
+    END IF;
+
+    IF NEW.app_module_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>App Module: ", NEW.app_module_name);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('menu_group', NEW.menu_group_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `menu_group_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `menu_group_trigger_update` AFTER UPDATE ON `menu_group` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.menu_group_name <> OLD.menu_group_name THEN
+        SET audit_log = CONCAT(audit_log, "Menu Group Name: ", OLD.menu_group_name, " -> ", NEW.menu_group_name, "<br/>");
+    END IF;
+    
+      IF NEW.app_module_name <> OLD.app_module_name THEN
+        SET audit_log = CONCAT(audit_log, "App Module: ", OLD.app_module_name, " -> ", NEW.app_module_name, "<br/>");
+    END IF;
+
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('menu_group', NEW.menu_group_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -1763,11 +1885,21 @@ CREATE TABLE `menu_item` (
 --
 
 INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `menu_item_icon`, `menu_group_id`, `menu_group_name`, `app_module_id`, `app_module_name`, `parent_id`, `parent_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'General Settings', 'general-settings.php', 'ti ti-settings', 1, 'Technical', 1, 'Settings', 0, '', 21, '2024-06-21 15:18:43', 2),
+(1, 'General Settings', 'general-settings.php', 'ti ti-settings', 1, 'Technical', 1, 'Settings', 0, '', 2, '2024-06-21 15:18:43', 2),
 (2, 'Users & Companies', '', 'ti ti-users', 2, 'Administration', 1, 'Settings', 0, '', 1, '2024-06-21 15:18:43', 2),
 (3, 'User Account', 'user-account.php', '', 2, 'Administration', 1, 'Settings', 2, 'Users & Companies', 1, '2024-06-21 15:18:43', 2),
 (4, 'Company', 'company.php', '', 2, 'Administration', 1, 'Settings', 2, 'Users & Companies', 3, '2024-06-21 15:18:43', 2),
-(5, 'App Module', 'app-module.php', 'ti ti-box', 1, 'Technical', 1, 'Settings', 0, '', 1, '2024-06-21 15:18:43', 2);
+(5, 'App Module', 'app-module.php', 'ti ti-box', 1, 'Technical', 1, 'Settings', 0, NULL, 1, '2024-06-21 15:18:43', 2),
+(6, 'User Interface', '', 'ti ti-layout-sidebar', 1, 'Technical', 1, 'Settings', 0, NULL, 4, '2024-06-25 11:43:13', 2),
+(7, 'Menu Group', 'menu-group.php', '', 1, 'Technical', 1, 'Settings', 6, 'User Interface', 1, '2024-06-25 11:43:13', 1),
+(8, 'Menu Item', 'menu-item.php', '', 1, 'Technical', 1, 'Settings', 6, 'User Interface', 2, '2024-06-25 11:43:13', 1),
+(9, 'Role', 'role.php', 'ti ti-hierarchy-2', 2, 'Administration', 1, 'Settings', 0, NULL, 2, '2024-06-25 16:51:04', 2),
+(10, 'System Action', 'system-action.php', '', 1, 'Technical', 1, 'Settings', 6, 'User Interface', 3, '2024-06-25 17:19:47', 2),
+(11, 'Localization', '', 'ti ti-map-pin', 1, 'Technical', 1, 'Settings', NULL, NULL, 2, '2024-06-25 17:25:32', 2),
+(12, 'State', 'state.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 10, '2024-06-25 17:28:43', 2),
+(13, 'Country', 'country.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 4, '2024-06-25 17:29:18', 2),
+(14, 'City', 'city.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 3, '2024-06-25 17:29:59', 2),
+(15, 'Currency', 'currency.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 2, '2024-06-25 17:31:04', 2);
 
 -- --------------------------------------------------------
 
@@ -2129,7 +2261,17 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (2, 1, 'Administrator', 2, 'Users & Companies', 1, 0, 0, 0, '2024-06-19 17:25:30', '2024-06-19 17:25:30', 1),
 (3, 1, 'Administrator', 3, 'User Account', 1, 1, 1, 1, '2024-06-19 17:30:37', '2024-06-19 17:30:37', 1),
 (4, 1, 'Administrator', 4, 'Company', 1, 1, 1, 1, '2024-06-19 17:30:37', '2024-06-19 17:30:37', 1),
-(5, 1, 'Administrator', 5, 'App Module', 1, 1, 1, 1, '2024-06-20 11:37:17', '2024-06-20 11:37:17', 1);
+(5, 1, 'Administrator', 5, 'App Module', 1, 1, 1, 1, '2024-06-20 11:37:17', '2024-06-20 11:37:17', 2),
+(6, 1, 'Administrator', 6, 'User Interface', 1, 0, 0, 0, '2024-06-25 11:43:13', '2024-06-25 11:43:13', 2),
+(7, 1, 'Administrator', 7, 'Menu Group', 1, 1, 1, 1, '2024-06-25 11:43:13', '2024-06-25 11:43:13', 1),
+(8, 1, 'Administrator', 8, 'Menu Item', 1, 1, 1, 1, '2024-06-25 11:43:13', '2024-06-25 11:43:13', 1),
+(9, 1, 'Administrator', 9, 'Role', 1, 1, 1, 1, '2024-06-25 16:51:10', '2024-06-25 16:51:10', 2),
+(10, 1, 'Administrator', 10, 'System Action', 1, 1, 1, 1, '2024-06-25 17:20:10', '2024-06-25 17:20:10', 2),
+(11, 1, 'Administrator', 11, 'Localization', 1, 0, 0, 0, '2024-06-25 17:25:37', '2024-06-25 17:25:37', 2),
+(12, 1, 'Administrator', 12, 'State', 1, 1, 1, 1, '2024-06-25 17:28:49', '2024-06-25 17:28:49', 2),
+(13, 1, 'Administrator', 13, 'Country', 1, 1, 1, 1, '2024-06-25 17:29:23', '2024-06-25 17:29:23', 2),
+(14, 1, 'Administrator', 14, 'City', 1, 1, 1, 1, '2024-06-25 17:30:03', '2024-06-25 17:30:03', 2),
+(15, 1, 'Administrator', 15, 'Currency', 1, 1, 1, 1, '2024-06-25 17:31:09', '2024-06-25 17:31:09', 2);
 
 --
 -- Triggers `role_permission`
@@ -2235,7 +2377,7 @@ CREATE TABLE `role_system_action_permission` (
 INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`, `role_id`, `role_name`, `system_action_id`, `system_action_name`, `system_action_access`, `date_assigned`, `created_date`, `last_log_by`) VALUES
 (1, 1, 'Administrator', 1, 'Update System Settings', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
 (2, 1, 'Administrator', 2, 'Update Security Settings', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
-(3, 1, 'Administrator', 3, 'Activate User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
+(3, 1, 'Administrator', 3, 'Activate User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 2),
 (4, 1, 'Administrator', 4, 'Deactivate User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
 (5, 1, 'Administrator', 5, 'Lock User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
 (6, 1, 'Administrator', 6, 'Unlock User Account', 1, '2024-06-22 17:54:16', '2024-06-22 17:54:16', 1),
@@ -2327,7 +2469,7 @@ CREATE TABLE `role_user_account` (
 --
 
 INSERT INTO `role_user_account` (`role_user_account_id`, `role_id`, `role_name`, `user_account_id`, `file_as`, `date_assigned`, `created_date`, `last_log_by`) VALUES
-(1, 1, 'Administrator', 2, 'Administrator', '2024-06-15 18:15:36', '2024-06-15 18:15:36', 1);
+(3, 1, 'Administrator', 2, 'Administrator', '2024-06-25 10:44:55', '2024-06-25 10:44:55', 1);
 
 --
 -- Triggers `role_user_account`
@@ -2397,7 +2539,7 @@ CREATE TABLE `security_setting` (
 INSERT INTO `security_setting` (`security_setting_id`, `security_setting_name`, `value`, `created_date`, `last_log_by`) VALUES
 (1, 'Max Failed Login Attempt', '5', '2024-06-17 21:34:43', 2),
 (2, 'Max Failed OTP Attempt', '5', '2024-06-17 21:34:43', 2),
-(3, 'Default Forgot Password Link', 'http://localhost/modernize/password-reset.php?id=', '2024-06-17 21:34:43', 2),
+(3, 'Default Forgot Password Link', 'http://localhost/digify2/password-reset.php?id=', '2024-06-17 21:34:43', 2),
 (4, 'Password Expiry Duration', '180', '2024-06-17 21:34:43', 2),
 (5, 'Session Timeout Duration', '30', '2024-06-17 21:34:43', 2),
 (6, 'OTP Duration', '5', '2024-06-17 21:34:43', 2),
@@ -2467,7 +2609,7 @@ CREATE TABLE `system_action` (
 INSERT INTO `system_action` (`system_action_id`, `system_action_name`, `system_action_description`, `created_date`, `last_log_by`) VALUES
 (1, 'Update System Settings', 'Access to update the system settings.', '2024-06-22 17:54:16', 1),
 (2, 'Update Security Settings', 'Access to update the security settings.', '2024-06-22 17:54:16', 1),
-(3, 'Activate User Account', 'Access to activate the user account.', '2024-06-22 17:54:16', 1),
+(3, 'Activate User Account', 'Access to activate the user account.', '2024-06-22 17:54:16', 2),
 (4, 'Deactivate User Account', 'Access to deactivate the user account.', '2024-06-22 17:54:16', 1),
 (5, 'Lock User Account', 'Access to lock the user account.', '2024-06-22 17:54:16', 1),
 (6, 'Unlock User Account', 'Access to unlock the user account.', '2024-06-22 17:54:16', 1),
@@ -2700,7 +2842,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmids@christianmotors.ph', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-15 18:08:25', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-23 16:00:39', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'jhQSkzCC5Svd%2B7A4GTQH%2BtcA2g558o5ZzYMvIvVCD7I%3D', '2024-06-15 18:08:25', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-25 09:19:26', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'Oq7cMoCryByyHXHr6qJSDk9U%2BbeRBUc9E6U%2F20Wn%2FDc%3D', '2024-06-15 18:08:25', 2);
 
 --
 -- Triggers `user_account`
@@ -3039,7 +3181,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=140;
 
 --
 -- AUTO_INCREMENT for table `email_setting`
@@ -3051,7 +3193,7 @@ ALTER TABLE `email_setting`
 -- AUTO_INCREMENT for table `internal_notes`
 --
 ALTER TABLE `internal_notes`
-  MODIFY `internal_notes_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `internal_notes_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `internal_notes_attachment`
@@ -3069,7 +3211,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -3111,7 +3253,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -3123,7 +3265,7 @@ ALTER TABLE `role_system_action_permission`
 -- AUTO_INCREMENT for table `role_user_account`
 --
 ALTER TABLE `role_user_account`
-  MODIFY `role_user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `role_user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `security_setting`

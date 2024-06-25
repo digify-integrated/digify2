@@ -33,7 +33,9 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
         # -------------------------------------------------------------
         case 'menu item table':
             $filterByAppModule = isset($_POST['filter_by_app_module']) ? htmlspecialchars($_POST['filter_by_app_module'], ENT_QUOTES, 'UTF-8') : null;
-            $sql = $databaseModel->getConnection()->prepare('CALL generateMenuItemTable(:filterByAppModule)');
+            $filterByMenuGroup = isset($_POST['filter_by_menu_group']) ? htmlspecialchars($_POST['filter_by_menu_group'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateMenuItemTable(:filterByMenuGroup, :filterByAppModule)');
+            $sql->bindValue(':filterByMenuGroup', $filterByMenuGroup, PDO::PARAM_INT);
             $sql->bindValue(':filterByAppModule', $filterByAppModule, PDO::PARAM_INT);
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);

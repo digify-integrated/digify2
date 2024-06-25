@@ -1,3 +1,9 @@
+<?php
+    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
+?>
+
 <div class="row">
     <div class="col-lg-4">
         <div class="card">
@@ -8,7 +14,7 @@
                 <div class="text-center">
                     <img src="./assets/images/default/default-company-logo.png" alt="" id="company_logo" class="rounded-circle" width="100" height="100">
                     <?php
-                        echo $companyWriteAccess['total'] > 0 ? 
+                        echo $writeAccess['total'] > 0 ? 
                         '<div class="d-flex align-items-center justify-content-center my-4 gap-6">
                             <button class="btn btn-primary" data-bs-toggle="modal" id="update-company-logo" data-bs-target="#company-logo-modal">Upload</button>
                         </div>' : '';
@@ -26,18 +32,15 @@
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            if($companyCreateAccess['total'] > 0 || $companyDeleteAccess['total'] > 0){
-                                echo $companyCreateAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Company</a></li>' : '';
-                                echo $companyDeleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-company">Delete Company</button></li>' : '';
-                                
-                                echo '<li><hr class="dropdown-divider"></li>';
+                            if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
+                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Company</a></li>' : '';
+                                echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-company">Delete Company</button></li>' : '';
                             }
                         ?>
-                        <li><button class="dropdown-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" id="view-log-notes">View Log Notes</button></li>
                     </ul>
                 </div>
                 <?php
-                    echo $companyWriteAccess['total'] > 0 ? 
+                    echo $writeAccess['total'] > 0 ? 
                     '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
                         <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#company-modal" id="edit-details">Edit</button>
                     </div>' : '';
@@ -254,5 +257,4 @@
     </div>
 </div>
 
-<?php require_once('components/global/view/_internal_notes.php'); ?>
-<?php require_once('components/global/view/_log_notes_offcanvas.php'); ?>
+<?php require_once('components/global/view/_internal_log_notes.php'); ?>

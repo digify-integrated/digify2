@@ -32,7 +32,9 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
         #
         # -------------------------------------------------------------
         case 'menu group table':
-            $sql = $databaseModel->getConnection()->prepare('CALL generateMenuGroupTable()');
+            $filterByAppModule = isset($_POST['filter_by_app_module']) ? htmlspecialchars($_POST['filter_by_app_module'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateMenuGroupTable(:filterByAppModule)');
+            $sql->bindValue(':filterByAppModule', $filterByAppModule, PDO::PARAM_INT);
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();

@@ -177,6 +177,8 @@ function notificationSettingTable(datatable_name, buttons = false, show_all = fa
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {

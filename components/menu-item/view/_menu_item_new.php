@@ -41,6 +41,12 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
+                                <label class="form-label" for="menu_item_icon">Icon</label>
+                                <input type="text" class="form-control maxlength" id="menu_item_icon" name="menu_item_icon" maxlength="50" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
                                 <label class="form-label" for="menu_item_url">URL</label>
                                 <input type="text" class="form-control maxlength" id="menu_item_url" name="menu_item_url" maxlength="50" autocomplete="off">
                             </div>

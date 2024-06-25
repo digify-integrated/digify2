@@ -19,7 +19,7 @@
         });
 
         $(document).on('click','#delete-company',function() {
-            const company_id = $('#company-id').text();
+            const company_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete company';
     
@@ -77,22 +77,20 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const company_id = $('#company-id').text();
+        if($('#log-notes-main').length){
+            const company_id = $('#details-id').text();
 
-                logNotes('company', company_id);
-            });
+            logNotesMain('company', company_id);
         }
 
         if($('#internal-notes').length){
-            const company_id = $('#company-id').text();
+            const company_id = $('#details-id').text();
 
             internalNotes('company', company_id);
         }
 
         if($('#internal-notes-form').length){
-            const company_id = $('#company-id').text();
+            const company_id = $('#details-id').text();
 
             internalNotesForm('company', company_id);
         }
@@ -157,7 +155,7 @@ function companyForm(){
             }
         },
         submitHandler: function(form) {
-            const company_id = $('#company-id').text();
+            const company_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update company';
           
@@ -198,6 +196,7 @@ function companyForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('company', company_id);
                 }
             });
         
@@ -224,7 +223,7 @@ function updateCompanyLogoForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -233,14 +232,14 @@ function updateCompanyLogoForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const company_id = $('#company-id').text();
+            const company_id = $('#details-id').text();
             const transaction = 'update company logo';
             var formData = new FormData(form);
             formData.append('company_id', company_id);
@@ -288,7 +287,7 @@ function updateCompanyLogoForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get company details':
-            var company_id = $('#company-id').text();
+            var company_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({

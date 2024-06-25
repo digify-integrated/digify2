@@ -44,6 +44,10 @@ INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, r
 INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 3, 'User Account', 1, 1, 1, 1, 1);
 INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 4, 'Company', 1, 1, 1, 1, 1);
 INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 5, 'App Module', 1, 1, 1, 1, 1);
+INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 6, 'User Interface', 1, 0, 0, 0, 1);
+INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 7, 'Menu Group', 1, 1, 1, 1, 1);
+INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, read_access, write_access, create_access, delete_access, last_log_by) VALUES (1, 'Administrator', 8, 'Menu Item', 1, 1, 1, 1, 1);
+
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 

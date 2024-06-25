@@ -151,7 +151,7 @@
         });
 
         $(document).on('click','#delete-role',function() {
-            const role_id = $('#role-id').text();
+            const role_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete role';
     
@@ -383,13 +383,7 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const role_id = $('#role-id').text();
-
-                logNotes('role', role_id);
-            });
-
+        if($('#log-notes-offcanvas').length){
             $(document).on('click','.view-role-permission-log-notes',function() {
                 const role_permission_id = $(this).data('role-permission-id');
 
@@ -409,14 +403,20 @@
             });
         }
 
+        if($('#log-notes-main').length){
+            const role_id = $('#details-id').text();
+
+            logNotesMain('role', role_id);
+        }
+
         if($('#internal-notes').length){
-             const role_id = $('#role-id').text();
+            const role_id = $('#details-id').text();
 
             internalNotes('role', role_id);
         }
 
         if($('#internal-notes-form').length){
-             const role_id = $('#role-id').text();
+            const role_id = $('#details-id').text();
 
             internalNotesForm('role', role_id);
         }
@@ -447,7 +447,7 @@ function roleForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -456,14 +456,14 @@ function roleForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const role_id = $('#role-id').text();
+            const role_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'update role';
           
@@ -504,6 +504,7 @@ function roleForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('role', role_id);
                 }
             });
         
@@ -520,7 +521,7 @@ function userAccountAssignmentForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -529,14 +530,14 @@ function userAccountAssignmentForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const role_id = $('#role-id').text();
+            const role_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'assign role user account';
           
@@ -593,7 +594,7 @@ function rolePermissionAssignmentForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -602,14 +603,14 @@ function rolePermissionAssignmentForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const role_id = $('#role-id').text();
+            const role_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'assign role permission';
           
@@ -666,7 +667,7 @@ function roleSystemActionPermissionAssignmentForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -675,14 +676,14 @@ function roleSystemActionPermissionAssignmentForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const role_id = $('#role-id').text();
+            const role_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'assign role system action permission';
           
@@ -732,7 +733,7 @@ function roleSystemActionPermissionAssignmentForm(){
 }
 
 function assignedUserAccountTable(datatable_name, buttons = false, show_all = false){
-    const role_id = $('#role-id').text();
+    const role_id = $('#details-id').text();
     const type = 'assigned role user account table';
     var settings;
 
@@ -791,7 +792,7 @@ function assignedUserAccountTable(datatable_name, buttons = false, show_all = fa
 }
 
 function assignedRolePermissionTable(datatable_name, buttons = false, show_all = false){
-    const role_id = $('#role-id').text();
+    const role_id = $('#details-id').text();
     const type = 'assigned menu item permission table';
     var settings;
 
@@ -856,7 +857,7 @@ function assignedRolePermissionTable(datatable_name, buttons = false, show_all =
 }
 
 function assignedRoleSystemActionPermissionTable(datatable_name, buttons = false, show_all = false){
-    const role_id = $('#role-id').text();
+    const role_id = $('#details-id').text();
     const type = 'assigned system action permission table';
     var settings;
 
@@ -917,7 +918,7 @@ function assignedRoleSystemActionPermissionTable(datatable_name, buttons = false
 function displayDetails(transaction){
     switch (transaction) {
         case 'get role details':
-            var role_id = $('#role-id').text();
+            var role_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
@@ -968,7 +969,7 @@ function displayDetails(transaction){
 function generateDropdownOptions(type){
     switch (type) {
         case 'role menu item dual listbox options':
-            var role_id = $('#role-id').text();
+            var role_id = $('#details-id').text();
 
             $.ajax({
                 url: 'components/menu-item/view/_menu_item_generation.php',
@@ -1013,7 +1014,7 @@ function generateDropdownOptions(type){
             });
             break;
         case 'role system action dual listbox options':
-            var role_id = $('#role-id').text();
+            var role_id = $('#details-id').text();
 
             $.ajax({
                 url: 'components/system-action/view/_system_action_generation.php',
@@ -1058,7 +1059,7 @@ function generateDropdownOptions(type){
             });
             break;
         case 'role user account dual listbox options':
-            var role_id = $('#role-id').text();
+            var role_id = $('#details-id').text();
 
             $.ajax({
                 url: 'components/user-account/view/_user_account_generation.php',

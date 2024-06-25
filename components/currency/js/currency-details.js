@@ -13,7 +13,7 @@
         });
 
         $(document).on('click','#delete-currency',function() {
-            const currency_id = $('#currency-id').text();
+            const currency_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete currency';
     
@@ -71,22 +71,20 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const currency_id = $('#currency-id').text();
+        if($('#log-notes-main').length){
+            const currency_id = $('#details-id').text();
 
-                logNotes('currency', currency_id);
-            });
+            logNotesMain('currency', currency_id);
         }
 
         if($('#internal-notes').length){
-            const currency_id = $('#currency-id').text();
+            const currency_id = $('#details-id').text();
 
             internalNotes('currency', currency_id);
         }
 
         if($('#internal-notes-form').length){
-            const currency_id = $('#currency-id').text();
+            const currency_id = $('#details-id').text();
 
             internalNotesForm('currency', currency_id);
         }
@@ -133,7 +131,7 @@ function currencyForm(){
             }
         },
         submitHandler: function(form) {
-            const currency_id = $('#currency-id').text();
+            const currency_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update currency';
           
@@ -174,6 +172,7 @@ function currencyForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('currency', currency_id);
                 }
             });
         
@@ -185,7 +184,7 @@ function currencyForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get currency details':
-            var currency_id = $('#currency-id').text();
+            var currency_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({

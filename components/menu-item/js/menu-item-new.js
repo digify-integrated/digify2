@@ -3,6 +3,7 @@
 
     $(function() {
         generateDropdownOptions('app module options');
+        generateDropdownOptions('menu group options');
         generateDropdownOptions('menu item options');
 
         if($('#menu-item-form').length){
@@ -22,7 +23,7 @@ function menuItemForm(){
             menu_item_name: {
                 required: true
             },
-            app_module: {
+            menu_group_id: {
                 required: true
             },
             order_sequence: {
@@ -33,8 +34,8 @@ function menuItemForm(){
             menu_item_name: {
                 required: 'Please enter the display name'
             },
-            app_module: {
-                required: 'Please choose the app module'
+            menu_group_id: {
+                required: 'Please choose the menu group'
             },
             order_sequence: {
                 required: 'Please enter the order sequence'
@@ -118,6 +119,31 @@ function generateDropdownOptions(type){
                 },
                 success: function(response) {
                     $('#app_module').select2({
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'menu group options':
+            
+            $.ajax({
+                url: 'components/menu-group/view/_menu_group_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#menu_group_id').select2({
                         data: response
                     }).on('change', function (e) {
                         $(this).valid()

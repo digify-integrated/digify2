@@ -139,6 +139,11 @@
             fileExtensionTable('#file-extension-table');
             $('#filter-offcanvas').offcanvas('hide');
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#file-extension-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -188,6 +193,8 @@ function fileExtensionTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {

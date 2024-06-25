@@ -132,6 +132,11 @@
                 showNotification('Deletion Multiple File Type Error', 'Please select the file types you wish to delete.', 'danger');
             }
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#file-type-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -176,6 +181,8 @@ function fileTypeTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {

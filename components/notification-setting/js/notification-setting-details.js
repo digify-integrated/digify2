@@ -28,7 +28,7 @@
         });
 
         $(document).on('click','#delete-notification-setting',function() {
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete notification setting';
     
@@ -87,7 +87,7 @@
         });
 
         $(document).on('change','#system-notification',function() {
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             var checkbox = document.getElementById('system-notification');
             var transaction = (checkbox).checked ? 'enable system notification channel' : 'disable system notification channel';
@@ -129,7 +129,7 @@
         });
 
         $(document).on('change','#email-notification',function() {
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             var checkbox = document.getElementById('email-notification');
             var transaction = (checkbox).checked ? 'enable email notification channel' : 'disable email notification channel';
@@ -171,7 +171,7 @@
         });
 
         $(document).on('change','#sms-notification',function() {
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             var checkbox = document.getElementById('sms-notification');
             var transaction = (checkbox).checked ? 'enable sms notification channel' : 'disable sms notification channel';
@@ -213,39 +213,39 @@
         });
 
         if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const notification_setting_id = $('#notification-setting-id').text();
-
-                logNotes('notification_setting', notification_setting_id);
-            });
-
             $(document).on('click','#view-email-notification-template-log-notes',function() {
-                const notification_setting_id = $('#notification-setting-id').text();
+                const notification_setting_id = $('#details-id').text();
 
                 logNotes('notification_setting_email_template', notification_setting_id);
             });
 
             $(document).on('click','#view-system-notification-template-log-notes',function() {
-                const notification_setting_id = $('#notification-setting-id').text();
+                const notification_setting_id = $('#details-id').text();
 
                 logNotes('notification_setting_system_template', notification_setting_id);
             });
 
             $(document).on('click','#view-sms-notification-template-log-notes',function() {
-                const notification_setting_id = $('#notification-setting-id').text();
+                const notification_setting_id = $('#details-id').text();
 
                 logNotes('notification_setting_sms_template', notification_setting_id);
             });
         }
 
+        if($('#log-notes-main').length){
+            const notification_setting_id = $('#details-id').text();
+
+            logNotesMain('notification_setting', notification_setting_id);
+        }
+
         if($('#internal-notes').length){
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
 
             internalNotes('notification_setting', notification_setting_id);
         }
 
         if($('#internal-notes-form').length){
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
 
             internalNotesForm('notification_setting', notification_setting_id);
         }
@@ -276,7 +276,7 @@ function notificationSettingForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -285,14 +285,14 @@ function notificationSettingForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
             const transaction = 'update notification setting';
           
             $.ajax({
@@ -328,6 +328,7 @@ function notificationSettingForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('notification_setting', notification_setting_id);
                 }
             });
         
@@ -360,7 +361,7 @@ function systemNotificationTemplateForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -369,14 +370,14 @@ function systemNotificationTemplateForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
             const transaction = 'update system notification template';
           
             $.ajax({
@@ -438,7 +439,7 @@ function emailNotificationTemplateForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -447,14 +448,14 @@ function emailNotificationTemplateForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
             const email_notification_body = encodeURIComponent(tinymce.get('email_notification_body').getContent());
             const transaction = 'update email notification template';
           
@@ -517,7 +518,7 @@ function smsNotificationTemplateForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -526,14 +527,14 @@ function smsNotificationTemplateForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const notification_setting_id = $('#notification-setting-id').text();
+            const notification_setting_id = $('#details-id').text();
             const transaction = 'update sms notification template';
           
             $.ajax({
@@ -580,7 +581,7 @@ function smsNotificationTemplateForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get notification setting details':
-            var notification_setting_id = $('#notification-setting-id').text();
+            var notification_setting_id = $('#details-id').text();
             var page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
@@ -627,7 +628,7 @@ function displayDetails(transaction){
             });
             break;
         case 'get system notification template details':
-            var notification_setting_id = $('#notification-setting-id').text();
+            var notification_setting_id = $('#details-id').text();
             var page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
@@ -670,7 +671,7 @@ function displayDetails(transaction){
             });
             break;
         case 'get email notification template details':
-            var notification_setting_id = $('#notification-setting-id').text();
+            var notification_setting_id = $('#details-id').text();
             var page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
@@ -735,7 +736,7 @@ function displayDetails(transaction){
             });
             break;
         case 'get sms notification template details':
-            var notification_setting_id = $('#notification-setting-id').text();
+            var notification_setting_id = $('#details-id').text();
             var page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({

@@ -2,6 +2,7 @@
     'use strict';
 
     $(function() {
+        generateFilterOptions('app module radio filter');
         generateFilterOptions('menu group radio filter');
 
         if($('#menu-item-table').length){
@@ -139,6 +140,11 @@
             menuItemTable('#menu-item-table');
             $('#filter-offcanvas').offcanvas('hide');
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#menu-item-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -150,11 +156,13 @@ function menuItemTable(datatable_name, buttons = false, show_all = false){
     const page_link = document.getElementById('page-link').getAttribute('href');
 
     var filter_by_app_module = $('input[name="filter-app-module"]:checked').val();
+    var filter_by_menu_group = $('input[name="filter-menu-group"]:checked').val();
     var settings;
 
     const column = [ 
         { 'data' : 'CHECK_BOX' },
         { 'data' : 'MENU_ITEM_NAME' },
+        { 'data' : 'MENU_GROUP_NAME' },
         { 'data' : 'APP_MODULE_NAME' },
         { 'data' : 'ORDER_SEQUENCE' },
         { 'data' : 'ACTION' }
@@ -165,7 +173,8 @@ function menuItemTable(datatable_name, buttons = false, show_all = false){
         { 'width': 'auto', 'aTargets': 1 },
         { 'width': 'auto', 'aTargets': 2 },
         { 'width': 'auto', 'aTargets': 3 },
-        { 'width': '15%','bSortable': false, 'aTargets': 4 }
+        { 'width': 'auto', 'aTargets': 4 },
+        { 'width': '15%','bSortable': false, 'aTargets': 5 }
     ];
 
     const length_menu = show_all ? [[-1], ['All']] : [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']];
@@ -179,7 +188,8 @@ function menuItemTable(datatable_name, buttons = false, show_all = false){
                 'type' : type,
                 'page_id' : page_id,
                 'page_link' : page_link,
-                'filter_by_app_module' : filter_by_app_module
+                'filter_by_app_module' : filter_by_app_module,
+                'filter_by_menu_group' : filter_by_menu_group
             },
             'dataSrc' : '',
             'error': function(xhr, status, error) {
@@ -190,6 +200,8 @@ function menuItemTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {
@@ -217,7 +229,7 @@ function menuItemTable(datatable_name, buttons = false, show_all = false){
 
 function generateFilterOptions(type){
     switch (type) {
-        case 'menu group radio filter':
+        case 'app module radio filter':
             
             $.ajax({
                 url: 'components/app-module/view/_app_module_generation.php',
@@ -228,6 +240,27 @@ function generateFilterOptions(type){
                 },
                 success: function(response) {
                     document.getElementById('app-module-filter').innerHTML = response[0].filterOptions;
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'menu group radio filter':
+            
+            $.ajax({
+                url: 'components/menu-group/view/_menu_group_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    document.getElementById('menu-group-filter').innerHTML = response[0].filterOptions;
                 },
                 error: function(xhr, status, error) {
                     var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;

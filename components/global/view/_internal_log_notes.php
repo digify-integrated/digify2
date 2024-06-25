@@ -29,10 +29,10 @@
                                 </form>
                             </div>
                             <div class="d-flex align-items-center gap-6 flex-wrap">
-                                <label class="d-flex nav-icon-hover-bg rounded" for="internal_notes_files">
+                                <label class="d-flex nav-icon-hover-bg rounded cursor-pointer" for="internal_notes_files" data-bs-toggle="tooltip" data-bs-placement="top" title="Attach files">
                                     <iconify-icon icon="solar:paperclip-outline" class="fs-7"></iconify-icon>
                                 </label>
-                                <label class="d-flex nav-icon-hover-bg rounded" for="internal_notes_files">
+                                <label class="d-flex nav-icon-hover-bg rounded cursor-pointer" for="internal_notes_files" data-bs-toggle="tooltip" data-bs-placement="top" title="Insert photo">
                                     <iconify-icon icon="solar:gallery-add-linear" class="fs-7"></iconify-icon>
                                 </label>
                                 <button id="submit-internal-notes" type="submit" form="internal-notes-form" class="btn btn-success ms-auto">Post</button>

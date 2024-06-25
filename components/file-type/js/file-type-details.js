@@ -13,7 +13,7 @@
         });
 
         $(document).on('click','#delete-file-type',function() {
-            const file_type_id = $('#file-type-id').text();
+            const file_type_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'delete file type';
     
@@ -71,22 +71,20 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const file_type_id = $('#file-type-id').text();
+        if($('#log-notes-main').length){
+            const file_type_id = $('#details-id').text();
 
-                logNotes('file_type', file_type_id);
-            });
+            logNotesMain('file_type', file_type_id);
         }
         
         if($('#internal-notes').length){
-            const file_type_id = $('#file-type-id').text();
+            const file_type_id = $('#details-id').text();
 
             internalNotes('file_type', file_type_id);
         }
 
         if($('#internal-notes-form').length){
-            const file_type_id = $('#file-type-id').text();
+            const file_type_id = $('#details-id').text();
 
             internalNotesForm('file_type', file_type_id);
         }
@@ -111,7 +109,7 @@ function fileTypeForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -120,14 +118,14 @@ function fileTypeForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const file_type_id = $('#file-type-id').text();
+            const file_type_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update file type';
           
@@ -168,6 +166,7 @@ function fileTypeForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('file_type', file_type_id);
                 }
             });
         
@@ -179,7 +178,7 @@ function fileTypeForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get file type details':
-            var file_type_id = $('#file-type-id').text();
+            var file_type_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             
             $.ajax({

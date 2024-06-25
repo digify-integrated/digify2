@@ -9,8 +9,6 @@
     <?php require_once('components/global/view/_head.php'); ?>
     <link rel="stylesheet" href="./assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="./assets/libs/select2/dist/css/select2.min.css">
-    <link rel="stylesheet" href="./assets/libs/daterangepicker/daterangepicker.css">
-    <link rel="stylesheet" href="./assets/libs/bootstrap-duallistbox/dist/bootstrap-duallistbox.min.css">
 </head>
 <body>
     <?php require_once('components/global/view/_preloader.php'); ?>
@@ -24,13 +22,13 @@
                         require_once('components/global/view/_breadcrumbs.php'); 
 
                         if($newRecord){
-                            require_once('components/user-account/view/_user_account_new.php');
+                            require_once('components/country/view/_country_new.php');
                         }
                         else if(!empty($detailID)){
-                            require_once('components/user-account/view/_user_account_details.php');
+                            require_once('components/country/view/_country_details.php');
                         }
                         else{
-                            require_once('components/user-account/view/_user_account.php');
+                            require_once('components/country/view/_country.php');
                         }
                     ?>
                 </div>
@@ -49,21 +47,18 @@
     <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
-    <script src="./assets/js/extra-libs/moment/moment.min.js"></script>
-    <script src="./assets/libs/daterangepicker/daterangepicker.js"></script>
-    <script src="./assets/libs/bootstrap-duallistbox/dist/jquery.bootstrap-duallistbox.min.js"></script>
 
     <?php
-        $scriptLink = 'user-account.js';
+        $scriptLink = 'country.js';
 
         if($newRecord){
-            $scriptLink = 'user-account-new.js';
+            $scriptLink = 'country-new.js';
         }
         else if(!empty($detailID)){
-            $scriptLink = 'user-account-details.js';
+            $scriptLink = 'country-details.js';
         }
 
-        echo '<script src="./components/user-account/js/'. $scriptLink .'?v=' . rand() .'"></script>';
+        echo '<script src="./components/country/js/'. $scriptLink .'?v=' . rand() .'"></script>';
     ?>
 </body>
 

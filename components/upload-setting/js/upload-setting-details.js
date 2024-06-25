@@ -21,7 +21,7 @@
         });
 
         $(document).on('click','#delete-upload-setting',function() {
-            const upload_setting_id = $('#upload-setting-id').text();
+            const upload_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete upload setting';
     
@@ -142,12 +142,6 @@
         });
 
         if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const upload_setting_id = $('#upload-setting-id').text();
-
-                logNotes('upload_setting', upload_setting_id);
-            });
-
             $(document).on('click','.view-file-extension-log-notes',function() {
                 const upload_setting_file_extension_id = $(this).data('upload-setting-file-extension-id');
 
@@ -155,14 +149,20 @@
             });
         }
 
+        if($('#log-notes-main').length){
+            const upload_setting_id = $('#details-id').text();
+
+            logNotesMain('upload_setting', upload_setting_id);
+        }
+
         if($('#internal-notes').length){
-            const upload_setting_id = $('#upload-setting-id').text();
+            const upload_setting_id = $('#details-id').text();
 
             internalNotes('upload_setting', upload_setting_id);
         }
 
         if($('#internal-notes-form').length){
-            const upload_setting_id = $('#upload-setting-id').text();
+            const upload_setting_id = $('#details-id').text();
 
             internalNotesForm('upload_setting', upload_setting_id);
         }
@@ -215,7 +215,7 @@ function uploadSettingForm(){
             }
         },
         submitHandler: function(form) {
-            const upload_setting_id = $('#upload-setting-id').text();
+            const upload_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update upload setting';
           
@@ -256,6 +256,7 @@ function uploadSettingForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('upload_setting', upload_setting_id);
                 }
             });
         
@@ -272,7 +273,7 @@ function fileExtensionAssignmentForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -281,14 +282,14 @@ function fileExtensionAssignmentForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const upload_setting_id = $('#upload-setting-id').text();
+            const upload_setting_id = $('#details-id').text();
             const transaction = 'assign upload setting file extension';
           
             $.ajax({
@@ -337,7 +338,7 @@ function fileExtensionAssignmentForm(){
 }
 
 function assignedFileExtensionTable(datatable_name, buttons = false, show_all = false){
-    const upload_setting_id = $('#upload-setting-id').text();
+    const upload_setting_id = $('#details-id').text();
     const type = 'assigned file extension table';
     var settings;
 
@@ -396,7 +397,7 @@ function assignedFileExtensionTable(datatable_name, buttons = false, show_all = 
 function displayDetails(transaction){
     switch (transaction) {
         case 'get upload setting details':
-            var upload_setting_id = $('#upload-setting-id').text();
+            var upload_setting_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
@@ -449,7 +450,7 @@ function displayDetails(transaction){
 function generateDropdownOptions(type){
     switch (type) {
         case 'file extension upload setting dual listbox options':
-            const upload_setting_id = $('#upload-setting-id').text();
+            const upload_setting_id = $('#details-id').text();
     
             $.ajax({
                 url: 'components/file-extension/view/_file_extension_generation.php',

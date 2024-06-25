@@ -2,6 +2,8 @@
     'use strict';
 
     $(function() {
+        generateDropdownOptions('app module options');
+
         if($('#menu-group-form').length){
             menuGroupForm();
         }
@@ -19,6 +21,9 @@ function menuGroupForm(){
             menu_group_name: {
                 required: true
             },
+            app_module_id: {
+                required: true
+            },
             order_sequence: {
                 required: true
             }
@@ -26,6 +31,9 @@ function menuGroupForm(){
         messages: {
             menu_group_name: {
                 required: 'Please enter the display name'
+            },
+            app_module_id: {
+                required: 'Please choose the app module'
             },
             order_sequence: {
                 required: 'Please enter the order sequence'
@@ -37,7 +45,7 @@ function menuGroupForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -46,7 +54,7 @@ function menuGroupForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
@@ -94,4 +102,34 @@ function menuGroupForm(){
             return false;
         }
     });
+}
+
+function generateDropdownOptions(type){
+    switch (type) {
+        case 'app module options':
+            
+            $.ajax({
+                url: 'components/app-module/view/_app_module_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#app_module_id').select2({
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+    }
 }

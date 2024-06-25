@@ -1,3 +1,11 @@
+<?php
+    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
+
+    $addRoleAccess = $globalModel->checkSystemActionAccessRights($userID, 9);
+?>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -7,18 +15,15 @@
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            if($menuItemCreateAccess['total'] > 0 || $menuItemDeleteAccess['total'] > 0){
-                                echo $menuItemCreateAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Menu Item</a></li>' : '';
-                                echo $menuItemDeleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-menu-item">Delete Menu Item</button></li>' : '';
-                                
-                                echo '<li><hr class="dropdown-divider"></li>';
+                            if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
+                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Menu Item</a></li>' : '';
+                                echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-menu-item">Delete Menu Item</button></li>' : '';
                             }
                         ?>
-                        <li><button class="dropdown-item" type="button" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" id="view-log-notes">View Log Notes</button></li>
                     </ul>
                 </div>
                 <?php
-                    echo $menuItemWriteAccess['total'] > 0 ? 
+                    echo $writeAccess['total'] > 0 ? 
                     '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
                         <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#menu-item-modal" id="edit-details">Edit</button>
                     </div>' : '';
@@ -38,7 +43,7 @@
                         <div class="form-group row">
                             <label class="form-label col-md-5">Menu Group:</label>
                             <div class="col-md-7">
-                                <p class="form-control-static" id="menu_group_summary">--</p>
+                                <p class="form-control-static" id="menu_group_name_summary">--</p>
                             </div>
                         </div>
                     </div>
@@ -109,7 +114,7 @@
     </div>
 </div>
 
-<div  class="datatables">
+<div class="datatables">
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -183,6 +188,12 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="menu_item_icon">Icon</label>
+                                <input type="text" class="form-control maxlength" id="menu_item_icon" name="menu_item_icon" maxlength="50" autocomplete="off">
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label" for="menu_item_url">URL</label>
@@ -224,5 +235,5 @@
     </div>
 </div>
 
-<?php require_once('components/global/view/_internal_notes.php'); ?>
 <?php require_once('components/global/view/_log_notes_offcanvas.php'); ?>
+<?php require_once('components/global/view/_internal_log_notes.php'); ?>

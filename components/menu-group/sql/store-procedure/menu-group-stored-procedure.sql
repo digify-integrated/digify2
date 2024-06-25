@@ -82,11 +82,24 @@ END //
 
 /* Generate Stored Procedure */
 
-CREATE PROCEDURE generateMenuGroupTable()
+CREATE PROCEDURE generateMenuGroupTable(IN p_filter_by_app_module INT)
 BEGIN
-	SELECT menu_group_id, menu_group_name, app_module_name, order_sequence 
-    FROM menu_group 
-    ORDER BY menu_group_id;
+    DECLARE query VARCHAR(5000);
+
+    SET query = CONCAT('
+        SELECT menu_group_id, menu_group_name, app_module_name, order_sequence 
+        FROM menu_group 
+        WHERE 1');
+
+    IF p_filter_by_app_module IS NOT NULL AND p_filter_by_app_module <> '' THEN
+        SET query = CONCAT(query, ' AND app_module_id = ', p_filter_by_app_module);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY menu_group_name');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
 END //
 
 CREATE PROCEDURE generateMenuGroupOptions()

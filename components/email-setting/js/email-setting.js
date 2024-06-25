@@ -132,6 +132,11 @@
                 showNotification('Deletion Multiple Email Setting Error', 'Please select the email settings you wish to delete.', 'danger');
             }
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#email-setting-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -177,6 +182,8 @@ function emailSettingTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {

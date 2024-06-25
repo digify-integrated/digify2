@@ -132,6 +132,11 @@
                 showNotification('Deletion Multiple Country Error', 'Please select the countries you wish to delete.', 'danger');
             }
         });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#country-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -176,6 +181,8 @@ function countryTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {

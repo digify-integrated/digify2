@@ -14,7 +14,7 @@ session_start();
 # -------------------------------------------------------------
 class MenuItemController {
     private $menuItemModel;
-    private $appModuleModel;
+    private $menuGroupModel;
     private $authenticationModel;
     private $securityModel;
 
@@ -27,17 +27,16 @@ class MenuItemController {
     #
     # Parameters:
     # - @param menuItemModel $menuItemModel     The menuItemModel instance for menu item related operations.
-    # - @param AppModuleModel $appModuleModel     The appModuleModel instance for menu group related operations.
-    # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
+    # - @param menuGroupModel $menuGroupModel     The menuGroupModel instance for menu group related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(MenuItemModel $menuItemModel, AppModuleModel $appModuleModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+    public function __construct(MenuItemModel $menuItemModel, MenuGroupModel $menuGroupModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
         $this->menuItemModel = $menuItemModel;
-        $this->appModuleModel = $appModuleModel;
         $this->authenticationModel = $authenticationModel;
+        $this->menuGroupModel = $menuGroupModel;
         $this->securityModel = $securityModel;
     }
     # -------------------------------------------------------------
@@ -174,21 +173,24 @@ class MenuItemController {
             return;
         }
 
-        if (isset($_POST['menu_item_name']) && !empty($_POST['menu_item_name']) && isset($_POST['app_module_id']) && !empty($_POST['app_module_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence']) && isset($_POST['menu_item_url'])) {
+        if (isset($_POST['menu_item_name']) && !empty($_POST['menu_item_name']) && isset($_POST['menu_group_id']) && !empty($_POST['menu_group_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence']) && isset($_POST['menu_item_url'])) {
             $userID = $_SESSION['user_account_id'];
             $menuItemName = $_POST['menu_item_name'];
             $orderSequence = htmlspecialchars($_POST['order_sequence'], ENT_QUOTES, 'UTF-8');
-            $appModuleID = htmlspecialchars($_POST['app_module_id'], ENT_QUOTES, 'UTF-8');
+            $menuGroupID = htmlspecialchars($_POST['menu_group_id'], ENT_QUOTES, 'UTF-8');
             $parentID = isset($_POST['parent_id']) ? htmlspecialchars($_POST['parent_id'], ENT_QUOTES, 'UTF-8') : null;
             $menuItemURL = htmlspecialchars($_POST['menu_item_url'], ENT_QUOTES, 'UTF-8');
+            $menuItemIcon = $_POST['menu_item_icon'];
 
-            $appModuleDetails = $this->appModuleModel->getAppModule($appModuleID);
-            $appModuleName = $appModuleDetails['app_module_name'] ?? null;
+            $menuGroupDetails = $this->menuGroupModel->getMenuGroup($menuGroupID);
+            $menuGroupName = $menuGroupDetails['menu_group_name'] ?? null;
+            $appModuleID = $menuGroupDetails['app_module_id'] ?? null;
+            $appModuleName = $menuGroupDetails['app_module_name'] ?? null;
 
             $parentMenuItemDetails = $this->menuItemModel->getMenuItem($parentID);
             $parentName = $parentMenuItemDetails['menu_item_name'] ?? null;
         
-            $menuItemID = $this->menuItemModel->insertMenuItem($menuItemName, $menuItemURL, $appModuleID, $appModuleName, $parentID, $parentName, $orderSequence, $userID);
+            $menuItemID = $this->menuItemModel->insertMenuItem($menuItemName, $menuItemURL, $menuItemIcon, $menuGroupID, $menuGroupName, $appModuleID, $appModuleName, $parentID, $parentName, $orderSequence, $userID);
     
             $response = [
                 'success' => true,
@@ -235,14 +237,15 @@ class MenuItemController {
             return;
         }
         
-        if (isset($_POST['menu_item_id']) && !empty($_POST['menu_item_id']) && isset($_POST['menu_item_name']) && !empty($_POST['menu_item_name']) && isset($_POST['app_module_id']) && !empty($_POST['app_module_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence']) && isset($_POST['menu_item_url'])) {
+        if (isset($_POST['menu_item_id']) && !empty($_POST['menu_item_id']) && isset($_POST['menu_item_name']) && !empty($_POST['menu_item_name']) && isset($_POST['menu_group_id']) && !empty($_POST['menu_group_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence']) && isset($_POST['menu_item_url'])) {
             $userID = $_SESSION['user_account_id'];
             $menuItemID = htmlspecialchars($_POST['menu_item_id'], ENT_QUOTES, 'UTF-8');
             $menuItemName = $_POST['menu_item_name'];
             $orderSequence = htmlspecialchars($_POST['order_sequence'], ENT_QUOTES, 'UTF-8');
-            $appModuleID = htmlspecialchars($_POST['app_module_id'], ENT_QUOTES, 'UTF-8');
+            $menuGroupID = htmlspecialchars($_POST['menu_group_id'], ENT_QUOTES, 'UTF-8');
             $parentID = isset($_POST['parent_id']) ? htmlspecialchars($_POST['parent_id'], ENT_QUOTES, 'UTF-8') : null;
             $menuItemURL = htmlspecialchars($_POST['menu_item_url'], ENT_QUOTES, 'UTF-8');
+            $menuItemIcon = $_POST['menu_item_icon'];
         
             $checkMenuItemExist = $this->menuItemModel->checkMenuItemExist($menuItemID);
             $total = $checkMenuItemExist['total'] ?? 0;
@@ -260,13 +263,15 @@ class MenuItemController {
                 exit;
             }
 
-            $appModuleDetails = $this->appModuleModel->getAppModule($appModuleID);
-            $appModuleName = $appModuleDetails['app_module_name'] ?? null;
+            $menuGroupDetails = $this->menuGroupModel->getMenuGroup($menuGroupID);
+            $menuGroupName = $menuGroupDetails['menu_group_name'] ?? null;
+            $appModuleID = $menuGroupDetails['app_module_id'] ?? null;
+            $appModuleName = $menuGroupDetails['app_module_name'] ?? null;
 
             $parentMenuItemDetails = $this->menuItemModel->getMenuItem($parentID);
             $parentName = $parentMenuItemDetails['menu_item_name'] ?? null;
 
-            $this->menuItemModel->updateMenuItem($menuItemID, $menuItemName, $menuItemURL, $appModuleID, $appModuleName, $parentID, $parentName, $orderSequence, $userID);
+            $this->menuItemModel->updateMenuItem($menuItemID, $menuItemName, $menuItemURL, $menuItemIcon, $menuGroupID, $menuGroupName, $appModuleID, $appModuleName, $parentID, $parentName, $orderSequence, $userID);
                 
             $response = [
                 'success' => true,
@@ -455,8 +460,9 @@ class MenuItemController {
                 'success' => true,
                 'menuItemName' => $menuItemDetails['menu_item_name'] ?? null,
                 'menuItemURL' => $menuItemDetails['menu_item_url'] ?? null,
-                'appModuleID' => $menuItemDetails['app_module_id'] ?? null,
-                'appModuleName' => $menuItemDetails['app_module_name'] ?? null,
+                'menuGroupID' => $menuItemDetails['menu_group_id'] ?? null,
+                'menuGroupName' => $menuItemDetails['menu_group_name'] ?? null,
+                'menuItemIcon' => $menuItemDetails['menu_item_icon'] ?? null,
                 'parentID' => $menuItemDetails['parent_id'] ?? null,
                 'parentName' => $menuItemDetails['parent_name'] ?? null,
                 'orderSequence' => $menuItemDetails['order_sequence'] ?? null
@@ -489,7 +495,7 @@ require_once '../../menu-item/model/menu-item-model.php';
 require_once '../../menu-group/model/menu-group-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new MenuItemController(new menuItemModel(new DatabaseModel), new AppModuleModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new MenuItemController(new MenuItemModel(new DatabaseModel), new MenuGroupModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>

@@ -14,7 +14,7 @@
         });
 
         $(document).on('click','#delete-city',function() {
-            const city_id = $('#city-id').text();
+            const city_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete city';
     
@@ -72,22 +72,20 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const city_id = $('#city-id').text();
+        if($('#log-notes-main').length){
+            const city_id = $('#details-id').text();
 
-                logNotes('city', city_id);
-            });
+            logNotesMain('city', city_id);
         }
 
         if($('#internal-notes').length){
-            const city_id = $('#city-id').text();
+            const city_id = $('#details-id').text();
 
             internalNotes('city', city_id);
         }
 
         if($('#internal-notes-form').length){
-            const city_id = $('#city-id').text();
+            const city_id = $('#details-id').text();
 
             internalNotesForm('city', city_id);
         }
@@ -134,7 +132,7 @@ function cityForm(){
             }
         },
         submitHandler: function(form) {
-            const city_id = $('#city-id').text();
+            const city_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update city';
           
@@ -175,6 +173,7 @@ function cityForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('city', city_id);
                 }
             });
         
@@ -186,7 +185,7 @@ function cityForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get city details':
-            var city_id = $('#city-id').text();
+            var city_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({

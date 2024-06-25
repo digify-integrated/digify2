@@ -14,7 +14,7 @@
         });
 
         $(document).on('click','#delete-file-extension',function() {
-            const file_extension_id = $('#file-extension-id').text();
+            const file_extension_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete file extension';
     
@@ -72,22 +72,20 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const file_extension_id = $('#file-extension-id').text();
+        if($('#log-notes-main').length){
+            const file_extension_id = $('#details-id').text();
 
-                logNotes('file_extension', file_extension_id);
-            });
+            logNotesMain('file_extension', file_extension_id);
         }
 
         if($('#internal-notes').length){
-            const file_extension_id = $('#file-extension-id').text();
+            const file_extension_id = $('#details-id').text();
 
             internalNotes('file_extension', file_extension_id);
         }
 
         if($('#internal-notes-form').length){
-            const file_extension_id = $('#file-extension-id').text();
+            const file_extension_id = $('#details-id').text();
 
             internalNotesForm('file_extension', file_extension_id);
         }
@@ -140,7 +138,7 @@ function fileExtensionForm(){
             }
         },
         submitHandler: function(form) {
-            const file_extension_id = $('#file-extension-id').text();
+            const file_extension_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update file extension';
           
@@ -181,6 +179,7 @@ function fileExtensionForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('file_extension', file_extension_id);
                 }
             });
         
@@ -192,7 +191,7 @@ function fileExtensionForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get file extension details':
-            var file_extension_id = $('#file-extension-id').text();
+            var file_extension_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({

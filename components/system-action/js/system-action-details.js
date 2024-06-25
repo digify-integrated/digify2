@@ -75,7 +75,7 @@
         });
 
         $(document).on('click','#delete-system-action',function() {
-            const system_action_id = $('#system-action-id').text();
+            const system_action_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete system action';
     
@@ -191,13 +191,7 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const system_action_id = $('#system-action-id').text();
-
-                logNotes('system_action', system_action_id);
-            });
-
+        if($('#log-notes-offcanvas').length){
             $(document).on('click','.view-role-system-action-permission-log-notes',function() {
                 const role_system_action_permission_id = $(this).data('role-system-action-permission-id');
 
@@ -205,14 +199,20 @@
             });
         }
 
+        if($('#log-notes-main').length){
+            const system_action_id = $('#details-id').text();
+
+            logNotesMain('system_action', system_action_id);
+        }
+
         if($('#internal-notes').length){
-            const system_action_id = $('#system-action-id').text();
+            const system_action_id = $('#details-id').text();
 
             internalNotes('system_action', system_action_id);
         }
 
         if($('#internal-notes-form').length){
-            const system_action_id = $('#system-action-id').text();
+            const system_action_id = $('#details-id').text();
 
             internalNotesForm('system_action', system_action_id);
         }
@@ -259,7 +259,7 @@ function systemActionForm(){
             }
         },
         submitHandler: function(form) {
-            const system_action_id = $('#system-action-id').text();
+            const system_action_id = $('#details-id').text();
             const transaction = 'update system action';
           
             $.ajax({
@@ -299,6 +299,7 @@ function systemActionForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('system_action', system_action_id);
                 }
             });
         
@@ -331,7 +332,7 @@ function roleSystemActionPermissionAssignmentForm(){
             }
         },
         submitHandler: function(form) {
-            const system_action_id = $('#system-action-id').text();
+            const system_action_id = $('#details-id').text();
             const transaction = 'assign system action role permission';
           
             $.ajax({
@@ -382,7 +383,7 @@ function roleSystemActionPermissionAssignmentForm(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get system action details':
-            var system_action_id = $('#system-action-id').text();
+            var system_action_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
@@ -431,7 +432,7 @@ function displayDetails(transaction){
 }
 
 function assignedRoleSystemActionPermissionTable(datatable_name, buttons = false, show_all = false){
-    const system_action_id = $('#system-action-id').text();
+    const system_action_id = $('#details-id').text();
     const type = 'assigned role system action permission table';
     var settings;
 
@@ -492,7 +493,7 @@ function assignedRoleSystemActionPermissionTable(datatable_name, buttons = false
 function generateDropdownOptions(type){
     switch (type) {
         case 'system action role dual listbox options':
-            var system_action_id = $('#system-action-id').text();
+            var system_action_id = $('#details-id').text();
 
             $.ajax({
                 url: 'components/role/view/_role_generation.php',

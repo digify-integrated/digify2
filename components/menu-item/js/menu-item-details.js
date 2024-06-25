@@ -3,7 +3,9 @@
 
     $(function() {
         generateDropdownOptions('app module options');
+        generateDropdownOptions('menu group options');
         generateDropdownOptions('menu item options');
+
         displayDetails('get menu item details');
 
         if($('#menu-item-form').length){
@@ -27,7 +29,7 @@
         }
 
         $(document).on('click','#delete-menu-item',function() {
-            const menu_item_id = $('#menu-item-id').text();
+            const menu_item_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete menu item';
     
@@ -199,13 +201,7 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length && $('#view-log-notes').length){
-            $(document).on('click','#view-log-notes',function() {
-                const menu_item_id = $('#menu-item-id').text();
-
-                logNotes('menu_item', menu_item_id);
-            });
-
+        if($('#log-notes-offcanvas').length){
             $(document).on('click','.view-role-permission-log-notes',function() {
                 const role_permission_id = $(this).data('role-permission-id');
 
@@ -213,14 +209,20 @@
             });
         }
 
+        if($('#log-notes-main').length){
+            const menu_item_id = $('#details-id').text();
+
+            logNotesMain('menu_item', menu_item_id);
+        }
+        
         if($('#internal-notes').length){
-            const menu_item_id = $('#menu-item-id').text();
+            const menu_item_id = $('#details-id').text();
 
             internalNotes('menu_item', menu_item_id);
         }
 
         if($('#internal-notes-form').length){
-            const menu_item_id = $('#menu-item-id').text();
+            const menu_item_id = $('#details-id').text();
 
             internalNotesForm('menu_item', menu_item_id);
         }
@@ -273,7 +275,7 @@ function menuItemForm(){
             }
         },
         submitHandler: function(form) {
-            const menu_item_id = $('#menu-item-id').text();
+            const menu_item_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update menu item';
           
@@ -314,6 +316,7 @@ function menuItemForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
+                    logNotesMain('menu_item', menu_item_id);
                 }
             });
         
@@ -330,7 +333,7 @@ function rolePermissionAssignmentForm(){
         highlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').addClass('is-invalid');
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
             }
             else {
                 inputElement.addClass('is-invalid');
@@ -339,14 +342,14 @@ function rolePermissionAssignmentForm(){
         unhighlight: function(element) {
             var inputElement = $(element);
             if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection__rendered').removeClass('is-invalid');
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
             }
             else {
                 inputElement.removeClass('is-invalid');
             }
         },
         submitHandler: function(form) {
-            const menu_item_id = $('#menu-item-id').text();
+            const menu_item_id = $('#details-id').text();
             const transaction = 'assign menu item role permission';
           
             $.ajax({
@@ -398,7 +401,7 @@ function submenuItemTable(datatable_name, buttons = false, show_all = false){
     toggleHideActionDropdown();
 
     const type = 'submenu item table';
-    const menu_item_id = $('#menu-item-id').text();
+    const menu_item_id = $('#details-id').text();
     var settings;
 
     const column = [ 
@@ -454,7 +457,7 @@ function submenuItemTable(datatable_name, buttons = false, show_all = false){
 }
 
 function assignedRolePermissionTable(datatable_name, buttons = false, show_all = false){
-    const menu_item_id = $('#menu-item-id').text();
+    const menu_item_id = $('#details-id').text();
     const type = 'assigned role permission table';
     var settings;
 
@@ -521,7 +524,7 @@ function assignedRolePermissionTable(datatable_name, buttons = false, show_all =
 function displayDetails(transaction){
     switch (transaction) {
         case 'get menu item details':
-            var menu_item_id = $('#menu-item-id').text();
+            var menu_item_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
@@ -539,14 +542,16 @@ function displayDetails(transaction){
                     if (response.success) {
                         $('#menu_item_name').val(response.menuItemName);
                         $('#menu_item_url').val(response.menuItemURL);
+                        $('#menu_item_icon').val(response.menuItemIcon);
                         $('#order_sequence').val(response.orderSequence);
                         
-                        $('#app_module').val(response.appModuleID).trigger('change');
+                        $('#menu_group_id').val(response.menuGroupID).trigger('change');
                         $('#parent_id').val(response.parentID).trigger('change');
                         
                         $('#menu_item_name_summary').text(response.menuItemName);
-                        $('#app_module_summary').text(response.appModuleName);
+                        $('#menu_group_name_summary').text(response.menuGroupName);
                         $('#parent_menu_item_summary').text(response.parentName);
+                        $('#menu_item_icon_summary').text(response.menuItemIcon);
                         $('#menu_item_url_summary').text(response.menuItemURL);
                         $('#order_sequence_summary').text(response.orderSequence);
                     } 
@@ -604,6 +609,32 @@ function generateDropdownOptions(type){
                 }
             });
             break;
+        case 'menu group options':
+            
+            $.ajax({
+                url: 'components/menu-group/view/_menu_group_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#menu_group_id').select2({
+                        dropdownParent: $('#menu-item-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
         case 'menu item options':
             
             $.ajax({
@@ -631,7 +662,7 @@ function generateDropdownOptions(type){
             });
             break;
         case 'menu item role dual listbox options':
-            const menu_item_id = $('#menu-item-id').text();
+            const menu_item_id = $('#details-id').text();
     
             $.ajax({
                 url: 'components/role/view/_role_generation.php',

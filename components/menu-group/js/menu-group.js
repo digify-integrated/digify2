@@ -2,6 +2,8 @@
     'use strict';
 
     $(function() {
+        generateFilterOptions('app module radio filter');
+
         if($('#menu-group-table').length){
             menuGroupTable('#menu-group-table');
         }
@@ -132,6 +134,16 @@
                 showNotification('Deletion Multiple Menu Group Error', 'Please select the menu groups you wish to delete.', 'danger');
             }
         });
+
+        $(document).on('click','#apply-filter',function() {
+            menuGroupTable('#menu-group-table');
+            $('#filter-offcanvas').offcanvas('hide');
+        });
+
+        $('#datatable-search').on('keyup', function () {
+            var table = $('#menu-group-table').DataTable();
+            table.search(this.value).draw();
+        });
     });
 })(jQuery);
 
@@ -141,11 +153,14 @@ function menuGroupTable(datatable_name, buttons = false, show_all = false){
     const type = 'menu group table';
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href'); 
+
+    var filter_by_app_module = $('input[name="filter-app-module"]:checked').val();
     var settings;
 
     const column = [ 
         { 'data' : 'CHECK_BOX' },
         { 'data' : 'MENU_GROUP_NAME' },
+        { 'data' : 'APP_MODULE_NAME' },
         { 'data' : 'ORDER_SEQUENCE' },
         { 'data' : 'ACTION' }
     ];
@@ -154,7 +169,8 @@ function menuGroupTable(datatable_name, buttons = false, show_all = false){
         { 'width': '1%', 'bSortable': false, 'aTargets': 0 },
         { 'width': 'auto', 'aTargets': 1 },
         { 'width': 'auto', 'aTargets': 2 },
-        { 'width': '15%', 'bSortable': false, 'aTargets': 3 }
+        { 'width': 'auto', 'aTargets': 3 },
+        { 'width': '15%', 'bSortable': false, 'aTargets': 4 }
     ];
 
     const length_menu = show_all ? [[-1], ['All']] : [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']];
@@ -167,7 +183,8 @@ function menuGroupTable(datatable_name, buttons = false, show_all = false){
             'data': {
                 'type' : type,
                 'page_id' : page_id,
-                'page_link' : page_link
+                'page_link' : page_link,
+                'filter_by_app_module' : filter_by_app_module
             },
             'dataSrc' : '',
             'error': function(xhr, status, error) {
@@ -178,6 +195,8 @@ function menuGroupTable(datatable_name, buttons = false, show_all = false){
                 showErrorDialog(fullErrorMessage);
             }
         },
+        'dom': 'Brtip',
+        'lengthChange': false,
         'order': [[ 1, 'asc' ]],
         'columns' : column,
         'fnDrawCallback': function( oSettings ) {
@@ -187,10 +206,12 @@ function menuGroupTable(datatable_name, buttons = false, show_all = false){
         'lengthMenu': length_menu,
         'language': {
             'emptyTable': 'No data found',
-            'searchPlaceholder': 'Search...',
+            'sLengthMenu': '_MENU_',
+            'searchPlaceholder': 'Search',
             'search': '',
+            'info': '_START_ - _END_ of _TOTAL_ items',
             'loadingRecords': 'Just a moment while we fetch your data...'
-        },
+        }
     };
 
     if (buttons) {
@@ -201,4 +222,30 @@ function menuGroupTable(datatable_name, buttons = false, show_all = false){
     destroyDatatable(datatable_name);
 
     $(datatable_name).dataTable(settings);
+}
+
+function generateFilterOptions(type){
+    switch (type) {
+        case 'app module radio filter':
+            
+            $.ajax({
+                url: 'components/app-module/view/_app_module_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    document.getElementById('app-module-filter').innerHTML = response[0].filterOptions;
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+    }
 }
