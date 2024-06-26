@@ -39,6 +39,7 @@
                         foreach ($options as $row) {
                             $appModuleID = $row['app_module_id'];
                             $appModuleName = $row['app_module_name'];
+                            $appModuleDescription = $row['app_module_description'];
                             $appVersion = $row['app_version'];
                             $menuItemID = $row['menu_item_id'];
                             $appLogo = $systemModel->checkImage($row['app_logo'], 'app module logo');
@@ -48,12 +49,13 @@
                                     
                             $apps .= '<div class="col-lg-2">
                                         <a href="'. $menuItemURL .'?app_module_id='. $securityModel->encryptData($appModuleID) .'&page_id='. $securityModel->encryptData($menuItemID) .'">
-                                            <div class="card light-gradient">
-                                                <div class="card-body text-center px-3 pb-4">
-                                                    <div class="d-flex align-items-center justify-content-center round-48 rounded flex-shrink-0 mb-2 mx-auto">
-                                                        <img src="'. $appLogo .'" width="55" height="55" class="mb-2" alt="app-logo">
+                                            <div class="card" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="'. $appModuleDescription .'">
+                                                <div class="card-body text-center">
+                                                    <div class="position-relative overflow-hidden d-inline-block">
+                                                        <img src="'. $appLogo .'" alt="app-logo" class="img-fluid mb-2 position-relative" width="80" height="80">
                                                     </div>
-                                                    <h5 class="d-flex align-items-center text-dark justify-content-center gap-1">'. $appModuleName .'</h5>
+                                                    <h5 class="fw-semibold fs-6 mb-0 text-dark">'. $appModuleName .'</h5>
+                                                    <span class="badge text-bg-danger fs-1 position-absolute top-0 end-0 d-flex align-items-center justify-content-center me-3 mt-3">'. $appVersion .'</span>
                                                 </div>
                                             </div>
                                         </a>

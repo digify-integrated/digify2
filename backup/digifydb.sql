@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 26, 2024 at 11:34 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jun 26, 2024 at 04:39 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -25,8 +25,9 @@ DELIMITER $$
 --
 -- Procedures
 --
+DROP PROCEDURE IF EXISTS `buildAppModuleStack`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `buildAppModuleStack` (IN `p_user_account_id` INT)   BEGIN
-    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, am.menu_item_id, app_logo, app_version
+    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, am.menu_item_id, app_logo, app_version, app_module_description
     FROM app_module am
     JOIN menu_item mi ON mi.app_module_id = am.app_module_id
     WHERE EXISTS (
@@ -43,6 +44,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `buildAppModuleStack` (IN `p_user_ac
     ORDER BY am.order_sequence;
 END$$
 
+DROP PROCEDURE IF EXISTS `buildMenuGroup`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuGroup` (IN `p_user_account_id` INT, IN `p_app_module_id` INT)   BEGIN
     SELECT DISTINCT(mg.menu_group_id) as menu_group_id, mg.menu_group_name as menu_group_name
     FROM menu_group mg
@@ -62,6 +64,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuGroup` (IN `p_user_account
     ORDER BY mg.order_sequence;
 END$$
 
+DROP PROCEDURE IF EXISTS `buildMenuItem`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuItem` (IN `p_user_account_id` INT, IN `p_menu_group_id` INT)   BEGIN
     SELECT mi.menu_item_id, mi.menu_item_name, mi.menu_group_id, mi.menu_item_url, mi.parent_id, mi.app_module_id, mi.menu_item_icon
     FROM menu_item AS mi
@@ -71,6 +74,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuItem` (IN `p_user_account_
     ORDER BY mi.order_sequence;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkAccessRights`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccessRights` (IN `p_user_account_id` INT, IN `p_menu_item_id` INT, IN `p_access_type` VARCHAR(10))   BEGIN
 	IF p_access_type = 'read' THEN
         SELECT COUNT(role_id) AS total
@@ -91,180 +95,218 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccessRights` (IN `p_user_acco
     END IF;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkAppModuleExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAppModuleExist` (IN `p_app_module_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM app_module
     WHERE app_module_id = p_app_module_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkCityExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCityExist` (IN `p_city_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM city
     WHERE city_id = p_city_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkCompanyExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCompanyExist` (IN `p_company_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM company
     WHERE company_id = p_company_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkCountryExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCountryExist` (IN `p_country_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM country
     WHERE country_id = p_country_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkCurrencyExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCurrencyExist` (IN `p_currency_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM currency
     WHERE currency_id = p_currency_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkEmailNotificationTemplateExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmailNotificationTemplateExist` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM notification_setting_email_template
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkEmailSettingExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmailSettingExist` (IN `p_email_setting_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM email_setting
     WHERE email_setting_id = p_email_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkFileExtensionExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkFileExtensionExist` (IN `p_file_extension_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM file_extension
     WHERE file_extension_id = p_file_extension_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkFileTypeExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkFileTypeExist` (IN `p_file_type_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM file_type
     WHERE file_type_id = p_file_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkLoginCredentialsExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkLoginCredentialsExist` (IN `p_user_account_id` INT, IN `p_credentials` VARCHAR(255))   BEGIN
 	SELECT COUNT(*) AS total
     FROM user_account
     WHERE user_account_id = p_user_account_id OR username = p_credentials OR email = p_credentials;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkMenuGroupExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMenuGroupExist` (IN `p_menu_group_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM menu_group
     WHERE menu_group_id = p_menu_group_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkMenuItemExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkMenuItemExist` (IN `p_menu_item_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM menu_item
     WHERE menu_item_id = p_menu_item_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkNotificationSettingExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkNotificationSettingExist` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM notification_setting
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkRoleExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkRoleExist` (IN `p_role_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM role
     WHERE role_id = p_role_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkRolePermissionExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkRolePermissionExist` (IN `p_role_permission_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM role_permission
     WHERE role_permission_id = p_role_permission_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkRoleSystemActionPermissionExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkRoleSystemActionPermissionExist` (IN `p_role_system_action_permission_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM role_system_action_permission
     WHERE role_system_action_permission_id = p_role_system_action_permission_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkRoleUserAccountExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkRoleUserAccountExist` (IN `p_role_user_account_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM role_user_account
     WHERE role_user_account_id = p_role_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkSMSNotificationTemplateExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSMSNotificationTemplateExist` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM notification_setting_sms_template
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkStateExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkStateExist` (IN `p_state_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM state
     WHERE state_id = p_state_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkSystemActionAccessRights`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSystemActionAccessRights` (IN `p_user_account_id` INT, IN `p_system_action_id` INT)   BEGIN
     SELECT COUNT(role_id) AS total
     FROM role_system_action_permission 
     WHERE system_action_id = p_system_action_id AND system_action_access = 1 AND role_id IN (SELECT role_id FROM role_user_account WHERE user_account_id = p_user_account_id);
 END$$
 
+DROP PROCEDURE IF EXISTS `checkSystemActionExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSystemActionExist` (IN `p_system_action_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM system_action
     WHERE system_action_id = p_system_action_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkSystemNotificationTemplateExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSystemNotificationTemplateExist` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM notification_setting_system_template
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkUICustomizationSettingExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUICustomizationSettingExist` (IN `p_user_account__id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM ui_customization_setting
+	WHERE user_account_id = p_user_account__id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkUploadSettingExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUploadSettingExist` (IN `p_upload_setting_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM upload_setting
     WHERE upload_setting_id = p_upload_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkUploadSettingFileExtensionExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUploadSettingFileExtensionExist` (IN `p_upload_setting_file_extension_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM upload_setting_file_extension
     WHERE upload_setting_file_extension_id = p_upload_setting_file_extension_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkUserAccountEmailExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountEmailExist` (IN `p_email` VARCHAR(255))   BEGIN
 	SELECT COUNT(*) AS total
     FROM user_account
     WHERE email = p_email;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkUserAccountEmailUpdateExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountEmailUpdateExist` (IN `p_user_account_id` INT, IN `p_email` VARCHAR(255))   BEGIN
 	SELECT COUNT(*) AS total
     FROM user_account
     WHERE email = p_email AND user_account_id != p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkUserAccountExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountExist` (IN `p_user_account_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM user_account
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteAppModule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAppModule` (IN `p_app_module_id` INT)   BEGIN
     DELETE FROM app_module WHERE app_module_id = p_app_module_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCity` (IN `p_city_id` INT)   BEGIN
     DELETE FROM city WHERE city_id = p_city_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompany` (IN `p_company_id` INT)   BEGIN
     DELETE FROM company WHERE company_id = p_company_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteCountry`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCountry` (IN `p_country_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -280,14 +322,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCountry` (IN `p_country_id` I
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteCurrency`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCurrency` (IN `p_currency_id` INT)   BEGIN
     DELETE FROM currency WHERE currency_id = p_currency_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteEmailSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmailSetting` (IN `p_email_setting_id` INT)   BEGIN
    DELETE FROM email_setting WHERE email_setting_id = p_email_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteFileExtension`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFileExtension` (IN `p_file_extension_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -302,6 +347,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFileExtension` (IN `p_file_ex
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteFileType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFileType` (IN `p_file_type_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -317,6 +363,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFileType` (IN `p_file_type_id
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteMenuGroup`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteMenuGroup` (IN `p_menu_group_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -330,6 +377,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteMenuGroup` (IN `p_menu_group_
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteMenuItem`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteMenuItem` (IN `p_menu_item_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -344,6 +392,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteMenuItem` (IN `p_menu_item_id
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteNotificationSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteNotificationSetting` (IN `p_notification_setting_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -360,6 +409,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteNotificationSetting` (IN `p_n
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteRole`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRole` (IN `p_role_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -376,18 +426,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRole` (IN `p_role_id` INT)   
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteRolePermission`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRolePermission` (IN `p_role_permission_id` INT)   BEGIN
    DELETE FROM role_permission WHERE role_permission_id = p_role_permission_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteRoleSystemActionPermission`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRoleSystemActionPermission` (IN `p_role_system_action_permission_id` INT)   BEGIN
    DELETE FROM role_system_action_permission WHERE role_system_action_permission_id = p_role_system_action_permission_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteRoleUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRoleUserAccount` (IN `p_role_user_account_id` INT)   BEGIN
    DELETE FROM role_user_account WHERE role_user_account_id = p_role_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteState`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteState` (IN `p_state_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -402,6 +456,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteState` (IN `p_state_id` INT) 
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteSystemAction`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSystemAction` (IN `p_system_action_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -416,6 +471,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSystemAction` (IN `p_system_a
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteUploadSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUploadSetting` (IN `p_upload_setting_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -430,10 +486,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUploadSetting` (IN `p_upload_
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteUploadSettingFileExtension`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUploadSettingFileExtension` (IN `p_upload_setting_file_extension_id` INT)   BEGIN
     DELETE FROM upload_setting_file_extension WHERE upload_setting_file_extension_id = p_upload_setting_file_extension_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserAccount` (IN `p_user_account_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -449,24 +507,28 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserAccount` (IN `p_user_acco
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateAppModuleOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAppModuleOptions` ()   BEGIN
 	SELECT app_module_id, app_module_name 
     FROM app_module 
     ORDER BY app_module_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateAppModuleTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAppModuleTable` ()   BEGIN
 	SELECT app_module_id, app_module_name, app_module_description, app_version, app_logo, order_sequence 
     FROM app_module 
     ORDER BY app_module_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCityOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCityOptions` ()   BEGIN
 	SELECT city_id, city_name, state_name, country_name 
     FROM city 
     ORDER BY city_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCityTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCityTable` (IN `p_filter_by_state` INT, IN `p_filter_by_country` INT)   BEGIN
     DECLARE query VARCHAR(5000);
 
@@ -490,12 +552,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCityTable` (IN `p_filter_by
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCompanyOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyOptions` ()   BEGIN
 	SELECT company_id, company_name 
     FROM company 
     ORDER BY company_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCompanyTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyTable` (IN `p_filter_by_city` INT, IN `p_filter_by_state` INT, IN `p_filter_by_country` INT)   BEGIN
     DECLARE query VARCHAR(5000);
 
@@ -523,33 +587,39 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyTable` (IN `p_filter
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCountryOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCountryOptions` ()   BEGIN
 	SELECT country_id, country_name 
     FROM country 
     ORDER BY country_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCountryTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCountryTable` ()   BEGIN
 	SELECT country_id, country_name 
     FROM country 
     ORDER BY country_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCurrencyOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCurrencyOptions` ()   BEGIN
 	SELECT currency_id, currency_name, currency_symbol FROM currency 
     ORDER BY currency_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCurrencyTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCurrencyTable` ()   BEGIN
     SELECT currency_id, currency_name, currency_symbol FROM currency;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateEmailSettingTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmailSettingTable` ()   BEGIN
     SELECT email_setting_id, email_setting_name, email_setting_description 
     FROM email_setting
     ORDER BY email_setting_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateFileExtensionDualListBoxOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileExtensionDualListBoxOptions` (IN `p_upload_setting_id` INT)   BEGIN
 	SELECT file_extension_id, file_extension_name, file_extension
     FROM file_extension 
@@ -557,6 +627,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileExtensionDualListBoxOpt
     ORDER BY file_extension_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateFileExtensionTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileExtensionTable` (IN `p_filter_by_file_type` INT)   BEGIN
     DECLARE query VARCHAR(5000);
 
@@ -576,18 +647,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileExtensionTable` (IN `p_
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateFileTypeOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileTypeOptions` ()   BEGIN
 	SELECT file_type_id, file_type_name 
     FROM file_type 
     ORDER BY file_type_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateFileTypeTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileTypeTable` ()   BEGIN
 	SELECT file_type_id, file_type_name 
     FROM file_type 
     ORDER BY file_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateInternalNotes`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateInternalNotes` (IN `p_table_name` VARCHAR(255), IN `p_reference_id` INT)   BEGIN
 	SELECT internal_notes_id, internal_note, internal_note_by, internal_note_date
     FROM internal_notes
@@ -595,6 +669,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateInternalNotes` (IN `p_table
     ORDER BY internal_note_date DESC;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateLogNotes`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateLogNotes` (IN `p_table_name` VARCHAR(255), IN `p_reference_id` INT)   BEGIN
 	SELECT log, changed_by, changed_at
     FROM audit_log
@@ -602,12 +677,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateLogNotes` (IN `p_table_name
     ORDER BY changed_at DESC;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateMenuGroupOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupOptions` ()   BEGIN
 	SELECT menu_group_id, menu_group_name 
     FROM menu_group 
     ORDER BY menu_group_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateMenuGroupTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupTable` (IN `p_filter_by_app_module` INT)   BEGIN
     DECLARE query VARCHAR(5000);
 
@@ -627,12 +704,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupTable` (IN `p_filt
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateMenuItemOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemOptions` ()   BEGIN
 	SELECT menu_item_id, menu_item_name 
     FROM menu_item 
     ORDER BY menu_item_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateMenuItemRoleDualListBoxOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemRoleDualListBoxOptions` (IN `p_menu_item_id` INT)   BEGIN
 	SELECT role_id, role_name 
     FROM role 
@@ -640,6 +719,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemRoleDualListBoxOpti
     ORDER BY role_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateMenuItemRolePermissionTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemRolePermissionTable` (IN `p_menu_item_id` INT)   BEGIN
 	SELECT role_permission_id, role_name, read_access, write_access, create_access, delete_access 
     FROM role_permission
@@ -647,6 +727,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemRolePermissionTable
     ORDER BY role_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateMenuItemTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemTable` (IN `p_filter_by_menu_group` INT, IN `p_filter_by_app_module` INT)   BEGIN
     DECLARE query VARCHAR(5000);
 
@@ -670,12 +751,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemTable` (IN `p_filte
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateNotificationSettingTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateNotificationSettingTable` ()   BEGIN
     SELECT notification_setting_id, notification_setting_name, notification_setting_description 
     FROM notification_setting
     ORDER BY notification_setting_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateRoleMenuItemDualListBoxOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleMenuItemDualListBoxOptions` (IN `p_role_id` INT)   BEGIN
 	SELECT menu_item_id, menu_item_name 
     FROM menu_item 
@@ -683,6 +766,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleMenuItemDualListBoxOpti
     ORDER BY menu_item_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateRoleMenuItemPermissionTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleMenuItemPermissionTable` (IN `p_role_id` INT)   BEGIN
 	SELECT role_permission_id, menu_item_name, read_access, write_access, create_access, delete_access 
     FROM role_permission
@@ -690,6 +774,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleMenuItemPermissionTable
     ORDER BY menu_item_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateRoleSystemActionDualListBoxOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleSystemActionDualListBoxOptions` (IN `p_role_id` INT)   BEGIN
 	SELECT system_action_id, system_action_name
     FROM system_action 
@@ -697,6 +782,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleSystemActionDualListBox
     ORDER BY system_action_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateRoleSystemActionPermissionTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleSystemActionPermissionTable` (IN `p_role_id` INT)   BEGIN
 	SELECT role_system_action_permission_id, system_action_name, system_action_access 
     FROM role_system_action_permission
@@ -704,12 +790,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleSystemActionPermissionT
     ORDER BY system_action_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateRoleTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleTable` ()   BEGIN
 	SELECT role_id, role_name, role_description
     FROM role 
     ORDER BY role_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateRoleUserAccountDualListBoxOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleUserAccountDualListBoxOptions` (IN `p_role_id` INT)   BEGIN
 	SELECT user_account_id, file_as 
     FROM user_account 
@@ -717,6 +805,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleUserAccountDualListBoxO
     ORDER BY file_as;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateRoleUserAccountTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleUserAccountTable` (IN `p_role_id` INT)   BEGIN
 	SELECT role_user_account_id, user_account_id, file_as 
     FROM role_user_account
@@ -724,12 +813,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleUserAccountTable` (IN `
     ORDER BY file_as;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateStateOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateStateOptions` ()   BEGIN
 	SELECT state_id, state_name, country_name
     FROM state 
     ORDER BY state_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateStateTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateStateTable` (IN `p_filter_by_country` INT)   BEGIN
     DECLARE query VARCHAR(5000);
 
@@ -749,11 +840,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateStateTable` (IN `p_filter_b
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateSubmenuItemTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSubmenuItemTable` (IN `p_parent_id` INT)   BEGIN
 	SELECT * FROM menu_item
 	WHERE parent_id = p_parent_id AND parent_id IS NOT NULL;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateSystemActionRoleDualListBoxOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionRoleDualListBoxOptions` (IN `p_system_action_id` INT)   BEGIN
 	SELECT role_id, role_name 
     FROM role 
@@ -761,6 +854,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionRoleDualListBox
     ORDER BY role_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateSystemActionRolePermissionTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionRolePermissionTable` (IN `p_system_action_id` INT)   BEGIN
 	SELECT role_system_action_permission_id, role_name, system_action_access 
     FROM role_system_action_permission
@@ -768,12 +862,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionRolePermissionT
     ORDER BY role_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateSystemActionTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionTable` ()   BEGIN
 	SELECT system_action_id, system_action_name, system_action_description
     FROM system_action 
     ORDER BY system_action_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateUploadSettingFileExtensionTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUploadSettingFileExtensionTable` (IN `p_upload_setting_id` INT)   BEGIN
     SELECT upload_setting_file_extension_id, file_extension_name, file_extension 
     FROM upload_setting_file_extension 
@@ -781,12 +877,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUploadSettingFileExtensionT
     ORDER BY file_extension_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateUploadSettingTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUploadSettingTable` ()   BEGIN
     SELECT upload_setting_id, upload_setting_name, upload_setting_description, max_file_size 
     FROM upload_setting
     ORDER BY upload_setting_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateUserAccountRoleDualListBoxOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountRoleDualListBoxOptions` (IN `p_user_account_id` INT)   BEGIN
 	SELECT role_id, role_name 
     FROM role 
@@ -794,6 +892,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountRoleDualListBoxO
     ORDER BY role_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateUserAccountRoleList`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountRoleList` (IN `p_user_account_id` INT)   BEGIN
 	SELECT role_user_account_id, role_name, date_assigned
     FROM role_user_account
@@ -801,6 +900,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountRoleList` (IN `p
     ORDER BY role_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateUserAccountTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountTable` (IN `p_filter_by_user_account_status` VARCHAR(10), IN `p_filter_by_user_account_lock_status` VARCHAR(10), IN `p_filter_password_expiry_start_date` DATE, IN `p_filter_password_expiry_end_date` DATE, IN `p_filter_last_connection_start_date` DATE, IN `p_filter_last_connection_end_date` DATE)   BEGIN
     DECLARE query VARCHAR(5000);
 
@@ -832,126 +932,157 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountTable` (IN `p_fi
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `getAppModule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppModule` (IN `p_app_module_id` INT)   BEGIN
 	SELECT * FROM app_module
 	WHERE app_module_id = p_app_module_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCity` (IN `p_city_id` INT)   BEGIN
 	SELECT * FROM city
 	WHERE city_id = p_city_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompany` (IN `p_company_id` INT)   BEGIN
 	SELECT * FROM company
 	WHERE company_id = p_company_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCountry`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCountry` (IN `p_country_id` INT)   BEGIN
 	SELECT * FROM country
 	WHERE country_id = p_country_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCurrency`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCurrency` (IN `p_currency_id` INT)   BEGIN
 	SELECT * FROM currency
 	WHERE currency_id = p_currency_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getEmailNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmailNotificationTemplate` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT * FROM notification_setting_email_template
 	WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getEmailSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmailSetting` (IN `p_email_setting_id` INT)   BEGIN
 	SELECT * FROM email_setting
     WHERE email_setting_id = p_email_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getFileExtension`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getFileExtension` (IN `p_file_extension_id` INT)   BEGIN
 	SELECT * FROM file_extension
 	WHERE file_extension_id = p_file_extension_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getFileType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getFileType` (IN `p_file_type_id` INT)   BEGIN
 	SELECT * FROM file_type
 	WHERE file_type_id = p_file_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getInternalNotesAttachment`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getInternalNotesAttachment` (IN `p_internal_notes_id` INT)   BEGIN
 	SELECT * FROM internal_notes_attachment
 	WHERE internal_notes_id = p_internal_notes_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getLoginCredentials`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getLoginCredentials` (IN `p_user_account_id` INT, IN `p_credentials` VARCHAR(255))   BEGIN
 	SELECT * FROM user_account
     WHERE user_account_id = p_user_account_id OR username = p_credentials OR email = p_credentials;
 END$$
 
+DROP PROCEDURE IF EXISTS `getMenuGroup`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getMenuGroup` (IN `p_menu_group_id` INT)   BEGIN
 	SELECT * FROM menu_group
 	WHERE menu_group_id = p_menu_group_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getMenuItem`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getMenuItem` (IN `p_menu_item_id` INT)   BEGIN
 	SELECT * FROM menu_item
 	WHERE menu_item_id = p_menu_item_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getNotificationSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getNotificationSetting` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT * FROM notification_setting
 	WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getPasswordHistory`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getPasswordHistory` (IN `p_user_account_id` INT)   BEGIN
 	SELECT * FROM password_history
 	WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getRole`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRole` (IN `p_role_id` INT)   BEGIN
 	SELECT * FROM role
     WHERE role_id = p_role_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getSecuritySetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getSecuritySetting` (IN `p_security_setting_id` INT)   BEGIN
 	SELECT * FROM security_setting
 	WHERE security_setting_id = p_security_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getSMSNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getSMSNotificationTemplate` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT * FROM notification_setting_sms_template
 	WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getState`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getState` (IN `p_state_id` INT)   BEGIN
 	SELECT * FROM state
 	WHERE state_id = p_state_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getSystemAction`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getSystemAction` (IN `p_system_action_id` INT)   BEGIN
 	SELECT * FROM system_action
     WHERE system_action_id = p_system_action_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getSystemNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getSystemNotificationTemplate` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT * FROM notification_setting_system_template
 	WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getUICustomizationSetting`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getUICustomizationSetting` (IN `p_user_account__id` INT)   BEGIN
+	SELECT * FROM ui_customization_setting
+	WHERE user_account_id = p_user_account__id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getUploadSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUploadSetting` (IN `p_upload_setting_id` INT)   BEGIN
 	SELECT * FROM upload_setting
 	WHERE upload_setting_id = p_upload_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getUploadSettingFileExtension`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUploadSettingFileExtension` (IN `p_upload_setting_id` INT)   BEGIN
 	SELECT * FROM upload_setting_file_extension
 	WHERE upload_setting_id = p_upload_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserAccount` (IN `p_user_account_id` INT, IN `p_email` VARCHAR(255))   BEGIN
 	SELECT * FROM user_account
     WHERE user_account_id = p_user_account_id OR email = p_email;
 END$$
 
+DROP PROCEDURE IF EXISTS `insertAppModule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAppModule` (IN `p_app_module_name` VARCHAR(100), IN `p_app_module_description` VARCHAR(500), IN `p_menu_item_id` INT, IN `p_menu_item_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT, OUT `p_app_module_id` INT)   BEGIN
     INSERT INTO app_module (app_module_name, app_module_description, menu_item_id, menu_item_name, order_sequence, last_log_by) 
 	VALUES(p_app_module_name, p_app_module_description, p_menu_item_id, p_menu_item_name, p_order_sequence, p_last_log_by);
@@ -959,6 +1090,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAppModule` (IN `p_app_module_
     SET p_app_module_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCity` (IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_city_id` INT)   BEGIN
     INSERT INTO city (city_name, state_id, state_name, country_id, country_name, last_log_by) 
 	VALUES(p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_last_log_by);
@@ -966,6 +1098,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCity` (IN `p_city_name` VARCH
     SET p_city_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCompany` (IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_company_id` INT)   BEGIN
     INSERT INTO company (company_name, legal_name, address, city_id, city_name, state_id, state_name, country_id, country_name, currency_id, currency_name, currency_symbol, tax_id, phone, mobile, email, website, last_log_by) 
 	VALUES(p_company_name, p_legal_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_currency_id, p_currency_name, p_currency_symbol, p_tax_id, p_phone, p_mobile, p_email, p_website, p_last_log_by);
@@ -973,6 +1106,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCompany` (IN `p_company_name`
     SET p_company_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertCountry`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCountry` (IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_country_id` INT)   BEGIN
     INSERT INTO country (country_name, last_log_by) 
 	VALUES(p_country_name, p_last_log_by);
@@ -980,6 +1114,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCountry` (IN `p_country_name`
     SET p_country_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertCurrency`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCurrency` (IN `p_currency_name` VARCHAR(100), IN `p_currency_symbol` VARCHAR(10), IN `p_last_log_by` INT, OUT `p_currency_id` INT)   BEGIN
     INSERT INTO currency (currency_name, currency_symbol, last_log_by) 
 	VALUES(p_currency_name, p_currency_symbol, p_last_log_by);
@@ -987,11 +1122,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCurrency` (IN `p_currency_nam
     SET p_currency_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertEmailNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmailNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_email_notification_subject` VARCHAR(200), IN `p_email_notification_body` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
     INSERT INTO notification_setting_email_template (notification_setting_id, email_notification_subject, email_notification_body, last_log_by) 
 	VALUES(p_notification_setting_id, p_email_notification_subject, p_email_notification_body, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertEmailSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmailSetting` (IN `p_email_setting_name` VARCHAR(100), IN `p_email_setting_description` VARCHAR(200), IN `p_mail_host` VARCHAR(100), IN `p_port` VARCHAR(10), IN `p_smtp_auth` INT(1), IN `p_smtp_auto_tls` INT(1), IN `p_mail_username` VARCHAR(200), IN `p_mail_password` VARCHAR(250), IN `p_mail_encryption` VARCHAR(20), IN `p_mail_from_name` VARCHAR(200), IN `p_mail_from_email` VARCHAR(200), IN `p_last_log_by` INT, OUT `p_email_setting_id` INT)   BEGIN
     INSERT INTO email_setting (email_setting_name, email_setting_description, mail_host, port, smtp_auth, smtp_auto_tls, mail_username, mail_password, mail_encryption, mail_from_name, mail_from_email, last_log_by) 
 	VALUES(p_email_setting_name, p_email_setting_description, p_mail_host, p_port, p_smtp_auth, p_smtp_auto_tls, p_mail_username, p_mail_password, p_mail_encryption, p_mail_from_name, p_mail_from_email, p_last_log_by);
@@ -999,6 +1136,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmailSetting` (IN `p_email_se
     SET p_email_setting_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertFileExtension`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFileExtension` (IN `p_file_extension_name` VARCHAR(100), IN `p_file_extension` VARCHAR(10), IN `p_file_type_id` INT, IN `p_file_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_file_extension_id` INT)   BEGIN
     INSERT INTO file_extension (file_extension_name, file_extension, file_type_id, file_type_name, last_log_by) 
 	VALUES(p_file_extension_name, p_file_extension, p_file_type_id, p_file_type_name, p_last_log_by);
@@ -1006,6 +1144,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFileExtension` (IN `p_file_ex
     SET p_file_extension_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertFileType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFileType` (IN `p_file_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_file_type_id` INT)   BEGIN
     INSERT INTO file_type (file_type_name, last_log_by) 
 	VALUES(p_file_type_name, p_last_log_by);
@@ -1013,6 +1152,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFileType` (IN `p_file_type_na
     SET p_file_type_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertInternalNotes`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertInternalNotes` (IN `p_table_name` VARCHAR(255), IN `p_reference_id` INT, IN `p_internal_note` VARCHAR(5000), IN `p_internal_note_by` INT, OUT `p_internal_notes_id` INT)   BEGIN
     INSERT INTO internal_notes (table_name, reference_id, internal_note, internal_note_by) 
 	VALUES(p_table_name, p_reference_id, p_internal_note, p_internal_note_by);
@@ -1020,11 +1160,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertInternalNotes` (IN `p_table_n
     SET p_internal_notes_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertInternalNotesAttachment`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertInternalNotesAttachment` (IN `p_internal_notes_id` INT, IN `p_attachment_file_name` VARCHAR(500), IN `p_attachment_file_size` DOUBLE, IN `p_attachment_path_file` VARCHAR(500))   BEGIN
     INSERT INTO internal_notes_attachment (internal_notes_id, attachment_file_name, attachment_file_size, attachment_path_file) 
 	VALUES(p_internal_notes_id, p_attachment_file_name, p_attachment_file_size, p_attachment_path_file);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertMenuGroup`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMenuGroup` (IN `p_menu_group_name` VARCHAR(100), IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT, OUT `p_menu_group_id` INT)   BEGIN
     INSERT INTO menu_group (menu_group_name, app_module_id, app_module_name, order_sequence, last_log_by) 
 	VALUES(p_menu_group_name, p_app_module_id, p_app_module_name, p_order_sequence, p_last_log_by);
@@ -1032,6 +1174,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMenuGroup` (IN `p_menu_group_
     SET p_menu_group_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertMenuItem`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMenuItem` (IN `p_menu_item_name` VARCHAR(100), IN `p_menu_item_url` VARCHAR(50), IN `p_menu_item_icon` VARCHAR(50), IN `p_menu_group_id` INT, IN `p_menu_group_name` VARCHAR(100), IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_parent_id` INT, IN `p_parent_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT, OUT `p_menu_item_id` INT)   BEGIN
     INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) 
 	VALUES(p_menu_item_name, p_menu_item_url, p_menu_item_icon, p_menu_group_id, p_menu_group_name, p_app_module_id, p_app_module_name, p_parent_id, p_parent_name, p_order_sequence, p_last_log_by);
@@ -1039,6 +1182,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertMenuItem` (IN `p_menu_item_na
     SET p_menu_item_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertNotificationSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertNotificationSetting` (IN `p_notification_setting_name` VARCHAR(100), IN `p_notification_setting_description` VARCHAR(200), IN `p_last_log_by` INT, OUT `p_notification_setting_id` INT)   BEGIN
     INSERT INTO notification_setting (notification_setting_name, notification_setting_description, last_log_by) 
 	VALUES(p_notification_setting_name, p_notification_setting_description, p_last_log_by);
@@ -1046,11 +1190,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertNotificationSetting` (IN `p_n
     SET p_notification_setting_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertPasswordHistory`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertPasswordHistory` (IN `p_user_account_id` INT, IN `p_password` VARCHAR(255))   BEGIN
     INSERT INTO password_history (user_account_id, password, password_change_date) 
     VALUES (p_user_account_id, p_password, NOW());
 END$$
 
+DROP PROCEDURE IF EXISTS `insertRole`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertRole` (IN `p_role_name` VARCHAR(100), IN `p_role_description` VARCHAR(200), IN `p_last_log_by` INT, OUT `p_role_id` INT)   BEGIN
     INSERT INTO role (role_name, role_description, last_log_by) 
 	VALUES(p_role_name, p_role_description, p_last_log_by);
@@ -1058,26 +1204,31 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertRole` (IN `p_role_name` VARCH
     SET p_role_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertRolePermission`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertRolePermission` (IN `p_role_id` INT, IN `p_role_name` VARCHAR(100), IN `p_menu_item_id` INT, IN `p_menu_item_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO role_permission (role_id, role_name, menu_item_id, menu_item_name, last_log_by) 
 	VALUES(p_role_id, p_role_name, p_menu_item_id, p_menu_item_name, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertRoleSystemActionPermission`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertRoleSystemActionPermission` (IN `p_role_id` INT, IN `p_role_name` VARCHAR(100), IN `p_system_action_id` INT, IN `p_system_action_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO role_system_action_permission (role_id, role_name, system_action_id, system_action_name, last_log_by) 
 	VALUES(p_role_id, p_role_name, p_system_action_id, p_system_action_name, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertRoleUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertRoleUserAccount` (IN `p_role_id` INT, IN `p_role_name` VARCHAR(100), IN `p_user_account_id` INT, IN `p_file_as` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO role_user_account (role_id, role_name, user_account_id, file_as, last_log_by) 
 	VALUES(p_role_id, p_role_name, p_user_account_id, p_file_as, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertSMSNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSMSNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_sms_notification_message` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO notification_setting_sms_template (notification_setting_id, sms_notification_message, last_log_by) 
 	VALUES(p_notification_setting_id, p_sms_notification_message, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertState`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertState` (IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_state_id` INT)   BEGIN
     INSERT INTO state (state_name, country_id, country_name, last_log_by) 
 	VALUES(p_state_name, p_country_id, p_country_name, p_last_log_by);
@@ -1085,6 +1236,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertState` (IN `p_state_name` VAR
     SET p_state_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertSystemAction`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSystemAction` (IN `p_system_action_name` VARCHAR(100), IN `p_system_action_description` VARCHAR(200), IN `p_last_log_by` INT, OUT `p_system_action_id` INT)   BEGIN
     INSERT INTO system_action (system_action_name, system_action_description, last_log_by) 
 	VALUES(p_system_action_name, p_system_action_description, p_last_log_by);
@@ -1092,11 +1244,33 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSystemAction` (IN `p_system_a
     SET p_system_action_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertSystemNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSystemNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_system_notification_title` VARCHAR(200), IN `p_system_notification_message` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO notification_setting_system_template (notification_setting_id, system_notification_title, system_notification_message, last_log_by) 
 	VALUES(p_notification_setting_id, p_system_notification_title, p_system_notification_message, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertUICustomizationSetting`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUICustomizationSetting` (IN `p_user_account__id` INT, IN `p_type` VARCHAR(30), IN `p_customization_value` VARCHAR(20), IN `p_last_log_by` INT)   BEGIN
+	IF p_type = 'sidebar type' THEN
+        INSERT INTO ui_customization_setting (user_account_id, sidebar_type, last_log_by) 
+	    VALUES(p_user_account__id, p_customization_value, p_last_log_by);
+    ELSEIF p_type = 'boxed layout' THEN
+        INSERT INTO ui_customization_setting (user_account_id, boxed_layout, last_log_by) 
+	    VALUES(p_user_account__id, p_customization_value, p_last_log_by);
+    ELSEIF p_type = 'theme' THEN
+        INSERT INTO ui_customization_setting (user_account_id, theme, last_log_by) 
+	    VALUES(p_user_account__id, p_customization_value, p_last_log_by);
+    ELSEIF p_type = 'color theme' THEN
+        INSERT INTO ui_customization_setting (user_account_id, color_theme, last_log_by) 
+	    VALUES(p_user_account__id, p_customization_value, p_last_log_by);
+    ELSE
+        INSERT INTO ui_customization_setting (user_account_id, card_border, last_log_by) 
+	    VALUES(p_user_account__id, p_customization_value, p_last_log_by);
+    END IF;
+END$$
+
+DROP PROCEDURE IF EXISTS `insertUploadSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUploadSetting` (IN `p_upload_setting_name` VARCHAR(100), IN `p_upload_setting_description` VARCHAR(200), IN `p_max_file_size` DOUBLE, IN `p_last_log_by` INT, OUT `p_upload_setting_id` INT)   BEGIN
     INSERT INTO upload_setting (upload_setting_name, upload_setting_description, max_file_size, last_log_by) 
 	VALUES(p_upload_setting_name, p_upload_setting_description, p_max_file_size, p_last_log_by);
@@ -1104,11 +1278,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUploadSetting` (IN `p_upload_
     SET p_upload_setting_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertUploadSettingFileExtension`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUploadSettingFileExtension` (IN `p_upload_setting_id` INT, IN `p_upload_setting_name` VARCHAR(100), IN `p_file_extension_id` INT, IN `p_file_extension_name` VARCHAR(100), IN `p_file_extension` VARCHAR(10), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) 
 	VALUES(p_upload_setting_id, p_upload_setting_name, p_file_extension_id, p_file_extension_name, p_file_extension, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUserAccount` (IN `p_file_as` VARCHAR(300), IN `p_email` VARCHAR(255), IN `p_username` VARCHAR(100), IN `p_password` VARCHAR(255), IN `p_password_expiry_date` DATE, IN `p_last_password_change` DATETIME, IN `p_last_log_by` INT, OUT `p_user_account_id` INT)   BEGIN
     INSERT INTO user_account (file_as, email, username, password, password_expiry_date, last_password_change, last_log_by) 
 	VALUES(p_file_as, p_email, p_username, p_password, p_password_expiry_date, p_last_password_change, p_last_log_by);
@@ -1116,12 +1292,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUserAccount` (IN `p_file_as` 
     SET p_user_account_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `updateAccountLock`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccountLock` (IN `p_user_account_id` INT, IN `p_locked` VARCHAR(5), IN `p_account_lock_duration` INT)   BEGIN
 	UPDATE user_account 
     SET locked = p_locked, account_lock_duration = p_account_lock_duration 
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateAppLogo`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppLogo` (IN `p_app_module_id` INT, IN `p_app_logo` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     UPDATE app_module
     SET app_logo = p_app_logo,
@@ -1129,6 +1307,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppLogo` (IN `p_app_module_id
     WHERE app_module_id = p_app_module_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateAppModule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppModule` (IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_app_module_description` VARCHAR(500), IN `p_menu_item_id` INT, IN `p_menu_item_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1159,6 +1338,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppModule` (IN `p_app_module_
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCity` (IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1188,6 +1368,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCity` (IN `p_city_id` INT, IN
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompany` (IN `p_company_id` INT, IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1220,6 +1401,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompany` (IN `p_company_id` I
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCompanyLogo`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyLogo` (IN `p_company_id` INT, IN `p_company_logo` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     UPDATE company
     SET company_logo = p_company_logo,
@@ -1227,6 +1409,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyLogo` (IN `p_company_i
     WHERE company_id = p_company_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCountry`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCountry` (IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1258,6 +1441,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCountry` (IN `p_country_id` I
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCurrency`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCurrency` (IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(100), IN `p_currency_symbol` VARCHAR(10), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1281,6 +1465,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCurrency` (IN `p_currency_id`
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateEmailNotificationChannelStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailNotificationChannelStatus` (IN `p_notification_setting_id` INT, IN `p_email_notification` INT(1), IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting
     SET email_notification = p_email_notification,
@@ -1288,6 +1473,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailNotificationChannelStatu
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateEmailNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_email_notification_subject` VARCHAR(200), IN `p_email_notification_body` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting_email_template
     SET email_notification_subject = p_email_notification_subject,
@@ -1296,6 +1482,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailNotificationTemplate` (I
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateEmailSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailSetting` (IN `p_email_setting_id` INT, IN `p_email_setting_name` VARCHAR(100), IN `p_email_setting_description` VARCHAR(200), IN `p_mail_host` VARCHAR(100), IN `p_port` VARCHAR(10), IN `p_smtp_auth` INT(1), IN `p_smtp_auto_tls` INT(1), IN `p_mail_username` VARCHAR(200), IN `p_mail_password` VARCHAR(250), IN `p_mail_encryption` VARCHAR(20), IN `p_mail_from_name` VARCHAR(200), IN `p_mail_from_email` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
     UPDATE email_setting
     SET email_setting_name = p_email_setting_name,
@@ -1313,12 +1500,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailSetting` (IN `p_email_se
     WHERE email_setting_id = p_email_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateFailedOTPAttempts`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFailedOTPAttempts` (IN `p_user_account_id` INT, IN `p_failed_otp_attempts` INT)   BEGIN
 	UPDATE user_account 
     SET failed_otp_attempts = p_failed_otp_attempts
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateFileExtension`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFileExtension` (IN `p_file_extension_id` INT, IN `p_file_extension_name` VARCHAR(100), IN `p_file_extension` VARCHAR(10), IN `p_file_type_id` INT, IN `p_file_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1344,6 +1533,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFileExtension` (IN `p_file_ex
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateFileType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFileType` (IN `p_file_type_id` INT, IN `p_file_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1365,18 +1555,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFileType` (IN `p_file_type_id
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateLastConnection`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateLastConnection` (IN `p_user_account_id` INT, IN `p_session_token` VARCHAR(255), IN `p_last_connection_date` DATETIME)   BEGIN
 	UPDATE user_account 
     SET session_token = p_session_token, last_connection_date = p_last_connection_date
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateLoginAttempt`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateLoginAttempt` (IN `p_user_account_id` INT, IN `p_failed_login_attempts` INT, IN `p_last_failed_login_attempt` DATETIME)   BEGIN
 	UPDATE user_account 
     SET failed_login_attempts = p_failed_login_attempts, last_failed_login_attempt = p_last_failed_login_attempt
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateMenuGroup`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMenuGroup` (IN `p_menu_group_id` INT, IN `p_menu_group_name` VARCHAR(100), IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1401,6 +1594,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMenuGroup` (IN `p_menu_group_
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateMenuItem`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMenuItem` (IN `p_menu_item_id` INT, IN `p_menu_item_name` VARCHAR(100), IN `p_menu_item_url` VARCHAR(50), IN `p_menu_item_icon` VARCHAR(50), IN `p_menu_group_id` INT, IN `p_menu_group_name` VARCHAR(100), IN `p_app_module_id` INT, IN `p_app_module_name` VARCHAR(100), IN `p_parent_id` INT, IN `p_parent_name` VARCHAR(100), IN `p_order_sequence` TINYINT(10), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1431,6 +1625,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMenuItem` (IN `p_menu_item_id
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateMultipleLoginSessionsStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMultipleLoginSessionsStatus` (IN `p_user_account_id` INT, IN `p_multiple_session` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
     UPDATE user_account
     SET multiple_session = p_multiple_session,
@@ -1438,6 +1633,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMultipleLoginSessionsStatus` 
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateNotificationSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateNotificationSetting` (IN `p_notification_setting_id` INT, IN `p_notification_setting_name` VARCHAR(100), IN `p_notification_setting_description` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting
     SET notification_setting_name = p_notification_setting_name,
@@ -1446,30 +1642,35 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateNotificationSetting` (IN `p_n
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateOTP`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOTP` (IN `p_user_account_id` INT, IN `p_otp` VARCHAR(255), IN `p_otp_expiry_date` DATETIME)   BEGIN
 	UPDATE user_account 
     SET otp = p_otp, otp_expiry_date = p_otp_expiry_date, failed_otp_attempts = 0
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateOTPAsExpired`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOTPAsExpired` (IN `p_user_account_id` INT, IN `p_otp_expiry_date` DATETIME)   BEGIN
 	UPDATE user_account 
     SET otp_expiry_date = p_otp_expiry_date
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateResetToken`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateResetToken` (IN `p_user_account_id` INT, IN `p_reset_token` VARCHAR(255), IN `p_reset_token_expiry_date` DATETIME)   BEGIN
 	UPDATE user_account 
     SET reset_token = p_reset_token, reset_token_expiry_date = p_reset_token_expiry_date
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateResetTokenAsExpired`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateResetTokenAsExpired` (IN `p_user_account_id` INT, IN `p_reset_token_expiry_date` DATETIME)   BEGIN
 	UPDATE user_account 
     SET reset_token_expiry_date = p_reset_token_expiry_date
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateRole`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRole` (IN `p_role_id` INT, IN `p_role_name` VARCHAR(100), IN `p_role_description` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1503,6 +1704,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRole` (IN `p_role_id` INT, IN
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateRolePermission`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRolePermission` (IN `p_role_permission_id` INT, IN `p_access_type` VARCHAR(10), IN `p_access` TINYINT(1), IN `p_last_log_by` INT)   BEGIN
     IF p_access_type = 'read' THEN
         UPDATE role_permission
@@ -1527,6 +1729,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRolePermission` (IN `p_role_p
     END IF;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateRoleSystemActionPermission`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRoleSystemActionPermission` (IN `p_role_system_action_permission_id` INT, IN `p_system_action_access` TINYINT(1), IN `p_last_log_by` INT)   BEGIN
     UPDATE role_system_action_permission
     SET system_action_access = p_system_action_access,
@@ -1534,6 +1737,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRoleSystemActionPermission` (
     WHERE role_system_action_permission_id = p_role_system_action_permission_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateSecuritySetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSecuritySetting` (IN `p_max_failed_login` INT, IN `p_max_failed_otp_attempt` INT, IN `p_password_expiry_duration` INT, IN `p_otp_duration` INT, IN `p_reset_password_token_duration` INT, IN `p_session_inactivity_limit` INT, IN `p_password_recovery_link` VARCHAR(1000), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1580,6 +1784,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSecuritySetting` (IN `p_max_f
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateSMSNotificationChannelStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSMSNotificationChannelStatus` (IN `p_notification_setting_id` INT, IN `p_sms_notification` INT(1), IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting
     SET sms_notification = p_sms_notification,
@@ -1587,6 +1792,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSMSNotificationChannelStatus`
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateSMSNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSMSNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_sms_notification_message` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting_sms_template
     SET sms_notification_message = p_sms_notification_message,
@@ -1594,6 +1800,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSMSNotificationTemplate` (IN 
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateState`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateState` (IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1626,6 +1833,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateState` (IN `p_state_id` INT, 
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateSystemAction`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemAction` (IN `p_system_action_id` INT, IN `p_system_action_name` VARCHAR(100), IN `p_system_action_description` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1648,6 +1856,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemAction` (IN `p_system_a
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateSystemNotificationChannelStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemNotificationChannelStatus` (IN `p_notification_setting_id` INT, IN `p_system_notification` INT(1), IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting
     SET system_notification = p_system_notification,
@@ -1655,6 +1864,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemNotificationChannelStat
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateSystemNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_system_notification_title` VARCHAR(200), IN `p_system_notification_message` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting_system_template
     SET system_notification_title = p_system_notification_title,
@@ -1663,6 +1873,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemNotificationTemplate` (
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateTwoFactorAuthenticationStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTwoFactorAuthenticationStatus` (IN `p_user_account_id` INT, IN `p_two_factor_auth` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
     UPDATE user_account
     SET two_factor_auth = p_two_factor_auth,
@@ -1670,6 +1881,37 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTwoFactorAuthenticationStatus
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateUICustomizationSetting`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUICustomizationSetting` (IN `p_user_account__id` INT, IN `p_type` VARCHAR(30), IN `p_customization_value` VARCHAR(20), IN `p_last_log_by` INT)   BEGIN
+	IF p_type = 'sidebar type' THEN
+        UPDATE ui_customization_setting
+        SET sidebar_type = p_customization_value,
+        last_log_by = p_last_log_by
+       	WHERE user_account_id = p_user_account__id;
+    ELSEIF p_type = 'boxed layout' THEN
+        UPDATE ui_customization_setting
+        SET boxed_layout = p_customization_value,
+        last_log_by = p_last_log_by
+       	WHERE user_account_id = p_user_account__id;
+    ELSEIF p_type = 'theme' THEN
+        UPDATE ui_customization_setting
+        SET theme = p_customization_value,
+        last_log_by = p_last_log_by
+       	WHERE user_account_id = p_user_account__id;
+    ELSEIF p_type = 'color theme' THEN
+        UPDATE ui_customization_setting
+        SET color_theme = p_customization_value,
+        last_log_by = p_last_log_by
+       	WHERE user_account_id = p_user_account__id;
+    ELSE
+        UPDATE ui_customization_setting
+        SET card_border = p_customization_value,
+        last_log_by = p_last_log_by
+       	WHERE user_account_id = p_user_account__id;
+    END IF;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateUploadSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUploadSetting` (IN `p_upload_setting_id` INT, IN `p_upload_setting_name` VARCHAR(100), IN `p_upload_setting_description` VARCHAR(200), IN `p_max_file_size` DOUBLE, IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1693,6 +1935,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUploadSetting` (IN `p_upload_
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccount` (IN `p_user_account_id` INT, IN `p_file_as` VARCHAR(300), IN `p_email` VARCHAR(255), IN `p_username` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1716,12 +1959,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccount` (IN `p_user_acco
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateUserAccountLock`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccountLock` (IN `p_user_account_id` INT, IN `p_locked` VARCHAR(5), IN `p_account_lock_duration` INT, IN `p_last_log_by` INT)   BEGIN
 	UPDATE user_account 
     SET locked = p_locked, account_lock_duration = p_account_lock_duration 
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateUserAccountPassword`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccountPassword` (IN `p_user_account_id` INT, IN `p_password` VARCHAR(255), IN `p_password_expiry_date` DATE, IN `p_last_log_by` INT)   BEGIN
 	UPDATE user_account 
     SET password = p_password, 
@@ -1731,6 +1976,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccountPassword` (IN `p_u
     WHERE p_user_account_id = user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateUserAccountProfilePicture`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccountProfilePicture` (IN `p_user_account_id` INT, IN `p_profile_picture` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     UPDATE user_account
     SET profile_picture = p_profile_picture,
@@ -1738,6 +1984,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccountProfilePicture` (I
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateUserAccountStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccountStatus` (IN `p_user_account_id` INT, IN `p_active` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
     UPDATE user_account
     SET active = p_active,
@@ -1745,6 +1992,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccountStatus` (IN `p_use
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateUserPassword`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserPassword` (IN `p_user_account_id` INT, IN `p_credentials` VARCHAR(255), IN `p_password` VARCHAR(255), IN `p_password_expiry_date` DATE)   BEGIN
 	UPDATE user_account 
     SET password = p_password, 
@@ -1765,6 +2013,7 @@ DELIMITER ;
 -- Table structure for table `app_module`
 --
 
+DROP TABLE IF EXISTS `app_module`;
 CREATE TABLE `app_module` (
   `app_module_id` int(10) UNSIGNED NOT NULL,
   `app_module_name` varchar(100) NOT NULL,
@@ -1788,6 +2037,7 @@ INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_descri
 --
 -- Triggers `app_module`
 --
+DROP TRIGGER IF EXISTS `app_module_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `app_module_trigger_insert` AFTER INSERT ON `app_module` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'App module created. <br/>';
@@ -1817,6 +2067,7 @@ CREATE TRIGGER `app_module_trigger_insert` AFTER INSERT ON `app_module` FOR EACH
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `app_module_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `app_module_trigger_update` AFTER UPDATE ON `app_module` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -1855,6 +2106,7 @@ DELIMITER ;
 -- Table structure for table `audit_log`
 --
 
+DROP TABLE IF EXISTS `audit_log`;
 CREATE TABLE `audit_log` (
   `audit_log_id` int(10) UNSIGNED NOT NULL,
   `table_name` varchar(255) NOT NULL,
@@ -4160,7 +4412,14 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2281, 'file_extension', 131, 'File Extension created. <br/><br/>File Extension Name: WPD<br/>File Extension: wpd<br/>File Type: Word Processor', 1, '2024-06-26 16:21:37', '2024-06-26 16:21:37'),
 (2282, 'upload_setting', 1, 'Upload Setting created. <br/><br/>Upload Setting Name: App Logo<br/>Upload Setting Description: Sets the upload setting when uploading app logo.<br/>Max File Size: 800', 1, '2024-06-26 16:34:32', '2024-06-26 16:34:32'),
 (2283, 'upload_setting', 2, 'Upload Setting created. <br/><br/>Upload Setting Name: Internal Notes Attachment<br/>Upload Setting Description: Sets the upload setting when uploading internal notes attachement.<br/>Max File Size: 800', 1, '2024-06-26 16:34:32', '2024-06-26 16:34:32'),
-(2284, 'email_setting', 1, 'Email Setting created. <br/><br/>Email Setting Name: Security Email Setting<br/>Email Setting Description: \r\nEmail setting for security emails.<br/>Host: smtp.hostinger.com<br/>Port: 465<br/>SMTP Authentication: 1<br/>Mail Username: cgmi-noreply@christianmotors.ph<br/>Mail Encryption: ssl<br/>Mail From Name: cgmi-noreply@christianmotors.ph<br/>Mail From Email: cgmi-noreply@christianmotors.ph', 1, '2024-06-26 16:43:58', '2024-06-26 16:43:58');
+(2284, 'email_setting', 1, 'Email Setting created. <br/><br/>Email Setting Name: Security Email Setting<br/>Email Setting Description: \r\nEmail setting for security emails.<br/>Host: smtp.hostinger.com<br/>Port: 465<br/>SMTP Authentication: 1<br/>Mail Username: cgmi-noreply@christianmotors.ph<br/>Mail Encryption: ssl<br/>Mail From Name: cgmi-noreply@christianmotors.ph<br/>Mail From Email: cgmi-noreply@christianmotors.ph', 1, '2024-06-26 16:43:58', '2024-06-26 16:43:58'),
+(2285, 'user_account', 2, 'Last Connection Date: 2024-06-26 16:55:07 -> 2024-06-26 19:13:10<br/>', 1, '2024-06-26 19:13:10', '2024-06-26 19:13:10'),
+(2286, 'user_account', 2, 'Failed Login Attempts: 0 -> 1<br/>', 1, '2024-06-26 21:31:18', '2024-06-26 21:31:18'),
+(2287, 'user_account', 2, 'Last Failed Login Attempt: 2024-06-26 21:31:18 -> 2024-06-26 21:33:02<br/>Failed Login Attempts: 1 -> 2<br/>', 1, '2024-06-26 21:33:02', '2024-06-26 21:33:02'),
+(2288, 'user_account', 2, 'Failed Login Attempts: 2 -> 0<br/>', 1, '2024-06-26 21:33:07', '2024-06-26 21:33:07'),
+(2289, 'user_account', 2, 'Last Connection Date: 2024-06-26 19:13:10 -> 2024-06-26 21:33:07<br/>', 1, '2024-06-26 21:33:07', '2024-06-26 21:33:07'),
+(2290, 'user_account', 2, 'Last Connection Date: 2024-06-26 21:33:07 -> 2024-06-26 21:39:45<br/>', 1, '2024-06-26 21:39:45', '2024-06-26 21:39:45'),
+(2291, 'user_account', 2, 'Last Connection Date: 2024-06-26 21:39:45 -> 2024-06-26 21:57:37<br/>', 1, '2024-06-26 21:57:37', '2024-06-26 21:57:37');
 
 -- --------------------------------------------------------
 
@@ -4168,6 +4427,7 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 -- Table structure for table `city`
 --
 
+DROP TABLE IF EXISTS `city`;
 CREATE TABLE `city` (
   `city_id` int(10) UNSIGNED NOT NULL,
   `city_name` varchar(100) NOT NULL,
@@ -5824,6 +6084,7 @@ INSERT INTO `city` (`city_id`, `city_name`, `state_id`, `state_name`, `country_i
 --
 -- Triggers `city`
 --
+DROP TRIGGER IF EXISTS `city_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `city_trigger_insert` AFTER INSERT ON `city` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'City created. <br/>';
@@ -5845,6 +6106,7 @@ CREATE TRIGGER `city_trigger_insert` AFTER INSERT ON `city` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `city_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `city_trigger_update` AFTER UPDATE ON `city` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -5875,6 +6137,7 @@ DELIMITER ;
 -- Table structure for table `company`
 --
 
+DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
   `company_id` int(10) UNSIGNED NOT NULL,
   `company_name` varchar(100) NOT NULL,
@@ -5902,6 +6165,7 @@ CREATE TABLE `company` (
 --
 -- Triggers `company`
 --
+DROP TRIGGER IF EXISTS `company_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `company_trigger_insert` AFTER INSERT ON `company` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Company created. <br/>';
@@ -5963,6 +6227,7 @@ CREATE TRIGGER `company_trigger_insert` AFTER INSERT ON `company` FOR EACH ROW B
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `company_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `company_trigger_update` AFTER UPDATE ON `company` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -6033,6 +6298,7 @@ DELIMITER ;
 -- Table structure for table `country`
 --
 
+DROP TABLE IF EXISTS `country`;
 CREATE TABLE `country` (
   `country_id` int(10) UNSIGNED NOT NULL,
   `country_name` varchar(100) NOT NULL,
@@ -6299,6 +6565,7 @@ INSERT INTO `country` (`country_id`, `country_name`, `created_date`, `last_log_b
 --
 -- Triggers `country`
 --
+DROP TRIGGER IF EXISTS `country_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `country_trigger_insert` AFTER INSERT ON `country` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Country created. <br/>';
@@ -6312,6 +6579,7 @@ CREATE TRIGGER `country_trigger_insert` AFTER INSERT ON `country` FOR EACH ROW B
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `country_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `country_trigger_update` AFTER UPDATE ON `country` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -6334,6 +6602,7 @@ DELIMITER ;
 -- Table structure for table `currency`
 --
 
+DROP TABLE IF EXISTS `currency`;
 CREATE TABLE `currency` (
   `currency_id` int(10) UNSIGNED NOT NULL,
   `currency_name` varchar(100) NOT NULL,
@@ -6345,6 +6614,7 @@ CREATE TABLE `currency` (
 --
 -- Triggers `currency`
 --
+DROP TRIGGER IF EXISTS `currency_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `currency_trigger_insert` AFTER INSERT ON `currency` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Currency created. <br/>';
@@ -6362,6 +6632,7 @@ CREATE TRIGGER `currency_trigger_insert` AFTER INSERT ON `currency` FOR EACH ROW
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `currency_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `currency_trigger_update` AFTER UPDATE ON `currency` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -6388,6 +6659,7 @@ DELIMITER ;
 -- Table structure for table `email_setting`
 --
 
+DROP TABLE IF EXISTS `email_setting`;
 CREATE TABLE `email_setting` (
   `email_setting_id` int(10) UNSIGNED NOT NULL,
   `email_setting_name` varchar(100) NOT NULL,
@@ -6415,6 +6687,7 @@ INSERT INTO `email_setting` (`email_setting_id`, `email_setting_name`, `email_se
 --
 -- Triggers `email_setting`
 --
+DROP TRIGGER IF EXISTS `email_setting_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `email_setting_trigger_insert` AFTER INSERT ON `email_setting` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Email Setting created. <br/>';
@@ -6464,6 +6737,7 @@ CREATE TRIGGER `email_setting_trigger_insert` AFTER INSERT ON `email_setting` FO
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `email_setting_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `email_setting_trigger_update` AFTER UPDATE ON `email_setting` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -6522,6 +6796,7 @@ DELIMITER ;
 -- Table structure for table `file_extension`
 --
 
+DROP TABLE IF EXISTS `file_extension`;
 CREATE TABLE `file_extension` (
   `file_extension_id` int(10) UNSIGNED NOT NULL,
   `file_extension_name` varchar(100) NOT NULL,
@@ -6672,6 +6947,7 @@ INSERT INTO `file_extension` (`file_extension_id`, `file_extension_name`, `file_
 --
 -- Triggers `file_extension`
 --
+DROP TRIGGER IF EXISTS `file_extension_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `file_extension_trigger_insert` AFTER INSERT ON `file_extension` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'File Extension created. <br/>';
@@ -6693,6 +6969,7 @@ CREATE TRIGGER `file_extension_trigger_insert` AFTER INSERT ON `file_extension` 
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `file_extension_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `file_extension_trigger_update` AFTER UPDATE ON `file_extension` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -6723,6 +7000,7 @@ DELIMITER ;
 -- Table structure for table `file_type`
 --
 
+DROP TABLE IF EXISTS `file_type`;
 CREATE TABLE `file_type` (
   `file_type_id` int(10) UNSIGNED NOT NULL,
   `file_type_name` varchar(100) NOT NULL,
@@ -6756,6 +7034,7 @@ INSERT INTO `file_type` (`file_type_id`, `file_type_name`, `created_date`, `last
 -- Table structure for table `internal_notes`
 --
 
+DROP TABLE IF EXISTS `internal_notes`;
 CREATE TABLE `internal_notes` (
   `internal_notes_id` int(10) UNSIGNED NOT NULL,
   `table_name` varchar(255) NOT NULL,
@@ -6772,6 +7051,7 @@ CREATE TABLE `internal_notes` (
 -- Table structure for table `internal_notes_attachment`
 --
 
+DROP TABLE IF EXISTS `internal_notes_attachment`;
 CREATE TABLE `internal_notes_attachment` (
   `internal_notes_attachment_id` int(10) UNSIGNED NOT NULL,
   `internal_notes_id` int(10) UNSIGNED NOT NULL,
@@ -6787,6 +7067,7 @@ CREATE TABLE `internal_notes_attachment` (
 -- Table structure for table `menu_group`
 --
 
+DROP TABLE IF EXISTS `menu_group`;
 CREATE TABLE `menu_group` (
   `menu_group_id` int(10) UNSIGNED NOT NULL,
   `menu_group_name` varchar(100) NOT NULL,
@@ -6809,6 +7090,7 @@ INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `
 --
 -- Triggers `menu_group`
 --
+DROP TRIGGER IF EXISTS `menu_group_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `menu_group_trigger_insert` AFTER INSERT ON `menu_group` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Menu group created. <br/>';
@@ -6830,6 +7112,7 @@ CREATE TRIGGER `menu_group_trigger_insert` AFTER INSERT ON `menu_group` FOR EACH
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `menu_group_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `menu_group_trigger_update` AFTER UPDATE ON `menu_group` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -6860,6 +7143,7 @@ DELIMITER ;
 -- Table structure for table `menu_item`
 --
 
+DROP TABLE IF EXISTS `menu_item`;
 CREATE TABLE `menu_item` (
   `menu_item_id` int(10) UNSIGNED NOT NULL,
   `menu_item_name` varchar(100) NOT NULL,
@@ -6906,6 +7190,7 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 --
 -- Triggers `menu_item`
 --
+DROP TRIGGER IF EXISTS `menu_item_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `menu_item_trigger_insert` AFTER INSERT ON `menu_item` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Menu Item created. <br/>';
@@ -6943,6 +7228,7 @@ CREATE TRIGGER `menu_item_trigger_insert` AFTER INSERT ON `menu_item` FOR EACH R
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `menu_item_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `menu_item_trigger_update` AFTER UPDATE ON `menu_item` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -6989,6 +7275,7 @@ DELIMITER ;
 -- Table structure for table `notification_setting`
 --
 
+DROP TABLE IF EXISTS `notification_setting`;
 CREATE TABLE `notification_setting` (
   `notification_setting_id` int(10) UNSIGNED NOT NULL,
   `notification_setting_name` varchar(100) NOT NULL,
@@ -7003,6 +7290,7 @@ CREATE TABLE `notification_setting` (
 --
 -- Triggers `notification_setting`
 --
+DROP TRIGGER IF EXISTS `notification_setting_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `notification_setting_trigger_insert` AFTER INSERT ON `notification_setting` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Notification Setting created. <br/>';
@@ -7032,6 +7320,7 @@ CREATE TRIGGER `notification_setting_trigger_insert` AFTER INSERT ON `notificati
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `notification_setting_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `notification_setting_trigger_update` AFTER UPDATE ON `notification_setting` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7070,6 +7359,7 @@ DELIMITER ;
 -- Table structure for table `notification_setting_email_template`
 --
 
+DROP TABLE IF EXISTS `notification_setting_email_template`;
 CREATE TABLE `notification_setting_email_template` (
   `notification_setting_email_id` int(10) UNSIGNED NOT NULL,
   `notification_setting_id` int(10) UNSIGNED NOT NULL,
@@ -7082,6 +7372,7 @@ CREATE TABLE `notification_setting_email_template` (
 --
 -- Triggers `notification_setting_email_template`
 --
+DROP TRIGGER IF EXISTS `notification_setting_email_template_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `notification_setting_email_template_trigger_insert` AFTER INSERT ON `notification_setting_email_template` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Email Notification Template created. <br/>';
@@ -7099,6 +7390,7 @@ CREATE TRIGGER `notification_setting_email_template_trigger_insert` AFTER INSERT
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `notification_setting_email_template_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `notification_setting_email_template_trigger_update` AFTER UPDATE ON `notification_setting_email_template` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7125,6 +7417,7 @@ DELIMITER ;
 -- Table structure for table `notification_setting_sms_template`
 --
 
+DROP TABLE IF EXISTS `notification_setting_sms_template`;
 CREATE TABLE `notification_setting_sms_template` (
   `notification_setting_sms_id` int(10) UNSIGNED NOT NULL,
   `notification_setting_id` int(10) UNSIGNED NOT NULL,
@@ -7136,6 +7429,7 @@ CREATE TABLE `notification_setting_sms_template` (
 --
 -- Triggers `notification_setting_sms_template`
 --
+DROP TRIGGER IF EXISTS `notification_setting_sms_template_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `notification_setting_sms_template_trigger_insert` AFTER INSERT ON `notification_setting_sms_template` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'SMS Notification Template created. <br/>';
@@ -7149,6 +7443,7 @@ CREATE TRIGGER `notification_setting_sms_template_trigger_insert` AFTER INSERT O
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `notification_setting_sms_template_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `notification_setting_sms_template_trigger_update` AFTER UPDATE ON `notification_setting_sms_template` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7171,6 +7466,7 @@ DELIMITER ;
 -- Table structure for table `notification_setting_system_template`
 --
 
+DROP TABLE IF EXISTS `notification_setting_system_template`;
 CREATE TABLE `notification_setting_system_template` (
   `notification_setting_system_id` int(10) UNSIGNED NOT NULL,
   `notification_setting_id` int(10) UNSIGNED NOT NULL,
@@ -7183,6 +7479,7 @@ CREATE TABLE `notification_setting_system_template` (
 --
 -- Triggers `notification_setting_system_template`
 --
+DROP TRIGGER IF EXISTS `notification_setting_system_template_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `notification_setting_system_template_trigger_insert` AFTER INSERT ON `notification_setting_system_template` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'System Notification Template created. <br/>';
@@ -7200,6 +7497,7 @@ CREATE TRIGGER `notification_setting_system_template_trigger_insert` AFTER INSER
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `notification_setting_system_template_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `notification_setting_system_template_trigger_update` AFTER UPDATE ON `notification_setting_system_template` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7226,6 +7524,7 @@ DELIMITER ;
 -- Table structure for table `password_history`
 --
 
+DROP TABLE IF EXISTS `password_history`;
 CREATE TABLE `password_history` (
   `password_history_id` int(10) UNSIGNED NOT NULL,
   `user_account_id` int(10) UNSIGNED NOT NULL,
@@ -7240,6 +7539,7 @@ CREATE TABLE `password_history` (
 -- Table structure for table `role`
 --
 
+DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
   `role_id` int(10) UNSIGNED NOT NULL,
   `role_name` varchar(100) NOT NULL,
@@ -7258,6 +7558,7 @@ INSERT INTO `role` (`role_id`, `role_name`, `role_description`, `created_date`, 
 --
 -- Triggers `role`
 --
+DROP TRIGGER IF EXISTS `role_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `role_trigger_insert` AFTER INSERT ON `role` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Role created. <br/>';
@@ -7275,6 +7576,7 @@ CREATE TRIGGER `role_trigger_insert` AFTER INSERT ON `role` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `role_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `role_trigger_update` AFTER UPDATE ON `role` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7301,6 +7603,7 @@ DELIMITER ;
 -- Table structure for table `role_permission`
 --
 
+DROP TABLE IF EXISTS `role_permission`;
 CREATE TABLE `role_permission` (
   `role_permission_id` int(10) UNSIGNED NOT NULL,
   `role_id` int(10) UNSIGNED NOT NULL,
@@ -7346,6 +7649,7 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 --
 -- Triggers `role_permission`
 --
+DROP TRIGGER IF EXISTS `role_permission_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `role_permission_trigger_insert` AFTER INSERT ON `role_permission` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Role permission created. <br/>';
@@ -7383,6 +7687,7 @@ CREATE TRIGGER `role_permission_trigger_insert` AFTER INSERT ON `role_permission
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `role_permission_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `role_permission_trigger_update` AFTER UPDATE ON `role_permission` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7425,6 +7730,7 @@ DELIMITER ;
 -- Table structure for table `role_system_action_permission`
 --
 
+DROP TABLE IF EXISTS `role_system_action_permission`;
 CREATE TABLE `role_system_action_permission` (
   `role_system_action_permission_id` int(10) UNSIGNED NOT NULL,
   `role_id` int(10) UNSIGNED NOT NULL,
@@ -7462,6 +7768,7 @@ INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`,
 --
 -- Triggers `role_system_action_permission`
 --
+DROP TRIGGER IF EXISTS `role_system_action_permission_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `role_system_action_permission_trigger_insert` AFTER INSERT ON `role_system_action_permission` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Role system action permission created. <br/>';
@@ -7487,6 +7794,7 @@ CREATE TRIGGER `role_system_action_permission_trigger_insert` AFTER INSERT ON `r
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `role_system_action_permission_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `role_system_action_permission_trigger_update` AFTER UPDATE ON `role_system_action_permission` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7517,6 +7825,7 @@ DELIMITER ;
 -- Table structure for table `role_user_account`
 --
 
+DROP TABLE IF EXISTS `role_user_account`;
 CREATE TABLE `role_user_account` (
   `role_user_account_id` int(10) UNSIGNED NOT NULL,
   `role_id` int(10) UNSIGNED NOT NULL,
@@ -7538,6 +7847,7 @@ INSERT INTO `role_user_account` (`role_user_account_id`, `role_id`, `role_name`,
 --
 -- Triggers `role_user_account`
 --
+DROP TRIGGER IF EXISTS `role_user_account_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `role_user_account_trigger_insert` AFTER INSERT ON `role_user_account` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Role user account created. <br/>';
@@ -7559,6 +7869,7 @@ CREATE TRIGGER `role_user_account_trigger_insert` AFTER INSERT ON `role_user_acc
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `role_user_account_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `role_user_account_trigger_update` AFTER UPDATE ON `role_user_account` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7585,6 +7896,7 @@ DELIMITER ;
 -- Table structure for table `security_setting`
 --
 
+DROP TABLE IF EXISTS `security_setting`;
 CREATE TABLE `security_setting` (
   `security_setting_id` int(10) UNSIGNED NOT NULL,
   `security_setting_name` varchar(100) NOT NULL,
@@ -7596,6 +7908,7 @@ CREATE TABLE `security_setting` (
 --
 -- Triggers `security_setting`
 --
+DROP TRIGGER IF EXISTS `security_setting_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `security_setting_trigger_insert` AFTER INSERT ON `security_setting` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Security Setting created. <br/>';
@@ -7613,6 +7926,7 @@ CREATE TRIGGER `security_setting_trigger_insert` AFTER INSERT ON `security_setti
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `security_setting_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `security_setting_trigger_update` AFTER UPDATE ON `security_setting` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7639,6 +7953,7 @@ DELIMITER ;
 -- Table structure for table `state`
 --
 
+DROP TABLE IF EXISTS `state`;
 CREATE TABLE `state` (
   `state_id` int(10) UNSIGNED NOT NULL,
   `state_name` varchar(100) NOT NULL,
@@ -7739,6 +8054,7 @@ INSERT INTO `state` (`state_id`, `state_name`, `country_id`, `country_name`, `cr
 --
 -- Triggers `state`
 --
+DROP TRIGGER IF EXISTS `state_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `state_trigger_insert` AFTER INSERT ON `state` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'State created. <br/>';
@@ -7756,6 +8072,7 @@ CREATE TRIGGER `state_trigger_insert` AFTER INSERT ON `state` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `state_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `state_trigger_update` AFTER UPDATE ON `state` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7782,6 +8099,7 @@ DELIMITER ;
 -- Table structure for table `system_action`
 --
 
+DROP TABLE IF EXISTS `system_action`;
 CREATE TABLE `system_action` (
   `system_action_id` int(10) UNSIGNED NOT NULL,
   `system_action_name` varchar(100) NOT NULL,
@@ -7815,6 +8133,7 @@ INSERT INTO `system_action` (`system_action_id`, `system_action_name`, `system_a
 --
 -- Triggers `system_action`
 --
+DROP TRIGGER IF EXISTS `system_action_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `system_action_trigger_insert` AFTER INSERT ON `system_action` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'System action created. <br/>';
@@ -7832,6 +8151,7 @@ CREATE TRIGGER `system_action_trigger_insert` AFTER INSERT ON `system_action` FO
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `system_action_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `system_action_trigger_update` AFTER UPDATE ON `system_action` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7858,6 +8178,7 @@ DELIMITER ;
 -- Table structure for table `system_setting`
 --
 
+DROP TABLE IF EXISTS `system_setting`;
 CREATE TABLE `system_setting` (
   `system_setting_id` int(10) UNSIGNED NOT NULL,
   `system_setting_name` varchar(100) NOT NULL,
@@ -7873,6 +8194,7 @@ CREATE TABLE `system_setting` (
 -- Table structure for table `ui_customization_setting`
 --
 
+DROP TABLE IF EXISTS `ui_customization_setting`;
 CREATE TABLE `ui_customization_setting` (
   `ui_customization_setting_id` int(10) UNSIGNED NOT NULL,
   `user_account_id` int(10) UNSIGNED NOT NULL,
@@ -7885,12 +8207,20 @@ CREATE TABLE `ui_customization_setting` (
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `ui_customization_setting`
+--
+
+INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
+(1, 2, 'full', 0, 'light', 'Orange_Theme', 0, '2024-06-26 20:28:22', 2);
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `upload_setting`
 --
 
+DROP TABLE IF EXISTS `upload_setting`;
 CREATE TABLE `upload_setting` (
   `upload_setting_id` int(10) UNSIGNED NOT NULL,
   `upload_setting_name` varchar(100) NOT NULL,
@@ -7911,6 +8241,7 @@ INSERT INTO `upload_setting` (`upload_setting_id`, `upload_setting_name`, `uploa
 --
 -- Triggers `upload_setting`
 --
+DROP TRIGGER IF EXISTS `upload_setting_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `upload_setting_trigger_insert` AFTER INSERT ON `upload_setting` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Upload Setting created. <br/>';
@@ -7932,6 +8263,7 @@ CREATE TRIGGER `upload_setting_trigger_insert` AFTER INSERT ON `upload_setting` 
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `upload_setting_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `upload_setting_trigger_update` AFTER UPDATE ON `upload_setting` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -7962,6 +8294,7 @@ DELIMITER ;
 -- Table structure for table `upload_setting_file_extension`
 --
 
+DROP TABLE IF EXISTS `upload_setting_file_extension`;
 CREATE TABLE `upload_setting_file_extension` (
   `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL,
   `upload_setting_id` int(10) UNSIGNED NOT NULL,
@@ -7997,6 +8330,7 @@ INSERT INTO `upload_setting_file_extension` (`upload_setting_file_extension_id`,
 --
 -- Triggers `upload_setting_file_extension`
 --
+DROP TRIGGER IF EXISTS `upload_setting_file_extension_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `upload_setting_file_extension_trigger_insert` AFTER INSERT ON `upload_setting_file_extension` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Upload Setting File Extension created. <br/>';
@@ -8029,6 +8363,7 @@ DELIMITER ;
 -- Table structure for table `user_account`
 --
 
+DROP TABLE IF EXISTS `user_account`;
 CREATE TABLE `user_account` (
   `user_account_id` int(10) UNSIGNED NOT NULL,
   `file_as` varchar(300) NOT NULL,
@@ -8064,11 +8399,12 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-26 16:55:07', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'DuwDczPUuig%2BiAH4dnRtSG1HPBQkv%2Bsx7FOQd8qdJjU%3D', '2024-06-26 13:25:47', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-26 21:57:37', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'uXdXKsPGxYBcTnxD%2F961Tdz%2Fnu1hUdARhDF1J4Q3FlI%3D', '2024-06-26 13:25:47', 1);
 
 --
 -- Triggers `user_account`
 --
+DROP TRIGGER IF EXISTS `user_account_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `user_account_trigger_insert` AFTER INSERT ON `user_account` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'User account created. <br/>';
@@ -8134,6 +8470,7 @@ CREATE TRIGGER `user_account_trigger_insert` AFTER INSERT ON `user_account` FOR 
 END
 $$
 DELIMITER ;
+DROP TRIGGER IF EXISTS `user_account_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `user_account_trigger_update` AFTER UPDATE ON `user_account` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
@@ -8489,7 +8826,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2285;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2292;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -8639,7 +8976,7 @@ ALTER TABLE `system_setting`
 -- AUTO_INCREMENT for table `ui_customization_setting`
 --
 ALTER TABLE `ui_customization_setting`
-  MODIFY `ui_customization_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `ui_customization_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `upload_setting`

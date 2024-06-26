@@ -2,6 +2,7 @@
   $userAccountPageAccess = $globalModel->checkAccessRights($userID, 3, 'read');
   $companyPageAccess = $globalModel->checkAccessRights($userID, 4, 'read');
   
+  $updateSystemSetting = $globalModel->checkSystemActionAccessRights($userID, 1);
   $updateSecuritySetting = $globalModel->checkSystemActionAccessRights($userID, 2);
 
   $securitySettingUpdate = $updateSecuritySetting['total'] == 0 ? 'disabled' : '';
@@ -9,24 +10,24 @@
 
   $userAccountButton = '';
   if ($userAccountPageAccess['total'] > 0) {
-    $userAccountPageDetails = $menuItemModel->getMenuItem(3);
+    $userAccountPageDetails = $menuItemModel->getMenuItem(4);
     $userAccountPageID = $userAccountPageDetails['menu_item_id'] ?? null;
     $userAccountAppModuleID = $userAccountPageDetails['app_module_id'] ?? null;
     $userAccountPageURL = $userAccountPageDetails['menu_item_url'] ?? null;
     $userAccountPageLink = $userAccountPageURL . '?app_module_id=' . $securityModel->encryptData($userAccountAppModuleID) . '&page_id=' . $securityModel->encryptData($userAccountPageID);
 
-    $userAccountButton = '<a href="'. $userAccountPageLink .'" class="btn btn-primary mb-4">Manage Users</a>';
+    $userAccountButton = '<a href="'. $userAccountPageLink .'" class="btn btn-info mb-4">Manage Users</a>';
   }
 
   $companyButton = '';
   if ($companyPageAccess['total'] > 0) {
-    $companyPageDetails = $menuItemModel->getMenuItem(3);
+    $companyPageDetails = $menuItemModel->getMenuItem(5);
     $companyPageID = $companyPageDetails['menu_item_id'] ?? null;
     $companyAppModuleID = $companyPageDetails['app_module_id'] ?? null;
     $companyPageURL = $companyPageDetails['menu_item_url'] ?? null;
     $companyPageLink = $companyPageURL . '?app_module_id=' . $securityModel->encryptData($companyAppModuleID) . '&page_id=' . $securityModel->encryptData($companyPageID);
 
-    $companyButton = '<a href="'. $companyPageLink .'" class="btn btn-primary mb-4">Manage Company</a>';
+    $companyButton = '<a href="'. $companyPageLink .'" class="btn btn-info mb-4">Manage Company</a>';
   }
 ?>
 <div class="card">
@@ -53,6 +54,10 @@
             <?php echo $companyButton; ?>
           </div>
         </div>
+      </div>
+      <hr class="m-0" />
+      <div class="card-body d-flex align-items-center">
+        <h5 class="card-title mb-0">System Settings</h5>
       </div>
       <hr class="m-0" />
       <div class="card-body d-flex align-items-center">

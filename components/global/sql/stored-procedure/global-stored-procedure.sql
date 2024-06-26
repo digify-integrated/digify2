@@ -42,7 +42,7 @@ END //
 
 CREATE PROCEDURE buildAppModuleStack(IN p_user_account_id INT)
 BEGIN
-    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, am.menu_item_id, app_logo, app_version
+    SELECT DISTINCT(am.app_module_id) as app_module_id, am.app_module_name, am.menu_item_id, app_logo, app_version, app_module_description
     FROM app_module am
     JOIN menu_item mi ON mi.app_module_id = am.app_module_id
     WHERE EXISTS (

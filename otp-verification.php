@@ -41,7 +41,6 @@
 </head>
 
 <body>
-    <?php require_once('components/global/view/_preloader.php'); ?>
     <div id="main-wrapper">
         <div class="position-relative overflow-hidden radial-gradient min-vh-100 w-100">
             <div class="position-relative z-index-5">
@@ -96,7 +95,7 @@
     </div>
     <?php 
         require_once('components/global/view/_error_modal.php');
-        require_once('components/global/view/_global_js.php');
+        require_once('./components/global/view/_index_js.php');
     ?>
     <script src="./assets/libs/max-length/bootstrap-maxlength.min.js"></script>
     <script src="./components/authentication/js/otp-verification.js?v=<?php echo rand(); ?>"></script>

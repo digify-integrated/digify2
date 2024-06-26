@@ -26,42 +26,42 @@
 
         <div class="d-flex flex-row flex-wrap gap-3 customizer-box color-pallete" role="group">
             <input type="radio" class="btn-check" name="color-theme-layout" id="Blue_Theme" autocomplete="off" />
-            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center" onclick="handleColorTheme('Blue_Theme')" for="Blue_Theme" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="BLUE_THEME">
+            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center color-theme" onclick="handleColorTheme('Blue_Theme')" for="Blue_Theme" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Blue Theme" data-theme-color="Blue_Theme">
                 <div class="color-box rounded-circle d-flex align-items-center justify-content-center skin-1">
                     <i class="ti ti-check text-white d-flex icon fs-5"></i>
                 </div>
             </label>
 
             <input type="radio" class="btn-check" name="color-theme-layout" id="Aqua_Theme" autocomplete="off" />
-            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center" onclick="handleColorTheme('Aqua_Theme')" for="Aqua_Theme" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="AQUA_THEME">
+            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center color-theme" onclick="handleColorTheme('Aqua_Theme')" for="Aqua_Theme" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Aqua Theme" data-theme-color="Aqua_Theme">
                 <div class="color-box rounded-circle d-flex align-items-center justify-content-center skin-2">
                     <i class="ti ti-check text-white d-flex icon fs-5"></i>
                 </div>
             </label>
 
             <input type="radio" class="btn-check" name="color-theme-layout" id="Purple_Theme" autocomplete="off" />
-            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center" onclick="handleColorTheme('Purple_Theme')" for="Purple_Theme" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="PURPLE_THEME">
+            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center color-theme" onclick="handleColorTheme('Purple_Theme')" for="Purple_Theme" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Purple Theme" data-theme-color="Purple_Theme">
                 <div class="color-box rounded-circle d-flex align-items-center justify-content-center skin-3">
                     <i class="ti ti-check text-white d-flex icon fs-5"></i>
                 </div>
             </label>
 
-            <input type="radio" class="btn-check" name="color-theme-layout" id="green-theme-layout" autocomplete="off" />
-            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center" onclick="handleColorTheme('Green_Theme')" for="green-theme-layout" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="GREEN_THEME">
+            <input type="radio" class="btn-check" name="color-theme-layout" id="Green_Theme" autocomplete="off" />
+            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center color-theme" onclick="handleColorTheme('Green_Theme')" for="Green_Theme" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Green Theme" data-theme-color="Green_Theme">
                 <div class="color-box rounded-circle d-flex align-items-center justify-content-center skin-4">
                     <i class="ti ti-check text-white d-flex icon fs-5"></i>
                 </div>
             </label>
 
-            <input type="radio" class="btn-check" name="color-theme-layout" id="cyan-theme-layout" autocomplete="off" />
-            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center" onclick="handleColorTheme('Cyan_Theme')" for="cyan-theme-layout" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="CYAN_THEME">
+            <input type="radio" class="btn-check" name="color-theme-layout" id="Cyan_Theme" autocomplete="off" />
+            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center color-theme" onclick="handleColorTheme('Cyan_Theme')" for="Cyan_Theme" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Cyan Theme" data-theme-color="Cyan_Theme">
                 <div class="color-box rounded-circle d-flex align-items-center justify-content-center skin-5">
                     <i class="ti ti-check text-white d-flex icon fs-5"></i>
                 </div>
             </label>
 
-            <input type="radio" class="btn-check" name="color-theme-layout" id="orange-theme-layout" autocomplete="off" />
-            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center" onclick="handleColorTheme('Orange_Theme')" for="orange-theme-layout" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="ORANGE_THEME">
+            <input type="radio" class="btn-check" name="color-theme-layout" id="Orange_Theme" autocomplete="off" />
+            <label class="btn p-9 btn-outline-primary rounded-2 d-flex align-items-center justify-content-center color-theme" onclick="handleColorTheme('Orange_Theme')" for="Orange_Theme" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Orange Theme" data-theme-color="Orange_Theme">
                 <div class="color-box rounded-circle d-flex align-items-center justify-content-center skin-6">
                     <i class="ti ti-check text-white d-flex icon fs-5"></i>
                 </div>

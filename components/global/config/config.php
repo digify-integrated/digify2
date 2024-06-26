@@ -96,6 +96,7 @@ define('RESET_PASSWORD_TOKEN_DURATION', 10);
 define('DEFAULT_PASSWORD_DURATION', 180);
 define('MAX_FAILED_OTP_ATTEMPTS', 5);
 define('DEFAULT_OTP_DURATION', 5);
+define('BASE_USER_ACCOUNT_DURATION', 1);
 define('DEFAULT_SESSION_INACTIVITY', 30);
 define('DEFAULT_PASSWORD_RECOVERY_LINK', 'http://localhost/modernize/password-reset.php?id=');
 

@@ -22,10 +22,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // =================================
   // Hide preloader
   // =================================
-  var preloader = document.querySelector(".preloader");
-  if (preloader) {
-    preloader.style.display = "none";
-  }
+  setTimeout(function() {
+    var preloader = document.querySelector(".preloader");
+    if (preloader) {
+      preloader.style.display = "none";
+    }
+  }, 300);
   // =================================
   // Increment & Decrement
   // =================================

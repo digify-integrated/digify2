@@ -40,6 +40,44 @@
         $(document).on('click','.datatable-checkbox-children',function() {
             toggleActionDropdown();
         });
+
+        $(document).on('click','.light-layout',function() {
+            saveUICustomization('theme', 'light');
+        });
+
+        $(document).on('click','.dark-layout',function() {
+            saveUICustomization('theme', 'dark');
+        });
+
+        $(document).on('click','.color-theme',function() {
+            const color_theme = $(this).data('theme-color');
+
+            saveUICustomization('color theme', color_theme);
+        });
+
+        $(document).on('click','#boxed-layout',function() {
+            saveUICustomization('boxed layout', 1);
+        });
+
+        $(document).on('click','#full-layout',function() {
+            saveUICustomization('boxed layout', 0);
+        });
+
+        $(document).on('click','#full-sidebar',function() {
+            saveUICustomization('sidebar type', 'full');
+        });
+
+        $(document).on('click','#mini-sidebar',function() {
+            saveUICustomization('sidebar type', 'mini-sidebar');
+        });
+
+        $(document).on('click','#card-with-border',function() {
+            saveUICustomization('card border', 1);
+        });
+
+        $(document).on('click','#card-without-border',function() {
+            saveUICustomization('card border', 0);
+        });
     });
 })(jQuery);
 
@@ -411,24 +449,25 @@ function internalNotesForm(databaseTable, referenceID){
 }
 
 function saveUICustomization(type, customizationValue){
-    const transaction = 'save ui customization';
+    const transaction = 'update ui customization setting';
 
     $.ajax({
         type: 'POST',
         url: 'components/global/controller/ui-customization-controller.php',
-        data: {
-            transaction : transaction, 
-            type : type, 
-            customizationValue : customizationValue
-        },
         dataType: 'json',
+        data: {
+            type : type, 
+            customizationValue : customizationValue, 
+            transaction : transaction
+        },
         success: function (response) {
             if (!response.success) {
-                if(response.isInactive){
+                if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                    setNotification(response.title, response.message, response.messageType);
                     window.location = 'logout.php?logout';
                 }
-                else{
-                    showNotification('Update UI Settings Error', response.message, 'danger');
+                else {
+                    showNotification(response.title, response.message, response.messageType);
                 }
             }
         },
