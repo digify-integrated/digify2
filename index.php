@@ -29,8 +29,8 @@
                                 <p class="mb-9">Empowering Futures, Crafting Digital Excellence</p>
                                 <form id="signin-form" method="post" action="#">
                                     <div class="mb-3">
-                                        <label for="email" class="form-label">Email Address</label>
-                                        <input type="email" class="form-control" id="email" name="email" autocomplete="off">
+                                        <label for="username" class="form-label">Username/Email Address</label>
+                                        <input type="text" class="form-control" id="username" name="username" autocomplete="off">
                                     </div>
                                     <div class="mb-4">
                                         <div class="d-flex align-items-center justify-content-between">

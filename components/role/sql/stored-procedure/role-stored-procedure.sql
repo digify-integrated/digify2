@@ -146,6 +146,7 @@ BEGIN
 
     DELETE FROM role_permission WHERE role_id = p_role_id;
     DELETE FROM role_system_action_permission WHERE role_id = p_role_id;
+    DELETE FROM role_user_account WHERE role_id = p_role_id;
     DELETE FROM role WHERE role_id = p_role_id;
 
     COMMIT;

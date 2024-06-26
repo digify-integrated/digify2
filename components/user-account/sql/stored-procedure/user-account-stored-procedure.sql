@@ -27,10 +27,10 @@ END //
 
 /* Insert Stored Procedure */
 
-CREATE PROCEDURE insertUserAccount(IN p_file_as VARCHAR(300), IN p_email VARCHAR(255), IN p_password VARCHAR(255), IN p_password_expiry_date DATE, IN p_last_password_change DATETIME, IN p_last_log_by INT, OUT p_user_account_id INT)
+CREATE PROCEDURE insertUserAccount(IN p_file_as VARCHAR(300), IN p_email VARCHAR(255), IN p_username VARCHAR(100), IN p_password VARCHAR(255), IN p_password_expiry_date DATE, IN p_last_password_change DATETIME, IN p_last_log_by INT, OUT p_user_account_id INT)
 BEGIN
-    INSERT INTO user_account (file_as, email, password, password_expiry_date, last_password_change, last_log_by) 
-	VALUES(p_file_as, p_email, p_password, p_password_expiry_date, p_last_password_change, p_last_log_by);
+    INSERT INTO user_account (file_as, email, username, password, password_expiry_date, last_password_change, last_log_by) 
+	VALUES(p_file_as, p_email, p_username, p_password, p_password_expiry_date, p_last_password_change, p_last_log_by);
 	
     SET p_user_account_id = LAST_INSERT_ID();
 END //
@@ -39,7 +39,7 @@ END //
 
 /* Update Stored Procedure */
 
-CREATE PROCEDURE updateUserAccount(IN p_user_account_id INT, IN p_file_as VARCHAR(300), IN p_email VARCHAR(255), IN p_last_log_by INT)
+CREATE PROCEDURE updateUserAccount(IN p_user_account_id INT, IN p_file_as VARCHAR(300), IN p_email VARCHAR(255), IN p_username VARCHAR(100), IN p_last_log_by INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -56,6 +56,7 @@ BEGIN
     UPDATE user_account
     SET file_as = p_file_as,
         email = p_email,
+        username = p_username,
         last_log_by = p_last_log_by
     WHERE user_account_id = p_user_account_id;
 

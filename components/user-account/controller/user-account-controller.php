@@ -225,9 +225,10 @@ class UserAccountController {
             return;
         }
 
-        if (isset($_POST['file_as']) && !empty($_POST['file_as']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && !empty($_POST['password'])) {
+        if (isset($_POST['file_as']) && !empty($_POST['file_as']) && isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && !empty($_POST['password'])) {
             $userID = $_SESSION['user_account_id'];
             $fileAs = htmlspecialchars($_POST['file_as'], ENT_QUOTES, 'UTF-8');
+            $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
             $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
             $password = $this->securityModel->encryptData($_POST['password']);
 
@@ -252,8 +253,8 @@ class UserAccountController {
             $lastPasswordChange = date('Y-m-d H:i:s');
             $passwordExpiryDate = date('Y-m-d', strtotime('+'. $defaultPasswordDuration .' days'));
         
-            $userAccountID = $this->userAccountModel->insertUserAccount($fileAs, $email, $password, $passwordExpiryDate, $lastPasswordChange, $userID);
-            $this->authenticationModel->insertPasswordHistory($userAccountID, $email, $password, $lastPasswordChange);
+            $userAccountID = $this->userAccountModel->insertUserAccount($fileAs, $email, $username, $password, $passwordExpiryDate, $lastPasswordChange, $userID);
+            $this->authenticationModel->insertPasswordHistory($userAccountID, $password, $lastPasswordChange);
     
             $response = [
                 'success' => true,
@@ -300,10 +301,11 @@ class UserAccountController {
             return;
         }
         
-        if (isset($_POST['user_account_id']) && !empty($_POST['user_account_id']) && isset($_POST['file_as']) && !empty($_POST['file_as']) && isset($_POST['email']) && !empty($_POST['email'])) {
+        if (isset($_POST['user_account_id']) && !empty($_POST['user_account_id']) && isset($_POST['file_as']) && !empty($_POST['file_as']) && isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['email']) && !empty($_POST['email'])) {
             $userID = $_SESSION['user_account_id'];
             $userAccountID = htmlspecialchars($_POST['user_account_id'], ENT_QUOTES, 'UTF-8');
             $fileAs = htmlspecialchars($_POST['file_as'], ENT_QUOTES, 'UTF-8');
+            $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
             $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
         
             $checkUserAccountExist = $this->userAccountModel->checkUserAccountExist($userAccountID);
@@ -337,7 +339,7 @@ class UserAccountController {
                 exit;
             }
 
-            $this->userAccountModel->updateUserAccount($userAccountID, $fileAs, $email, $userID);
+            $this->userAccountModel->updateUserAccount($userAccountID, $fileAs, $email, $username, $userID);
             
             $response = [
                 'success' => true,
@@ -596,7 +598,7 @@ class UserAccountController {
             $passwordExpiryDate = date('Y-m-d', strtotime('+'. $defaultPasswordDuration .' days'));
 
             $this->userAccountModel->updateUserAccountPassword($userAccountID, $encryptedPassword, $passwordExpiryDate, $userID);
-            $this->authenticationModel->insertPasswordHistory($userAccountID, $email, $encryptedPassword, $lastPasswordChange);
+            $this->authenticationModel->insertPasswordHistory($userAccountID, $encryptedPassword, $lastPasswordChange);
             
             $response = [
                 'success' => true,
@@ -1687,6 +1689,7 @@ class UserAccountController {
                 'success' => true,
                 'fileAs' => $userAccountDetails['file_as'] ?? null,
                 'email' => $userAccountDetails['email'] ?? null,
+                'username' => $userAccountDetails['username'] ?? null,
                 'profilePicture' => $profilePicture,
                 'passwordExpiryDate' => $passwordExpiryDate,
                 'lastPasswordReset' => $lastPasswordReset,

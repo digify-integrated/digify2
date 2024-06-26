@@ -5,6 +5,7 @@ CREATE TABLE system_setting(
 	system_setting_name VARCHAR(100) NOT NULL,
 	system_setting_description VARCHAR(200) NOT NULL,
 	value VARCHAR(1000) NOT NULL,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
 );

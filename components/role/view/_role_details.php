@@ -9,7 +9,7 @@
 ?>
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0">Role</h5>
@@ -33,18 +33,20 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Display Name:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-3">Display Name:</label>
+                            <div class="col-md-9">
                                 <p class="form-control-static" id="role_name_summary">--</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Description:</label>
-                            <div class="col-md-7">
+                            <label class="form-label col-md-3">Description:</label>
+                            <div class="col-md-9">
                                 <p class="form-control-static" id="role_description_summary">--</p>
                             </div>
                         </div>
@@ -55,38 +57,7 @@
     </div>
 </div>
 
-<div class="datatables">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex align-items-center">
-                    <h5 class="card-title mb-0">User Account</h5>
-                    <?php
-                        if($addRoleUserAccount['total'] > 0){
-                            echo '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                    <button class="btn btn-success d-flex align-items-center mb-0" data-bs-toggle="modal" data-bs-target="#user-account-assignment-modal" id="assign-user-account">Assign</button>
-                                </div>';
-                        }
-                    ?>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="assigned-user-account-table" class="table border table-striped table-hover align-middle text-wrap mb-0">
-                            <thead class="text-dark">
-                                <tr>
-                                    <th>User Account</th>
-                                    <th>Last Connection Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <div class="datatables">
     <div class="row">

@@ -19,18 +19,24 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
+                            <div class="mb-3">
+                                <label class="col-sm-4 form-label" for="username">Username <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="username" name="username" maxlength="100" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
                             <div class="mb-3">
                                 <label class="col-sm-4 form-label" for="email">Email Address <span class="text-danger">*</span></label>
                                 <input type="email" class="form-control maxlength" id="email" name="email" maxlength="250" autocomplete="off">
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-4">
                             <div class="mb-3">
                                 <label class="col-sm-4 form-label" for="file_as">Password <span class="text-danger">*</span></label>
                                 <div class="input-group mb-3">
                                     <input type="password" class="form-control" id="password" name="password">
-                                    <button class="btn bg-info-subtle text-info  rounded-end d-flex align-items-center password-addon" type="button">
+                                    <button class="btn btn-dark rounded-end d-flex align-items-center password-addon" type="button">
                                         <i class="ti ti-eye"></i>
                                     </button>
                                 </div>

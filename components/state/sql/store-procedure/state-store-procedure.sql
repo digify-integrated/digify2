@@ -100,7 +100,7 @@ BEGIN
         FROM state 
         WHERE 1');
 
-    IF p_filter_by_country IS NOT NULL THEN
+    IF p_filter_by_country IS NOT NULL AND p_filter_by_country <> '' THEN
         SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
     END IF;
 

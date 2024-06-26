@@ -2,27 +2,27 @@ DELIMITER //
 
 /* Check Stored Procedure */
 
-CREATE PROCEDURE checkLoginCredentialsExist(IN p_user_account_id INT, IN p_email VARCHAR(255))
+CREATE PROCEDURE checkLoginCredentialsExist(IN p_user_account_id INT, IN p_credentials VARCHAR(255))
 BEGIN
 	SELECT COUNT(*) AS total
     FROM user_account
-    WHERE user_account_id = p_user_account_id OR email = p_email;
+    WHERE user_account_id = p_user_account_id OR username = p_credentials OR email = p_credentials;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Get Stored Procedure */
 
-CREATE PROCEDURE getLoginCredentials(IN p_user_account_id INT, IN p_email VARCHAR(255))
+CREATE PROCEDURE getLoginCredentials(IN p_user_account_id INT, IN p_credentials VARCHAR(255))
 BEGIN
 	SELECT * FROM user_account
-    WHERE user_account_id = p_user_account_id OR email = p_email;
+    WHERE user_account_id = p_user_account_id OR username = p_credentials OR email = p_credentials;
 END //
 
-CREATE PROCEDURE getPasswordHistory(IN p_user_account_id INT, IN p_email VARCHAR(255))
+CREATE PROCEDURE getPasswordHistory(IN p_user_account_id INT)
 BEGIN
 	SELECT * FROM password_history
-	WHERE user_account_id = p_user_account_id OR email = BINARY p_email;
+	WHERE user_account_id = p_user_account_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -78,7 +78,7 @@ BEGIN
     WHERE user_account_id = p_user_account_id;
 END //
 
-CREATE PROCEDURE updateUserPassword(IN p_user_account_id INT, IN p_email VARCHAR(255), IN p_password VARCHAR(255), IN p_password_expiry_date DATE)
+CREATE PROCEDURE updateUserPassword(IN p_user_account_id INT, IN p_credentials VARCHAR(255), IN p_password VARCHAR(255), IN p_password_expiry_date DATE)
 BEGIN
 	UPDATE user_account 
     SET password = p_password, 
@@ -88,7 +88,7 @@ BEGIN
         failed_login_attempts = 0, 
         account_lock_duration = 0,
         last_log_by = p_user_account_id
-    WHERE p_user_account_id = user_account_id OR email = BINARY p_email;
+    WHERE p_user_account_id = user_account_id OR username = p_credentials OR email = BINARY p_credentials;
 END //
 
 CREATE PROCEDURE updateResetTokenAsExpired(IN p_user_account_id INT, IN p_reset_token_expiry_date DATETIME)
@@ -102,10 +102,10 @@ END //
 
 /* Insert Stored Procedure */
 
-CREATE PROCEDURE insertPasswordHistory(IN p_user_account_id INT, IN p_email VARCHAR(255), IN p_password VARCHAR(255))
+CREATE PROCEDURE insertPasswordHistory(IN p_user_account_id INT, IN p_password VARCHAR(255))
 BEGIN
-    INSERT INTO password_history (user_account_id, email, password, password_change_date) 
-    VALUES (p_user_account_id, p_email, p_password, NOW());
+    INSERT INTO password_history (user_account_id, password, password_change_date) 
+    VALUES (p_user_account_id, p_password, NOW());
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

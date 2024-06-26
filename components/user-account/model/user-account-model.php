@@ -24,16 +24,18 @@ class UserAccountModel {
     # - $p_user_account_id (int): The user account ID.
     # - $p_file_as (string): The name of the user account.
     # - $p_email (string): The email of the user account.
+    # - $p_username (string): The username of the user account.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateUserAccount($p_user_account_id, $p_file_as, $p_email, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateUserAccount(:p_user_account_id, :p_file_as, :p_email, :p_last_log_by)');
+    public function updateUserAccount($p_user_account_id, $p_file_as, $p_email, $p_username, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateUserAccount(:p_user_account_id, :p_file_as, :p_email, :p_username, :p_last_log_by)');
         $stmt->bindValue(':p_user_account_id', $p_user_account_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_file_as', $p_file_as, PDO::PARAM_STR);
         $stmt->bindValue(':p_email', $p_email, PDO::PARAM_STR);
+        $stmt->bindValue(':p_username', $p_username, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -187,6 +189,7 @@ class UserAccountModel {
     # Parameters:
     # - $p_file_as (string): The name of the user account.
     # - $p_email (string): The email of the user account.
+    # - $p_username (string): The username of the user account.
     # - $p_password (string): The password of the user account.
     # - $p_password_expiry_date (date): The password expiry date.
     # - $p_last_password_change (datetime): The last password change.
@@ -195,10 +198,11 @@ class UserAccountModel {
     # Returns: String
     #
     # -------------------------------------------------------------
-    public function insertUserAccount($p_file_as, $p_email, $p_password, $p_password_expiry_date, $p_last_password_change, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertUserAccount(:p_file_as, :p_email, :p_password, :p_password_expiry_date, :p_last_password_change, :p_last_log_by, @p_user_account_id)');
+    public function insertUserAccount($p_file_as, $p_email, $p_username, $p_password, $p_password_expiry_date, $p_last_password_change, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertUserAccount(:p_file_as, :p_email, :p_username, :p_password, :p_password_expiry_date, :p_last_password_change, :p_last_log_by, @p_user_account_id)');
         $stmt->bindValue(':p_file_as', $p_file_as, PDO::PARAM_STR);
         $stmt->bindValue(':p_email', $p_email, PDO::PARAM_STR);
+        $stmt->bindValue(':p_username', $p_username, PDO::PARAM_STR);
         $stmt->bindValue(':p_password', $p_password, PDO::PARAM_STR);
         $stmt->bindValue(':p_password_expiry_date', $p_password_expiry_date, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_password_change', $p_last_password_change, PDO::PARAM_STR);

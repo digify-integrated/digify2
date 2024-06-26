@@ -27,6 +27,7 @@ CREATE TABLE upload_setting_file_extension(
 	file_extension_name VARCHAR(100) NOT NULL,
 	file_extension VARCHAR(10) NOT NULL,
 	date_assigned DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
 	FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
 );
@@ -39,9 +40,20 @@ INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_nam
 INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (1, 'App Logo', 2, 'JPG', 'jpg', '1');
 INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (1, 'App Logo', 3, 'JPEG', 'jpeg', '1');
 
-INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 1, 'PNG', 'png', '1');
-INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 2, 'JPG', 'jpg', '1');
-INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 3, 'JPEG', 'jpeg', '1');
-INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 4, 'PDF', 'pdf', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (1, 'App Logo', 63, 'PNG', 'png', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (1, 'App Logo', 61, 'JPG', 'jpg', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (1, 'App Logo', 62, 'JPEG', 'jpeg', '1');
+
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 63, 'PNG', 'png', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 61, 'JPG', 'jpg', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 62, 'JPEG', 'jpeg', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 127, 'PDF', 'pdf', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 125, 'DOC', 'doc', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 125, 'DOCX', 'docx', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 130, 'TXT', 'txt', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 92, 'XLS', 'xls', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 94, 'XLSX', 'xlsx', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 89, 'PPT', 'ppt', '1');
+INSERT INTO upload_setting_file_extension (upload_setting_id, upload_setting_name, file_extension_id, file_extension_name, file_extension, last_log_by) VALUES (2, 'Internal Notes Attachment', 90, 'PPTX', 'pptx', '1');
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

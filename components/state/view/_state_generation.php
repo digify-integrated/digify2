@@ -32,7 +32,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
         #
         # -------------------------------------------------------------
         case 'state table':
-            $filterByCountry = isset($_POST['filter_by_state']) ? htmlspecialchars($_POST['filter_by_state'], ENT_QUOTES, 'UTF-8') : null;
+            $filterByCountry = isset($_POST['filter_by_country']) ? htmlspecialchars($_POST['filter_by_country'], ENT_QUOTES, 'UTF-8') : null;
             $sql = $databaseModel->getConnection()->prepare('CALL generateStateTable(:filterByCountry)');
             $sql->bindValue(':filterByCountry', $filterByCountry, PDO::PARAM_INT);
             $sql->execute();

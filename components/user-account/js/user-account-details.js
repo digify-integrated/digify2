@@ -201,9 +201,6 @@
                                 fullErrorMessage += `, Response: ${xhr.responseText}`;
                             }
                             showErrorDialog(fullErrorMessage);
-                        },
-                        complete: function(){
-                            logNotesMain('user_account', user_account_id);
                         }
                     });
                     return false;
@@ -263,9 +260,6 @@
                                 fullErrorMessage += `, Response: ${xhr.responseText}`;
                             }
                             showErrorDialog(fullErrorMessage);
-                        },
-                        complete: function(){
-                            logNotesMain('user_account', user_account_id);
                         }
                     });
                     return false;
@@ -325,9 +319,6 @@
                                 fullErrorMessage += `, Response: ${xhr.responseText}`;
                             }
                             showErrorDialog(fullErrorMessage);
-                        },
-                        complete: function(){
-                            logNotesMain('user_account', user_account_id);
                         }
                     });
                     return false;
@@ -387,9 +378,6 @@
                                 fullErrorMessage += `, Response: ${xhr.responseText}`;
                             }
                             showErrorDialog(fullErrorMessage);
-                        },
-                        complete: function(){
-                            logNotesMain('user_account', user_account_id);
                         }
                     });
                     return false;
@@ -521,16 +509,29 @@ function userAccountForm(){
             file_as: {
                 required: true
             },
+            username: {
+                required: true
+            },
             email: {
                 required: true
+            },
+            password: {
+                required: true,
+                password_strength: true
             }
         },
         messages: {
             file_as: {
                 required: 'Please enter the display name'
             },
+            username: {
+                required: 'Please enter the username'
+            },
             email: {
                 required: 'Please enter the email'
+            },
+            password: {
+                required: 'Please enter the password'
             }
         },
         errorPlacement: function (error, element) {
@@ -867,12 +868,14 @@ function displayDetails(transaction){
                     if (response.success) {
                         $('#file_as').val(response.fileAs);
                         $('#email').val(response.email);
+                        $('#username').val(response.username);
 
                         document.getElementById('active_summary').innerHTML = response.activeBadge;
                         document.getElementById('locked_summary').innerHTML = response.lockedBadge;
                         
                         $('#file_as_summary').text(response.fileAs);
                         $('#email_summary').text(response.email);
+                        $('#username_summary').text(response.username);
                         $('#password_expiry_summary').text(response.passwordExpiryDate);
                         $('#last_connection_date_summary').text(response.lastConnectionDate);
                         $('#last_password_reset_summary').text(response.lastPasswordReset);

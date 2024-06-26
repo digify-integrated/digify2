@@ -73,6 +73,16 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group row">
+                            <label class="form-label col-md-5">Username:</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" id="username_summary">--</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
                             <label class="form-label col-md-5">Email Address:</label>
                             <div class="col-md-7">
                                 <p class="form-control-static" id="email_summary">--</p>
@@ -244,6 +254,14 @@
                             <div class="mb-3">
                                 <label class="col-sm-4 form-label" for="file_as">Display Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control maxlength" id="file_as" name="file_as" maxlength="300" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label class="col-sm-4 form-label" for="username">Username <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="username" name="username" maxlength="100" autocomplete="off">
                             </div>
                         </div>
                     </div>

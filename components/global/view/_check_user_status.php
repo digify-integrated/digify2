@@ -1,6 +1,7 @@
 <?php
     $loginCredentialsDetails = $authenticationModel->getLoginCredentials($userID, null);
     $userFileAs = $loginCredentialsDetails['file_as'];
+    $userAccountName = $loginCredentialsDetails['username'];
     $userEmail = $loginCredentialsDetails['email'];
     $multipleSession = $loginCredentialsDetails['multiple_session'];
     $profilePicture = $systemModel->checkImage($loginCredentialsDetails['profile_picture'] ?? null, 'profile');

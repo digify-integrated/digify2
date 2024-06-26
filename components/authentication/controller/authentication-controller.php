@@ -116,17 +116,17 @@ class AuthenticationController {
             return;
         }
     
-        $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
-        $password = htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8');
+        $username = $_POST['username'];
+        $password = $_POST['password'];
 
-        $checkLoginCredentialsExist = $this->authenticationModel->checkLoginCredentialsExist(null, $email);
+        $checkLoginCredentialsExist = $this->authenticationModel->checkLoginCredentialsExist(null, $username);
         $total = $checkLoginCredentialsExist['total'] ?? 0;
     
         if ($total === 0) {
             $response = [
                 'success' => false,
                 'title' => 'Authentication Error',
-                'message' => 'The email or password you entered is invalid. Please double-check your credentials and try again.',
+                'message' => 'The credentials you entered is invalid. Please double-check your credentials and try again.',
                 'messageType' => 'error'
             ];
             
@@ -134,7 +134,7 @@ class AuthenticationController {
             exit;
         }
 
-        $loginCredentialsDetails = $this->authenticationModel->getLoginCredentials(null, $email);
+        $loginCredentialsDetails = $this->authenticationModel->getLoginCredentials(null, $username);
         $userAccountID = $loginCredentialsDetails['user_account_id'];
         $active = $loginCredentialsDetails['active'];
         $userPassword = $this->securityModel->decryptData($loginCredentialsDetails['password']);
@@ -164,7 +164,7 @@ class AuthenticationController {
         }
     
         if ($this->passwordHasExpired($passwordExpiryDate)) {
-            $this->handlePasswordExpiration($userAccountID, $email, $encryptedUserID);
+            $this->handlePasswordExpiration($userAccountID, $encryptedUserID);
             exit;
         }
     
@@ -176,7 +176,7 @@ class AuthenticationController {
         $this->authenticationModel->updateLoginAttempt($userAccountID, 0, null);
     
         if ($twoFactorAuth === 'Yes') {
-            $this->handleTwoFactorAuth($userAccountID, $email, $encryptedUserID);
+            $this->handleTwoFactorAuth($userAccountID, $encryptedUserID);
             exit;
         }
 
@@ -423,7 +423,7 @@ class AuthenticationController {
             exit;
         }
 
-        $checkPasswordHistory = $this->checkPasswordHistory($userAccountID, $email, $newPassword);
+        $checkPasswordHistory = $this->checkPasswordHistory($userAccountID, $newPassword);
     
         if ($checkPasswordHistory > 0) {
             $response = [
@@ -785,7 +785,7 @@ class AuthenticationController {
     # Returns: Array
     #
     # -------------------------------------------------------------
-    private function handlePasswordExpiration($userAccountID, $email, $encryptedUserID) {
+    private function handlePasswordExpiration($userAccountID, $encryptedUserID) {
         $securitySettingDetails = $this->securitySettingModel->getSecuritySetting(3);
         $defaultForgotPasswordLink = $securitySettingDetails['value'];
 
@@ -821,13 +821,15 @@ class AuthenticationController {
     #
     # Parameters: 
     # - $userAccountID (int): The user ID.
-    # - $email (string): The email address of the user.
     # - $encryptedUserID (string): The encrypted user ID.
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    private function handleTwoFactorAuth($userAccountID, $email, $encryptedUserID) {
+    private function handleTwoFactorAuth($userAccountID, $encryptedUserID) {
+        $loginCredentialsDetails = $this->authenticationModel->getLoginCredentials($userAccountID, null);
+        $email = $loginCredentialsDetails['email'];
+
         $securitySettingDetails = $this->securitySettingModel->getSecuritySetting(6);
         $otpDuration = $securitySettingDetails['value'] ?? DEFAULT_OTP_DURATION;
 
@@ -929,9 +931,9 @@ class AuthenticationController {
     # Returns: Array
     #
     # -------------------------------------------------------------
-    private function checkPasswordHistory($p_user_account_id, $p_email, $p_password) {
+    private function checkPasswordHistory($p_user_account_id, $p_password) {
         $total = 0;
-        $passwordHistory = $this->authenticationModel->getPasswordHistory($p_user_account_id, $p_email);
+        $passwordHistory = $this->authenticationModel->getPasswordHistory($p_user_account_id);
     
         foreach ($passwordHistory as $history) {
             $password = $this->securityModel->decryptData($history['password']);

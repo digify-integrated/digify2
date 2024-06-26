@@ -19,6 +19,9 @@ function userAccountForm(){
             file_as: {
                 required: true
             },
+            username: {
+                required: true
+            },
             email: {
                 required: true
             },
@@ -30,6 +33,9 @@ function userAccountForm(){
         messages: {
             file_as: {
                 required: 'Please enter the display name'
+            },
+            username: {
+                required: 'Please enter the username'
             },
             email: {
                 required: 'Please enter the email'

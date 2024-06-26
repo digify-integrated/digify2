@@ -3,7 +3,8 @@
 CREATE TABLE user_account (
     user_account_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     file_as VARCHAR(300) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    username VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
     profile_picture VARCHAR(500) NULL,
     locked VARCHAR(5) NOT NULL DEFAULT 'No',
@@ -32,8 +33,8 @@ CREATE TABLE user_account (
 CREATE INDEX user_account_index_user_account_id ON user_account(user_account_id);
 CREATE INDEX user_account_index_email ON user_account(email);
 
-INSERT INTO user_account (file_as, email, password, locked, active, password_expiry_date, two_factor_auth, last_log_by) VALUES ('CGMI Bot', 'cgmids@christianmotors.ph', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', 'No', 'Yes', '2025-12-30', 'No', '1');
-INSERT INTO user_account (file_as, email, password, locked, active, password_expiry_date, two_factor_auth, last_log_by) VALUES ('Administrator', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', 'No', 'Yes', '2025-12-30', 'No', '1');
+INSERT INTO user_account (file_as, username, email, password, locked, active, password_expiry_date, two_factor_auth, last_log_by) VALUES ('CGMI Bot', 'cgmibot', 'cgmibot.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', 'No', 'Yes', '2025-12-30', 'No', '1');
+INSERT INTO user_account (file_as, username, email, password, locked, active, password_expiry_date, two_factor_auth, last_log_by) VALUES ('Administrator', 'ldagulto', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', 'No', 'Yes', '2025-12-30', 'No', '1');
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
@@ -42,7 +43,6 @@ INSERT INTO user_account (file_as, email, password, locked, active, password_exp
 CREATE TABLE password_history (
     password_history_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     user_account_id INT UNSIGNED NOT NULL,
-    email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     password_change_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     created_date DATETIME NOT NULL DEFAULT NOW(),
@@ -51,6 +51,5 @@ CREATE TABLE password_history (
 
 CREATE INDEX password_history_index_password_history_id ON password_history(password_history_id);
 CREATE INDEX password_history_index_user_account_id ON password_history(user_account_id);
-CREATE INDEX password_history_index_email ON password_history(email);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

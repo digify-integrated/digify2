@@ -409,3 +409,35 @@ function internalNotesForm(databaseTable, referenceID){
         }
     });
 }
+
+function saveUICustomization(type, customizationValue){
+    const transaction = 'save ui customization';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/global/controller/ui-customization-controller.php',
+        data: {
+            transaction : transaction, 
+            type : type, 
+            customizationValue : customizationValue
+        },
+        dataType: 'json',
+        success: function (response) {
+            if (!response.success) {
+                if(response.isInactive){
+                    window.location = 'logout.php?logout';
+                }
+                else{
+                    showNotification('Update UI Settings Error', response.message, 'danger');
+                }
+            }
+        },
+        error: function(xhr, status, error) {
+            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+            if (xhr.responseText) {
+                fullErrorMessage += `, Response: ${xhr.responseText}`;
+            }
+            showErrorDialog(fullErrorMessage);
+        }
+    });
+}

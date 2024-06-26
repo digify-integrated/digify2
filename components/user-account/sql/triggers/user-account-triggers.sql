@@ -14,6 +14,10 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "Email: ", OLD.email, " -> ", NEW.email, "<br/>");
     END IF;
 
+    IF NEW.username <> OLD.username THEN
+        SET audit_log = CONCAT(audit_log, "Username: ", OLD.username, " -> ", NEW.username, "<br/>");
+    END IF;
+
     IF NEW.locked <> OLD.locked THEN
         SET audit_log = CONCAT(audit_log, "Locked: ", OLD.locked, " -> ", NEW.locked, "<br/>");
     END IF;
@@ -76,6 +80,10 @@ BEGIN
 
     IF NEW.email <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Email: ", NEW.email);
+    END IF;
+
+    IF NEW.username <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Username: ", NEW.username);
     END IF;
 
     IF NEW.locked <> '' THEN
