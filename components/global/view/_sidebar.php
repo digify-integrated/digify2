@@ -31,6 +31,10 @@
 
               $menuItemDetails = $menuItemModel->getMenuItem($menuItemID);
               $menuItemURL = $menuItemDetails['menu_item_url'];
+              $menuItemPageID = $menuItemDetails['menu_item_id'] ?? null;
+              $menuItemAppModuleID = $menuItemDetails['app_module_id'] ?? null;
+              $menuItemPageURL = $menuItemDetails['menu_item_url'] ?? null;
+              $menuItemPageLink = $menuItemPageURL . '?app_module_id=' . $securityModel->encryptData($menuItemAppModuleID) . '&page_id=' . $securityModel->encryptData($menuItemPageID);
 
               if($appModuleSidebarID == $appModuleID){
                 $apps .= '<li class="mini-nav-item" id="mini-1">
@@ -41,7 +45,7 @@
               }
               else{
                 $apps .= '<li class="mini-nav-item" id="mini-1">
-                            <a href="'. $menuItemURL .'" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="'. $appModuleName .'">
+                            <a href="'. $menuItemPageLink .'" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-placement="right" data-bs-title="'. $appModuleName .'">
                               <img src="'. $appLogo .'" width="40" height="40" alt="app-logo">
                             </a>
                           </li>';

@@ -93,7 +93,7 @@ BEGIN
         FROM file_extension 
         WHERE 1');
 
-    IF p_filter_by_file_type IS NOT NULL THEN
+    IF p_filter_by_file_type IS NOT NULL AND p_filter_by_file_type != '' THEN
         SET query = CONCAT(query, ' AND file_type_id = ', p_filter_by_file_type);
     END IF;
 

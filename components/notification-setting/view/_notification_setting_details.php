@@ -1,9 +1,3 @@
-<?php
-    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
-    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
-?>
-
 <div class="row">
     <div class="col-lg-6">
         <div class="card">
@@ -14,7 +8,6 @@
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
                             echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Notification Setting</a></li>' : '';
-
                             echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-notification-setting">Delete Notification Setting</button></li>' : '';
                         ?>
                     </ul>
@@ -110,7 +103,7 @@
             <div class="card-body p-4">
                 <h4 class="card-title">System Notification Template</h4>
                 <p class="card-subtitle">Configure the system notification template:</p>
-                <div class="d-flex align-items-center justify-content-between mt-7">
+                <div class="d-flex align-items-center justify-content-between mt-3">
                     <div class="d-flex align-items-center gap-3">
                         <div>
                             <h5 class="fs-4 fw-semibold" id="system_notification_title_preview">Title</h5>
@@ -130,7 +123,7 @@
             <div class="card-body p-4">
                 <h4 class="card-title">Email Notification Template</h4>
                 <p class="card-subtitle">Configure the email notification template:</p>
-                <div class="d-flex align-items-center justify-content-between mt-7">
+                <div class="d-flex align-items-center justify-content-between mt-3">
                     <div class="d-flex align-items-center gap-3">
                         <div>
                             <h5 class="fs-4 fw-semibold" id="email_notification_subject_preview">Subject</h5>
@@ -150,7 +143,7 @@
             <div class="card-body p-4">
                 <h4 class="card-title">SMS Notification Template</h4>
                 <p class="card-subtitle">Configure the SMS notification template:</p>
-                <div class="d-flex align-items-center justify-content-between mt-7">
+                <div class="d-flex align-items-center justify-content-between mt-3">
                     <div class="d-flex align-items-center gap-3">
                         <div>
                             <p class="mb-3" id="sms_notification_message_preview">Message</p>

@@ -2,8 +2,8 @@
     'use strict';
 
     $(function() {
-        generateFilterOptions('state radio filter');
-        generateFilterOptions('country radio filter');
+        generateDropdownOptions('state options');
+        generateDropdownOptions('country options');
 
         if($('#city-table').length){
             cityTable('#city-table');
@@ -155,8 +155,8 @@ function cityTable(datatable_name, buttons = false, show_all = false){
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
-    var filter_by_state = $('input[name="filter-state"]:checked').val();
-    var filter_by_country = $('input[name="filter-country"]:checked').val();
+    var filter_by_state = $('#state_filter').val();
+    var filter_by_country = $('#country_filter').val();
     var settings;
 
     const column = [ 
@@ -225,9 +225,9 @@ function cityTable(datatable_name, buttons = false, show_all = false){
     $(datatable_name).dataTable(settings);
 }
 
-function generateFilterOptions(type){
+function generateDropdownOptions(type){
     switch (type) {
-        case 'state radio filter':
+        case 'state options':
             
             $.ajax({
                 url: 'components/state/view/_state_generation.php',
@@ -237,7 +237,10 @@ function generateFilterOptions(type){
                     type : type
                 },
                 success: function(response) {
-                    document.getElementById('state-filter').innerHTML = response[0].filterOptions;
+                    $('#state_filter').select2({
+                        dropdownParent: $('#filter-offcanvas'),
+                        data: response
+                    });
                 },
                 error: function(xhr, status, error) {
                     var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
@@ -248,7 +251,7 @@ function generateFilterOptions(type){
                 }
             });
             break;
-        case 'country radio filter':
+        case 'country options':
             
             $.ajax({
                 url: 'components/country/view/_country_generation.php',
@@ -258,7 +261,10 @@ function generateFilterOptions(type){
                     type : type
                 },
                 success: function(response) {
-                    document.getElementById('country-filter').innerHTML = response[0].filterOptions;
+                    $('#country_filter').select2({
+                        dropdownParent: $('#filter-offcanvas'),
+                        data: response
+                    });
                 },
                 error: function(xhr, status, error) {
                     var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;

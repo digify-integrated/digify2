@@ -171,12 +171,14 @@ class CurrencyController {
             return;
         }
 
-        if (isset($_POST['currency_name']) && !empty($_POST['currency_name']) && isset($_POST['currency_symbol']) && !empty($_POST['currency_symbol'])) {
+        if (isset($_POST['currency_name']) && !empty($_POST['currency_name']) && isset($_POST['currency_symbol']) && !empty($_POST['currency_symbol']) && isset($_POST['currency_code']) && !empty($_POST['currency_code']) && isset($_POST['exchange_rate'])) {
             $userID = $_SESSION['user_account_id'];
             $currencyName = $_POST['currency_name'];
             $currencySymbol = $_POST['currency_symbol'];
+            $currencyCode = $_POST['currency_code'];
+            $exchangeRate = $_POST['exchange_rate'];
         
-            $currencyID = $this->currencyModel->insertCurrency($currencyName, $currencySymbol, $userID);
+            $currencyID = $this->currencyModel->insertCurrency($currencyName, $currencyCode, $currencySymbol, $exchangeRate, $userID);
     
             $response = [
                 'success' => true,
@@ -228,6 +230,8 @@ class CurrencyController {
             $currencyID = htmlspecialchars($_POST['currency_id'], ENT_QUOTES, 'UTF-8');
             $currencyName = $_POST['currency_name'];
             $currencySymbol = $_POST['currency_symbol'];
+            $currencyCode = $_POST['currency_code'];
+            $exchangeRate = $_POST['exchange_rate'];
         
             $checkCurrencyExist = $this->currencyModel->checkCurrencyExist($currencyID);
             $total = $checkCurrencyExist['total'] ?? 0;
@@ -245,7 +249,7 @@ class CurrencyController {
                 exit;
             }
 
-            $this->currencyModel->updateCurrency($currencyID, $currencyName, $currencySymbol, $userID);
+            $this->currencyModel->updateCurrency($currencyID, $currencyName, $currencyCode, $currencySymbol, $exchangeRate, $userID);
                 
             $response = [
                 'success' => true,

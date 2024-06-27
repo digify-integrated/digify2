@@ -24,6 +24,20 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="currency_code">Currency Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="currency_code" name="currency_code" maxlength="10" autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label" for="exchange_rate">Exchange Rate</label>
+                                <input type="number" class="form-control" id="exchange_rate" name="exchange_rate" min="0" steps="0.01">
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

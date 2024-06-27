@@ -13,10 +13,10 @@ END //
 
 /* Insert Stored Procedure */
 
-CREATE PROCEDURE insertCurrency(IN p_currency_name VARCHAR(100), IN p_currency_symbol VARCHAR(10), IN p_last_log_by INT, OUT p_currency_id INT)
+CREATE PROCEDURE insertCurrency(IN p_currency_name VARCHAR(100), IN p_currency_code VARCHAR(10), IN p_currency_symbol VARCHAR(10), IN p_exchange_rate DOUBLE, IN p_last_log_by INT, OUT p_currency_id INT)
 BEGIN
-    INSERT INTO currency (currency_name, currency_symbol, last_log_by) 
-	VALUES(p_currency_name, p_currency_symbol, p_last_log_by);
+    INSERT INTO currency (currency_name, currency_code, currency_symbol, exchange_rate, last_log_by) 
+	VALUES(p_currency_name, p_currency_code, p_currency_symbol, p_exchange_rate, p_last_log_by);
 	
     SET p_currency_id = LAST_INSERT_ID();
 END //
@@ -25,7 +25,7 @@ END //
 
 /* Update Stored Procedure */
 
-CREATE PROCEDURE updateCurrency(IN p_currency_id INT, IN p_currency_name VARCHAR(100), IN p_currency_symbol VARCHAR(10), IN p_last_log_by INT)
+CREATE PROCEDURE updateCurrency(IN p_currency_id INT, IN p_currency_name VARCHAR(100), IN p_currency_code VARCHAR(10), IN p_currency_symbol VARCHAR(10), IN p_exchange_rate DOUBLE, IN p_last_log_by INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -42,7 +42,9 @@ BEGIN
 
     UPDATE currency
     SET currency_name = p_currency_name,
+        currency_code = p_currency_code,
         currency_symbol = p_currency_symbol,
+        exchange_rate = p_exchange_rate,
         last_log_by = p_last_log_by
     WHERE currency_id = p_currency_id;
 

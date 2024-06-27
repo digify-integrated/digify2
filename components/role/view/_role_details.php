@@ -1,8 +1,4 @@
 <?php
-    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
-    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
-
     $addRoleUserAccount = $globalModel->checkSystemActionAccessRights($userID, 7);
     $addRoleAccess = $globalModel->checkSystemActionAccessRights($userID, 9);
     $addRoleSystemActionAccess = $globalModel->checkSystemActionAccessRights($userID, 12);
@@ -17,18 +13,15 @@
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
-                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Role</a></li>' : '';
-                                echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-role">Delete Role</button></li>' : '';
-                            }
+                           echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Role</a></li>' : '';
+                           echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-role">Delete Role</button></li>' : '';
                         ?>
                     </ul>
                 </div>
                 <?php
-                    echo $writeAccess['total'] > 0 ? 
-                    '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                        <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#role-modal">Edit</button>
-                    </div>' : '';
+                    echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                                                        <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#role-modal">Edit</button>
+                                                    </div>' : '';
                 ?>
             </div>
             <div class="card-body">
@@ -66,11 +59,9 @@
                 <div class="card-header d-flex align-items-center">
                     <h5 class="card-title mb-0">Role Permission</h5>
                     <?php
-                        if($addRoleAccess['total'] > 0){
-                            echo '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                        <button class="btn btn-success d-flex align-items-center mb-0" data-bs-toggle="modal" data-bs-target="#role-permission-assignment-modal" id="assign-role-permission">Assign</button>
-                                    </div>';
-                        }
+                        echo $addRoleAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                                                                <button class="btn btn-success d-flex align-items-center mb-0" data-bs-toggle="modal" data-bs-target="#role-permission-assignment-modal" id="assign-role-permission">Assign</button>
+                                                            </div>' : '';
                     ?>
                 </div>
                 <div class="card-body">
@@ -102,11 +93,9 @@
                 <div class="card-header d-flex align-items-center">
                     <h5 class="card-title mb-0">System Action Permission</h5>
                     <?php
-                        if($addRoleSystemActionAccess['total'] > 0){
-                            echo '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                        <button class="btn btn-success d-flex align-items-center mb-0" data-bs-toggle="modal" data-bs-target="#role-system-action-permission-assignment-modal" id="assign-role-system-action-permission">Assign</button>
-                                    </div>';
-                        }
+                        echo $addRoleSystemActionAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                                                                            <button class="btn btn-success d-flex align-items-center mb-0" data-bs-toggle="modal" data-bs-target="#role-system-action-permission-assignment-modal" id="assign-role-system-action-permission">Assign</button>
+                                                                        </div>' : '';
                     ?>
                 </div>
                 <div class="card-body">

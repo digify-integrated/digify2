@@ -98,15 +98,15 @@ BEGIN
         FROM company 
         WHERE 1');
 
-    IF p_filter_by_city IS NOT NULL THEN
+    IF p_filter_by_city IS NOT NULL AND p_filter_by_city != '' THEN
         SET query = CONCAT(query, ' AND city_id = ', p_filter_by_city);
     END IF;
 
-    IF p_filter_by_state IS NOT NULL THEN
+    IF p_filter_by_state IS NOT NULL AND p_filter_by_state != '' THEN
         SET query = CONCAT(query, ' AND state_id = ', p_filter_by_state);
     END IF;
 
-    IF p_filter_by_country IS NOT NULL THEN
+    IF p_filter_by_country IS NOT NULL AND p_filter_by_country != '' THEN
         SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
     END IF;
 

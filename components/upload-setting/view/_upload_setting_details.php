@@ -1,8 +1,4 @@
 <?php
-    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
-    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
-
     $addFileExtensionAccess  = $globalModel->checkSystemActionAccessRights($userID, 15);
 ?>
 
@@ -15,18 +11,15 @@
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
-                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Upload Setting</a></li>' : '';
-                                echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-upload-setting">Delete Upload Setting</button></li>' : '';
-                            }
+                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Upload Setting</a></li>' : '';
+                            echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-upload-setting">Delete Upload Setting</button></li>' : '';
                         ?>
                     </ul>
                 </div>
                 <?php
-                    echo $writeAccess['total'] > 0 ? 
-                    '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                        <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#upload-setting-modal" id="edit-details">Edit</button>
-                    </div>' : '';
+                    echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                                                        <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#upload-setting-modal" id="edit-details">Edit</button>
+                                                    </div>' : '';
                 ?>
             </div>
             <div class="card-body">
@@ -70,11 +63,9 @@
                 <div class="card-header d-flex align-items-center">
                     <h5 class="card-title mb-0">File Extension</h5>
                     <?php
-                        if($addFileExtensionAccess['total'] > 0){
-                            echo '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                        <button class="btn btn-success d-flex align-items-center mb-0" data-bs-toggle="modal" data-bs-target="#file-extension-assignment-modal" id="assign-file-extension">Assign</button>
-                                    </div>';
-                        }
+                        echo $addFileExtensionAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                                                                        <button class="btn btn-success d-flex align-items-center mb-0" data-bs-toggle="modal" data-bs-target="#file-extension-assignment-modal" id="assign-file-extension">Assign</button>
+                                                                    </div>' : '';
                     ?>
                 </div>
                 <div class="card-body">

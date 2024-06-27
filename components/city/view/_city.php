@@ -1,8 +1,3 @@
-<?php
-    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
-?>
-
 <div class="card card-body">
     <div class="row">
         <div class="col-md-4 col-xl-3">
@@ -64,11 +59,15 @@
     <div class="offcanvas-body p-0">
         <div class="border-bottom rounded-0">
             <h6 class="mt-4 mb-3 mx-4 fw-semibold">By State</h6>
-            <div class="pb-4 px-4" id="state-filter"></div>
+            <div class="pb-4 px-4" id="state-filter">
+                <select id="state_filter" name="state_filter" class="select2 form-control"></select>
+            </div>
         </div>
         <div class="border-bottom rounded-0">
             <h6 class="mt-4 mb-3 mx-4 fw-semibold">By Country</h6>
-            <div class="pb-4 px-4" id="country-filter"></div>
+            <div class="pb-4 px-4" id="country-filter">
+                <select id="country_filter" name="country_filter" class="select2 form-control"></select>
+            </div>
         </div>
         <div class="p-4">
             <button type="button" class="btn btn-warning w-100" id="apply-filter">Apply Filter</button>

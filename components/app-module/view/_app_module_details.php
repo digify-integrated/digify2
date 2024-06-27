@@ -1,8 +1,3 @@
-<?php
-    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
-    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
-?>
 <div class="row">
     <div class="col-lg-8">
         <div class="card">
@@ -12,18 +7,15 @@
                     <button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
-                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create App Module</a></li>' : '';
-                                echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-app-module">Delete App Module</button></li>' : '';
-                            }
+                           echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create App Module</a></li>' : '';
+                           echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-app-module">Delete App Module</button></li>' : '';
                         ?>
                     </ul>
                 </div>
                 <?php
-                    echo $writeAccess['total'] > 0 ? 
-                    '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                        <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#app-module-modal">Edit</button>
-                    </div>' : '';
+                    echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#app-module-modal">Edit</button>
+                                                        </div>' : '';
                 ?>
             </div>
             <div class="card-body">
@@ -89,10 +81,9 @@
                 <div class="text-center">
                     <img src="./assets/images/default/app-module-logo.png" alt="" id="app_module_logo" width="100" height="100">
                     <?php
-                        echo $writeAccess['total'] > 0 ? 
-                                '<div class="d-flex align-items-center justify-content-center my-4 gap-6">
-                                    <button class="btn btn-primary" data-bs-toggle="modal" id="update-app-logo" data-bs-target="#app-logo-modal">Upload</button>
-                                </div>' : '';
+                        echo $writeAccess['total'] > 0 ? '<div class="d-flex align-items-center justify-content-center my-4 gap-6">
+                                                                <button class="btn btn-primary" data-bs-toggle="modal" id="update-app-logo" data-bs-target="#app-logo-modal">Upload</button>
+                                                            </div>' : '';
                     ?>
                     <p class="mb-0 mt-2">Allowed JPG, JPEG or PNG. Max size of 500kb</p>
                 </div>

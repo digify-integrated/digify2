@@ -1,7 +1,4 @@
 <?php
-    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
-
     $activateUserAccount = $globalModel->checkSystemActionAccessRights($userID, 3);
     $deactivateUserAccount = $globalModel->checkSystemActionAccessRights($userID, 4);
     $lockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 5);

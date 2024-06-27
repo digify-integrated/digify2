@@ -2,9 +2,9 @@
     'use strict';
 
     $(function() {
-        generateFilterOptions('city radio filter');
-        generateFilterOptions('state radio filter');
-        generateFilterOptions('country radio filter');
+        generateDropdownOptions('city options');
+        generateDropdownOptions('state options');
+        generateDropdownOptions('country options');
 
         if($('#company-table').length){
             companyTable('#company-table');
@@ -156,9 +156,9 @@ function companyTable(datatable_name, buttons = false, show_all = false){
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
-    var filter_by_city = $('input[name="filter-city"]:checked').val();
-    var filter_by_state = $('input[name="filter-state"]:checked').val();
-    var filter_by_country = $('input[name="filter-country"]:checked').val();
+    var filter_by_city = $('#city_filter').val();
+    var filter_by_state = $('#state_filter').val();
+    var filter_by_country = $('#country_filter').val();
     var settings;
 
     const column = [ 
@@ -224,9 +224,9 @@ function companyTable(datatable_name, buttons = false, show_all = false){
     $(datatable_name).dataTable(settings);
 }
 
-function generateFilterOptions(type){
+function generateDropdownOptions(type){
     switch (type) {
-        case 'city radio filter':
+        case 'city options':
             
             $.ajax({
                 url: 'components/city/view/_city_generation.php',
@@ -236,7 +236,10 @@ function generateFilterOptions(type){
                     type : type
                 },
                 success: function(response) {
-                    document.getElementById('city-filter').innerHTML = response[0].filterOptions;
+                    $('#city_filter').select2({
+                        dropdownParent: $('#filter-offcanvas'),
+                        data: response
+                      });
                 },
                 error: function(xhr, status, error) {
                     var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
@@ -247,7 +250,7 @@ function generateFilterOptions(type){
                 }
             });
             break;
-        case 'state radio filter':
+        case 'state options':
             
             $.ajax({
                 url: 'components/state/view/_state_generation.php',
@@ -257,7 +260,10 @@ function generateFilterOptions(type){
                     type : type
                 },
                 success: function(response) {
-                    document.getElementById('state-filter').innerHTML = response[0].filterOptions;
+                    $('#state_filter').select2({
+                        dropdownParent: $('#filter-offcanvas'),
+                        data: response
+                    });
                 },
                 error: function(xhr, status, error) {
                     var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
@@ -268,7 +274,7 @@ function generateFilterOptions(type){
                 }
             });
             break;
-        case 'country radio filter':
+        case 'country options':
             
             $.ajax({
                 url: 'components/country/view/_country_generation.php',
@@ -278,7 +284,10 @@ function generateFilterOptions(type){
                     type : type
                 },
                 success: function(response) {
-                    document.getElementById('country-filter').innerHTML = response[0].filterOptions;
+                    $('#country_filter').select2({
+                        dropdownParent: $('#filter-offcanvas'),
+                        data: response
+                    });
                 },
                 error: function(xhr, status, error) {
                     var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;

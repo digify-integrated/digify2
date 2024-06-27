@@ -1,9 +1,3 @@
-<?php
-    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
-    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
-?>
-
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -13,18 +7,15 @@
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            if($createAccess['total'] > 0 || $deleteAccess['total'] > 0){
-                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create File Extension</a></li>' : '';
-                                echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-file-extension">Delete File Extension</button></li>' : '';
-                            }
+                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create File Extension</a></li>' : '';
+                            echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-file-extension">Delete File Extension</button></li>' : '';
                         ?>
                     </ul>
                 </div>
                 <?php
-                    echo $writeAccess['total'] > 0 ? 
-                    '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                        <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#file-extension-modal" id="edit-details">Edit</button>
-                    </div>' : '';
+                    echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#file-extension-modal" id="edit-details">Edit</button>
+                                                        </div>' : '';
                 ?>
             </div>
             <div class="card-body">

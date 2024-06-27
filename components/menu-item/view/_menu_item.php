@@ -1,8 +1,3 @@
-<?php
-    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
-?>
-
 <div class="card card-body">
     <div class="row">
         <div class="col-md-4 col-xl-3">

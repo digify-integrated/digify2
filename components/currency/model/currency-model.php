@@ -23,17 +23,21 @@ class CurrencyModel {
     # Parameters:
     # - $p_currency_id (int): The currency ID.
     # - $p_currency_name (string): The currency name.
+    # - $p_currency_code (string): The currency code.
     # - $p_currency_symbol (string): The currency symbol.
+    # - $p_exchange_rate (doubl): The exchange rate.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateCurrency($p_currency_id, $p_currency_name, $p_currency_symbol, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateCurrency(:p_currency_id, :p_currency_name, :p_currency_symbol, :p_last_log_by)');
+    public function updateCurrency($p_currency_id, $p_currency_name, $p_currency_code, $p_currency_symbol, $p_exchange_rate, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateCurrency(:p_currency_id, :p_currency_name, :p_currency_code, :p_currency_symbol, :p_exchange_rate, :p_last_log_by)');
         $stmt->bindValue(':p_currency_id', $p_currency_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_currency_name', $p_currency_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_currency_code', $p_currency_code, PDO::PARAM_STR);
         $stmt->bindValue(':p_currency_symbol', $p_currency_symbol, PDO::PARAM_STR);
+        $stmt->bindValue(':p_exchange_rate', $p_exchange_rate, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -50,16 +54,20 @@ class CurrencyModel {
     #
     # Parameters:
     # - $p_currency_name (string): The currency name.
+    # - $p_currency_code (string): The currency code.
     # - $p_currency_symbol (string): The currency symbol.
+    # - $p_exchange_rate (doubl): The exchange rate.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: String
     #
     # -------------------------------------------------------------
-    public function insertCurrency($p_currency_name, $p_currency_symbol, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertCurrency(:p_currency_name, :p_currency_symbol, :p_last_log_by, @p_currency_id)');
+    public function insertCurrency($p_currency_name, $p_currency_code, $p_currency_symbol, $p_exchange_rate, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertCurrency(:p_currency_name, :p_currency_code, :p_currency_symbol, :p_exchange_rate, :p_last_log_by, @p_currency_id)');
         $stmt->bindValue(':p_currency_name', $p_currency_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_currency_code', $p_currency_code, PDO::PARAM_STR);
         $stmt->bindValue(':p_currency_symbol', $p_currency_symbol, PDO::PARAM_STR);
+        $stmt->bindValue(':p_exchange_rate', $p_exchange_rate, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
         

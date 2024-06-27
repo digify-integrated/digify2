@@ -97,6 +97,9 @@ function currencyForm(){
             currency_name: {
                 required: true
             },
+            currency_code: {
+                required: true
+            },
             currency_symbol: {
                 required: true
             }
@@ -104,6 +107,9 @@ function currencyForm(){
         messages: {
             currency_name: {
                 required: 'Please enter the display name'
+            },
+            currency_code: {
+                required: 'Please enter the currency code'
             },
             currency_symbol: {
                 required: 'Please enter the symbol'

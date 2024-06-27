@@ -1,10 +1,10 @@
-<button class="btn btn-danger p-3 rounded-circle d-flex align-items-center justify-content-center customizer-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+<button class="btn btn-danger p-3 rounded-circle d-flex align-items-center justify-content-center customizer-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#customizerOffCanvas" aria-controls="customizerOffCanvas">
     <i class="icon ti ti-settings fs-7"></i>
 </button>
 
-<div class="offcanvas customizer offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+<div class="offcanvas customizer offcanvas-end" tabindex="-1" id="customizerOffCanvas" style="width: 330px !important;" aria-labelledby="customizerOffCanvasLabel">
     <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
-        <h4 class="offcanvas-title fw-semibold" id="offcanvasExampleLabel">Settings</h4>
+        <h4 class="offcanvas-title fw-semibold" id="customizerOffCanvasLabel">Customization</h4>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body" data-simplebar style="height: calc(100vh - 80px)">

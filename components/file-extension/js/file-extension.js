@@ -2,7 +2,7 @@
     'use strict';
 
     $(function() {
-        generateFilterOptions('file type radio filter');
+        generateDropdownOptions('file type options');
 
         if($('#file-extension-table').length){
             fileExtensionTable('#file-extension-table');
@@ -154,7 +154,7 @@ function fileExtensionTable(datatable_name, buttons = false, show_all = false){
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
-    var filter_by_file_type = $('input[name="filter-file-type"]:checked').val();
+    var filter_by_file_type = $('#file_type_filter').val();
     var settings;
 
     const column = [ 
@@ -233,6 +233,35 @@ function generateFilterOptions(type){
                 },
                 success: function(response) {
                     document.getElementById('file-type-filter').innerHTML = response[0].filterOptions;
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+    }
+}
+
+function generateDropdownOptions(type){
+    switch (type) {
+        case 'file type options':
+            
+            $.ajax({
+                url: 'components/file-type/view/_file_type_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#file_type_filter').select2({
+                        dropdownParent: $('#filter-offcanvas'),
+                        data: response
+                    });
                 },
                 error: function(xhr, status, error) {
                     var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;

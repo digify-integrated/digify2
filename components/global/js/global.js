@@ -6,6 +6,13 @@
         maxLength();
         initializeFilterDaterange();
 
+        sessionStorage.setItem('Layout', 'vertical');
+        sessionStorage.setItem('Direction', 'ltr');
+
+        if($('#customizerOffCanvas').length){
+            getUICustomization();
+        }
+
         $(document).on('click','#internal-notes-button',function() {
             resetModalForm('internal-notes-form');
         });
@@ -43,40 +50,49 @@
 
         $(document).on('click','.light-layout',function() {
             saveUICustomization('theme', 'light');
+            sessionStorage.setItem('Theme', 'light');
         });
 
         $(document).on('click','.dark-layout',function() {
             saveUICustomization('theme', 'dark');
+            sessionStorage.setItem('Theme', 'dark');
         });
 
         $(document).on('click','.color-theme',function() {
             const color_theme = $(this).data('theme-color');
 
             saveUICustomization('color theme', color_theme);
+            sessionStorage.setItem('ColorTheme', color_theme);
         });
 
         $(document).on('click','#boxed-layout',function() {
             saveUICustomization('boxed layout', 1);
+            sessionStorage.setItem('BoxedLayout', true);
         });
 
         $(document).on('click','#full-layout',function() {
             saveUICustomization('boxed layout', 0);
+            sessionStorage.setItem('BoxedLayout', false);
         });
 
         $(document).on('click','#full-sidebar',function() {
             saveUICustomization('sidebar type', 'full');
+            sessionStorage.setItem('SidebarType', 'full');
         });
 
         $(document).on('click','#mini-sidebar',function() {
             saveUICustomization('sidebar type', 'mini-sidebar');
+            sessionStorage.setItem('SidebarType', 'mini-sidebar');
         });
 
         $(document).on('click','#card-with-border',function() {
             saveUICustomization('card border', 1);
+            sessionStorage.setItem('CardBorder', true);
         });
 
         $(document).on('click','#card-without-border',function() {
             saveUICustomization('card border', 0);
+            sessionStorage.setItem('CardBorder', false);
         });
     });
 })(jQuery);
@@ -479,4 +495,42 @@ function saveUICustomization(type, customizationValue){
             showErrorDialog(fullErrorMessage);
         }
     });
+}
+
+function getUICustomization(){
+    $.ajax({
+        url: 'components/global/controller/ui-customization-controller.php',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          transaction : 'get ui customization setting details'
+        },
+        success: function(response) {
+          if (response.success) {
+            sessionStorage.setItem('Layout', response.layout);
+            sessionStorage.setItem('SidebarType', response.sidebarType);
+            sessionStorage.setItem('BoxedLayout', response.boxedLayout);
+            sessionStorage.setItem('Direction', response.direction);
+            sessionStorage.setItem('Theme', response.theme);
+            sessionStorage.setItem('ColorTheme', response.colorTheme);
+            sessionStorage.setItem('CardBorder', response.cardBorder);
+          } 
+          else {
+            if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+              setNotification(response.title, response.message, response.messageType);
+              window.location = 'logout.php?logout';
+            }
+            else {
+              showNotification(response.title, response.message, response.messageType);
+            }
+          }
+        },
+        error: function(xhr, status, error) {
+          var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+          if (xhr.responseText) {
+            fullErrorMessage += `, Response: ${xhr.responseText}`;
+          }
+          showErrorDialog(fullErrorMessage);
+        }
+      });
 }

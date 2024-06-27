@@ -87,11 +87,11 @@ BEGIN
         FROM city 
         WHERE 1');
 
-    IF p_filter_by_state IS NOT NULL THEN
+    IF p_filter_by_state IS NOT NULL AND p_filter_by_state != '' THEN
         SET query = CONCAT(query, ' AND state_id = ', p_filter_by_state);
     END IF;
 
-    IF p_filter_by_country IS NOT NULL THEN
+    IF p_filter_by_country IS NOT NULL AND p_filter_by_country != '' THEN
         SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
     END IF;
 

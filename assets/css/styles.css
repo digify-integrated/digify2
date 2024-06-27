@@ -28390,6 +28390,9 @@ body {
     background: #f4f7fb;
     min-height: calc(100% - 102px);
 }
+.apps-wrapper {
+    margin-top: 30px !important;
+}
 .body-wrapper .container-fluid,
 .body-wrapper .container-lg,
 .body-wrapper .container-md,

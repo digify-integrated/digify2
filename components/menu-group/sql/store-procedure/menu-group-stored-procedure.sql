@@ -36,6 +36,8 @@ BEGIN
 
     UPDATE menu_item
     SET menu_group_name = p_menu_group_name,
+        app_module_id = p_app_module_id,
+        app_module_name = p_app_module_name,
         last_log_by = p_last_log_by
     WHERE menu_group_id = p_menu_group_id;
 

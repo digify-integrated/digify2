@@ -1,21 +1,3 @@
-<?php
-    require('components/user-account/model/user-account-model.php');
-
-    $userAccountModel = new UserAccountModel($databaseModel);
-
-    $activateUserAccount = $globalModel->checkSystemActionAccessRights($userID, 3);
-    $deactivateUserAccount = $globalModel->checkSystemActionAccessRights($userID, 4);
-    $lockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 5);
-    $unlockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 6);
-    $addRoleUserAccount  = $globalModel->checkSystemActionAccessRights($userID, 7);
-
-    if(isset($_GET['id'])){
-        $userAccountDetails = $userAccountModel->getUserAccount($detailID, null);
-        $userAccountActive = $userAccountDetails['active'];
-        $userAccountLocked = $userAccountDetails['locked'];
-    }
-?>
-
 <div class="row">
     <div class="col-lg-7">
         <div class="card">
@@ -24,30 +6,12 @@
                 <?php
                     $action = '';
 
-                    if($createAccess['total'] > 0 || $deleteAccess['total'] > 0 || $activateUserAccount['total'] > 0 || $deactivateUserAccount['total'] > 0 || $lockUserAccount['total'] > 0 || $unlockUserAccount['total'] > 0){
+                    if($writeAccess['total'] > 0){
                         $action .= '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
                                         <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                                         <ul class="dropdown-menu dropdown-menu-end">';
                                         
                         $action .= $writeAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" data-bs-toggle="modal" id="change-password" data-bs-target="#change-password-modal">Change Password</button></li>' : '';
-                                                        
-                        $action .= $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create User Account</a></li>' : '';
-        
-                        if($userAccountActive == 'Yes' && $deactivateUserAccount['total'] > 0){
-                            $action .= '<li><button class="dropdown-item" type="button" id="deactivate-user-account">Deactivate User Account</button></li>';
-                        }
-                        else if($userAccountActive == 'No' && $activateUserAccount['total'] > 0){
-                            $action .= '<li><button class="dropdown-item" type="button" id="activate-user-account">Activate User Account</button></li>';
-                        }
-        
-                        if($userAccountLocked == 'Yes' && $unlockUserAccount['total'] > 0){
-                            $action .= '<li><button class="dropdown-item" type="button" id="unlock-user-account">Unlock User Account</button></li>';
-                        }
-                        else if($userAccountLocked == 'No' && $lockUserAccount['total'] > 0){
-                            $action .= '<li><button class="dropdown-item" type="button" id="lock-user-account">Lock User Account</button></li>';
-                        }
-        
-                        $action .= $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-user-account">Delete User Account</button></li>' : '';
 
                         $action .= '</ul>
                                 </div>';
@@ -154,6 +118,24 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Change Profile</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="text-center">
+                    <img src="./assets/images/profile/user-1.jpg" alt="" id="user_account_profile_picture" class="rounded-circle" width="100" height="100">
+                    <?php
+                        echo $writeAccess['total'] > 0 ? '<div class="d-flex align-items-center justify-content-center my-4 gap-6">
+                                                            <button class="btn btn-primary" data-bs-toggle="modal" id="update-user-account-profile-picture" data-bs-target="#user-account-profile-picture-modal">Upload</button>
+                                                            </div>' : '';
+                    ?>
+                    <p class="mb-0 mt-0">Allowed JPG, JPEG or PNG. Max size of 500kb</p>
+                </div>
+            </div>
+        </div>
         <div class="card">
             <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0">Security Settings</h5>
@@ -179,56 +161,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
-                            <i class="ti ti-login text-dark d-block fs-7" width="22" height="22"></i>
-                        </div>
-                        <div>
-                            <h5 class="fs-4 fw-semibold">Multiple Login Sessions</h5>
-                            <p class="mb-0 text-wrap w-80">Track logins with Multiple Sessions, get alerts for unfamiliar activity, boost security.</p>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="form-check form-switch mb-0">
-                            <?php
-                                $checkboxAttributes = ($writeAccess['total'] > 0) ? '' : 'disabled';
-                                                            
-                                echo '<input class="form-check-input" type="checkbox" role="switch" id="multiple-login-sessions" ' . $checkboxAttributes . '>';
-                            ?>
-                        </div>
-                    </div>
-                </div>
             </div>
-        </div>
-    </div>
-    <div class="col-lg-5">
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Change Profile</h5>
-            </div>
-            <div class="card-body p-4">
-                <div class="text-center">
-                    <img src="./assets/images/profile/user-1.jpg" alt="" id="user_account_profile_picture" class="rounded-circle" width="100" height="100">
-                    <?php
-                        echo $writeAccess['total'] > 0 ? '<div class="d-flex align-items-center justify-content-center my-4 gap-6">
-                                                            <button class="btn btn-primary" data-bs-toggle="modal" id="update-user-account-profile-picture" data-bs-target="#user-account-profile-picture-modal">Upload</button>
-                                                            </div>' : '';
-                    ?>
-                    <p class="mb-0 mt-2">Allowed JPG, JPEG or PNG. Max size of 500kb</p>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">User Roles</h5>
-                <?php
-                    echo $addRoleUserAccount['total'] ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-success mb-0 me-0" data-bs-toggle="modal" data-bs-target="#user-account-assignment-modal" id="assign-user-account">Assign</button>
-                                                        </div>' : '';
-                ?>
-            </div>
-            <div class="card-body p-4" id="role-list"></div>
         </div>
     </div>
 </div>

@@ -36,4 +36,8 @@
     }
     
     $newRecord = isset($_GET['new']);
+
+    $writeAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
 ?>

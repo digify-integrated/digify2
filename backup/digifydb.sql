@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 26, 2024 at 04:39 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jun 27, 2024 at 11:21 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -537,11 +537,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCityTable` (IN `p_filter_by
         FROM city 
         WHERE 1');
 
-    IF p_filter_by_state IS NOT NULL THEN
+    IF p_filter_by_state IS NOT NULL AND p_filter_by_state != '' THEN
         SET query = CONCAT(query, ' AND state_id = ', p_filter_by_state);
     END IF;
 
-    IF p_filter_by_country IS NOT NULL THEN
+    IF p_filter_by_country IS NOT NULL AND p_filter_by_country != '' THEN
         SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
     END IF;
 
@@ -568,15 +568,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyTable` (IN `p_filter
         FROM company 
         WHERE 1');
 
-    IF p_filter_by_city IS NOT NULL THEN
+    IF p_filter_by_city IS NOT NULL AND p_filter_by_city != '' THEN
         SET query = CONCAT(query, ' AND city_id = ', p_filter_by_city);
     END IF;
 
-    IF p_filter_by_state IS NOT NULL THEN
+    IF p_filter_by_state IS NOT NULL AND p_filter_by_state != '' THEN
         SET query = CONCAT(query, ' AND state_id = ', p_filter_by_state);
     END IF;
 
-    IF p_filter_by_country IS NOT NULL THEN
+    IF p_filter_by_country IS NOT NULL AND p_filter_by_country != '' THEN
         SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
     END IF;
 
@@ -636,7 +636,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileExtensionTable` (IN `p_
         FROM file_extension 
         WHERE 1');
 
-    IF p_filter_by_file_type IS NOT NULL THEN
+    IF p_filter_by_file_type IS NOT NULL AND p_filter_by_file_type != '' THEN
         SET query = CONCAT(query, ' AND file_type_id = ', p_filter_by_file_type);
     END IF;
 
@@ -1115,9 +1115,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCountry` (IN `p_country_name`
 END$$
 
 DROP PROCEDURE IF EXISTS `insertCurrency`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCurrency` (IN `p_currency_name` VARCHAR(100), IN `p_currency_symbol` VARCHAR(10), IN `p_last_log_by` INT, OUT `p_currency_id` INT)   BEGIN
-    INSERT INTO currency (currency_name, currency_symbol, last_log_by) 
-	VALUES(p_currency_name, p_currency_symbol, p_last_log_by);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCurrency` (IN `p_currency_name` VARCHAR(100), IN `p_currency_code` VARCHAR(10), IN `p_currency_symbol` VARCHAR(10), IN `p_exchange_rate` DOUBLE, IN `p_last_log_by` INT, OUT `p_currency_id` INT)   BEGIN
+    INSERT INTO currency (currency_name, currency_code, currency_symbol, exchange_rate, last_log_by) 
+	VALUES(p_currency_name, p_currency_code, p_currency_symbol, p_exchange_rate, p_last_log_by);
 	
     SET p_currency_id = LAST_INSERT_ID();
 END$$
@@ -1442,7 +1442,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCountry` (IN `p_country_id` I
 END$$
 
 DROP PROCEDURE IF EXISTS `updateCurrency`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCurrency` (IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(100), IN `p_currency_symbol` VARCHAR(10), IN `p_last_log_by` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCurrency` (IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(100), IN `p_currency_code` VARCHAR(10), IN `p_currency_symbol` VARCHAR(10), IN `p_exchange_rate` DOUBLE, IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -1458,7 +1458,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCurrency` (IN `p_currency_id`
 
     UPDATE currency
     SET currency_name = p_currency_name,
+        currency_code = p_currency_code,
         currency_symbol = p_currency_symbol,
+        exchange_rate = p_exchange_rate,
         last_log_by = p_last_log_by
     WHERE currency_id = p_currency_id;
 
@@ -1580,6 +1582,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateMenuGroup` (IN `p_menu_group_
 
     UPDATE menu_item
     SET menu_group_name = p_menu_group_name,
+        app_module_id = p_app_module_id,
+        app_module_name = p_app_module_name,
         last_log_by = p_last_log_by
     WHERE menu_group_id = p_menu_group_id;
 
@@ -2032,7 +2036,8 @@ CREATE TABLE `app_module` (
 --
 
 INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_description`, `app_logo`, `app_version`, `menu_item_id`, `menu_item_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 1, 'General Settings', 100, '2024-06-26 13:43:48', 1);
+(1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 22, 'Account Setting', 100, '2024-06-26 13:43:48', 2),
+(2, 'Inventory', 'Manage your stock and logistics activities', './components/app-module/image/logo/2/PsyC.png', '1.0.0', 23, 'Inventory Overview', 1, '2024-06-27 15:30:44', 2);
 
 --
 -- Triggers `app_module`
@@ -4419,7 +4424,37 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2288, 'user_account', 2, 'Failed Login Attempts: 2 -> 0<br/>', 1, '2024-06-26 21:33:07', '2024-06-26 21:33:07'),
 (2289, 'user_account', 2, 'Last Connection Date: 2024-06-26 19:13:10 -> 2024-06-26 21:33:07<br/>', 1, '2024-06-26 21:33:07', '2024-06-26 21:33:07'),
 (2290, 'user_account', 2, 'Last Connection Date: 2024-06-26 21:33:07 -> 2024-06-26 21:39:45<br/>', 1, '2024-06-26 21:39:45', '2024-06-26 21:39:45'),
-(2291, 'user_account', 2, 'Last Connection Date: 2024-06-26 21:39:45 -> 2024-06-26 21:57:37<br/>', 1, '2024-06-26 21:57:37', '2024-06-26 21:57:37');
+(2291, 'user_account', 2, 'Last Connection Date: 2024-06-26 21:39:45 -> 2024-06-26 21:57:37<br/>', 1, '2024-06-26 21:57:37', '2024-06-26 21:57:37'),
+(2292, 'menu_group', 4, 'Menu group created. <br/><br/>Menu Group Name: Profile<br/>App Module: Settings<br/>Order Sequence: 1', 2, '2024-06-27 14:49:24', '2024-06-27 14:49:24'),
+(2293, 'menu_group', 2, 'Order Sequence: 1 -> 5<br/>', 2, '2024-06-27 14:49:35', '2024-06-27 14:49:35'),
+(2294, 'menu_item', 22, 'Menu Item created. <br/><br/>Menu Item Name: Account Setting<br/>Menu Item URL: account-setting.php<br/>Menu Item Icon: ti ti-tool<br/>Menu Group Name: Profile<br/>App Module: Settings<br/>Order Sequence: 1', 2, '2024-06-27 14:52:08', '2024-06-27 14:52:08'),
+(2295, 'role_permission', 23, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Account Setting<br/>Date Assigned: 2024-06-27 14:52:13', 2, '2024-06-27 14:52:13', '2024-06-27 14:52:13'),
+(2296, 'role_permission', 23, 'Read Access: 0 -> 1<br/>', 2, '2024-06-27 14:52:15', '2024-06-27 14:52:15'),
+(2297, 'role_permission', 23, 'Write Access: 0 -> 1<br/>', 2, '2024-06-27 14:52:16', '2024-06-27 14:52:16'),
+(2298, 'menu_item', 6, 'Menu Item Icon: ti ti-hierarchy-2 -> ti ti-sitemap<br/>', 2, '2024-06-27 14:52:49', '2024-06-27 14:52:49'),
+(2299, 'notification_setting', 1, 'Notification Setting created. <br/><br/>Notification Setting Name: Login OTP<br/>Notification Setting Description: Notification setting for Login OTP received by the users.<br/>System Notification: 1', 2, '2024-06-27 14:59:41', '2024-06-27 14:59:41'),
+(2300, 'notification_setting', 1, 'Email Notification: 0 -> 1<br/>', 2, '2024-06-27 14:59:46', '2024-06-27 14:59:46'),
+(2301, 'notification_setting', 1, 'System Notification: 1 -> 0<br/>', 2, '2024-06-27 14:59:46', '2024-06-27 14:59:46'),
+(2302, 'notification_setting_email_template', 1, 'Email Notification Template created. <br/><br/>Email Notification Subject: Login OTP - Secure Access to Your Account<br/>Email Notification Body: <p>To ensure the security of your account, we have generated a unique One-Time Password (OTP) for you to use during the login process. Please use the following OTP to access your account:</p>\n<p><br>OTP:&nbsp;<strong>{OTP_CODE}</strong></p>\n<p><br>Please note that this OTP is valid for &nbsp;<strong>#{OTP_CODE_VALIDITY}</strong>. Once you have logged in successfully, we recommend enabling two-factor authentication for an added layer of security.<br>If you did not initiate this login or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', 2, '2024-06-27 15:02:58', '2024-06-27 15:02:58'),
+(2303, 'notification_setting', 2, 'Notification Setting created. <br/><br/>Notification Setting Name: Forgot Password<br/>Notification Setting Description: Notification setting when the user initiates forgot password.<br/>System Notification: 1', 2, '2024-06-27 15:03:26', '2024-06-27 15:03:26'),
+(2304, 'notification_setting', 2, 'Email Notification: 0 -> 1<br/>', 2, '2024-06-27 15:03:28', '2024-06-27 15:03:28'),
+(2305, 'notification_setting', 2, 'System Notification: 1 -> 0<br/>', 2, '2024-06-27 15:03:29', '2024-06-27 15:03:29'),
+(2306, 'notification_setting_email_template', 2, 'Email Notification Template created. <br/><br/>Email Notification Subject: Password Reset Request - Action Required<br/>Email Notification Body: <p>We received a request to reset your password. To proceed with the password reset, please follow the steps below:</p>\n<ol>\n<li>\n<p>Click on the following link to reset your password:&nbsp; <strong><a href=\"#{RESET_LINK}\">Password Reset Link</a></strong></p>\n</li>\n<li>\n<p>If you did not request this password reset, please ignore this email. Your account remains secure.</p>\n</li>\n</ol>\n<p>Please note that this link is time-sensitive and will expire after <strong>#{RESET_LINK_VALIDITY}</strong>. If you do not reset your password within this timeframe, you may need to request another password reset.</p>\n<p><br>If you did not initiate this password reset request or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.<br><br>Note: This is an automatically generated email. Please do not reply to this address.</p>', 2, '2024-06-27 15:13:04', '2024-06-27 15:13:04'),
+(2307, 'menu_group', 5, 'Menu group created. <br/><br/>Menu Group Name: Inventory Dashboard<br/>App Module: Settings<br/>Order Sequence: 1', 2, '2024-06-27 15:29:15', '2024-06-27 15:29:15'),
+(2308, 'menu_item', 23, 'Menu Item created. <br/><br/>Menu Item Name: Inventory Overview<br/>Menu Item URL: inventory-overview.php<br/>Menu Item Icon: ti ti-home<br/>Menu Group Name: Inventory Dashboard<br/>App Module: Settings<br/>Order Sequence: 1', 2, '2024-06-27 15:30:10', '2024-06-27 15:30:10'),
+(2309, 'app_module', 2, 'App module created. <br/><br/>App Module Name: Inventory<br/>App Module Description: Manage your stock and logistics activities<br/>App Version: 1.0.0<br/>Menu Item Name: Inventory Overview<br/>Order Sequence: 1', 2, '2024-06-27 15:30:44', '2024-06-27 15:30:44'),
+(2310, 'menu_group', 5, 'App Module: Settings -> Inventory<br/>', 2, '2024-06-27 15:31:23', '2024-06-27 15:31:23'),
+(2311, 'role_permission', 24, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Inventory Overview<br/>Date Assigned: 2024-06-27 15:31:42', 2, '2024-06-27 15:31:42', '2024-06-27 15:31:42'),
+(2312, 'role_permission', 24, 'Read Access: 0 -> 1<br/>', 2, '2024-06-27 15:31:43', '2024-06-27 15:31:43'),
+(2313, 'menu_item', 23, 'App Module: Settings -> Inventory<br/>', 2, '2024-06-27 15:32:11', '2024-06-27 15:32:11'),
+(2314, 'app_module', 1, 'Menu Item Name: General Settings -> Account Setting<br/>', 2, '2024-06-27 16:05:57', '2024-06-27 16:05:57'),
+(2315, 'menu_group', 6, 'Menu group created. <br/><br/>Menu Group Name: Warehouse Management<br/>App Module: Inventory<br/>Order Sequence: 23', 2, '2024-06-27 17:17:10', '2024-06-27 17:17:10'),
+(2316, 'menu_item', 24, 'Menu Item created. <br/><br/>Menu Item Name: Warehouses<br/>Menu Item URL: warehouses.php<br/>Menu Item Icon: ti ti-building-warehouse<br/>Menu Group Name: Warehouse Management<br/>App Module: Inventory<br/>Order Sequence: 23', 2, '2024-06-27 17:18:42', '2024-06-27 17:18:42'),
+(2317, 'role_permission', 25, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Warehouses<br/>Date Assigned: 2024-06-27 17:18:46', 2, '2024-06-27 17:18:46', '2024-06-27 17:18:46'),
+(2318, 'role_permission', 25, 'Read Access: 0 -> 1<br/>', 2, '2024-06-27 17:18:47', '2024-06-27 17:18:47'),
+(2319, 'role_permission', 25, 'Create Access: 0 -> 1<br/>', 2, '2024-06-27 17:18:48', '2024-06-27 17:18:48'),
+(2320, 'role_permission', 25, 'Write Access: 0 -> 1<br/>', 2, '2024-06-27 17:18:48', '2024-06-27 17:18:48'),
+(2321, 'role_permission', 25, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-27 17:18:49', '2024-06-27 17:18:49');
 
 -- --------------------------------------------------------
 
@@ -7083,9 +7118,12 @@ CREATE TABLE `menu_group` (
 --
 
 INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `app_module_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'Technical', 1, 'Settings', 100, '2024-06-26 14:28:45', 1),
-(2, 'Administration', 1, 'Settings', 1, '2024-06-26 14:28:45', 1),
-(3, 'Configurations', 1, 'Settings', 50, '2024-06-26 14:28:45', 1);
+(1, 'Technical', 1, 'Settings', 100, '2024-06-26 14:28:45', 2),
+(2, 'Administration', 1, 'Settings', 5, '2024-06-26 14:28:45', 2),
+(3, 'Configurations', 1, 'Settings', 50, '2024-06-26 14:28:45', 2),
+(4, 'Profile', 1, 'Settings', 1, '2024-06-27 14:49:24', 2),
+(5, 'Inventory Dashboard', 2, 'Inventory', 1, '2024-06-27 15:29:15', 2),
+(6, 'Warehouse Management', 2, 'Inventory', 23, '2024-06-27 17:17:10', 2);
 
 --
 -- Triggers `menu_group`
@@ -7165,27 +7203,30 @@ CREATE TABLE `menu_item` (
 --
 
 INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `menu_item_icon`, `menu_group_id`, `menu_group_name`, `app_module_id`, `app_module_name`, `parent_id`, `parent_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
-(1, 'App Module', 'app-module.php', 'ti ti-box', 1, 'Technical', 1, 'Settings', 0, '', 1, '2024-06-26 15:17:26', 1),
-(2, 'General Settings', 'general-settings.php', 'ti ti-settings', 1, 'Technical', 1, 'Settings', 0, '', 7, '2024-06-26 15:17:26', 1),
-(3, 'Users & Companies', '', 'ti ti-users', 2, 'Administration', 1, 'Settings', 0, '', 21, '2024-06-26 15:17:26', 1),
-(4, 'User Account', 'user-account.php', '', 2, 'Administration', 1, 'Settings', 3, 'Users & Companies', 21, '2024-06-26 15:17:26', 1),
-(5, 'Company', 'company.php', '', 2, 'Administration', 1, 'Settings', 3, 'Users & Companies', 3, '2024-06-26 15:17:26', 1),
-(6, 'Role', 'role.php', 'ti ti-hierarchy-2', 2, 'Administration', 1, 'Settings', 0, '', 3, '2024-06-26 15:17:26', 1),
+(1, 'App Module', 'app-module.php', 'ti ti-box', 1, 'Technical', 1, 'Settings', 0, '', 1, '2024-06-26 15:17:26', 2),
+(2, 'General Settings', 'general-settings.php', 'ti ti-settings', 1, 'Technical', 1, 'Settings', 0, '', 7, '2024-06-26 15:17:26', 2),
+(3, 'Users & Companies', '', 'ti ti-users', 2, 'Administration', 1, 'Settings', 0, '', 21, '2024-06-26 15:17:26', 2),
+(4, 'User Account', 'user-account.php', '', 2, 'Administration', 1, 'Settings', 3, 'Users & Companies', 21, '2024-06-26 15:17:26', 2),
+(5, 'Company', 'company.php', '', 2, 'Administration', 1, 'Settings', 3, 'Users & Companies', 3, '2024-06-26 15:17:26', 2),
+(6, 'Role', 'role.php', 'ti ti-sitemap', 2, 'Administration', 1, 'Settings', NULL, NULL, 3, '2024-06-26 15:17:26', 2),
 (7, 'User Interface', '', 'ti ti-layout-sidebar', 1, 'Technical', 1, 'Settings', NULL, NULL, 16, '2024-06-26 15:17:26', 2),
-(8, 'Menu Group', 'menu-group.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 1, '2024-06-26 15:17:26', 1),
-(9, 'Menu Item', 'menu-item.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 2, '2024-06-26 15:17:26', 1),
-(10, 'System Action', 'system-action.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 2, '2024-06-26 15:17:26', 1),
-(11, 'Localization', '', 'ti ti-map-pin', 1, 'Technical', 1, 'Settings', 0, '', 12, '2024-06-26 15:17:26', 1),
-(12, 'City', 'city.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 12, '2024-06-26 15:17:26', 1),
-(13, 'Country', 'country.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 13, '2024-06-26 15:17:26', 1),
-(14, 'State', 'state.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 19, '2024-06-26 15:17:26', 1),
-(15, 'Currency', 'currency.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 14, '2024-06-26 15:17:26', 1),
-(16, 'File Configuration', '', 'ti ti-file-symlink', 1, 'Technical', 1, 'Settings', 0, '', 6, '2024-06-26 15:17:26', 1),
-(17, 'Upload Setting', 'upload-setting.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 21, '2024-06-26 15:17:26', 1),
-(18, 'File Type', 'file-type.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 6, '2024-06-26 15:17:26', 1),
-(19, 'File Extension', 'file-extension.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 7, '2024-06-26 15:17:26', 1),
-(20, 'Email Setting', 'email-setting.php', 'ti ti-mail-forward', 1, 'Technical', 1, 'Settings', 0, '', 5, '2024-06-26 15:17:26', 1),
-(21, 'Notification Setting', 'notification-setting.php', 'ti ti-bell', 1, 'Technical', 1, 'Settings', 0, '', 14, '2024-06-26 15:17:26', 1);
+(8, 'Menu Group', 'menu-group.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 1, '2024-06-26 15:17:26', 2),
+(9, 'Menu Item', 'menu-item.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 2, '2024-06-26 15:17:26', 2),
+(10, 'System Action', 'system-action.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 2, '2024-06-26 15:17:26', 2),
+(11, 'Localization', '', 'ti ti-map-pin', 1, 'Technical', 1, 'Settings', 0, '', 12, '2024-06-26 15:17:26', 2),
+(12, 'City', 'city.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 12, '2024-06-26 15:17:26', 2),
+(13, 'Country', 'country.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 13, '2024-06-26 15:17:26', 2),
+(14, 'State', 'state.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 19, '2024-06-26 15:17:26', 2),
+(15, 'Currency', 'currency.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 14, '2024-06-26 15:17:26', 2),
+(16, 'File Configuration', '', 'ti ti-file-symlink', 1, 'Technical', 1, 'Settings', 0, '', 6, '2024-06-26 15:17:26', 2),
+(17, 'Upload Setting', 'upload-setting.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 21, '2024-06-26 15:17:26', 2),
+(18, 'File Type', 'file-type.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 6, '2024-06-26 15:17:26', 2),
+(19, 'File Extension', 'file-extension.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 7, '2024-06-26 15:17:26', 2),
+(20, 'Email Setting', 'email-setting.php', 'ti ti-mail-forward', 1, 'Technical', 1, 'Settings', 0, '', 5, '2024-06-26 15:17:26', 2),
+(21, 'Notification Setting', 'notification-setting.php', 'ti ti-bell', 1, 'Technical', 1, 'Settings', 0, '', 14, '2024-06-26 15:17:26', 2),
+(22, 'Account Setting', 'account-setting.php', 'ti ti-tool', 4, 'Profile', 1, 'Settings', 0, NULL, 1, '2024-06-27 14:52:08', 2),
+(23, 'Inventory Overview', 'inventory-overview.php', 'ti ti-home', 5, 'Inventory Dashboard', 2, 'Inventory', NULL, NULL, 1, '2024-06-27 15:30:10', 2),
+(24, 'Warehouses', 'warehouses.php', 'ti ti-building-warehouse', 6, 'Warehouse Management', 2, 'Inventory', 0, NULL, 23, '2024-06-27 17:18:42', 2);
 
 --
 -- Triggers `menu_item`
@@ -7288,6 +7329,14 @@ CREATE TABLE `notification_setting` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `notification_setting`
+--
+
+INSERT INTO `notification_setting` (`notification_setting_id`, `notification_setting_name`, `notification_setting_description`, `system_notification`, `email_notification`, `sms_notification`, `created_date`, `last_log_by`) VALUES
+(1, 'Login OTP', 'Notification setting for Login OTP received by the users.', 0, 1, 0, '2024-06-27 14:59:41', 2),
+(2, 'Forgot Password', 'Notification setting when the user initiates forgot password.', 0, 1, 0, '2024-06-27 15:03:26', 2);
+
+--
 -- Triggers `notification_setting`
 --
 DROP TRIGGER IF EXISTS `notification_setting_trigger_insert`;
@@ -7368,6 +7417,14 @@ CREATE TABLE `notification_setting_email_template` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notification_setting_email_template`
+--
+
+INSERT INTO `notification_setting_email_template` (`notification_setting_email_id`, `notification_setting_id`, `email_notification_subject`, `email_notification_body`, `created_date`, `last_log_by`) VALUES
+(1, 1, 'Login OTP - Secure Access to Your Account', '<p>To ensure the security of your account, we have generated a unique One-Time Password (OTP) for you to use during the login process. Please use the following OTP to access your account:</p>\n<p><br>OTP:&nbsp;<strong>{OTP_CODE}</strong></p>\n<p><br>Please note that this OTP is valid for &nbsp;<strong>#{OTP_CODE_VALIDITY}</strong>. Once you have logged in successfully, we recommend enabling two-factor authentication for an added layer of security.<br>If you did not initiate this login or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-06-27 15:02:58', 2),
+(2, 2, 'Password Reset Request - Action Required', '<p>We received a request to reset your password. To proceed with the password reset, please follow the steps below:</p>\n<ol>\n<li>\n<p>Click on the following link to reset your password:&nbsp; <strong><a href=\"#{RESET_LINK}\">Password Reset Link</a></strong></p>\n</li>\n<li>\n<p>If you did not request this password reset, please ignore this email. Your account remains secure.</p>\n</li>\n</ol>\n<p>Please note that this link is time-sensitive and will expire after <strong>#{RESET_LINK_VALIDITY}</strong>. If you do not reset your password within this timeframe, you may need to request another password reset.</p>\n<p><br>If you did not initiate this password reset request or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.<br><br>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-06-27 15:13:04', 2);
 
 --
 -- Triggers `notification_setting_email_template`
@@ -7629,7 +7686,7 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (4, 1, 'Administrator', 3, 'Users & Companies', 1, 0, 0, 0, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
 (5, 1, 'Administrator', 4, 'User Account', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
 (6, 1, 'Administrator', 5, 'Company', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
-(7, 1, 'Administrator', 6, 'Role', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
+(7, 1, 'Administrator', 6, 'Role', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 2),
 (8, 1, 'Administrator', 7, 'User Interface', 1, 0, 0, 0, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 2),
 (9, 1, 'Administrator', 8, 'Menu Group', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
 (10, 1, 'Administrator', 9, 'Menu Item', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
@@ -7644,7 +7701,10 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (19, 1, 'Administrator', 18, 'File Type', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
 (20, 1, 'Administrator', 19, 'File Extension', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
 (21, 1, 'Administrator', 20, 'Email Setting', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
-(22, 1, 'Administrator', 21, 'Notification Setting', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1);
+(22, 1, 'Administrator', 21, 'Notification Setting', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
+(23, 1, 'Administrator', 22, 'Account Setting', 1, 1, 0, 0, '2024-06-27 14:52:13', '2024-06-27 14:52:13', 2),
+(24, 1, 'Administrator', 23, 'Inventory Overview', 1, 0, 0, 0, '2024-06-27 15:31:42', '2024-06-27 15:31:42', 2),
+(25, 1, 'Administrator', 24, 'Warehouses', 1, 1, 1, 1, '2024-06-27 17:18:46', '2024-06-27 17:18:46', 2);
 
 --
 -- Triggers `role_permission`
@@ -8820,13 +8880,13 @@ ALTER TABLE `user_account`
 -- AUTO_INCREMENT for table `app_module`
 --
 ALTER TABLE `app_module`
-  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2292;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2322;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -8886,25 +8946,25 @@ ALTER TABLE `internal_notes_attachment`
 -- AUTO_INCREMENT for table `menu_group`
 --
 ALTER TABLE `menu_group`
-  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
 --
 ALTER TABLE `notification_setting`
-  MODIFY `notification_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `notification_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `notification_setting_email_template`
 --
 ALTER TABLE `notification_setting_email_template`
-  MODIFY `notification_setting_email_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `notification_setting_email_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `notification_setting_sms_template`
@@ -8934,7 +8994,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`

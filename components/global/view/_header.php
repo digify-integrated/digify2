@@ -1,3 +1,19 @@
+<?php
+    $accountSettingPageAccess = $globalModel->checkAccessRights($userID, 22, 'read');
+
+    if ($accountSettingPageAccess['total'] > 0) {
+        $accountSettingPageDetails = $menuItemModel->getMenuItem(22);
+        $accountSettingPageID = $accountSettingPageDetails['menu_item_id'] ?? null;
+        $accountSettingAppModuleID = $accountSettingPageDetails['app_module_id'] ?? null;
+        $accountSettingPageURL = $accountSettingPageDetails['menu_item_url'] ?? null;
+        $accountSettingPageLink = $accountSettingPageURL . '?app_module_id=' . $securityModel->encryptData($accountSettingAppModuleID) . '&page_id=' . $securityModel->encryptData($accountSettingPageID);
+    
+        $accountSettingButton = ' <a href="'. $accountSettingPageLink .'" class="p-2 dropdown-item h6 rounded-1">
+                                    Account Settings
+                                </a>';
+    }
+?>
+
 <header class="topbar">
     <div class="with-vertical">
         <nav class="navbar navbar-expand-lg p-0">
@@ -43,9 +59,7 @@
                                         </div>
                                     </div>
                                     <div class="message-body">
-                                        <a href="account-settings.php" class="p-2 dropdown-item h6 rounded-1">
-                                            Account Settings
-                                        </a>
+                                        <?php echo $accountSettingButton; ?>
                                         <a href="logout.php?logout" class="p-2 dropdown-item h6 rounded-1">
                                             Sign Out
                                         </a>

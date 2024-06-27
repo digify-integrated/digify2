@@ -2,7 +2,7 @@
     'use strict';
 
     $(function() {
-        generateFilterOptions('country radio filter');
+        generateDropdownOptions('country options');
 
         if($('#state-table').length){
             stateTable('#state-table');
@@ -154,7 +154,7 @@ function stateTable(datatable_name, buttons = false, show_all = false){
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
-    var filter_by_country = $('input[name="filter-country"]:checked').val();
+    var filter_by_country = $('#country_filter').val();
     var settings;
 
     const column = [ 
@@ -220,9 +220,9 @@ function stateTable(datatable_name, buttons = false, show_all = false){
     $(datatable_name).dataTable(settings);
 }
 
-function generateFilterOptions(type){
+function generateDropdownOptions(type){
     switch (type) {
-        case 'country radio filter':
+        case 'country options':
             
             $.ajax({
                 url: 'components/country/view/_country_generation.php',
@@ -232,7 +232,10 @@ function generateFilterOptions(type){
                     type : type
                 },
                 success: function(response) {
-                    document.getElementById('country-filter').innerHTML = response[0].filterOptions;
+                    $('#country_filter').select2({
+                        dropdownParent: $('#filter-offcanvas'),
+                        data: response
+                    });
                 },
                 error: function(xhr, status, error) {
                     var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;

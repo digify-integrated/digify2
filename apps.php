@@ -24,7 +24,7 @@
 <body>
     <?php require_once('components/global/view/_preloader.php'); ?>
     <div id="main-wrapper" class="o_home_menu_background">
-        <div class="body-wrapper bg-transparent w-100">
+        <div class="body-wrapper apps-wrapper bg-transparent w-100">
             <div class="container-fluid">
                 <div class="row">
                     <?php
@@ -47,7 +47,7 @@
                             $menuItemDetails = $menuItemModel->getMenuItem($menuItemID);
                             $menuItemURL = $menuItemDetails['menu_item_url'];
                                     
-                            $apps .= '<div class="col-lg-2">
+                            $apps .= '<div class="col-lg-2 hover-img">
                                         <a href="'. $menuItemURL .'?app_module_id='. $securityModel->encryptData($appModuleID) .'&page_id='. $securityModel->encryptData($menuItemID) .'">
                                             <div class="card" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="'. $appModuleDescription .'">
                                                 <div class="card-body text-center">

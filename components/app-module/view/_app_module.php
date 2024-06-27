@@ -1,7 +1,3 @@
-<?php
-    $deleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-    $createAccess = $globalModel->checkAccessRights($userID, $pageID, 'create');
-?>
 <div class="card card-body">
     <div class="row">
         <div class="col-md-4 col-xl-3">
@@ -14,9 +10,9 @@
             <div class="card-actions cursor-pointer ms-auto d-flex button-group">
                 <?php
                     echo $deleteAccess['total'] > 0 ? '<button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0 d-none" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><button class="dropdown-item" type="button" id="delete-app-module">Delete App Module</button></li>
-                            </ul>' : '';
+                                                        <ul class="dropdown-menu dropdown-menu-end">
+                                                            <li><button class="dropdown-item" type="button" id="delete-app-module">Delete App Module</button></li>
+                                                        </ul>' : '';
 
                     echo $createAccess['total'] > 0 ? '<a href="' . $pageLink . '&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
                 ?>
