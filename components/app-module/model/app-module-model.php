@@ -66,6 +66,7 @@ class AppModuleModel {
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
+    # -------------------------------------------------------------
 
     # -------------------------------------------------------------
     #   Insert methods
@@ -194,10 +195,10 @@ class AppModuleModel {
 
         $htmlOptions = '';
         foreach ($options as $row) {
-            $menuGroupID = $row['app_module_id'];
-            $menuGroupName = $row['app_module_name'];
+            $appModuleID = $row['app_module_id'];
+            $appModuleName = $row['app_module_name'];
 
-            $htmlOptions .= '<option value="' . htmlspecialchars($menuGroupID, ENT_QUOTES) . '">' . htmlspecialchars($menuGroupName, ENT_QUOTES) . '</option>';
+            $htmlOptions .= '<option value="' . htmlspecialchars($appModuleID, ENT_QUOTES) . '">' . htmlspecialchars($appModuleName, ENT_QUOTES) . '</option>';
         }
 
         return $htmlOptions;

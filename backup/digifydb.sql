@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 27, 2024 at 11:21 AM
+-- Generation Time: Jun 28, 2024 at 11:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -130,6 +130,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCurrencyExist` (IN `p_currency
     WHERE currency_id = p_currency_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkDepartureReasonsExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkDepartureReasonsExist` (IN `p_departure_reasons_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM departure_reasons
+    WHERE departure_reasons_id = p_departure_reasons_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkEmailNotificationTemplateExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmailNotificationTemplateExist` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -142,6 +149,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmailSettingExist` (IN `p_emai
 	SELECT COUNT(*) AS total
     FROM email_setting
     WHERE email_setting_id = p_email_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkEmploymentTypesExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmploymentTypesExist` (IN `p_employment_types_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM employment_types
+    WHERE employment_types_id = p_employment_types_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkFileExtensionExist`$$
@@ -327,9 +341,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCurrency` (IN `p_currency_id`
     DELETE FROM currency WHERE currency_id = p_currency_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteDepartureReasons`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteDepartureReasons` (IN `p_departure_reasons_id` INT)   BEGIN
+    DELETE FROM departure_reasons WHERE departure_reasons_id = p_departure_reasons_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteEmailSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmailSetting` (IN `p_email_setting_id` INT)   BEGIN
    DELETE FROM email_setting WHERE email_setting_id = p_email_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteEmploymentTypes`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmploymentTypes` (IN `p_employment_types_id` INT)   BEGIN
+    DELETE FROM employment_types WHERE employment_types_id = p_employment_types_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteFileExtension`$$
@@ -612,11 +636,39 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCurrencyTable` ()   BEGIN
     SELECT currency_id, currency_name, currency_symbol FROM currency;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateDepartureReasonsOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateDepartureReasonsOptions` ()   BEGIN
+	SELECT departure_reasons_id, departure_reasons_name 
+    FROM departure_reasons 
+    ORDER BY departure_reasons_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateDepartureReasonsTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateDepartureReasonsTable` ()   BEGIN
+	SELECT departure_reasons_id, departure_reasons_name 
+    FROM departure_reasons 
+    ORDER BY departure_reasons_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateEmailSettingTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmailSettingTable` ()   BEGIN
     SELECT email_setting_id, email_setting_name, email_setting_description 
     FROM email_setting
     ORDER BY email_setting_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmploymentTypesOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmploymentTypesOptions` ()   BEGIN
+	SELECT employment_types_id, employment_types_name 
+    FROM employment_types 
+    ORDER BY employment_types_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmploymentTypesTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmploymentTypesTable` ()   BEGIN
+	SELECT employment_types_id, employment_types_name 
+    FROM employment_types 
+    ORDER BY employment_types_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateFileExtensionDualListBoxOptions`$$
@@ -962,6 +1014,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getCurrency` (IN `p_currency_id` IN
 	WHERE currency_id = p_currency_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getDepartureReasons`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getDepartureReasons` (IN `p_departure_reasons_id` INT)   BEGIN
+	SELECT * FROM departure_reasons
+	WHERE departure_reasons_id = p_departure_reasons_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getEmailNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmailNotificationTemplate` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT * FROM notification_setting_email_template
@@ -972,6 +1030,12 @@ DROP PROCEDURE IF EXISTS `getEmailSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmailSetting` (IN `p_email_setting_id` INT)   BEGIN
 	SELECT * FROM email_setting
     WHERE email_setting_id = p_email_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getEmploymentTypes`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmploymentTypes` (IN `p_employment_types_id` INT)   BEGIN
+	SELECT * FROM employment_types
+	WHERE employment_types_id = p_employment_types_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getFileExtension`$$
@@ -1122,6 +1186,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCurrency` (IN `p_currency_nam
     SET p_currency_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertDepartureReasons`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertDepartureReasons` (IN `p_departure_reasons_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_departure_reasons_id` INT)   BEGIN
+    INSERT INTO departure_reasons (departure_reasons_name, last_log_by) 
+	VALUES(p_departure_reasons_name, p_last_log_by);
+	
+    SET p_departure_reasons_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertEmailNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmailNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_email_notification_subject` VARCHAR(200), IN `p_email_notification_body` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
     INSERT INTO notification_setting_email_template (notification_setting_id, email_notification_subject, email_notification_body, last_log_by) 
@@ -1134,6 +1206,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmailSetting` (IN `p_email_se
 	VALUES(p_email_setting_name, p_email_setting_description, p_mail_host, p_port, p_smtp_auth, p_smtp_auto_tls, p_mail_username, p_mail_password, p_mail_encryption, p_mail_from_name, p_mail_from_email, p_last_log_by);
 	
     SET p_email_setting_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertEmploymentTypes`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmploymentTypes` (IN `p_employment_types_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_employment_types_id` INT)   BEGIN
+    INSERT INTO employment_types (employment_types_name, last_log_by) 
+	VALUES(p_employment_types_name, p_last_log_by);
+	
+    SET p_employment_types_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertFileExtension`$$
@@ -1467,6 +1547,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCurrency` (IN `p_currency_id`
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateDepartureReasons`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateDepartureReasons` (IN `p_departure_reasons_id` INT, IN `p_departure_reasons_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE departure_reasons
+    SET departure_reasons_name = p_departure_reasons_name,
+        last_log_by = p_last_log_by
+    WHERE departure_reasons_id = p_departure_reasons_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateEmailNotificationChannelStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailNotificationChannelStatus` (IN `p_notification_setting_id` INT, IN `p_email_notification` INT(1), IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting
@@ -1500,6 +1588,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailSetting` (IN `p_email_se
         mail_from_email = p_mail_from_email,
         last_log_by = p_last_log_by
     WHERE email_setting_id = p_email_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateEmploymentTypes`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmploymentTypes` (IN `p_employment_types_id` INT, IN `p_employment_types_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employment_types
+    SET employment_types_name = p_employment_types_name,
+        last_log_by = p_last_log_by
+    WHERE employment_types_id = p_employment_types_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateFailedOTPAttempts`$$
@@ -2037,7 +2133,7 @@ CREATE TABLE `app_module` (
 
 INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_description`, `app_logo`, `app_version`, `menu_item_id`, `menu_item_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
 (1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 22, 'Account Setting', 100, '2024-06-26 13:43:48', 2),
-(2, 'Inventory', 'Manage your stock and logistics activities', './components/app-module/image/logo/2/PsyC.png', '1.0.0', 23, 'Inventory Overview', 1, '2024-06-27 15:30:44', 2);
+(2, 'Employees', 'Centralize employee information', './components/app-module/image/logo/2/kwDc.png', '1.0.0', 23, 'Inventory Overview', 1, '2024-06-27 15:30:44', 2);
 
 --
 -- Triggers `app_module`
@@ -4454,7 +4550,71 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2318, 'role_permission', 25, 'Read Access: 0 -> 1<br/>', 2, '2024-06-27 17:18:47', '2024-06-27 17:18:47'),
 (2319, 'role_permission', 25, 'Create Access: 0 -> 1<br/>', 2, '2024-06-27 17:18:48', '2024-06-27 17:18:48'),
 (2320, 'role_permission', 25, 'Write Access: 0 -> 1<br/>', 2, '2024-06-27 17:18:48', '2024-06-27 17:18:48'),
-(2321, 'role_permission', 25, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-27 17:18:49', '2024-06-27 17:18:49');
+(2321, 'role_permission', 25, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-27 17:18:49', '2024-06-27 17:18:49'),
+(2322, 'menu_group', 5, 'App Module: Inventory -> Centralize employee information<br/>', 2, '2024-06-28 08:47:30', '2024-06-28 08:47:30'),
+(2323, 'menu_group', 6, 'App Module: Inventory -> Centralize employee information<br/>', 2, '2024-06-28 08:47:30', '2024-06-28 08:47:30'),
+(2324, 'menu_item', 23, 'App Module: Inventory -> Centralize employee information<br/>', 2, '2024-06-28 08:47:30', '2024-06-28 08:47:30'),
+(2325, 'menu_item', 24, 'App Module: Inventory -> Centralize employee information<br/>', 2, '2024-06-28 08:47:30', '2024-06-28 08:47:30'),
+(2326, 'app_module', 2, 'App Module Name: Inventory -> Centralize employee information<br/>', 2, '2024-06-28 08:47:30', '2024-06-28 08:47:30'),
+(2327, 'menu_group', 5, 'App Module: Centralize employee information -> Employees<br/>', 2, '2024-06-28 09:06:55', '2024-06-28 09:06:55'),
+(2328, 'menu_group', 6, 'App Module: Centralize employee information -> Employees<br/>', 2, '2024-06-28 09:06:55', '2024-06-28 09:06:55'),
+(2329, 'menu_item', 23, 'App Module: Centralize employee information -> Employees<br/>', 2, '2024-06-28 09:06:55', '2024-06-28 09:06:55'),
+(2330, 'menu_item', 24, 'App Module: Centralize employee information -> Employees<br/>', 2, '2024-06-28 09:06:55', '2024-06-28 09:06:55'),
+(2331, 'app_module', 2, 'App Module Name: Centralize employee information -> Employees<br/>App Module Description: Manage your stock and logistics activities -> Centralize employee information<br/>', 2, '2024-06-28 09:06:55', '2024-06-28 09:06:55'),
+(2332, 'menu_item', 24, 'Menu Group Name: Warehouse Management -> Employee Configuration<br/>', 2, '2024-06-28 09:25:39', '2024-06-28 09:25:39'),
+(2333, 'menu_group', 6, 'Menu Group Name: Warehouse Management -> Employee Configuration<br/>', 2, '2024-06-28 09:25:39', '2024-06-28 09:25:39'),
+(2334, 'menu_item', 23, 'Menu Group Name: Inventory Dashboard -> Employees<br/>', 2, '2024-06-28 09:27:34', '2024-06-28 09:27:34'),
+(2335, 'menu_group', 5, 'Menu Group Name: Inventory Dashboard -> Employees<br/>', 2, '2024-06-28 09:27:34', '2024-06-28 09:27:34'),
+(2336, 'role_permission', 24, 'Menu Item: Inventory Overview -> Employees<br/>', 2, '2024-06-28 09:38:13', '2024-06-28 09:38:13'),
+(2337, 'menu_item', 23, 'Menu Item Name: Inventory Overview -> Employees<br/>Menu Item URL: inventory-overview.php -> employees.php<br/>Menu Item Icon: ti ti-home -> ti ti-users<br/>', 2, '2024-06-28 09:38:13', '2024-06-28 09:38:13'),
+(2338, 'role_permission', 24, 'Create Access: 0 -> 1<br/>', 2, '2024-06-28 09:38:27', '2024-06-28 09:38:27'),
+(2339, 'role_permission', 24, 'Write Access: 0 -> 1<br/>', 2, '2024-06-28 09:38:28', '2024-06-28 09:38:28'),
+(2340, 'role_permission', 24, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-28 09:38:28', '2024-06-28 09:38:28'),
+(2341, 'role_permission', 25, 'Menu Item: Warehouses -> Department<br/>', 2, '2024-06-28 09:48:35', '2024-06-28 09:48:35'),
+(2342, 'menu_item', 24, 'Menu Item Name: Warehouses -> Department<br/>Menu Item URL: warehouses.php -> department.php<br/>Menu Item Icon: ti ti-building-warehouse -> ti ti-hierarchy-2<br/>Order Sequence: 23 -> 4<br/>', 2, '2024-06-28 09:48:35', '2024-06-28 09:48:35'),
+(2343, 'menu_item', 25, 'Menu Item created. <br/><br/>Menu Item Name: Work Location<br/>Menu Item URL: work-location.php<br/>Menu Item Icon: ti ti-map-pin<br/>Menu Group Name: Employee Configuration<br/>App Module: Employees<br/>Order Sequence: 23', 2, '2024-06-28 10:38:12', '2024-06-28 10:38:12'),
+(2344, 'role_permission', 26, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Work Location<br/>Date Assigned: 2024-06-28 10:38:17', 2, '2024-06-28 10:38:17', '2024-06-28 10:38:17'),
+(2345, 'role_permission', 26, 'Read Access: 0 -> 1<br/>', 2, '2024-06-28 10:38:18', '2024-06-28 10:38:18'),
+(2346, 'role_permission', 26, 'Create Access: 0 -> 1<br/>', 2, '2024-06-28 10:38:19', '2024-06-28 10:38:19'),
+(2347, 'role_permission', 26, 'Write Access: 0 -> 1<br/>', 2, '2024-06-28 10:38:20', '2024-06-28 10:38:20'),
+(2348, 'role_permission', 26, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-28 10:38:21', '2024-06-28 10:38:21'),
+(2349, 'menu_item', 26, 'Menu Item created. <br/><br/>Menu Item Name: Work Schedules<br/>Menu Item URL: work-schedules.php<br/>Menu Item Icon: ti ti-calendar-stats<br/>Menu Group Name: Employee Configuration<br/>App Module: Employees<br/>Order Sequence: 24', 2, '2024-06-28 10:43:21', '2024-06-28 10:43:21'),
+(2350, 'role_permission', 27, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Work Schedules<br/>Date Assigned: 2024-06-28 10:43:25', 2, '2024-06-28 10:43:25', '2024-06-28 10:43:25'),
+(2351, 'role_permission', 27, 'Read Access: 0 -> 1<br/>', 2, '2024-06-28 10:43:26', '2024-06-28 10:43:26'),
+(2352, 'role_permission', 27, 'Create Access: 0 -> 1<br/>', 2, '2024-06-28 10:43:27', '2024-06-28 10:43:27'),
+(2353, 'role_permission', 27, 'Write Access: 0 -> 1<br/>', 2, '2024-06-28 10:43:27', '2024-06-28 10:43:27'),
+(2354, 'role_permission', 27, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-28 10:43:28', '2024-06-28 10:43:28'),
+(2355, 'menu_item', 27, 'Menu Item created. <br/><br/>Menu Item Name: Employment Types<br/>Menu Item URL: employment-types.php<br/>Menu Item Icon: ti ti-briefcase<br/>Menu Group Name: Employee Configuration<br/>App Module: Employees<br/>Order Sequence: 5', 2, '2024-06-28 10:45:01', '2024-06-28 10:45:01'),
+(2356, 'role_permission', 28, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Employment Types<br/>Date Assigned: 2024-06-28 10:45:05', 2, '2024-06-28 10:45:05', '2024-06-28 10:45:05'),
+(2357, 'role_permission', 28, 'Read Access: 0 -> 1<br/>', 2, '2024-06-28 10:45:06', '2024-06-28 10:45:06'),
+(2358, 'role_permission', 28, 'Create Access: 0 -> 1<br/>', 2, '2024-06-28 10:45:07', '2024-06-28 10:45:07'),
+(2359, 'role_permission', 28, 'Write Access: 0 -> 1<br/>', 2, '2024-06-28 10:45:10', '2024-06-28 10:45:10'),
+(2360, 'role_permission', 28, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-28 10:45:10', '2024-06-28 10:45:10'),
+(2361, 'menu_item', 28, 'Menu Item created. <br/><br/>Menu Item Name: Departure Reasons<br/>Menu Item URL: departure-reasons.php<br/>Menu Item Icon: ti ti-user-minus<br/>Menu Group Name: Employee Configuration<br/>App Module: Employees<br/>Order Sequence: 5', 2, '2024-06-28 10:46:48', '2024-06-28 10:46:48'),
+(2362, 'role_permission', 29, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Departure Reasons<br/>Date Assigned: 2024-06-28 10:50:01', 2, '2024-06-28 10:50:01', '2024-06-28 10:50:01'),
+(2363, 'role_permission', 29, 'Read Access: 0 -> 1<br/>', 2, '2024-06-28 10:50:03', '2024-06-28 10:50:03'),
+(2364, 'role_permission', 29, 'Create Access: 0 -> 1<br/>', 2, '2024-06-28 10:50:04', '2024-06-28 10:50:04'),
+(2365, 'role_permission', 29, 'Write Access: 0 -> 1<br/>', 2, '2024-06-28 10:50:05', '2024-06-28 10:50:05'),
+(2366, 'role_permission', 29, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-28 10:50:05', '2024-06-28 10:50:05'),
+(2367, 'menu_item', 29, 'Menu Item created. <br/><br/>Menu Item Name: Job Positions<br/>Menu Item URL: job-positions.php<br/>Menu Item Icon: ti ti-id<br/>Menu Group Name: Employee Configuration<br/>App Module: Employees<br/>Order Sequence: 10', 2, '2024-06-28 10:56:17', '2024-06-28 10:56:17'),
+(2368, 'role_permission', 30, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Job Positions<br/>Date Assigned: 2024-06-28 10:56:21', 2, '2024-06-28 10:56:21', '2024-06-28 10:56:21'),
+(2369, 'role_permission', 30, 'Read Access: 0 -> 1<br/>', 2, '2024-06-28 10:56:22', '2024-06-28 10:56:22'),
+(2370, 'role_permission', 30, 'Create Access: 0 -> 1<br/>', 2, '2024-06-28 10:56:22', '2024-06-28 10:56:22'),
+(2371, 'role_permission', 30, 'Write Access: 0 -> 1<br/>', 2, '2024-06-28 10:56:23', '2024-06-28 10:56:23'),
+(2372, 'role_permission', 30, 'Delete Access: 0 -> 1<br/>', 2, '2024-06-28 10:56:24', '2024-06-28 10:56:24'),
+(2373, 'role_permission', 25, 'Menu Item: Department -> Departments<br/>', 2, '2024-06-28 10:56:57', '2024-06-28 10:56:57'),
+(2374, 'menu_item', 24, 'Menu Item Name: Department -> Departments<br/>Menu Item URL: department.php -> departments.php<br/>', 2, '2024-06-28 10:56:57', '2024-06-28 10:56:57'),
+(2375, 'role_permission', 26, 'Menu Item: Work Location -> Work Locations<br/>', 2, '2024-06-28 10:57:09', '2024-06-28 10:57:09'),
+(2376, 'menu_item', 25, 'Menu Item Name: Work Location -> Work Locations<br/>Menu Item URL: work-location.php -> work-locations.php<br/>', 2, '2024-06-28 10:57:09', '2024-06-28 10:57:09'),
+(2377, 'departure_reasons', 1, 'Departure Reason Name: Settings -> Settingsss<br/>', 2, '2024-06-28 14:03:50', '2024-06-28 14:03:50'),
+(2378, 'departure_reasons', 2, 'Departure reason created. <br/><br/>Departure Reason Name: test', 2, '2024-06-28 14:04:42', '2024-06-28 14:04:42'),
+(2379, 'departure_reasons', 3, 'Departure reason created. <br/><br/>Departure Reason Name: test2', 2, '2024-06-28 14:05:03', '2024-06-28 14:05:03'),
+(2380, 'employment_types', 1, 'Employment type created. <br/><br/>Employment Type Name: test', 2, '2024-06-28 15:57:35', '2024-06-28 15:57:35'),
+(2381, 'employment_types', 1, 'Employment Type Name: test -> testasd<br/>', 2, '2024-06-28 15:58:36', '2024-06-28 15:58:36'),
+(2382, 'employment_types', 1, 'Employment Type Name: testasd -> testasdasd<br/>', 2, '2024-06-28 15:58:38', '2024-06-28 15:58:38'),
+(2383, 'employment_types', 2, 'Employment type created. <br/><br/>Employment Type Name: asdasd', 2, '2024-06-28 15:58:46', '2024-06-28 15:58:46'),
+(2384, 'employment_types', 3, 'Employment type created. <br/><br/>Employment Type Name: asd', 2, '2024-06-28 15:58:49', '2024-06-28 15:58:49'),
+(2385, 'employment_types', 4, 'Employment type created. <br/><br/>Employment Type Name: test', 2, '2024-06-28 16:07:15', '2024-06-28 16:07:15');
 
 -- --------------------------------------------------------
 
@@ -6691,6 +6851,54 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `departure_reasons`
+--
+
+DROP TABLE IF EXISTS `departure_reasons`;
+CREATE TABLE `departure_reasons` (
+  `departure_reasons_id` int(10) UNSIGNED NOT NULL,
+  `departure_reasons_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `departure_reasons`
+--
+DROP TRIGGER IF EXISTS `departure_reasons_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `departure_reasons_trigger_insert` AFTER INSERT ON `departure_reasons` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Departure reason created. <br/>';
+
+    IF NEW.departure_reasons_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Departure Reason Name: ", NEW.departure_reasons_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('departure_reasons', NEW.departure_reasons_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `departure_reasons_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `departure_reasons_trigger_update` AFTER UPDATE ON `departure_reasons` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.departure_reasons_name <> OLD.departure_reasons_name THEN
+        SET audit_log = CONCAT(audit_log, "Departure Reason Name: ", OLD.departure_reasons_name, " -> ", NEW.departure_reasons_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('departure_reasons', NEW.departure_reasons_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `email_setting`
 --
 
@@ -6820,6 +7028,54 @@ CREATE TRIGGER `email_setting_trigger_update` AFTER UPDATE ON `email_setting` FO
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('email_setting', NEW.email_setting_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employment_types`
+--
+
+DROP TABLE IF EXISTS `employment_types`;
+CREATE TABLE `employment_types` (
+  `employment_types_id` int(10) UNSIGNED NOT NULL,
+  `employment_types_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `employment_types`
+--
+DROP TRIGGER IF EXISTS `employment_types_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `employment_types_trigger_insert` AFTER INSERT ON `employment_types` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employment type created. <br/>';
+
+    IF NEW.employment_types_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Employment Type Name: ", NEW.employment_types_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employment_types', NEW.employment_types_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `employment_types_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `employment_types_trigger_update` AFTER UPDATE ON `employment_types` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.employment_types_name <> OLD.employment_types_name THEN
+        SET audit_log = CONCAT(audit_log, "Employment Type Name: ", OLD.employment_types_name, " -> ", NEW.employment_types_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employment_types', NEW.employment_types_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -7122,8 +7378,8 @@ INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `
 (2, 'Administration', 1, 'Settings', 5, '2024-06-26 14:28:45', 2),
 (3, 'Configurations', 1, 'Settings', 50, '2024-06-26 14:28:45', 2),
 (4, 'Profile', 1, 'Settings', 1, '2024-06-27 14:49:24', 2),
-(5, 'Inventory Dashboard', 2, 'Inventory', 1, '2024-06-27 15:29:15', 2),
-(6, 'Warehouse Management', 2, 'Inventory', 23, '2024-06-27 17:17:10', 2);
+(5, 'Employees', 2, 'Employees', 1, '2024-06-27 15:29:15', 2),
+(6, 'Employee Configuration', 2, 'Employees', 23, '2024-06-27 17:17:10', 2);
 
 --
 -- Triggers `menu_group`
@@ -7225,8 +7481,13 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (20, 'Email Setting', 'email-setting.php', 'ti ti-mail-forward', 1, 'Technical', 1, 'Settings', 0, '', 5, '2024-06-26 15:17:26', 2),
 (21, 'Notification Setting', 'notification-setting.php', 'ti ti-bell', 1, 'Technical', 1, 'Settings', 0, '', 14, '2024-06-26 15:17:26', 2),
 (22, 'Account Setting', 'account-setting.php', 'ti ti-tool', 4, 'Profile', 1, 'Settings', 0, NULL, 1, '2024-06-27 14:52:08', 2),
-(23, 'Inventory Overview', 'inventory-overview.php', 'ti ti-home', 5, 'Inventory Dashboard', 2, 'Inventory', NULL, NULL, 1, '2024-06-27 15:30:10', 2),
-(24, 'Warehouses', 'warehouses.php', 'ti ti-building-warehouse', 6, 'Warehouse Management', 2, 'Inventory', 0, NULL, 23, '2024-06-27 17:18:42', 2);
+(23, 'Employees', 'employees.php', 'ti ti-users', 5, 'Employees', 2, 'Employees', 0, NULL, 1, '2024-06-27 15:30:10', 2),
+(24, 'Departments', 'departments.php', 'ti ti-hierarchy-2', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 4, '2024-06-27 17:18:42', 2),
+(25, 'Work Locations', 'work-locations.php', 'ti ti-map-pin', 6, 'Employee Configuration', 2, 'Employees', NULL, NULL, 23, '2024-06-28 10:38:12', 2),
+(26, 'Work Schedules', 'work-schedules.php', 'ti ti-calendar-stats', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 24, '2024-06-28 10:43:21', 2),
+(27, 'Employment Types', 'employment-types.php', 'ti ti-briefcase', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 5, '2024-06-28 10:45:01', 2),
+(28, 'Departure Reasons', 'departure-reasons.php', 'ti ti-user-minus', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 5, '2024-06-28 10:46:48', 2),
+(29, 'Job Positions', 'job-positions.php', 'ti ti-id', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 10, '2024-06-28 10:56:17', 2);
 
 --
 -- Triggers `menu_item`
@@ -7703,8 +7964,13 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (21, 1, 'Administrator', 20, 'Email Setting', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
 (22, 1, 'Administrator', 21, 'Notification Setting', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
 (23, 1, 'Administrator', 22, 'Account Setting', 1, 1, 0, 0, '2024-06-27 14:52:13', '2024-06-27 14:52:13', 2),
-(24, 1, 'Administrator', 23, 'Inventory Overview', 1, 0, 0, 0, '2024-06-27 15:31:42', '2024-06-27 15:31:42', 2),
-(25, 1, 'Administrator', 24, 'Warehouses', 1, 1, 1, 1, '2024-06-27 17:18:46', '2024-06-27 17:18:46', 2);
+(24, 1, 'Administrator', 23, 'Employees', 1, 1, 1, 1, '2024-06-27 15:31:42', '2024-06-27 15:31:42', 2),
+(25, 1, 'Administrator', 24, 'Departments', 1, 1, 1, 1, '2024-06-27 17:18:46', '2024-06-27 17:18:46', 2),
+(26, 1, 'Administrator', 25, 'Work Locations', 1, 1, 1, 1, '2024-06-28 10:38:17', '2024-06-28 10:38:17', 2),
+(27, 1, 'Administrator', 26, 'Work Schedules', 1, 1, 1, 1, '2024-06-28 10:43:25', '2024-06-28 10:43:25', 2),
+(28, 1, 'Administrator', 27, 'Employment Types', 1, 1, 1, 1, '2024-06-28 10:45:05', '2024-06-28 10:45:05', 2),
+(29, 1, 'Administrator', 28, 'Departure Reasons', 1, 1, 1, 1, '2024-06-28 10:50:01', '2024-06-28 10:50:01', 2),
+(30, 1, 'Administrator', 29, 'Job Positions', 1, 1, 1, 1, '2024-06-28 10:56:21', '2024-06-28 10:56:21', 2);
 
 --
 -- Triggers `role_permission`
@@ -8272,7 +8538,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'light', 'Orange_Theme', 0, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'light', 'Aqua_Theme', 0, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -8661,12 +8927,28 @@ ALTER TABLE `currency`
   ADD KEY `currency_index_currency_id` (`currency_id`);
 
 --
+-- Indexes for table `departure_reasons`
+--
+ALTER TABLE `departure_reasons`
+  ADD PRIMARY KEY (`departure_reasons_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `departure_reasons_index_departure_reasons_id` (`departure_reasons_id`);
+
+--
 -- Indexes for table `email_setting`
 --
 ALTER TABLE `email_setting`
   ADD PRIMARY KEY (`email_setting_id`),
   ADD KEY `last_log_by` (`last_log_by`),
   ADD KEY `email_setting_index_email_setting_id` (`email_setting_id`);
+
+--
+-- Indexes for table `employment_types`
+--
+ALTER TABLE `employment_types`
+  ADD PRIMARY KEY (`employment_types_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `employment_types_index_employment_types_id` (`employment_types_id`);
 
 --
 -- Indexes for table `file_extension`
@@ -8886,7 +9168,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2322;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2386;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -8913,10 +9195,22 @@ ALTER TABLE `currency`
   MODIFY `currency_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `departure_reasons`
+--
+ALTER TABLE `departure_reasons`
+  MODIFY `departure_reasons_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `email_setting`
 --
 ALTER TABLE `email_setting`
   MODIFY `email_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `employment_types`
+--
+ALTER TABLE `employment_types`
+  MODIFY `employment_types_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `file_extension`
@@ -8952,7 +9246,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -8994,7 +9288,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -9099,10 +9393,22 @@ ALTER TABLE `currency`
   ADD CONSTRAINT `currency_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `departure_reasons`
+--
+ALTER TABLE `departure_reasons`
+  ADD CONSTRAINT `departure_reasons_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `email_setting`
 --
 ALTER TABLE `email_setting`
   ADD CONSTRAINT `email_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `employment_types`
+--
+ALTER TABLE `employment_types`
+  ADD CONSTRAINT `employment_types_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `file_extension`

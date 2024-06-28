@@ -13,6 +13,11 @@
             getUICustomization();
         }
 
+        $(document).on('click','#discard-create',function() {
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            discardCreate(page_link);
+        });
+
         $(document).on('click','#internal-notes-button',function() {
             resetModalForm('internal-notes-form');
         });
@@ -411,6 +416,7 @@ function internalNotesForm(databaseTable, referenceID){
         },
         submitHandler: function(form) {
             const transaction = 'add internal notes';
+            
             var formData = new FormData(form);
             formData.append('transaction', transaction);
             formData.append('database_table', databaseTable);
@@ -503,34 +509,34 @@ function getUICustomization(){
         method: 'POST',
         dataType: 'json',
         data: {
-          transaction : 'get ui customization setting details'
+            transaction : 'get ui customization setting details'
         },
         success: function(response) {
-          if (response.success) {
-            sessionStorage.setItem('Layout', response.layout);
-            sessionStorage.setItem('SidebarType', response.sidebarType);
-            sessionStorage.setItem('BoxedLayout', response.boxedLayout);
-            sessionStorage.setItem('Direction', response.direction);
-            sessionStorage.setItem('Theme', response.theme);
-            sessionStorage.setItem('ColorTheme', response.colorTheme);
-            sessionStorage.setItem('CardBorder', response.cardBorder);
-          } 
-          else {
-            if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-              setNotification(response.title, response.message, response.messageType);
-              window.location = 'logout.php?logout';
-            }
+            if (response.success) {
+                sessionStorage.setItem('Layout', response.layout);
+                sessionStorage.setItem('SidebarType', response.sidebarType);
+                sessionStorage.setItem('BoxedLayout', response.boxedLayout);
+                sessionStorage.setItem('Direction', response.direction);
+                sessionStorage.setItem('Theme', response.theme);
+                sessionStorage.setItem('ColorTheme', response.colorTheme);
+                sessionStorage.setItem('CardBorder', response.cardBorder);
+            } 
             else {
-              showNotification(response.title, response.message, response.messageType);
+                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                    setNotification(response.title, response.message, response.messageType);
+                    window.location = 'logout.php?logout';
+                }
+                else {
+                    showNotification(response.title, response.message, response.messageType);
+                }
             }
-          }
         },
         error: function(xhr, status, error) {
-          var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-          if (xhr.responseText) {
-            fullErrorMessage += `, Response: ${xhr.responseText}`;
-          }
-          showErrorDialog(fullErrorMessage);
+            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+            if (xhr.responseText) {
+                fullErrorMessage += `, Response: ${xhr.responseText}`;
+            }
+            showErrorDialog(fullErrorMessage);
         }
       });
 }

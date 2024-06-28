@@ -5,11 +5,6 @@
         if($('#country-form').length){
             countryForm();
         }
-
-        $(document).on('click','#discard-create',function() {
-            const page_link = document.getElementById('page-link').getAttribute('href'); 
-            discardCreate(page_link);
-        });
     });
 })(jQuery);
 

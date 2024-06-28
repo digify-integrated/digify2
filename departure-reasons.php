@@ -22,13 +22,13 @@
                         require_once('components/global/view/_breadcrumbs.php'); 
 
                         if($newRecord){
-                            require_once('components/warehouses/view/_warehouses_new.php');
+                            require_once('components/departure-reasons/view/_departure_reasons_new.php');
                         }
                         else if(!empty($detailID)){
-                            require_once('components/warehouses/view/_warehouses_details.php');
+                            require_once('components/departure-reasons/view/_departure_reasons_details.php');
                         }
                         else{
-                            require_once('components/warehouses/view/_warehouses.php');
+                            require_once('components/departure-reasons/view/_departure_reasons.php');
                         }
                     ?>
                 </div>
@@ -45,20 +45,18 @@
 
     <script src="./assets/libs/max-length/bootstrap-maxlength.min.js"></script>
     <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
-    <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
 
     <?php
-        $scriptLink = 'warehouses.js';
+        $scriptLink = 'departure-reasons.js';
 
         if($newRecord){
-            $scriptLink = 'warehouses-new.js';
+            $scriptLink = 'departure-reasons-new.js';
         }
         else if(!empty($detailID)){
-            $scriptLink = 'warehouses-details.js';
+            $scriptLink = 'departure-reasons-details.js';
         }
 
-        echo '<script src="./components/warehouses/js/'. $scriptLink .'?v=' . rand() .'"></script>';
+        echo '<script src="./components/departure-reasons/js/'. $scriptLink .'?v=' . rand() .'"></script>';
     ?>
 </body>
 

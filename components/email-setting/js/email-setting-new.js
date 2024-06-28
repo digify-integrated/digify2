@@ -5,11 +5,6 @@
         if($('#email-setting-form').length){
             emailSettingForm();
         }
-
-        $(document).on('click','#discard-create',function() {
-            const page_link = document.getElementById('page-link').getAttribute('href');
-            discardCreate(page_link);
-        });
     });
 })(jQuery);
 
