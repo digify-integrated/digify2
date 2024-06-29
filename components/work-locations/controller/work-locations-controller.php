@@ -183,22 +183,14 @@ class WorkLocationsController {
             return;
         }
 
-        if (isset($_POST['work_locations_name']) && !empty($_POST['work_locations_name']) && isset($_POST['legal_name']) && !empty($_POST['legal_name']) && isset($_POST['address']) && !empty($_POST['address']) && isset($_POST['city_id']) && !empty($_POST['city_id']) && isset($_POST['currency_id']) && !empty($_POST['currency_id']) && isset($_POST['tax_id']) && isset($_POST['phone']) && isset($_POST['mobile']) && isset($_POST['email']) && isset($_POST['website'])) {
+        if (isset($_POST['work_locations_name']) && !empty($_POST['work_locations_name']) && isset($_POST['address']) && !empty($_POST['address']) && isset($_POST['city_id']) && !empty($_POST['city_id']) && isset($_POST['phone']) && isset($_POST['mobile']) && isset($_POST['email'])) {
             $userID = $_SESSION['user_account_id'];
-            $companyName = $_POST['work_locations_name'];
-            $legalName = $_POST['legal_name'];
+            $workLocationsName = $_POST['work_locations_name'];
             $address = $_POST['address'];
             $cityID = htmlspecialchars($_POST['city_id'], ENT_QUOTES, 'UTF-8');
-            $currencyID = htmlspecialchars($_POST['currency_id'], ENT_QUOTES, 'UTF-8');
-            $taxID = htmlspecialchars($_POST['tax_id'], ENT_QUOTES, 'UTF-8');
             $phone = htmlspecialchars($_POST['phone'], ENT_QUOTES, 'UTF-8');
             $mobile = htmlspecialchars($_POST['mobile'], ENT_QUOTES, 'UTF-8');
             $email = $_POST['email'];
-            $website = $_POST['website'];
-
-            $currencyDetails = $this->currencyModel->getCurrency($currencyID);
-            $currencyName = $currencyDetails['currency_name'] ?? null;
-            $currencySymbol = $currencyDetails['currency_symbol'] ?? null;
 
             $cityDetails = $this->cityModel->getCity($cityID);
             $cityName = $cityDetails['city_name'] ?? null;
@@ -211,12 +203,12 @@ class WorkLocationsController {
             $countryDetails = $this->countryModel->getCountry($countryID);
             $countryName = $countryDetails['country_name'] ?? null;
         
-            $companyID = $this->workLocationsModel->insertWorkLocations($companyName, $legalName, $address, $cityID, $cityName, $stateID, $stateName, $countryID, $countryName, $currencyID, $currencyName, $currencySymbol, $taxID, $phone, $mobile, $email, $website, $userID);
+            $workLocationsID = $this->workLocationsModel->insertWorkLocations($workLocationsName, $address, $cityID, $cityName, $stateID, $stateName, $countryID, $countryName, $phone, $mobile, $email, $userID);
     
             $response = [
                 'success' => true,
-                'companyID' => $this->securityModel->encryptData($companyID),
-                'title' => 'Insert WorkLocations Success',
+                'workLocationsID' => $this->securityModel->encryptData($workLocationsID),
+                'title' => 'Insert Work Locations Success',
                 'message' => 'The company has been inserted successfully.',
                 'messageType' => 'success'
             ];
@@ -246,7 +238,7 @@ class WorkLocationsController {
     #
     # Function: updateWorkLocations
     # Description: 
-    # Updates the company if it exists; otherwise, return an error message.
+    # Updates the work locations if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -258,28 +250,24 @@ class WorkLocationsController {
             return;
         }
         
-        if (isset($_POST['work_locations_id']) && !empty($_POST['work_locations_id']) && isset($_POST['work_locations_name']) && !empty($_POST['work_locations_name']) && isset($_POST['legal_name']) && !empty($_POST['legal_name']) && isset($_POST['address']) && !empty($_POST['address']) && isset($_POST['city_id']) && !empty($_POST['city_id']) && isset($_POST['currency_id']) && !empty($_POST['currency_id']) && isset($_POST['tax_id']) && isset($_POST['phone']) && isset($_POST['mobile']) && isset($_POST['email']) && isset($_POST['website'])) {
+        if (isset($_POST['work_locations_id']) && !empty($_POST['work_locations_id']) && isset($_POST['work_locations_name']) && !empty($_POST['work_locations_name']) && isset($_POST['address']) && !empty($_POST['address']) && isset($_POST['city_id']) && !empty($_POST['city_id']) && isset($_POST['phone']) && isset($_POST['mobile']) && isset($_POST['email']) ) {
             $userID = $_SESSION['user_account_id'];
-            $companyID = htmlspecialchars($_POST['work_locations_id'], ENT_QUOTES, 'UTF-8');
-            $companyName = $_POST['work_locations_name'];
-            $legalName = $_POST['legal_name'];
+            $workLocationsID = htmlspecialchars($_POST['work_locations_id'], ENT_QUOTES, 'UTF-8');
+            $workLocationsName = $_POST['work_locations_name'];
             $address = $_POST['address'];
             $cityID = htmlspecialchars($_POST['city_id'], ENT_QUOTES, 'UTF-8');
-            $currencyID = htmlspecialchars($_POST['currency_id'], ENT_QUOTES, 'UTF-8');
-            $taxID = htmlspecialchars($_POST['tax_id'], ENT_QUOTES, 'UTF-8');
             $phone = htmlspecialchars($_POST['phone'], ENT_QUOTES, 'UTF-8');
             $mobile = htmlspecialchars($_POST['mobile'], ENT_QUOTES, 'UTF-8');
             $email = $_POST['email'];
-            $website = $_POST['website'];
         
-            $checkWorkLocationsExist = $this->workLocationsModel->checkWorkLocationsExist($companyID);
+            $checkWorkLocationsExist = $this->workLocationsModel->checkWorkLocationsExist($workLocationsID);
             $total = $checkWorkLocationsExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Update WorkLocations Error',
+                    'title' => 'Update Work Locations Error',
                     'message' => 'The company does not exist.',
                     'messageType' => 'error'
                 ];
@@ -287,10 +275,6 @@ class WorkLocationsController {
                 echo json_encode($response);
                 exit;
             }
-
-            $currencyDetails = $this->currencyModel->getCurrency($currencyID);
-            $currencyName = $currencyDetails['currency_name'] ?? null;
-            $currencySymbol = $currencyDetails['currency_symbol'] ?? null;
 
             $cityDetails = $this->cityModel->getCity($cityID);
             $cityName = $cityDetails['city_name'] ?? null;
@@ -303,11 +287,11 @@ class WorkLocationsController {
             $countryDetails = $this->countryModel->getCountry($countryID);
             $countryName = $countryDetails['country_name'] ?? null;
 
-            $this->workLocationsModel->updateWorkLocations($companyID, $companyName, $legalName, $address, $cityID, $cityName, $stateID, $stateName, $countryID, $countryName, $currencyID, $currencyName, $currencySymbol, $taxID, $phone, $mobile, $email, $website, $userID);
+            $this->workLocationsModel->updateWorkLocations($workLocationsID, $workLocationsName, $address, $cityID, $cityName, $stateID, $stateName, $countryID, $countryName, $phone, $mobile, $email, $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Update WorkLocations Success',
+                'title' => 'Update Work Locations Success',
                 'message' => 'The company has been updated successfully.',
                 'messageType' => 'success'
             ];
@@ -323,176 +307,6 @@ class WorkLocationsController {
                 'messageType' => 'error'
             ];
             
-            echo json_encode($response);
-            exit;
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: updateWorkLocationsLogo
-    # Description: 
-    # Handles the update of the company logo.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function updateWorkLocationsLogo() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        if (isset($_POST['work_locations_id']) && !empty($_POST['work_locations_id'])) {
-            $userID = $_SESSION['user_account_id'];
-
-            $companyID = htmlspecialchars($_POST['work_locations_id'], ENT_QUOTES, 'UTF-8');
-
-            $checkWorkLocationsExist = $this->workLocationsModel->checkWorkLocationsExist($companyID);
-            $total = $checkWorkLocationsExist['total'] ?? 0;
-
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'notExist' => true,
-                    'title' => 'Update WorkLocations Logo Error',
-                    'message' => 'The company logo does not exist.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-
-            $companyLogoFileName = $_FILES['work_locations_logo']['name'];
-            $companyLogoFileSize = $_FILES['work_locations_logo']['size'];
-            $companyLogoFileError = $_FILES['work_locations_logo']['error'];
-            $companyLogoTempName = $_FILES['work_locations_logo']['tmp_name'];
-            $companyLogoFileExtension = explode('.', $companyLogoFileName);
-            $companyLogoActualFileExtension = strtolower(end($companyLogoFileExtension));
-
-            $uploadSetting = $this->uploadSettingModel->getUploadSetting(3);
-            $maxFileSize = $uploadSetting['max_file_size'];
-
-            $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(3);
-            $allowedFileExtensions = [];
-
-            foreach ($uploadSettingFileExtension as $row) {
-                $allowedFileExtensions[] = $row['file_extension'];
-            }
-
-            if (!in_array($companyLogoActualFileExtension, $allowedFileExtensions)) {
-                $response = [
-                    'success' => false,
-                    'title' => 'Update WorkLocations Logo Error',
-                    'message' => 'The file uploaded is not supported.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-            
-            if(empty($companyLogoTempName)){
-                $response = [
-                    'success' => false,
-                    'title' => 'Update WorkLocations Logo Error',
-                    'message' => 'Please choose the company logo.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-            
-            if($companyLogoFileError){
-                $response = [
-                    'success' => false,
-                    'title' => 'Update WorkLocations Logo Error',
-                    'message' => 'An error occurred while uploading the file.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-            
-            if($companyLogoFileSize > ($maxFileSize * 1024)){
-                $response = [
-                    'success' => false,
-                    'title' => 'Update WorkLocations Logo Error',
-                    'message' => 'The company logo exceeds the maximum allowed size of ' . number_format($maxFileSize) . ' kb.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-
-            $fileName = $this->securityModel->generateFileName();
-            $fileNew = $fileName . '.' . $companyLogoActualFileExtension;
-            
-            define('PROJECT_BASE_DIR', dirname(__DIR__));
-            define('COMPANY_LOGO_DIR', 'image/logo/');
-
-            $directory = PROJECT_BASE_DIR. '/'. COMPANY_LOGO_DIR. $companyID. '/';
-            $fileDestination = $directory. $fileNew;
-            $filePath = './components/company/image/logo/'. $companyID . '/' . $fileNew;
-
-            $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
-
-            if(!$directoryChecker){
-                $response = [
-                    'success' => false,
-                    'title' => 'Update WorkLocations Logo Error',
-                    'message' => $directoryChecker,
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-
-            $companyDetails = $this->workLocationsModel->getWorkLocations($companyID);
-            $companyLogoPath = !empty($companyDetails['work_locations_logo']) ? str_replace('./components/', '../../', $companyDetails['work_locations_logo']) : null;
-
-            if(file_exists($companyLogoPath)){
-                if (!unlink($companyLogoPath)) {
-                    $response = [
-                        'success' => false,
-                        'title' => 'Update WorkLocations Logo Error',
-                        'message' => 'The company logo cannot be deleted due to an error.',
-                        'messageType' => 'error'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;
-                }
-            }
-
-            if(!move_uploaded_file($companyLogoTempName, $fileDestination)){
-                $response = [
-                    'success' => false,
-                    'title' => 'Update WorkLocations Logo Error',
-                    'message' => 'The company logo cannot be uploaded due to an error.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;           
-            }
-
-            $this->workLocationsModel->updateWorkLocationsLogo($companyID, $filePath, $userID);
-
-            $response = [
-                'success' => true,
-                'title' => 'Update WorkLocations Logo Success',
-                'message' => 'The company logo has been updated successfully.',
-                'messageType' => 'success'
-            ];
-
             echo json_encode($response);
             exit;
         }
@@ -520,17 +334,17 @@ class WorkLocationsController {
         }
 
         if (isset($_POST['work_locations_id']) && !empty($_POST['work_locations_id'])) {
-            $companyID = htmlspecialchars($_POST['work_locations_id'], ENT_QUOTES, 'UTF-8');
+            $workLocationsID = htmlspecialchars($_POST['work_locations_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkWorkLocationsExist = $this->workLocationsModel->checkWorkLocationsExist($companyID);
+            $checkWorkLocationsExist = $this->workLocationsModel->checkWorkLocationsExist($workLocationsID);
             $total = $checkWorkLocationsExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Delete WorkLocations Error',
-                    'message' => 'The company does not exist.',
+                    'title' => 'Delete Work Location Error',
+                    'message' => 'The work location does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -538,29 +352,12 @@ class WorkLocationsController {
                 exit;
             }
 
-            $companyDetails = $this->workLocationsModel->getWorkLocations($companyID);
-            $companyLogoPath = !empty($companyDetails['work_locations_logo']) ? str_replace('./components/', '../../', $companyDetails['work_locations_logo']) : null;
-
-            if(file_exists($companyLogoPath)){
-                if (!unlink($companyLogoPath)) {
-                    $response = [
-                        'success' => false,
-                        'title' => 'Delete WorkLocations Logo Error',
-                        'message' => 'The company logo cannot be deleted due to an error.',
-                        'messageType' => 'error'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;
-                }
-            }
-
-            $this->workLocationsModel->deleteWorkLocations($companyID);
+            $this->workLocationsModel->deleteWorkLocations($workLocationsID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete WorkLocations Success',
-                'message' => 'The company has been deleted successfully.',
+                'title' => 'Delete Work Location Success',
+                'message' => 'The work location has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -598,38 +395,21 @@ class WorkLocationsController {
         }
 
         if (isset($_POST['work_locations_id']) && !empty($_POST['work_locations_id'])) {
-            $companyIDs = $_POST['work_locations_id'];
+            $workLocationsIDs = $_POST['work_locations_id'];
     
-            foreach($companyIDs as $companyID){
-                $checkWorkLocationsExist = $this->workLocationsModel->checkWorkLocationsExist($companyID);
+            foreach($workLocationsIDs as $workLocationsID){
+                $checkWorkLocationsExist = $this->workLocationsModel->checkWorkLocationsExist($workLocationsID);
                 $total = $checkWorkLocationsExist['total'] ?? 0;
 
                 if($total > 0){
-                    $companyDetails = $this->workLocationsModel->getWorkLocations($companyID);
-                    $companyLogoPath = !empty($companyDetails['work_locations_logo']) ? str_replace('./components/', '../../', $companyDetails['work_locations_logo']) : null;
-        
-                    if(file_exists($companyLogoPath)){
-                        if (!unlink($companyLogoPath)) {
-                            $response = [
-                                'success' => false,
-                                'title' => 'Delete WorkLocations Logo Error',
-                                'message' => 'The company logo cannot be deleted due to an error.',
-                                'messageType' => 'error'
-                            ];
-                            
-                            echo json_encode($response);
-                            exit;
-                        }
-                    }
-                    
-                    $this->workLocationsModel->deleteWorkLocations($companyID);
+                    $this->workLocationsModel->deleteWorkLocations($workLocationsID);
                 }
             }
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete Multiple WorkLocations Success',
-                'message' => 'The selected companies have been deleted successfully.',
+                'title' => 'Delete Multiple Work Locations Success',
+                'message' => 'The selected work locations have been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -672,17 +452,17 @@ class WorkLocationsController {
     
         if (isset($_POST['work_locations_id']) && !empty($_POST['work_locations_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $companyID = htmlspecialchars($_POST['work_locations_id'], ENT_QUOTES, 'UTF-8');
+            $workLocationsID = htmlspecialchars($_POST['work_locations_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkWorkLocationsExist = $this->workLocationsModel->checkWorkLocationsExist($companyID);
+            $checkWorkLocationsExist = $this->workLocationsModel->checkWorkLocationsExist($workLocationsID);
             $total = $checkWorkLocationsExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Get WorkLocations Details Error',
-                    'message' => 'The company does not exist.',
+                    'title' => 'Get Work Locations Details Error',
+                    'message' => 'The work location does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -690,25 +470,18 @@ class WorkLocationsController {
                 exit;
             }
     
-            $companyDetails = $this->workLocationsModel->getWorkLocations($companyID);
+            $companyDetails = $this->workLocationsModel->getWorkLocations($workLocationsID);
             $companyLogo = $this->systemModel->checkImage($companyDetails['work_locations_logo'] ?? null, 'company logo');
 
             $response = [
                 'success' => true,
-                'companyName' => $companyDetails['work_locations_name'] ?? null,
-                'legalName' => $companyDetails['legal_name'] ?? null,
+                'workLocationsName' => $companyDetails['work_locations_name'] ?? null,
                 'address' => $companyDetails['address'] ?? null,
                 'cityID' => $companyDetails['city_id'] ?? null,
                 'cityName' => $companyDetails['city_name'] . ', ' . $companyDetails['state_name'] . ', ' . $companyDetails['country_name'],
-                'currencyID' => $companyDetails['currency_id'] ?? null,
-                'currencyName' => $companyDetails['currency_name'] ?? null,
-                'currencySymbol' => $companyDetails['currency_symbol'] ?? null,
-                'taxID' => $companyDetails['tax_id'] ?? null,
                 'phone' => $companyDetails['phone'] ?? null,
                 'mobile' => $companyDetails['mobile'] ?? null,
-                'email' => $companyDetails['email'] ?? null,
-                'website' => $companyDetails['website'] ?? null,
-                'companyLogo' => $companyLogo
+                'email' => $companyDetails['email'] ?? null
             ];
 
             echo json_encode($response);
@@ -734,7 +507,7 @@ require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../company/model/company-model.php';
+require_once '../../work-locations/model/work-locations-model.php';
 require_once '../../city/model/city-model.php';
 require_once '../../state/model/state-model.php';
 require_once '../../country/model/country-model.php';

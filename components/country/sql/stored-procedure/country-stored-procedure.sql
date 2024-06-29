@@ -34,6 +34,11 @@ BEGIN
 
     START TRANSACTION;
 
+    UPDATE work_locations
+    SET country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE country_id = p_country_id;
+
     UPDATE company
     SET country_name = p_country_name,
         last_log_by = p_last_log_by

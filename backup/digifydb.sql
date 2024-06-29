@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 28, 2024 at 11:38 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jun 29, 2024 at 01:36 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -305,6 +305,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountExist` (IN `p_user_
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkWorkLocationsExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkLocationsExist` (IN `p_work_locations_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM work_locations
+    WHERE work_locations_id = p_work_locations_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteAppModule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAppModule` (IN `p_app_module_id` INT)   BEGIN
     DELETE FROM app_module WHERE app_module_id = p_app_module_id;
@@ -529,6 +536,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserAccount` (IN `p_user_acco
     DELETE FROM user_account WHERE user_account_id = p_user_account_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteWorkLocations`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkLocations` (IN `p_work_locations_id` INT)   BEGIN
+    DELETE FROM work_locations WHERE work_locations_id = p_work_locations_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateAppModuleOptions`$$
@@ -984,6 +996,41 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountTable` (IN `p_fi
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateWorkLocationsOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkLocationsOptions` ()   BEGIN
+	SELECT work_locations_id, work_locations_name 
+    FROM work_locations 
+    ORDER BY work_locations_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateWorkLocationsTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkLocationsTable` (IN `p_filter_by_city` INT, IN `p_filter_by_state` INT, IN `p_filter_by_country` INT)   BEGIN
+    DECLARE query VARCHAR(5000);
+
+    SET query = CONCAT('
+        SELECT work_locations_id, work_locations_name, address, city_name, state_name, country_name
+        FROM work_locations 
+        WHERE 1');
+
+    IF p_filter_by_city IS NOT NULL AND p_filter_by_city != '' THEN
+        SET query = CONCAT(query, ' AND city_id = ', p_filter_by_city);
+    END IF;
+
+    IF p_filter_by_state IS NOT NULL AND p_filter_by_state != '' THEN
+        SET query = CONCAT(query, ' AND state_id = ', p_filter_by_state);
+    END IF;
+
+    IF p_filter_by_country IS NOT NULL AND p_filter_by_country != '' THEN
+        SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY work_locations_name');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
 DROP PROCEDURE IF EXISTS `getAppModule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppModule` (IN `p_app_module_id` INT)   BEGIN
 	SELECT * FROM app_module
@@ -1144,6 +1191,12 @@ DROP PROCEDURE IF EXISTS `getUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserAccount` (IN `p_user_account_id` INT, IN `p_email` VARCHAR(255))   BEGIN
 	SELECT * FROM user_account
     WHERE user_account_id = p_user_account_id OR email = p_email;
+END$$
+
+DROP PROCEDURE IF EXISTS `getWorkLocations`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getWorkLocations` (IN `p_work_locations_id` INT)   BEGIN
+	SELECT * FROM work_locations
+	WHERE work_locations_id = p_work_locations_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `insertAppModule`$$
@@ -1372,6 +1425,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUserAccount` (IN `p_file_as` 
     SET p_user_account_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertWorkLocations`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkLocations` (IN `p_work_locations_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_work_locations_id` INT)   BEGIN
+    INSERT INTO work_locations (work_locations_name, address, city_id, city_name, state_id, state_name, country_id, country_name, phone, mobile, email, last_log_by) 
+	VALUES(p_work_locations_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_phone, p_mobile, p_email, p_last_log_by);
+	
+    SET p_work_locations_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `updateAccountLock`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccountLock` (IN `p_user_account_id` INT, IN `p_locked` VARCHAR(5), IN `p_account_lock_duration` INT)   BEGIN
 	UPDATE user_account 
@@ -1426,6 +1487,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCity` (IN `p_city_id` INT, IN
     END;
 
     START TRANSACTION;
+
+    UPDATE work_locations
+    SET city_name = p_city_name,
+        state_id = p_state_id,
+        state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE city_id = p_city_id;
 
     UPDATE company
     SET city_name = p_city_name,
@@ -1497,6 +1567,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCountry` (IN `p_country_id` I
     END;
 
     START TRANSACTION;
+
+    UPDATE work_locations
+    SET country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE country_id = p_country_id;
 
     UPDATE company
     SET country_name = p_country_name,
@@ -1909,6 +1984,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateState` (IN `p_state_id` INT, 
 
     START TRANSACTION;
 
+    UPDATE work_locations
+    SET state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE state_id = p_state_id;
+
     UPDATE company
     SET state_name = p_state_name,
         country_id = p_country_id,
@@ -2103,6 +2185,33 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserPassword` (IN `p_user_acc
         account_lock_duration = 0,
         last_log_by = p_user_account_id
     WHERE p_user_account_id = user_account_id OR username = p_credentials OR email = BINARY p_credentials;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateWorkLocations`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkLocations` (IN `p_work_locations_id` INT, IN `p_work_locations_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE work_locations
+    SET work_locations_name = p_work_locations_name,
+        address = p_address,
+        city_id = p_city_id,
+        city_name = p_city_name,
+        state_id = p_state_id,
+        state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        phone = p_phone,
+        mobile = p_mobile,
+        email = p_email,
+        last_log_by = p_last_log_by
+    WHERE work_locations_id = p_work_locations_id;
+
+    COMMIT;
 END$$
 
 DELIMITER ;
@@ -4614,7 +4723,24 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2382, 'employment_types', 1, 'Employment Type Name: testasd -> testasdasd<br/>', 2, '2024-06-28 15:58:38', '2024-06-28 15:58:38'),
 (2383, 'employment_types', 2, 'Employment type created. <br/><br/>Employment Type Name: asdasd', 2, '2024-06-28 15:58:46', '2024-06-28 15:58:46'),
 (2384, 'employment_types', 3, 'Employment type created. <br/><br/>Employment Type Name: asd', 2, '2024-06-28 15:58:49', '2024-06-28 15:58:49'),
-(2385, 'employment_types', 4, 'Employment type created. <br/><br/>Employment Type Name: test', 2, '2024-06-28 16:07:15', '2024-06-28 16:07:15');
+(2385, 'employment_types', 4, 'Employment type created. <br/><br/>Employment Type Name: test', 2, '2024-06-28 16:07:15', '2024-06-28 16:07:15'),
+(2386, 'user_account', 2, 'Failed Login Attempts: 0 -> 1<br/>', 1, '2024-06-29 16:55:54', '2024-06-29 16:55:54'),
+(2387, 'user_account', 2, 'Failed Login Attempts: 1 -> 0<br/>', 1, '2024-06-29 16:55:59', '2024-06-29 16:55:59'),
+(2388, 'user_account', 2, 'Last Connection Date: 2024-06-26 21:57:37 -> 2024-06-29 16:55:59<br/>', 1, '2024-06-29 16:55:59', '2024-06-29 16:55:59'),
+(2389, 'work_locations', 1, 'Work locations created. <br/><br/>Work Locations Name: test<br/>Address: test<br/>City: Aborlan<br/>State: Palawan<br/>Country: Philippines<br/>Phone: asd', 2, '2024-06-29 17:22:40', '2024-06-29 17:22:40'),
+(2390, 'work_locations', 2, 'Work locations created. <br/><br/>Work Locations Name: test<br/>Address: test<br/>City: Aborlan<br/>State: Palawan<br/>Country: Philippines', 2, '2024-06-29 17:23:33', '2024-06-29 17:23:33'),
+(2391, 'work_locations', 3, 'Work locations created. <br/><br/>Work Locations Name: test<br/>Address: test<br/>City: Abra De Ilog<br/>State: Occidental Mindoro<br/>Country: Philippines<br/>Phone: asd', 2, '2024-06-29 18:16:11', '2024-06-29 18:16:11'),
+(2392, 'work_locations', 3, 'Mobile:  -> asdasd<br/>Email:  -> asd@gmail.com<br/>', 2, '2024-06-29 18:16:55', '2024-06-29 18:16:55'),
+(2393, 'work_locations', 3, 'Email: asd@gmail.com -> asd@gmail.comsad<br/>', 2, '2024-06-29 18:19:20', '2024-06-29 18:19:20'),
+(2394, 'work_locations', 4, 'Work locations created. <br/><br/>Work Locations Name: testt<br/>Address: testt<br/>City: Aborlan<br/>State: Palawan<br/>Country: Philippines<br/>Phone: asd', 2, '2024-06-29 18:22:50', '2024-06-29 18:22:50'),
+(2395, 'employment_types', 5, 'Employment type created. <br/><br/>Employment Type Name: test', 2, '2024-06-29 18:24:16', '2024-06-29 18:24:16'),
+(2396, 'employment_types', 6, 'Employment type created. <br/><br/>Employment Type Name: test2', 2, '2024-06-29 18:25:04', '2024-06-29 18:25:04'),
+(2397, 'employment_types', 6, 'Employment Type Name: test2 -> test2test<br/>', 2, '2024-06-29 18:25:09', '2024-06-29 18:25:09'),
+(2398, 'employment_types', 7, 'Employment type created. <br/><br/>Employment Type Name: test', 2, '2024-06-29 18:25:13', '2024-06-29 18:25:13'),
+(2399, 'employment_types', 8, 'Employment type created. <br/><br/>Employment Type Name: test', 2, '2024-06-29 18:34:10', '2024-06-29 18:34:10'),
+(2400, 'departure_reasons', 4, 'Departure reason created. <br/><br/>Departure Reason Name: test', 2, '2024-06-29 18:54:42', '2024-06-29 18:54:42'),
+(2401, 'departure_reasons', 5, 'Departure reason created. <br/><br/>Departure Reason Name: test', 2, '2024-06-29 18:54:50', '2024-06-29 18:54:50'),
+(2402, 'departure_reasons', 4, 'Departure Reason Name: test -> test222<br/>', 2, '2024-06-29 18:55:03', '2024-06-29 18:55:03');
 
 -- --------------------------------------------------------
 
@@ -8725,7 +8851,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-26 21:57:37', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'uXdXKsPGxYBcTnxD%2F961Tdz%2Fnu1hUdARhDF1J4Q3FlI%3D', '2024-06-26 13:25:47', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-29 16:55:59', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'GU1jnS63H0cIdKrRtBE827Nb4aQz3p%2BpkieIb4JbI%2F4%3D', '2024-06-26 13:25:47', 1);
 
 --
 -- Triggers `user_account`
@@ -8860,6 +8986,120 @@ CREATE TRIGGER `user_account_trigger_update` AFTER UPDATE ON `user_account` FOR 
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('user_account', NEW.user_account_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `work_locations`
+--
+
+DROP TABLE IF EXISTS `work_locations`;
+CREATE TABLE `work_locations` (
+  `work_locations_id` int(10) UNSIGNED NOT NULL,
+  `work_locations_name` varchar(100) NOT NULL,
+  `address` varchar(500) NOT NULL,
+  `city_id` int(10) UNSIGNED NOT NULL,
+  `city_name` varchar(100) NOT NULL,
+  `state_id` int(10) UNSIGNED NOT NULL,
+  `state_name` varchar(100) NOT NULL,
+  `country_id` int(10) UNSIGNED NOT NULL,
+  `country_name` varchar(100) NOT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `email` varchar(500) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `work_locations`
+--
+DROP TRIGGER IF EXISTS `work_locations_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `work_locations_trigger_insert` AFTER INSERT ON `work_locations` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Work locations created. <br/>';
+
+    IF NEW.work_locations_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Work Locations Name: ", NEW.work_locations_name);
+    END IF;
+
+    IF NEW.address <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Address: ", NEW.address);
+    END IF;
+
+    IF NEW.city_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>City: ", NEW.city_name);
+    END IF;
+
+    IF NEW.state_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>State: ", NEW.state_name);
+    END IF;
+
+    IF NEW.country_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Country: ", NEW.country_name);
+    END IF;
+
+    IF NEW.phone <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Phone: ", NEW.phone);
+    END IF;
+
+    IF NEW.mobile <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Mobile: ", NEW.mobile);
+    END IF;
+
+    IF NEW.email <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Email: ", NEW.email);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('work_locations', NEW.work_locations_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `work_locations_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `work_locations_trigger_update` AFTER UPDATE ON `work_locations` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.work_locations_name <> OLD.work_locations_name THEN
+        SET audit_log = CONCAT(audit_log, "Work Locations Name: ", OLD.work_locations_name, " -> ", NEW.work_locations_name, "<br/>");
+    END IF;
+
+    IF NEW.address <> OLD.address THEN
+        SET audit_log = CONCAT(audit_log, "Address: ", OLD.address, " -> ", NEW.address, "<br/>");
+    END IF;
+
+    IF NEW.city_name <> OLD.city_name THEN
+        SET audit_log = CONCAT(audit_log, "City: ", OLD.city_name, " -> ", NEW.city_name, "<br/>");
+    END IF;
+
+    IF NEW.state_name <> OLD.state_name THEN
+        SET audit_log = CONCAT(audit_log, "State: ", OLD.state_name, " -> ", NEW.state_name, "<br/>");
+    END IF;
+
+    IF NEW.country_name <> OLD.country_name THEN
+        SET audit_log = CONCAT(audit_log, "Country: ", OLD.country_name, " -> ", NEW.country_name, "<br/>");
+    END IF;
+
+    IF NEW.phone <> OLD.phone THEN
+        SET audit_log = CONCAT(audit_log, "Phone: ", OLD.phone, " -> ", NEW.phone, "<br/>");
+    END IF;
+
+    IF NEW.mobile <> OLD.mobile THEN
+        SET audit_log = CONCAT(audit_log, "Mobile: ", OLD.mobile, " -> ", NEW.mobile, "<br/>");
+    END IF;
+
+    IF NEW.email <> OLD.email THEN
+        SET audit_log = CONCAT(audit_log, "Email: ", OLD.email, " -> ", NEW.email, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('work_locations', NEW.work_locations_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -9155,6 +9395,17 @@ ALTER TABLE `user_account`
   ADD KEY `user_account_index_email` (`email`);
 
 --
+-- Indexes for table `work_locations`
+--
+ALTER TABLE `work_locations`
+  ADD PRIMARY KEY (`work_locations_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `work_locations_index_work_locations_id` (`work_locations_id`),
+  ADD KEY `work_locations_index_city_id` (`city_id`),
+  ADD KEY `work_locations_index_state_id` (`state_id`),
+  ADD KEY `work_locations_index_country_id` (`country_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -9168,7 +9419,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2386;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2403;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -9198,7 +9449,7 @@ ALTER TABLE `currency`
 -- AUTO_INCREMENT for table `departure_reasons`
 --
 ALTER TABLE `departure_reasons`
-  MODIFY `departure_reasons_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `departure_reasons_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `email_setting`
@@ -9210,7 +9461,7 @@ ALTER TABLE `email_setting`
 -- AUTO_INCREMENT for table `employment_types`
 --
 ALTER TABLE `employment_types`
-  MODIFY `employment_types_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `employment_types_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `file_extension`
@@ -9349,6 +9600,12 @@ ALTER TABLE `upload_setting_file_extension`
 --
 ALTER TABLE `user_account`
   MODIFY `user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `work_locations`
+--
+ALTER TABLE `work_locations`
+  MODIFY `work_locations_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -9562,6 +9819,12 @@ ALTER TABLE `upload_setting_file_extension`
 --
 ALTER TABLE `user_account`
   ADD CONSTRAINT `user_account_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `work_locations`
+--
+ALTER TABLE `work_locations`
+  ADD CONSTRAINT `work_locations_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

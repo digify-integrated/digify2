@@ -12,7 +12,7 @@
 
         $(document).on('click','.delete-work-locations',function() {
             const work_locations_id = $(this).data('work-locations-id');
-            const transaction = 'delete work location';
+            const transaction = 'delete work locations';
     
             Swal.fire({
                 title: 'Confirm Work Location Deletion',
@@ -143,7 +143,7 @@
         });
 
         $('#datatable-search').on('keyup', function () {
-            var table = $('#country-table').DataTable();
+            var table = $('#work-locations-table').DataTable();
             table.search(this.value).draw();
         });
     });

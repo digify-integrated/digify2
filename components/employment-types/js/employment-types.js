@@ -3,7 +3,7 @@
 
     $(function() {
         if($('#employment-types-table').length){
-            departureReasonsTable('#employment-types-table');
+            employmentTypesTable('#employment-types-table');
         }
 
         $(document).on('click','.delete-employment-types',function() {
@@ -140,7 +140,7 @@
     });
 })(jQuery);
 
-function departureReasonsTable(datatable_name, buttons = false, show_all = false){
+function employmentTypesTable(datatable_name, buttons = false, show_all = false){
     toggleHideActionDropdown();
 
     const type = 'employment types table';

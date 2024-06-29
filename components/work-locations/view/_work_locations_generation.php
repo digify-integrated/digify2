@@ -70,7 +70,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                                 <div class="ms-3">
                                                     <div class="user-meta-info">
                                                         <h6 class="user-name mb-0">'. $workLocationsName .'</h6>
-                                                        <small>'. $companyAddress .'</small>
+                                                        <small>'. $workLocationsAddress .'</small>
                                                     </div>
                                                 </div>
                                             </a>

@@ -76,19 +76,19 @@
         if($('#log-notes-main').length){
             const work_locations_id = $('#details-id').text();
 
-            logNotesMain('work locations', work_locations_id);
+            logNotesMain('work_locations', work_locations_id);
         }
 
         if($('#internal-notes').length){
             const work_locations_id = $('#details-id').text();
 
-            internalNotes('work locations', work_locations_id);
+            internalNotes('work_locations', work_locations_id);
         }
 
         if($('#internal-notes-form').length){
             const work_locations_id = $('#details-id').text();
 
-            internalNotesForm('work locations', work_locations_id);
+            internalNotesForm('work_locations', work_locations_id);
         }
     });
 })(jQuery);

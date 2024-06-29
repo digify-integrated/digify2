@@ -3,12 +3,12 @@
 
     $(function() {
         if($('#employment-types-form').length){
-            departureReasonsForm();
+            employmentTypesForm();
         }
     });
 })(jQuery);
 
-function departureReasonsForm(){
+function employmentTypesForm(){
     $('#employment-types-form').validate({
         rules: {
             employment_types_name: {
@@ -56,7 +56,7 @@ function departureReasonsForm(){
                 success: function (response) {
                     if (response.success) {
                         setNotification(response.title, response.message, response.messageType);
-                        window.location = page_link + '&id=' + response.departureReasonsID;
+                        window.location = page_link + '&id=' + response.employmentTypesID;
                     }
                     else {
                         if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
