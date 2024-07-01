@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 29, 2024 at 01:36 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jul 01, 2024 at 11:32 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -130,11 +130,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCurrencyExist` (IN `p_currency
     WHERE currency_id = p_currency_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `checkDepartureReasonsExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkDepartureReasonsExist` (IN `p_departure_reasons_id` INT)   BEGIN
+DROP PROCEDURE IF EXISTS `checkDepartureReasonExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkDepartureReasonExist` (IN `p_departure_reason_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
-    FROM departure_reasons
-    WHERE departure_reasons_id = p_departure_reasons_id;
+    FROM departure_reason
+    WHERE departure_reason_id = p_departure_reason_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkEmailNotificationTemplateExist`$$
@@ -151,11 +151,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmailSettingExist` (IN `p_emai
     WHERE email_setting_id = p_email_setting_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `checkEmploymentTypesExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmploymentTypesExist` (IN `p_employment_types_id` INT)   BEGIN
+DROP PROCEDURE IF EXISTS `checkEmploymentTypeExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmploymentTypeExist` (IN `p_employment_type_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
-    FROM employment_types
-    WHERE employment_types_id = p_employment_types_id;
+    FROM employment_type
+    WHERE employment_type_id = p_employment_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkFileExtensionExist`$$
@@ -170,6 +170,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkFileTypeExist` (IN `p_file_typ
 	SELECT COUNT(*) AS total
     FROM file_type
     WHERE file_type_id = p_file_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkJobPositionExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkJobPositionExist` (IN `p_job_position_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM job_position
+    WHERE job_position_id = p_job_position_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkLoginCredentialsExist`$$
@@ -226,6 +233,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkRoleUserAccountExist` (IN `p_r
 	SELECT COUNT(*) AS total
     FROM role_user_account
     WHERE role_user_account_id = p_role_user_account_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkScheduleTypeExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkScheduleTypeExist` (IN `p_schedule_type_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM schedule_type
+    WHERE schedule_type_id = p_schedule_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkSMSNotificationTemplateExist`$$
@@ -305,11 +319,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountExist` (IN `p_user_
     WHERE user_account_id = p_user_account_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `checkWorkLocationsExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkLocationsExist` (IN `p_work_locations_id` INT)   BEGIN
+DROP PROCEDURE IF EXISTS `checkWorkLocationExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkLocationExist` (IN `p_work_location_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
-    FROM work_locations
-    WHERE work_locations_id = p_work_locations_id;
+    FROM work_location
+    WHERE work_location_id = p_work_location_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkWorkScheduleExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkScheduleExist` (IN `p_work_schedule_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM work_schedule
+    WHERE work_schedule_id = p_work_schedule_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteAppModule`$$
@@ -348,9 +369,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCurrency` (IN `p_currency_id`
     DELETE FROM currency WHERE currency_id = p_currency_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `deleteDepartureReasons`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteDepartureReasons` (IN `p_departure_reasons_id` INT)   BEGIN
-    DELETE FROM departure_reasons WHERE departure_reasons_id = p_departure_reasons_id;
+DROP PROCEDURE IF EXISTS `deleteDepartureReason`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteDepartureReason` (IN `p_departure_reason_id` INT)   BEGIN
+    DELETE FROM departure_reason WHERE departure_reason_id = p_departure_reason_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteEmailSetting`$$
@@ -358,9 +379,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmailSetting` (IN `p_email_se
    DELETE FROM email_setting WHERE email_setting_id = p_email_setting_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `deleteEmploymentTypes`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmploymentTypes` (IN `p_employment_types_id` INT)   BEGIN
-    DELETE FROM employment_types WHERE employment_types_id = p_employment_types_id;
+DROP PROCEDURE IF EXISTS `deleteEmploymentType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmploymentType` (IN `p_employment_type_id` INT)   BEGIN
+    DELETE FROM employment_type WHERE employment_type_id = p_employment_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteFileExtension`$$
@@ -392,6 +413,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFileType` (IN `p_file_type_id
     DELETE FROM file_type WHERE file_type_id = p_file_type_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteJobPosition`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteJobPosition` (IN `p_job_position_id` INT)   BEGIN
+    DELETE FROM job_position WHERE job_position_id = p_job_position_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteMenuGroup`$$
@@ -472,6 +498,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRoleUserAccount` (IN `p_role_
    DELETE FROM role_user_account WHERE role_user_account_id = p_role_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteScheduleType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteScheduleType` (IN `p_schedule_type_id` INT)   BEGIN
+    DELETE FROM schedule_type WHERE schedule_type_id = p_schedule_type_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteState`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteState` (IN `p_state_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -538,9 +569,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserAccount` (IN `p_user_acco
     COMMIT;
 END$$
 
-DROP PROCEDURE IF EXISTS `deleteWorkLocations`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkLocations` (IN `p_work_locations_id` INT)   BEGIN
-    DELETE FROM work_locations WHERE work_locations_id = p_work_locations_id;
+DROP PROCEDURE IF EXISTS `deleteWorkLocation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkLocation` (IN `p_work_location_id` INT)   BEGIN
+    DELETE FROM work_location WHERE work_location_id = p_work_location_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteWorkSchedule`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkSchedule` (IN `p_work_schedule_id` INT)   BEGIN
+    DELETE FROM work_schedule WHERE work_schedule_id = p_work_schedule_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateAppModuleOptions`$$
@@ -648,18 +684,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCurrencyTable` ()   BEGIN
     SELECT currency_id, currency_name, currency_symbol FROM currency;
 END$$
 
-DROP PROCEDURE IF EXISTS `generateDepartureReasonsOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateDepartureReasonsOptions` ()   BEGIN
-	SELECT departure_reasons_id, departure_reasons_name 
-    FROM departure_reasons 
-    ORDER BY departure_reasons_name;
+DROP PROCEDURE IF EXISTS `generateDepartureReasonOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateDepartureReasonOptions` ()   BEGIN
+	SELECT departure_reason_id, departure_reason_name 
+    FROM departure_reason 
+    ORDER BY departure_reason_name;
 END$$
 
-DROP PROCEDURE IF EXISTS `generateDepartureReasonsTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateDepartureReasonsTable` ()   BEGIN
-	SELECT departure_reasons_id, departure_reasons_name 
-    FROM departure_reasons 
-    ORDER BY departure_reasons_id;
+DROP PROCEDURE IF EXISTS `generateDepartureReasonTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateDepartureReasonTable` ()   BEGIN
+	SELECT departure_reason_id, departure_reason_name 
+    FROM departure_reason 
+    ORDER BY departure_reason_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateEmailSettingTable`$$
@@ -669,18 +705,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmailSettingTable` ()   BEG
     ORDER BY email_setting_name;
 END$$
 
-DROP PROCEDURE IF EXISTS `generateEmploymentTypesOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmploymentTypesOptions` ()   BEGIN
-	SELECT employment_types_id, employment_types_name 
-    FROM employment_types 
-    ORDER BY employment_types_name;
+DROP PROCEDURE IF EXISTS `generateEmploymentTypeOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmploymentTypeOptions` ()   BEGIN
+	SELECT employment_type_id, employment_type_name 
+    FROM employment_type 
+    ORDER BY employment_type_name;
 END$$
 
-DROP PROCEDURE IF EXISTS `generateEmploymentTypesTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmploymentTypesTable` ()   BEGIN
-	SELECT employment_types_id, employment_types_name 
-    FROM employment_types 
-    ORDER BY employment_types_id;
+DROP PROCEDURE IF EXISTS `generateEmploymentTypeTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmploymentTypeTable` ()   BEGIN
+	SELECT employment_type_id, employment_type_name 
+    FROM employment_type 
+    ORDER BY employment_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateFileExtensionDualListBoxOptions`$$
@@ -731,6 +767,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateInternalNotes` (IN `p_table
     FROM internal_notes
     WHERE table_name = p_table_name AND reference_id  = p_reference_id
     ORDER BY internal_note_date DESC;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateJobPositionOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateJobPositionOptions` ()   BEGIN
+	SELECT job_position_id, job_position_name 
+    FROM job_position 
+    ORDER BY job_position_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateJobPositionTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateJobPositionTable` ()   BEGIN
+	SELECT job_position_id, job_position_name 
+    FROM job_position 
+    ORDER BY job_position_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateLogNotes`$$
@@ -877,6 +927,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRoleUserAccountTable` (IN `
     ORDER BY file_as;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateScheduleTypeOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateScheduleTypeOptions` ()   BEGIN
+	SELECT schedule_type_id, schedule_type_name 
+    FROM schedule_type 
+    ORDER BY schedule_type_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateScheduleTypeTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateScheduleTypeTable` ()   BEGIN
+	SELECT schedule_type_id, schedule_type_name 
+    FROM schedule_type 
+    ORDER BY schedule_type_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateStateOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateStateOptions` ()   BEGIN
 	SELECT state_id, state_name, country_name
@@ -996,20 +1060,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountTable` (IN `p_fi
     DEALLOCATE PREPARE stmt;
 END$$
 
-DROP PROCEDURE IF EXISTS `generateWorkLocationsOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkLocationsOptions` ()   BEGIN
-	SELECT work_locations_id, work_locations_name 
-    FROM work_locations 
-    ORDER BY work_locations_name;
+DROP PROCEDURE IF EXISTS `generateWorkLocationOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkLocationOptions` ()   BEGIN
+	SELECT work_location_id, work_location_name 
+    FROM work_location 
+    ORDER BY work_location_name;
 END$$
 
-DROP PROCEDURE IF EXISTS `generateWorkLocationsTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkLocationsTable` (IN `p_filter_by_city` INT, IN `p_filter_by_state` INT, IN `p_filter_by_country` INT)   BEGIN
+DROP PROCEDURE IF EXISTS `generateWorkLocationTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkLocationTable` (IN `p_filter_by_city` INT, IN `p_filter_by_state` INT, IN `p_filter_by_country` INT)   BEGIN
     DECLARE query VARCHAR(5000);
 
     SET query = CONCAT('
-        SELECT work_locations_id, work_locations_name, address, city_name, state_name, country_name
-        FROM work_locations 
+        SELECT work_location_id, work_location_name, address, city_name, state_name, country_name
+        FROM work_location 
         WHERE 1');
 
     IF p_filter_by_city IS NOT NULL AND p_filter_by_city != '' THEN
@@ -1024,7 +1088,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkLocationsTable` (IN `p_
         SET query = CONCAT(query, ' AND country_id = ', p_filter_by_country);
     END IF;
 
-    SET query = CONCAT(query, ' ORDER BY work_locations_name');
+    SET query = CONCAT(query, ' ORDER BY work_location_name');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateWorkScheduleOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkScheduleOptions` ()   BEGIN
+	SELECT work_schedule_id, work_schedule_name 
+    FROM work_schedule 
+    ORDER BY work_schedule_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateWorkScheduleTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkScheduleTable` (IN `p_filter_by_schedule_type` INT)   BEGIN
+    DECLARE query VARCHAR(5000);
+
+    SET query = CONCAT('
+        SELECT work_schedule_id, work_schedule_name, schedule_type_name
+        FROM work_schedule 
+        WHERE 1');
+
+    IF p_filter_by_schedule_type IS NOT NULL AND p_filter_by_schedule_type != '' THEN
+        SET query = CONCAT(query, ' AND schedule_type_id = ', p_filter_by_schedule_type);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY work_schedule_name');
 
     PREPARE stmt FROM query;
     EXECUTE stmt;
@@ -1061,10 +1152,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getCurrency` (IN `p_currency_id` IN
 	WHERE currency_id = p_currency_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `getDepartureReasons`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getDepartureReasons` (IN `p_departure_reasons_id` INT)   BEGIN
-	SELECT * FROM departure_reasons
-	WHERE departure_reasons_id = p_departure_reasons_id;
+DROP PROCEDURE IF EXISTS `getDepartureReason`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getDepartureReason` (IN `p_departure_reason_id` INT)   BEGIN
+	SELECT * FROM departure_reason
+	WHERE departure_reason_id = p_departure_reason_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmailNotificationTemplate`$$
@@ -1079,10 +1170,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmailSetting` (IN `p_email_setti
     WHERE email_setting_id = p_email_setting_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `getEmploymentTypes`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmploymentTypes` (IN `p_employment_types_id` INT)   BEGIN
-	SELECT * FROM employment_types
-	WHERE employment_types_id = p_employment_types_id;
+DROP PROCEDURE IF EXISTS `getEmploymentType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmploymentType` (IN `p_employment_type_id` INT)   BEGIN
+	SELECT * FROM employment_type
+	WHERE employment_type_id = p_employment_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getFileExtension`$$
@@ -1101,6 +1192,12 @@ DROP PROCEDURE IF EXISTS `getInternalNotesAttachment`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getInternalNotesAttachment` (IN `p_internal_notes_id` INT)   BEGIN
 	SELECT * FROM internal_notes_attachment
 	WHERE internal_notes_id = p_internal_notes_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getJobPosition`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getJobPosition` (IN `p_job_position_id` INT)   BEGIN
+	SELECT * FROM job_position
+	WHERE job_position_id = p_job_position_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getLoginCredentials`$$
@@ -1137,6 +1234,12 @@ DROP PROCEDURE IF EXISTS `getRole`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getRole` (IN `p_role_id` INT)   BEGIN
 	SELECT * FROM role
     WHERE role_id = p_role_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getScheduleType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getScheduleType` (IN `p_schedule_type_id` INT)   BEGIN
+	SELECT * FROM schedule_type
+	WHERE schedule_type_id = p_schedule_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getSecuritySetting`$$
@@ -1193,10 +1296,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserAccount` (IN `p_user_account
     WHERE user_account_id = p_user_account_id OR email = p_email;
 END$$
 
-DROP PROCEDURE IF EXISTS `getWorkLocations`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getWorkLocations` (IN `p_work_locations_id` INT)   BEGIN
-	SELECT * FROM work_locations
-	WHERE work_locations_id = p_work_locations_id;
+DROP PROCEDURE IF EXISTS `getWorkLocation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getWorkLocation` (IN `p_work_location_id` INT)   BEGIN
+	SELECT * FROM work_location
+	WHERE work_location_id = p_work_location_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getWorkSchedule`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getWorkSchedule` (IN `p_work_schedule_id` INT)   BEGIN
+	SELECT * FROM work_schedule
+	WHERE work_schedule_id = p_work_schedule_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `insertAppModule`$$
@@ -1239,12 +1348,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCurrency` (IN `p_currency_nam
     SET p_currency_id = LAST_INSERT_ID();
 END$$
 
-DROP PROCEDURE IF EXISTS `insertDepartureReasons`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertDepartureReasons` (IN `p_departure_reasons_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_departure_reasons_id` INT)   BEGIN
-    INSERT INTO departure_reasons (departure_reasons_name, last_log_by) 
-	VALUES(p_departure_reasons_name, p_last_log_by);
+DROP PROCEDURE IF EXISTS `insertDepartureReason`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertDepartureReason` (IN `p_departure_reason_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_departure_reason_id` INT)   BEGIN
+    INSERT INTO departure_reason (departure_reason_name, last_log_by) 
+	VALUES(p_departure_reason_name, p_last_log_by);
 	
-    SET p_departure_reasons_id = LAST_INSERT_ID();
+    SET p_departure_reason_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertEmailNotificationTemplate`$$
@@ -1261,12 +1370,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmailSetting` (IN `p_email_se
     SET p_email_setting_id = LAST_INSERT_ID();
 END$$
 
-DROP PROCEDURE IF EXISTS `insertEmploymentTypes`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmploymentTypes` (IN `p_employment_types_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_employment_types_id` INT)   BEGIN
-    INSERT INTO employment_types (employment_types_name, last_log_by) 
-	VALUES(p_employment_types_name, p_last_log_by);
+DROP PROCEDURE IF EXISTS `insertEmploymentType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmploymentType` (IN `p_employment_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_employment_type_id` INT)   BEGIN
+    INSERT INTO employment_type (employment_type_name, last_log_by) 
+	VALUES(p_employment_type_name, p_last_log_by);
 	
-    SET p_employment_types_id = LAST_INSERT_ID();
+    SET p_employment_type_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertFileExtension`$$
@@ -1297,6 +1406,14 @@ DROP PROCEDURE IF EXISTS `insertInternalNotesAttachment`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertInternalNotesAttachment` (IN `p_internal_notes_id` INT, IN `p_attachment_file_name` VARCHAR(500), IN `p_attachment_file_size` DOUBLE, IN `p_attachment_path_file` VARCHAR(500))   BEGIN
     INSERT INTO internal_notes_attachment (internal_notes_id, attachment_file_name, attachment_file_size, attachment_path_file) 
 	VALUES(p_internal_notes_id, p_attachment_file_name, p_attachment_file_size, p_attachment_path_file);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertJobPosition`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertJobPosition` (IN `p_job_position_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_job_position_id` INT)   BEGIN
+    INSERT INTO job_position (job_position_name, last_log_by) 
+	VALUES(p_job_position_name, p_last_log_by);
+	
+    SET p_job_position_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertMenuGroup`$$
@@ -1353,6 +1470,14 @@ DROP PROCEDURE IF EXISTS `insertRoleUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertRoleUserAccount` (IN `p_role_id` INT, IN `p_role_name` VARCHAR(100), IN `p_user_account_id` INT, IN `p_file_as` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO role_user_account (role_id, role_name, user_account_id, file_as, last_log_by) 
 	VALUES(p_role_id, p_role_name, p_user_account_id, p_file_as, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertScheduleType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertScheduleType` (IN `p_schedule_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_schedule_type_id` INT)   BEGIN
+    INSERT INTO schedule_type (schedule_type_name, last_log_by) 
+	VALUES(p_schedule_type_name, p_last_log_by);
+	
+    SET p_schedule_type_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertSMSNotificationTemplate`$$
@@ -1425,12 +1550,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUserAccount` (IN `p_file_as` 
     SET p_user_account_id = LAST_INSERT_ID();
 END$$
 
-DROP PROCEDURE IF EXISTS `insertWorkLocations`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkLocations` (IN `p_work_locations_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_work_locations_id` INT)   BEGIN
-    INSERT INTO work_locations (work_locations_name, address, city_id, city_name, state_id, state_name, country_id, country_name, phone, mobile, email, last_log_by) 
-	VALUES(p_work_locations_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_phone, p_mobile, p_email, p_last_log_by);
+DROP PROCEDURE IF EXISTS `insertWorkLocation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkLocation` (IN `p_work_location_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_work_location_id` INT)   BEGIN
+    INSERT INTO work_location (work_location_name, address, city_id, city_name, state_id, state_name, country_id, country_name, phone, mobile, email, last_log_by) 
+	VALUES(p_work_location_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_phone, p_mobile, p_email, p_last_log_by);
 	
-    SET p_work_locations_id = LAST_INSERT_ID();
+    SET p_work_location_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertWorkSchedule`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkSchedule` (IN `p_work_schedule_name` VARCHAR(100), IN `p_schedule_type_id` INT, IN `p_schedule_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_work_schedule_id` INT)   BEGIN
+    INSERT INTO work_schedule (work_schedule_name, schedule_type_id, schedule_type_name, last_log_by) 
+	VALUES(p_work_schedule_name, p_schedule_type_id, p_schedule_type_name, p_last_log_by);
+	
+    SET p_work_schedule_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `updateAccountLock`$$
@@ -1622,12 +1755,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCurrency` (IN `p_currency_id`
     COMMIT;
 END$$
 
-DROP PROCEDURE IF EXISTS `updateDepartureReasons`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateDepartureReasons` (IN `p_departure_reasons_id` INT, IN `p_departure_reasons_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
-    UPDATE departure_reasons
-    SET departure_reasons_name = p_departure_reasons_name,
+DROP PROCEDURE IF EXISTS `updateDepartureReason`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateDepartureReason` (IN `p_departure_reason_id` INT, IN `p_departure_reason_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE departure_reason
+    SET departure_reason_name = p_departure_reason_name,
         last_log_by = p_last_log_by
-    WHERE departure_reasons_id = p_departure_reasons_id;
+    WHERE departure_reason_id = p_departure_reason_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateEmailNotificationChannelStatus`$$
@@ -1665,12 +1798,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmailSetting` (IN `p_email_se
     WHERE email_setting_id = p_email_setting_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `updateEmploymentTypes`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmploymentTypes` (IN `p_employment_types_id` INT, IN `p_employment_types_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
-    UPDATE employment_types
-    SET employment_types_name = p_employment_types_name,
+DROP PROCEDURE IF EXISTS `updateEmploymentType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmploymentType` (IN `p_employment_type_id` INT, IN `p_employment_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employment_type
+    SET employment_type_name = p_employment_type_name,
         last_log_by = p_last_log_by
-    WHERE employment_types_id = p_employment_types_id;
+    WHERE employment_type_id = p_employment_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateFailedOTPAttempts`$$
@@ -1726,6 +1859,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFileType` (IN `p_file_type_id
     WHERE file_type_id = p_file_type_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateJobPosition`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateJobPosition` (IN `p_job_position_id` INT, IN `p_job_position_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE job_position
+    SET job_position_name = p_job_position_name,
+        last_log_by = p_last_log_by
+    WHERE job_position_id = p_job_position_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateLastConnection`$$
@@ -1910,6 +2051,28 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRoleSystemActionPermission` (
     SET system_action_access = p_system_action_access,
         last_log_by = p_last_log_by
     WHERE role_system_action_permission_id = p_role_system_action_permission_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateScheduleType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateScheduleType` (IN `p_schedule_type_id` INT, IN `p_schedule_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE work_schedule
+    SET schedule_type_name = p_schedule_type_name,
+        last_log_by = p_last_log_by
+    WHERE schedule_type_id = p_schedule_type_id;
+
+    UPDATE schedule_type
+    SET schedule_type_name = p_schedule_type_name,
+        last_log_by = p_last_log_by
+    WHERE schedule_type_id = p_schedule_type_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateSecuritySetting`$$
@@ -2187,8 +2350,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserPassword` (IN `p_user_acc
     WHERE p_user_account_id = user_account_id OR username = p_credentials OR email = BINARY p_credentials;
 END$$
 
-DROP PROCEDURE IF EXISTS `updateWorkLocations`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkLocations` (IN `p_work_locations_id` INT, IN `p_work_locations_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+DROP PROCEDURE IF EXISTS `updateWorkLocation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkLocation` (IN `p_work_location_id` INT, IN `p_work_location_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -2196,8 +2359,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkLocations` (IN `p_work_lo
 
     START TRANSACTION;
 
-    UPDATE work_locations
-    SET work_locations_name = p_work_locations_name,
+    UPDATE work_location
+    SET work_location_name = p_work_location_name,
         address = p_address,
         city_id = p_city_id,
         city_name = p_city_name,
@@ -2209,7 +2372,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkLocations` (IN `p_work_lo
         mobile = p_mobile,
         email = p_email,
         last_log_by = p_last_log_by
-    WHERE work_locations_id = p_work_locations_id;
+    WHERE work_location_id = p_work_location_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateWorkSchedule`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkSchedule` (IN `p_work_schedule_id` INT, IN `p_work_schedule_name` VARCHAR(100), IN `p_schedule_type_id` INT, IN `p_schedule_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE work_schedule
+    SET work_schedule_name = p_work_schedule_name,
+        schedule_type_id = p_schedule_type_id,
+        schedule_type_name = p_schedule_type_name,
+        last_log_by = p_last_log_by
+    WHERE work_schedule_id = p_work_schedule_id;
 
     COMMIT;
 END$$
@@ -4740,7 +4922,53 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2399, 'employment_types', 8, 'Employment type created. <br/><br/>Employment Type Name: test', 2, '2024-06-29 18:34:10', '2024-06-29 18:34:10'),
 (2400, 'departure_reasons', 4, 'Departure reason created. <br/><br/>Departure Reason Name: test', 2, '2024-06-29 18:54:42', '2024-06-29 18:54:42'),
 (2401, 'departure_reasons', 5, 'Departure reason created. <br/><br/>Departure Reason Name: test', 2, '2024-06-29 18:54:50', '2024-06-29 18:54:50'),
-(2402, 'departure_reasons', 4, 'Departure Reason Name: test -> test222<br/>', 2, '2024-06-29 18:55:03', '2024-06-29 18:55:03');
+(2402, 'departure_reasons', 4, 'Departure Reason Name: test -> test222<br/>', 2, '2024-06-29 18:55:03', '2024-06-29 18:55:03'),
+(2403, 'job_positions', 1, 'Job position created. <br/><br/>Job Position Name: test', 2, '2024-07-01 09:43:13', '2024-07-01 09:43:13'),
+(2404, 'job_positions', 1, 'Job Position Name: test -> test2<br/>', 2, '2024-07-01 09:43:21', '2024-07-01 09:43:21'),
+(2405, 'job_positions', 2, 'Job position created. <br/><br/>Job Position Name: test', 2, '2024-07-01 09:54:03', '2024-07-01 09:54:03'),
+(2406, 'role_permission', 29, 'Menu Item: Departure Reasons -> Departure Reason<br/>', 2, '2024-07-01 10:46:09', '2024-07-01 10:46:09'),
+(2407, 'menu_item', 28, 'Menu Item Name: Departure Reasons -> Departure Reason<br/>Menu Item URL: departure-reasons.php -> departure-reason.php<br/>', 2, '2024-07-01 10:46:09', '2024-07-01 10:46:09'),
+(2408, 'role_permission', 25, 'Menu Item: Departments -> Department<br/>', 2, '2024-07-01 10:46:22', '2024-07-01 10:46:22'),
+(2409, 'menu_item', 24, 'Menu Item Name: Departments -> Department<br/>Menu Item URL: departments.php -> department.php<br/>', 2, '2024-07-01 10:46:22', '2024-07-01 10:46:22'),
+(2410, 'role_permission', 30, 'Menu Item: Job Positions -> Job Position<br/>', 2, '2024-07-01 10:46:34', '2024-07-01 10:46:34'),
+(2411, 'menu_item', 29, 'Menu Item Name: Job Positions -> Job Position<br/>Menu Item URL: job-positions.php -> job-position.php<br/>', 2, '2024-07-01 10:46:34', '2024-07-01 10:46:34'),
+(2412, 'role_permission', 28, 'Menu Item: Employment Types -> Employment Type<br/>', 2, '2024-07-01 10:47:11', '2024-07-01 10:47:11'),
+(2413, 'menu_item', 27, 'Menu Item Name: Employment Types -> Employment Type<br/>Menu Item URL: employment-types.php -> employment-type.php<br/>', 2, '2024-07-01 10:47:11', '2024-07-01 10:47:11'),
+(2414, 'role_permission', 26, 'Menu Item: Work Locations -> Work Location<br/>', 2, '2024-07-01 10:47:20', '2024-07-01 10:47:20'),
+(2415, 'menu_item', 25, 'Menu Item Name: Work Locations -> Work Location<br/>Menu Item URL: work-locations.php -> work-location.php<br/>', 2, '2024-07-01 10:47:20', '2024-07-01 10:47:20'),
+(2416, 'role_permission', 27, 'Menu Item: Work Schedules -> Work Schedule<br/>', 2, '2024-07-01 10:47:35', '2024-07-01 10:47:35'),
+(2417, 'menu_item', 26, 'Menu Item Name: Work Schedules -> Work Schedule<br/>Menu Item URL: work-schedules.php -> work-schedule.php<br/>', 2, '2024-07-01 10:47:35', '2024-07-01 10:47:35'),
+(2418, 'role_permission', 24, 'Menu Item: Employees -> Employee<br/>', 2, '2024-07-01 10:47:50', '2024-07-01 10:47:50'),
+(2419, 'menu_item', 23, 'Menu Item Name: Employees -> Employee<br/>Menu Item URL: employees.php -> employee.php<br/>', 2, '2024-07-01 10:47:50', '2024-07-01 10:47:50'),
+(2420, 'departure_reason', 1, 'Departure reason created. <br/><br/>Departure Reason Name: test', 2, '2024-07-01 11:00:15', '2024-07-01 11:00:15'),
+(2421, 'employment_type', 1, 'Employment type created. <br/><br/>Employment Type Name: test', 2, '2024-07-01 11:02:13', '2024-07-01 11:02:13'),
+(2422, 'employment_type', 1, 'Employment Type Name: test -> testtest<br/>', 2, '2024-07-01 11:02:19', '2024-07-01 11:02:19'),
+(2423, 'work_location', 1, 'Work location created. <br/><br/>Work Location Name: test<br/>Address: test<br/>City: Aborlan<br/>State: Palawan<br/>Country: Philippines', 2, '2024-07-01 11:02:31', '2024-07-01 11:02:31'),
+(2424, 'work_location', 1, 'Work Location Name: test -> testt<br/>Address: test -> testt<br/>City: Aborlan -> Abulug<br/>State: Palawan -> Cagayan<br/>', 2, '2024-07-01 11:02:38', '2024-07-01 11:02:38'),
+(2425, 'work_location', 1, 'Work Location Name: testt -> testttes<br/>Address: testt -> testttest<br/>', 2, '2024-07-01 11:04:14', '2024-07-01 11:04:14'),
+(2426, 'work_location', 1, 'Work Location Name: testttes -> testttestes<br/>Address: testttest -> testttesttest<br/>', 2, '2024-07-01 11:04:26', '2024-07-01 11:04:26'),
+(2427, 'job_position', 1, 'Job position created. <br/><br/>Job Position Name: test', 2, '2024-07-01 11:04:59', '2024-07-01 11:04:59'),
+(2428, 'job_position', 2, 'Job position created. <br/><br/>Job Position Name: test', 2, '2024-07-01 11:07:24', '2024-07-01 11:07:24'),
+(2429, 'job_position', 2, 'Job Position Name: test -> testtest<br/>', 2, '2024-07-01 11:07:30', '2024-07-01 11:07:30'),
+(2430, 'work_location', 2, 'Work location created. <br/><br/>Work Location Name: test<br/>Address: test<br/>City: Aborlan<br/>State: Palawan<br/>Country: Philippines', 2, '2024-07-01 11:11:48', '2024-07-01 11:11:48'),
+(2431, 'menu_item', 30, 'Menu Item created. <br/><br/>Menu Item Name: Work Schedule Type<br/>Menu Item URL: work-schedule-type.php<br/>Menu Group Name: Employee Configuration<br/>App Module: Employees<br/>Order Sequence: 25', 2, '2024-07-01 14:52:27', '2024-07-01 14:52:27'),
+(2432, 'role_permission', 31, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Work Schedule Type<br/>Date Assigned: 2024-07-01 14:52:33', 2, '2024-07-01 14:52:33', '2024-07-01 14:52:33'),
+(2433, 'role_permission', 31, 'Read Access: 0 -> 1<br/>', 2, '2024-07-01 14:52:35', '2024-07-01 14:52:35'),
+(2434, 'role_permission', 31, 'Create Access: 0 -> 1<br/>', 2, '2024-07-01 14:52:35', '2024-07-01 14:52:35'),
+(2435, 'role_permission', 31, 'Write Access: 0 -> 1<br/>', 2, '2024-07-01 14:52:36', '2024-07-01 14:52:36'),
+(2436, 'role_permission', 31, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-01 14:52:37', '2024-07-01 14:52:37'),
+(2437, 'menu_item', 30, 'Menu Item Icon:  -> ti ti-calendar-stats<br/>', 2, '2024-07-01 14:54:28', '2024-07-01 14:54:28');
+INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `changed_by`, `changed_at`, `created_date`) VALUES
+(2438, 'menu_item', 31, 'Menu Item created. <br/><br/>Menu Item Name: Scheduling<br/>Menu Item Icon: ti ti-calendar-time<br/>Menu Group Name: Employee Configuration<br/>App Module: Employees<br/>Order Sequence: 24', 2, '2024-07-01 14:59:44', '2024-07-01 14:59:44'),
+(2439, 'role_permission', 32, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Scheduling<br/>Date Assigned: 2024-07-01 14:59:48', 2, '2024-07-01 14:59:48', '2024-07-01 14:59:48'),
+(2440, 'role_permission', 32, 'Read Access: 0 -> 1<br/>', 2, '2024-07-01 14:59:49', '2024-07-01 14:59:49'),
+(2441, 'menu_item', 26, 'Menu Item Icon: ti ti-calendar-stats -> <br/>Order Sequence: 24 -> 1<br/>', 2, '2024-07-01 15:00:20', '2024-07-01 15:00:20'),
+(2442, 'menu_item', 30, 'Menu Item Icon: ti ti-calendar-stats -> <br/>Order Sequence: 25 -> 2<br/>', 2, '2024-07-01 15:00:33', '2024-07-01 15:00:33'),
+(2443, 'role_permission', 31, 'Menu Item: Work Schedule Type -> Schedule Type<br/>', 2, '2024-07-01 15:09:21', '2024-07-01 15:09:21'),
+(2444, 'menu_item', 30, 'Menu Item Name: Work Schedule Type -> Schedule Type<br/>Menu Item URL: work-schedule-type.php -> schedule-type.php<br/>', 2, '2024-07-01 15:09:21', '2024-07-01 15:09:21'),
+(2445, 'schedule_type', 1, 'Schedule type created. <br/><br/>Schedule Type Name: Fixed', 2, '2024-07-01 15:48:39', '2024-07-01 15:48:39'),
+(2446, 'schedule_type', 1, 'Schedule Type Name: Fixed -> Fixed test<br/>', 2, '2024-07-01 15:49:14', '2024-07-01 15:49:14'),
+(2447, 'schedule_type', 1, 'Schedule Type Name: Fixed test -> Fixed<br/>', 2, '2024-07-01 15:49:18', '2024-07-01 15:49:18');
 
 -- --------------------------------------------------------
 
@@ -6977,46 +7205,46 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `departure_reasons`
+-- Table structure for table `departure_reason`
 --
 
-DROP TABLE IF EXISTS `departure_reasons`;
-CREATE TABLE `departure_reasons` (
-  `departure_reasons_id` int(10) UNSIGNED NOT NULL,
-  `departure_reasons_name` varchar(100) NOT NULL,
+DROP TABLE IF EXISTS `departure_reason`;
+CREATE TABLE `departure_reason` (
+  `departure_reason_id` int(10) UNSIGNED NOT NULL,
+  `departure_reason_name` varchar(100) NOT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Triggers `departure_reasons`
+-- Triggers `departure_reason`
 --
-DROP TRIGGER IF EXISTS `departure_reasons_trigger_insert`;
+DROP TRIGGER IF EXISTS `departure_reason_trigger_insert`;
 DELIMITER $$
-CREATE TRIGGER `departure_reasons_trigger_insert` AFTER INSERT ON `departure_reasons` FOR EACH ROW BEGIN
+CREATE TRIGGER `departure_reason_trigger_insert` AFTER INSERT ON `departure_reason` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Departure reason created. <br/>';
 
-    IF NEW.departure_reasons_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Departure Reason Name: ", NEW.departure_reasons_name);
+    IF NEW.departure_reason_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Departure Reason Name: ", NEW.departure_reason_name);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('departure_reasons', NEW.departure_reasons_id, audit_log, NEW.last_log_by, NOW());
+    VALUES ('departure_reason', NEW.departure_reason_id, audit_log, NEW.last_log_by, NOW());
 END
 $$
 DELIMITER ;
-DROP TRIGGER IF EXISTS `departure_reasons_trigger_update`;
+DROP TRIGGER IF EXISTS `departure_reason_trigger_update`;
 DELIMITER $$
-CREATE TRIGGER `departure_reasons_trigger_update` AFTER UPDATE ON `departure_reasons` FOR EACH ROW BEGIN
+CREATE TRIGGER `departure_reason_trigger_update` AFTER UPDATE ON `departure_reason` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
 
-    IF NEW.departure_reasons_name <> OLD.departure_reasons_name THEN
-        SET audit_log = CONCAT(audit_log, "Departure Reason Name: ", OLD.departure_reasons_name, " -> ", NEW.departure_reasons_name, "<br/>");
+    IF NEW.departure_reason_name <> OLD.departure_reason_name THEN
+        SET audit_log = CONCAT(audit_log, "Departure Reason Name: ", OLD.departure_reason_name, " -> ", NEW.departure_reason_name, "<br/>");
     END IF;
     
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('departure_reasons', NEW.departure_reasons_id, audit_log, NEW.last_log_by, NOW());
+        VALUES ('departure_reason', NEW.departure_reason_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -7162,46 +7390,46 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `employment_types`
+-- Table structure for table `employment_type`
 --
 
-DROP TABLE IF EXISTS `employment_types`;
-CREATE TABLE `employment_types` (
-  `employment_types_id` int(10) UNSIGNED NOT NULL,
-  `employment_types_name` varchar(100) NOT NULL,
+DROP TABLE IF EXISTS `employment_type`;
+CREATE TABLE `employment_type` (
+  `employment_type_id` int(10) UNSIGNED NOT NULL,
+  `employment_type_name` varchar(100) NOT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Triggers `employment_types`
+-- Triggers `employment_type`
 --
-DROP TRIGGER IF EXISTS `employment_types_trigger_insert`;
+DROP TRIGGER IF EXISTS `employment_type_trigger_insert`;
 DELIMITER $$
-CREATE TRIGGER `employment_types_trigger_insert` AFTER INSERT ON `employment_types` FOR EACH ROW BEGIN
+CREATE TRIGGER `employment_type_trigger_insert` AFTER INSERT ON `employment_type` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Employment type created. <br/>';
 
-    IF NEW.employment_types_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Employment Type Name: ", NEW.employment_types_name);
+    IF NEW.employment_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Employment Type Name: ", NEW.employment_type_name);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('employment_types', NEW.employment_types_id, audit_log, NEW.last_log_by, NOW());
+    VALUES ('employment_type', NEW.employment_type_id, audit_log, NEW.last_log_by, NOW());
 END
 $$
 DELIMITER ;
-DROP TRIGGER IF EXISTS `employment_types_trigger_update`;
+DROP TRIGGER IF EXISTS `employment_type_trigger_update`;
 DELIMITER $$
-CREATE TRIGGER `employment_types_trigger_update` AFTER UPDATE ON `employment_types` FOR EACH ROW BEGIN
+CREATE TRIGGER `employment_type_trigger_update` AFTER UPDATE ON `employment_type` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
 
-    IF NEW.employment_types_name <> OLD.employment_types_name THEN
-        SET audit_log = CONCAT(audit_log, "Employment Type Name: ", OLD.employment_types_name, " -> ", NEW.employment_types_name, "<br/>");
+    IF NEW.employment_type_name <> OLD.employment_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Employment Type Name: ", OLD.employment_type_name, " -> ", NEW.employment_type_name, "<br/>");
     END IF;
     
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('employment_types', NEW.employment_types_id, audit_log, NEW.last_log_by, NOW());
+        VALUES ('employment_type', NEW.employment_type_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -7481,6 +7709,61 @@ CREATE TABLE `internal_notes_attachment` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `job_position`
+--
+
+DROP TABLE IF EXISTS `job_position`;
+CREATE TABLE `job_position` (
+  `job_position_id` int(10) UNSIGNED NOT NULL,
+  `job_position_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `job_position`
+--
+
+INSERT INTO `job_position` (`job_position_id`, `job_position_name`, `created_date`, `last_log_by`) VALUES
+(1, 'test', '2024-07-01 11:04:59', 2);
+
+--
+-- Triggers `job_position`
+--
+DROP TRIGGER IF EXISTS `job_position_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `job_position_trigger_insert` AFTER INSERT ON `job_position` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Job position created. <br/>';
+
+    IF NEW.job_position_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Job Position Name: ", NEW.job_position_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('job_position', NEW.job_position_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `job_position_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `job_position_trigger_update` AFTER UPDATE ON `job_position` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.job_position_name <> OLD.job_position_name THEN
+        SET audit_log = CONCAT(audit_log, "Job Position Name: ", OLD.job_position_name, " -> ", NEW.job_position_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('job_position', NEW.job_position_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `menu_group`
 --
 
@@ -7607,13 +7890,15 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (20, 'Email Setting', 'email-setting.php', 'ti ti-mail-forward', 1, 'Technical', 1, 'Settings', 0, '', 5, '2024-06-26 15:17:26', 2),
 (21, 'Notification Setting', 'notification-setting.php', 'ti ti-bell', 1, 'Technical', 1, 'Settings', 0, '', 14, '2024-06-26 15:17:26', 2),
 (22, 'Account Setting', 'account-setting.php', 'ti ti-tool', 4, 'Profile', 1, 'Settings', 0, NULL, 1, '2024-06-27 14:52:08', 2),
-(23, 'Employees', 'employees.php', 'ti ti-users', 5, 'Employees', 2, 'Employees', 0, NULL, 1, '2024-06-27 15:30:10', 2),
-(24, 'Departments', 'departments.php', 'ti ti-hierarchy-2', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 4, '2024-06-27 17:18:42', 2),
-(25, 'Work Locations', 'work-locations.php', 'ti ti-map-pin', 6, 'Employee Configuration', 2, 'Employees', NULL, NULL, 23, '2024-06-28 10:38:12', 2),
-(26, 'Work Schedules', 'work-schedules.php', 'ti ti-calendar-stats', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 24, '2024-06-28 10:43:21', 2),
-(27, 'Employment Types', 'employment-types.php', 'ti ti-briefcase', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 5, '2024-06-28 10:45:01', 2),
-(28, 'Departure Reasons', 'departure-reasons.php', 'ti ti-user-minus', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 5, '2024-06-28 10:46:48', 2),
-(29, 'Job Positions', 'job-positions.php', 'ti ti-id', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 10, '2024-06-28 10:56:17', 2);
+(23, 'Employee', 'employee.php', 'ti ti-users', 5, 'Employees', 2, 'Employees', NULL, NULL, 1, '2024-06-27 15:30:10', 2),
+(24, 'Department', 'department.php', 'ti ti-hierarchy-2', 6, 'Employee Configuration', 2, 'Employees', NULL, NULL, 4, '2024-06-27 17:18:42', 2),
+(25, 'Work Location', 'work-location.php', 'ti ti-map-pin', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 23, '2024-06-28 10:38:12', 2),
+(26, 'Work Schedule', 'work-schedule.php', '', 6, 'Employee Configuration', 2, 'Employees', 31, 'Scheduling', 1, '2024-06-28 10:43:21', 2),
+(27, 'Employment Type', 'employment-type.php', 'ti ti-briefcase', 6, 'Employee Configuration', 2, 'Employees', NULL, NULL, 5, '2024-06-28 10:45:01', 2),
+(28, 'Departure Reason', 'departure-reason.php', 'ti ti-user-minus', 6, 'Employee Configuration', 2, 'Employees', NULL, NULL, 5, '2024-06-28 10:46:48', 2),
+(29, 'Job Position', 'job-position.php', 'ti ti-id', 6, 'Employee Configuration', 2, 'Employees', NULL, NULL, 10, '2024-06-28 10:56:17', 2),
+(30, 'Schedule Type', 'schedule-type.php', '', 6, 'Employee Configuration', 2, 'Employees', 31, 'Scheduling', 2, '2024-07-01 14:52:27', 2),
+(31, 'Scheduling', '', 'ti ti-calendar-time', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 24, '2024-07-01 14:59:44', 2);
 
 --
 -- Triggers `menu_item`
@@ -8090,13 +8375,15 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (21, 1, 'Administrator', 20, 'Email Setting', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
 (22, 1, 'Administrator', 21, 'Notification Setting', 1, 1, 1, 1, '2024-06-26 15:17:26', '2024-06-26 15:17:26', 1),
 (23, 1, 'Administrator', 22, 'Account Setting', 1, 1, 0, 0, '2024-06-27 14:52:13', '2024-06-27 14:52:13', 2),
-(24, 1, 'Administrator', 23, 'Employees', 1, 1, 1, 1, '2024-06-27 15:31:42', '2024-06-27 15:31:42', 2),
-(25, 1, 'Administrator', 24, 'Departments', 1, 1, 1, 1, '2024-06-27 17:18:46', '2024-06-27 17:18:46', 2),
-(26, 1, 'Administrator', 25, 'Work Locations', 1, 1, 1, 1, '2024-06-28 10:38:17', '2024-06-28 10:38:17', 2),
-(27, 1, 'Administrator', 26, 'Work Schedules', 1, 1, 1, 1, '2024-06-28 10:43:25', '2024-06-28 10:43:25', 2),
-(28, 1, 'Administrator', 27, 'Employment Types', 1, 1, 1, 1, '2024-06-28 10:45:05', '2024-06-28 10:45:05', 2),
-(29, 1, 'Administrator', 28, 'Departure Reasons', 1, 1, 1, 1, '2024-06-28 10:50:01', '2024-06-28 10:50:01', 2),
-(30, 1, 'Administrator', 29, 'Job Positions', 1, 1, 1, 1, '2024-06-28 10:56:21', '2024-06-28 10:56:21', 2);
+(24, 1, 'Administrator', 23, 'Employee', 1, 1, 1, 1, '2024-06-27 15:31:42', '2024-06-27 15:31:42', 2),
+(25, 1, 'Administrator', 24, 'Department', 1, 1, 1, 1, '2024-06-27 17:18:46', '2024-06-27 17:18:46', 2),
+(26, 1, 'Administrator', 25, 'Work Location', 1, 1, 1, 1, '2024-06-28 10:38:17', '2024-06-28 10:38:17', 2),
+(27, 1, 'Administrator', 26, 'Work Schedule', 1, 1, 1, 1, '2024-06-28 10:43:25', '2024-06-28 10:43:25', 2),
+(28, 1, 'Administrator', 27, 'Employment Type', 1, 1, 1, 1, '2024-06-28 10:45:05', '2024-06-28 10:45:05', 2),
+(29, 1, 'Administrator', 28, 'Departure Reason', 1, 1, 1, 1, '2024-06-28 10:50:01', '2024-06-28 10:50:01', 2),
+(30, 1, 'Administrator', 29, 'Job Position', 1, 1, 1, 1, '2024-06-28 10:56:21', '2024-06-28 10:56:21', 2),
+(31, 1, 'Administrator', 30, 'Schedule Type', 1, 1, 1, 1, '2024-07-01 14:52:33', '2024-07-01 14:52:33', 2),
+(32, 1, 'Administrator', 31, 'Scheduling', 1, 0, 0, 0, '2024-07-01 14:59:48', '2024-07-01 14:59:48', 2);
 
 --
 -- Triggers `role_permission`
@@ -8337,6 +8624,61 @@ CREATE TRIGGER `role_user_account_trigger_update` AFTER UPDATE ON `role_user_acc
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('role_user_account', NEW.role_user_account_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `schedule_type`
+--
+
+DROP TABLE IF EXISTS `schedule_type`;
+CREATE TABLE `schedule_type` (
+  `schedule_type_id` int(10) UNSIGNED NOT NULL,
+  `schedule_type_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `schedule_type`
+--
+
+INSERT INTO `schedule_type` (`schedule_type_id`, `schedule_type_name`, `created_date`, `last_log_by`) VALUES
+(1, 'Fixed', '2024-07-01 15:48:39', 2);
+
+--
+-- Triggers `schedule_type`
+--
+DROP TRIGGER IF EXISTS `schedule_type_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `schedule_type_trigger_insert` AFTER INSERT ON `schedule_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Schedule type created. <br/>';
+
+    IF NEW.schedule_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Schedule Type Name: ", NEW.schedule_type_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('schedule_type', NEW.schedule_type_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `schedule_type_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `schedule_type_trigger_update` AFTER UPDATE ON `schedule_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.schedule_type_name <> OLD.schedule_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Schedule Type Name: ", OLD.schedule_type_name, " -> ", NEW.schedule_type_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('schedule_type', NEW.schedule_type_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -8994,13 +9336,13 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `work_locations`
+-- Table structure for table `work_location`
 --
 
-DROP TABLE IF EXISTS `work_locations`;
-CREATE TABLE `work_locations` (
-  `work_locations_id` int(10) UNSIGNED NOT NULL,
-  `work_locations_name` varchar(100) NOT NULL,
+DROP TABLE IF EXISTS `work_location`;
+CREATE TABLE `work_location` (
+  `work_location_id` int(10) UNSIGNED NOT NULL,
+  `work_location_name` varchar(100) NOT NULL,
   `address` varchar(500) NOT NULL,
   `city_id` int(10) UNSIGNED NOT NULL,
   `city_name` varchar(100) NOT NULL,
@@ -9016,15 +9358,15 @@ CREATE TABLE `work_locations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Triggers `work_locations`
+-- Triggers `work_location`
 --
-DROP TRIGGER IF EXISTS `work_locations_trigger_insert`;
+DROP TRIGGER IF EXISTS `work_location_trigger_insert`;
 DELIMITER $$
-CREATE TRIGGER `work_locations_trigger_insert` AFTER INSERT ON `work_locations` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Work locations created. <br/>';
+CREATE TRIGGER `work_location_trigger_insert` AFTER INSERT ON `work_location` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Work location created. <br/>';
 
-    IF NEW.work_locations_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Work Locations Name: ", NEW.work_locations_name);
+    IF NEW.work_location_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Work Location Name: ", NEW.work_location_name);
     END IF;
 
     IF NEW.address <> '' THEN
@@ -9056,17 +9398,17 @@ CREATE TRIGGER `work_locations_trigger_insert` AFTER INSERT ON `work_locations` 
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('work_locations', NEW.work_locations_id, audit_log, NEW.last_log_by, NOW());
+    VALUES ('work_location', NEW.work_location_id, audit_log, NEW.last_log_by, NOW());
 END
 $$
 DELIMITER ;
-DROP TRIGGER IF EXISTS `work_locations_trigger_update`;
+DROP TRIGGER IF EXISTS `work_location_trigger_update`;
 DELIMITER $$
-CREATE TRIGGER `work_locations_trigger_update` AFTER UPDATE ON `work_locations` FOR EACH ROW BEGIN
+CREATE TRIGGER `work_location_trigger_update` AFTER UPDATE ON `work_location` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
 
-    IF NEW.work_locations_name <> OLD.work_locations_name THEN
-        SET audit_log = CONCAT(audit_log, "Work Locations Name: ", OLD.work_locations_name, " -> ", NEW.work_locations_name, "<br/>");
+    IF NEW.work_location_name <> OLD.work_location_name THEN
+        SET audit_log = CONCAT(audit_log, "Work Location Name: ", OLD.work_location_name, " -> ", NEW.work_location_name, "<br/>");
     END IF;
 
     IF NEW.address <> OLD.address THEN
@@ -9099,11 +9441,27 @@ CREATE TRIGGER `work_locations_trigger_update` AFTER UPDATE ON `work_locations` 
     
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('work_locations', NEW.work_locations_id, audit_log, NEW.last_log_by, NOW());
+        VALUES ('work_location', NEW.work_location_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `work_schedule`
+--
+
+DROP TABLE IF EXISTS `work_schedule`;
+CREATE TABLE `work_schedule` (
+  `work_schedule_id` int(10) UNSIGNED NOT NULL,
+  `work_schedule_name` varchar(100) NOT NULL,
+  `schedule_type_id` int(10) UNSIGNED NOT NULL,
+  `schedule_type_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -9167,12 +9525,12 @@ ALTER TABLE `currency`
   ADD KEY `currency_index_currency_id` (`currency_id`);
 
 --
--- Indexes for table `departure_reasons`
+-- Indexes for table `departure_reason`
 --
-ALTER TABLE `departure_reasons`
-  ADD PRIMARY KEY (`departure_reasons_id`),
+ALTER TABLE `departure_reason`
+  ADD PRIMARY KEY (`departure_reason_id`),
   ADD KEY `last_log_by` (`last_log_by`),
-  ADD KEY `departure_reasons_index_departure_reasons_id` (`departure_reasons_id`);
+  ADD KEY `departure_reason_index_departure_reason_id` (`departure_reason_id`);
 
 --
 -- Indexes for table `email_setting`
@@ -9183,12 +9541,12 @@ ALTER TABLE `email_setting`
   ADD KEY `email_setting_index_email_setting_id` (`email_setting_id`);
 
 --
--- Indexes for table `employment_types`
+-- Indexes for table `employment_type`
 --
-ALTER TABLE `employment_types`
-  ADD PRIMARY KEY (`employment_types_id`),
+ALTER TABLE `employment_type`
+  ADD PRIMARY KEY (`employment_type_id`),
   ADD KEY `last_log_by` (`last_log_by`),
-  ADD KEY `employment_types_index_employment_types_id` (`employment_types_id`);
+  ADD KEY `employment_type_index_employment_type_id` (`employment_type_id`);
 
 --
 -- Indexes for table `file_extension`
@@ -9224,6 +9582,14 @@ ALTER TABLE `internal_notes_attachment`
   ADD PRIMARY KEY (`internal_notes_attachment_id`),
   ADD KEY `internal_notes_attachment_index_internal_notes_id` (`internal_notes_attachment_id`),
   ADD KEY `internal_notes_attachment_index_table_name` (`internal_notes_id`);
+
+--
+-- Indexes for table `job_position`
+--
+ALTER TABLE `job_position`
+  ADD PRIMARY KEY (`job_position_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `job_position_index_job_position_id` (`job_position_id`);
 
 --
 -- Indexes for table `menu_group`
@@ -9326,6 +9692,14 @@ ALTER TABLE `role_user_account`
   ADD KEY `role_user_account_permissionn_index_role_id` (`role_id`);
 
 --
+-- Indexes for table `schedule_type`
+--
+ALTER TABLE `schedule_type`
+  ADD PRIMARY KEY (`schedule_type_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `schedule_type_index_schedule_type_id` (`schedule_type_id`);
+
+--
 -- Indexes for table `security_setting`
 --
 ALTER TABLE `security_setting`
@@ -9395,15 +9769,24 @@ ALTER TABLE `user_account`
   ADD KEY `user_account_index_email` (`email`);
 
 --
--- Indexes for table `work_locations`
+-- Indexes for table `work_location`
 --
-ALTER TABLE `work_locations`
-  ADD PRIMARY KEY (`work_locations_id`),
+ALTER TABLE `work_location`
+  ADD PRIMARY KEY (`work_location_id`),
   ADD KEY `last_log_by` (`last_log_by`),
-  ADD KEY `work_locations_index_work_locations_id` (`work_locations_id`),
-  ADD KEY `work_locations_index_city_id` (`city_id`),
-  ADD KEY `work_locations_index_state_id` (`state_id`),
-  ADD KEY `work_locations_index_country_id` (`country_id`);
+  ADD KEY `work_location_index_work_location_id` (`work_location_id`),
+  ADD KEY `work_location_index_city_id` (`city_id`),
+  ADD KEY `work_location_index_state_id` (`state_id`),
+  ADD KEY `work_location_index_country_id` (`country_id`);
+
+--
+-- Indexes for table `work_schedule`
+--
+ALTER TABLE `work_schedule`
+  ADD PRIMARY KEY (`work_schedule_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `schedule_type_id` (`schedule_type_id`),
+  ADD KEY `work_schedule_index_work_schedule_id` (`work_schedule_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -9419,7 +9802,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2403;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2448;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -9446,10 +9829,10 @@ ALTER TABLE `currency`
   MODIFY `currency_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `departure_reasons`
+-- AUTO_INCREMENT for table `departure_reason`
 --
-ALTER TABLE `departure_reasons`
-  MODIFY `departure_reasons_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+ALTER TABLE `departure_reason`
+  MODIFY `departure_reason_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `email_setting`
@@ -9458,10 +9841,10 @@ ALTER TABLE `email_setting`
   MODIFY `email_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `employment_types`
+-- AUTO_INCREMENT for table `employment_type`
 --
-ALTER TABLE `employment_types`
-  MODIFY `employment_types_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+ALTER TABLE `employment_type`
+  MODIFY `employment_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `file_extension`
@@ -9488,6 +9871,12 @@ ALTER TABLE `internal_notes_attachment`
   MODIFY `internal_notes_attachment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `job_position`
+--
+ALTER TABLE `job_position`
+  MODIFY `job_position_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `menu_group`
 --
 ALTER TABLE `menu_group`
@@ -9497,7 +9886,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -9539,7 +9928,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -9552,6 +9941,12 @@ ALTER TABLE `role_system_action_permission`
 --
 ALTER TABLE `role_user_account`
   MODIFY `role_user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `schedule_type`
+--
+ALTER TABLE `schedule_type`
+  MODIFY `schedule_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `security_setting`
@@ -9602,10 +9997,16 @@ ALTER TABLE `user_account`
   MODIFY `user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `work_locations`
+-- AUTO_INCREMENT for table `work_location`
 --
-ALTER TABLE `work_locations`
-  MODIFY `work_locations_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `work_location`
+  MODIFY `work_location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `work_schedule`
+--
+ALTER TABLE `work_schedule`
+  MODIFY `work_schedule_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -9650,10 +10051,10 @@ ALTER TABLE `currency`
   ADD CONSTRAINT `currency_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
--- Constraints for table `departure_reasons`
+-- Constraints for table `departure_reason`
 --
-ALTER TABLE `departure_reasons`
-  ADD CONSTRAINT `departure_reasons_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+ALTER TABLE `departure_reason`
+  ADD CONSTRAINT `departure_reason_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `email_setting`
@@ -9662,10 +10063,10 @@ ALTER TABLE `email_setting`
   ADD CONSTRAINT `email_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
--- Constraints for table `employment_types`
+-- Constraints for table `employment_type`
 --
-ALTER TABLE `employment_types`
-  ADD CONSTRAINT `employment_types_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+ALTER TABLE `employment_type`
+  ADD CONSTRAINT `employment_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `file_extension`
@@ -9691,6 +10092,12 @@ ALTER TABLE `internal_notes`
 --
 ALTER TABLE `internal_notes_attachment`
   ADD CONSTRAINT `internal_notes_attachment_ibfk_1` FOREIGN KEY (`internal_notes_id`) REFERENCES `internal_notes` (`internal_notes_id`);
+
+--
+-- Constraints for table `job_position`
+--
+ALTER TABLE `job_position`
+  ADD CONSTRAINT `job_position_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `menu_group`
@@ -9771,6 +10178,12 @@ ALTER TABLE `role_user_account`
   ADD CONSTRAINT `role_user_account_ibfk_3` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `schedule_type`
+--
+ALTER TABLE `schedule_type`
+  ADD CONSTRAINT `schedule_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `security_setting`
 --
 ALTER TABLE `security_setting`
@@ -9821,10 +10234,17 @@ ALTER TABLE `user_account`
   ADD CONSTRAINT `user_account_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
--- Constraints for table `work_locations`
+-- Constraints for table `work_location`
 --
-ALTER TABLE `work_locations`
-  ADD CONSTRAINT `work_locations_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+ALTER TABLE `work_location`
+  ADD CONSTRAINT `work_location_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `work_schedule`
+--
+ALTER TABLE `work_schedule`
+  ADD CONSTRAINT `work_schedule_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
+  ADD CONSTRAINT `work_schedule_ibfk_2` FOREIGN KEY (`schedule_type_id`) REFERENCES `schedule_type` (`schedule_type_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
