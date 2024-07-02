@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 02, 2024 at 11:31 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jul 02, 2024 at 02:54 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -93,6 +93,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccessRights` (IN `p_user_acco
         FROM role_user_account
         WHERE user_account_id = p_user_account_id AND role_id IN (SELECT role_id FROM role_permission where delete_access = 1 AND menu_item_id = p_menu_item_id);
     END IF;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkAddressTypeExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAddressTypeExist` (IN `p_address_type_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM address_type
+    WHERE address_type_id = p_address_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkAppModuleExist`$$
@@ -358,6 +365,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkScheduleExist` (IN `p_work
     WHERE work_schedule_id = p_work_schedule_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteAddressType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAddressType` (IN `p_address_type_id` INT)   BEGIN
+    DELETE FROM address_type WHERE address_type_id = p_address_type_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteAppModule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAppModule` (IN `p_app_module_id` INT)   BEGIN
     DELETE FROM app_module WHERE app_module_id = p_app_module_id;
@@ -617,6 +629,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkSchedule` (IN `p_work_sch
     DELETE FROM work_schedule WHERE work_schedule_id = p_work_schedule_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateAddressTypeOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAddressTypeOptions` ()   BEGIN
+	SELECT address_type_id, address_type_name 
+    FROM address_type 
+    ORDER BY address_type_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateAddressTypeTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAddressTypeTable` ()   BEGIN
+	SELECT address_type_id, address_type_name 
+    FROM address_type 
+    ORDER BY address_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateAppModuleOptions`$$
@@ -1168,6 +1194,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkScheduleTable` (IN `p_f
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `getAddressType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAddressType` (IN `p_address_type_id` INT)   BEGIN
+	SELECT * FROM address_type
+	WHERE address_type_id = p_address_type_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getAppModule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppModule` (IN `p_app_module_id` INT)   BEGIN
 	SELECT * FROM app_module
@@ -1358,6 +1390,14 @@ DROP PROCEDURE IF EXISTS `getWorkSchedule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getWorkSchedule` (IN `p_work_schedule_id` INT)   BEGIN
 	SELECT * FROM work_schedule
 	WHERE work_schedule_id = p_work_schedule_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `insertAddressType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAddressType` (IN `p_address_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_address_type_id` INT)   BEGIN
+    INSERT INTO address_type (address_type_name, last_log_by) 
+	VALUES(p_address_type_name, p_last_log_by);
+	
+    SET p_address_type_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertAppModule`$$
@@ -1629,6 +1669,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccountLock` (IN `p_user_acco
 	UPDATE user_account 
     SET locked = p_locked, account_lock_duration = p_account_lock_duration 
     WHERE user_account_id = p_user_account_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateAddressType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAddressType` (IN `p_address_type_id` INT, IN `p_address_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE address_type
+    SET address_type_name = p_address_type_name,
+        last_log_by = p_last_log_by
+    WHERE address_type_id = p_address_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateAppLogo`$$
@@ -2458,6 +2506,54 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkSchedule` (IN `p_work_sch
     WHERE work_schedule_id = p_work_schedule_id;
 END$$
 
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `address_type`
+--
+
+DROP TABLE IF EXISTS `address_type`;
+CREATE TABLE `address_type` (
+  `address_type_id` int(10) UNSIGNED NOT NULL,
+  `address_type_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `address_type`
+--
+DROP TRIGGER IF EXISTS `address_type_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `address_type_trigger_insert` AFTER INSERT ON `address_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Address type created. <br/>';
+
+    IF NEW.address_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Address Type Name: ", NEW.address_type_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('address_type', NEW.address_type_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `address_type_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `address_type_trigger_update` AFTER UPDATE ON `address_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.address_type_name <> OLD.address_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Address Type Name: ", OLD.address_type_name, " -> ", NEW.address_type_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('address_type', NEW.address_type_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -5135,7 +5231,14 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2549, 'role_permission', 45, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:30:10', '2024-07-02 17:30:10'),
 (2550, 'role_permission', 45, 'Write Access: 1 -> 0<br/>', 2, '2024-07-02 17:30:10', '2024-07-02 17:30:10'),
 (2551, 'role_permission', 45, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:30:11', '2024-07-02 17:30:11'),
-(2552, 'role_permission', 45, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:30:12', '2024-07-02 17:30:12');
+(2552, 'role_permission', 45, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:30:12', '2024-07-02 17:30:12'),
+(2553, 'user_account', 2, 'Failed Login Attempts: 0 -> 1<br/>', 1, '2024-07-02 19:52:28', '2024-07-02 19:52:28'),
+(2554, 'user_account', 2, 'Failed Login Attempts: 1 -> 0<br/>', 1, '2024-07-02 19:52:31', '2024-07-02 19:52:31'),
+(2555, 'user_account', 2, 'Last Connection Date: 2024-06-29 16:55:59 -> 2024-07-02 19:52:31<br/>', 1, '2024-07-02 19:52:31', '2024-07-02 19:52:31'),
+(2556, 'address_type', 1, 'Address type created. <br/><br/>Address Type Name: test', 2, '2024-07-02 20:46:41', '2024-07-02 20:46:41'),
+(2557, 'address_type', 1, 'Address Type Name: test -> testasd<br/>', 2, '2024-07-02 20:51:02', '2024-07-02 20:51:02'),
+(2558, 'address_type', 2, 'Address type created. <br/><br/>Address Type Name: test\\', 2, '2024-07-02 20:51:11', '2024-07-02 20:51:11'),
+(2559, 'address_type', 3, 'Address type created. <br/><br/>Address Type Name: test', 2, '2024-07-02 20:51:15', '2024-07-02 20:51:15');
 
 -- --------------------------------------------------------
 
@@ -9394,7 +9497,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-06-29 16:55:59', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'GU1jnS63H0cIdKrRtBE827Nb4aQz3p%2BpkieIb4JbI%2F4%3D', '2024-06-26 13:25:47', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-02 19:52:31', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '2C0vX7SHW62Zu2gx%2Fc2kveYbZoaWsoZI8%2BNCHd9r%2F6c%3D', '2024-06-26 13:25:47', 1);
 
 --
 -- Triggers `user_account`
@@ -9796,6 +9899,14 @@ DELIMITER ;
 --
 
 --
+-- Indexes for table `address_type`
+--
+ALTER TABLE `address_type`
+  ADD PRIMARY KEY (`address_type_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `address_type_index_address_type_id` (`address_type_id`);
+
+--
 -- Indexes for table `app_module`
 --
 ALTER TABLE `app_module`
@@ -10130,6 +10241,12 @@ ALTER TABLE `work_schedule`
 --
 
 --
+-- AUTO_INCREMENT for table `address_type`
+--
+ALTER TABLE `address_type`
+  MODIFY `address_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `app_module`
 --
 ALTER TABLE `app_module`
@@ -10139,7 +10256,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2553;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2560;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -10354,6 +10471,12 @@ ALTER TABLE `work_schedule`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `address_type`
+--
+ALTER TABLE `address_type`
+  ADD CONSTRAINT `address_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `app_module`

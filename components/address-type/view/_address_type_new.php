@@ -1,0 +1,25 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Address Type Form</h5>
+                <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                    <button type="submit" form="address-type-form" class="btn btn-success mb-0" id="submit-data">Save</button>
+                    <button type="button" id="discard-create" class="btn btn-outline-danger mb-0">Discard</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="address-type-form" method="post" action="#">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label class="form-label" for="address_type_name">Address Type <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="address_type_name" name="address_type_name" maxlength="100" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
