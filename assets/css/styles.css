@@ -28584,7 +28584,7 @@ html[data-boxed-layout="boxed"] .container-xxl {
 }
 .sidebar-nav ul .sidebar-item .sidebar-link {
     display: flex;
-    font-size: 14px;
+    font-size: 13px;
     white-space: nowrap;
     align-items: center;
     position: relative;

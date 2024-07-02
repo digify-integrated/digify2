@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 01, 2024 at 11:32 AM
+-- Generation Time: Jul 02, 2024 at 11:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `buildAppModuleStack` (IN `p_user_ac
             WHERE user_account_id = p_user_account_id
         )
     )
-    ORDER BY am.order_sequence;
+    ORDER BY am.order_sequence, am.app_module_name;
 END$$
 
 DROP PROCEDURE IF EXISTS `buildMenuGroup`$$
@@ -71,7 +71,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `buildMenuItem` (IN `p_user_account_
     INNER JOIN role_permission AS mar ON mi.menu_item_id = mar.menu_item_id
     INNER JOIN role_user_account AS ru ON mar.role_id = ru.role_id
     WHERE mar.read_access = 1 AND ru.user_account_id = p_user_account_id AND mi.menu_group_id = p_menu_group_id
-    ORDER BY mi.order_sequence;
+    ORDER BY mi.order_sequence, mi.menu_item_name;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkAccessRights`$$
@@ -317,6 +317,31 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountExist` (IN `p_user_
 	SELECT COUNT(*) AS total
     FROM user_account
     WHERE user_account_id = p_user_account_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkWorkHoursExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkHoursExist` (IN `p_work_hours_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM work_hours
+    WHERE work_hours_id = p_work_hours_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkWorkHoursOverlap`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkHoursOverlap` (IN `p_work_hours_id` INT, IN `p_work_schedule_id` INT, IN `p_day_of_week` VARCHAR(20), IN `p_day_period` VARCHAR(20), IN `p_start_time` TIME, IN `p_end_time` TIME)   BEGIN
+    IF p_work_hours_id IS NOT NULL OR p_work_hours_id <> '' THEN
+        SELECT COUNT(*) AS total
+        FROM work_hours
+        WHERE work_hours_id != p_work_hours_id
+        AND work_schedule_id = p_work_schedule_id
+        AND day_of_week = p_day_of_week
+        AND (start_time BETWEEN p_start_time AND p_end_time OR end_time BETWEEN p_start_time AND p_end_time);
+    ELSE
+        SELECT COUNT(*) AS total
+        FROM work_hours
+        WHERE work_hours_id != p_work_hours_id
+        AND day_of_week = p_day_of_week
+        AND (start_time BETWEEN p_start_time AND p_end_time OR end_time BETWEEN p_start_time AND p_end_time);
+    END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkWorkLocationExist`$$
@@ -569,6 +594,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserAccount` (IN `p_user_acco
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteWorkHours`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkHours` (IN `p_work_hours_id` INT)   BEGIN
+    DELETE FROM work_hours WHERE work_hours_id = p_work_hours_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteWorkLocation`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkLocation` (IN `p_work_location_id` INT)   BEGIN
     DELETE FROM work_location WHERE work_location_id = p_work_location_id;
@@ -576,7 +606,17 @@ END$$
 
 DROP PROCEDURE IF EXISTS `deleteWorkSchedule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkSchedule` (IN `p_work_schedule_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM work_hours WHERE work_schedule_id = p_work_schedule_id;
     DELETE FROM work_schedule WHERE work_schedule_id = p_work_schedule_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateAppModuleOptions`$$
@@ -1060,6 +1100,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountTable` (IN `p_fi
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateWorkHoursTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkHoursTable` (IN `p_work_schedule_id` INT)   BEGIN
+    SELECT work_hours_id, day_of_week, day_period, start_time, end_time, notes
+    FROM work_hours WHERE work_schedule_id = p_work_schedule_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateWorkLocationOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkLocationOptions` ()   BEGIN
 	SELECT work_location_id, work_location_name 
@@ -1294,6 +1340,12 @@ DROP PROCEDURE IF EXISTS `getUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserAccount` (IN `p_user_account_id` INT, IN `p_email` VARCHAR(255))   BEGIN
 	SELECT * FROM user_account
     WHERE user_account_id = p_user_account_id OR email = p_email;
+END$$
+
+DROP PROCEDURE IF EXISTS `getWorkHours`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getWorkHours` (IN `p_work_hours_id` INT)   BEGIN
+	SELECT * FROM work_hours
+	WHERE work_hours_id = p_work_hours_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getWorkLocation`$$
@@ -1548,6 +1600,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUserAccount` (IN `p_file_as` 
 	VALUES(p_file_as, p_email, p_username, p_password, p_password_expiry_date, p_last_password_change, p_last_log_by);
 	
     SET p_user_account_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertWorkHours`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkHours` (IN `p_work_schedule_id` INT, IN `p_day_of_week` VARCHAR(20), IN `p_day_period` VARCHAR(20), IN `p_start_time` TIME, IN `p_end_time` TIME, IN `p_notes` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO work_hours (work_schedule_id, day_of_week, day_period, start_time, end_time, notes, last_log_by) 
+	VALUES(p_work_schedule_id, p_day_of_week, p_day_period, p_start_time, p_end_time, p_notes, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertWorkLocation`$$
@@ -2350,6 +2408,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserPassword` (IN `p_user_acc
     WHERE p_user_account_id = user_account_id OR username = p_credentials OR email = BINARY p_credentials;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateWorkHours`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkHours` (IN `p_work_hours_id` INT, IN `p_work_schedule_id` INT, IN `p_day_of_week` VARCHAR(20), IN `p_day_period` VARCHAR(20), IN `p_start_time` TIME, IN `p_end_time` TIME, IN `p_notes` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    UPDATE work_hours
+    SET work_schedule_id = p_work_schedule_id,
+        day_of_week = p_day_of_week,
+        day_period = p_day_period,
+        start_time = p_start_time,
+        end_time = p_end_time,
+        notes = p_notes,
+        last_log_by = p_last_log_by
+    WHERE work_hours_id = p_work_hours_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateWorkLocation`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkLocation` (IN `p_work_location_id` INT, IN `p_work_location_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -2379,21 +2450,12 @@ END$$
 
 DROP PROCEDURE IF EXISTS `updateWorkSchedule`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkSchedule` (IN `p_work_schedule_id` INT, IN `p_work_schedule_name` VARCHAR(100), IN `p_schedule_type_id` INT, IN `p_schedule_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
     UPDATE work_schedule
     SET work_schedule_name = p_work_schedule_name,
         schedule_type_id = p_schedule_type_id,
         schedule_type_name = p_schedule_type_name,
         last_log_by = p_last_log_by
     WHERE work_schedule_id = p_work_schedule_id;
-
-    COMMIT;
 END$$
 
 DELIMITER ;
@@ -4968,7 +5030,112 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2444, 'menu_item', 30, 'Menu Item Name: Work Schedule Type -> Schedule Type<br/>Menu Item URL: work-schedule-type.php -> schedule-type.php<br/>', 2, '2024-07-01 15:09:21', '2024-07-01 15:09:21'),
 (2445, 'schedule_type', 1, 'Schedule type created. <br/><br/>Schedule Type Name: Fixed', 2, '2024-07-01 15:48:39', '2024-07-01 15:48:39'),
 (2446, 'schedule_type', 1, 'Schedule Type Name: Fixed -> Fixed test<br/>', 2, '2024-07-01 15:49:14', '2024-07-01 15:49:14'),
-(2447, 'schedule_type', 1, 'Schedule Type Name: Fixed test -> Fixed<br/>', 2, '2024-07-01 15:49:18', '2024-07-01 15:49:18');
+(2447, 'schedule_type', 1, 'Schedule Type Name: Fixed test -> Fixed<br/>', 2, '2024-07-01 15:49:18', '2024-07-01 15:49:18'),
+(2448, 'schedule_type', 2, 'Schedule type created. <br/><br/>Schedule Type Name: Flexible', 2, '2024-07-02 09:49:09', '2024-07-02 09:49:09'),
+(2449, 'schedule_type', 3, 'Schedule type created. <br/><br/>Schedule Type Name: Shifting', 2, '2024-07-02 09:49:26', '2024-07-02 09:49:26'),
+(2450, 'work_schedule', 5, 'Schedule Type Name: Fixed -> Flexible<br/>', 2, '2024-07-02 10:17:16', '2024-07-02 10:17:16'),
+(2451, 'work_schedule', 5, 'Schedule Type Name: Flexible -> Fixed<br/>', 2, '2024-07-02 10:17:21', '2024-07-02 10:17:21'),
+(2452, 'system_action', 17, 'System action created. <br/><br/>System Action Name: Add Work Hours<br/>System Action Description: Access to add the work hours.', 2, '2024-07-02 10:23:36', '2024-07-02 10:23:36'),
+(2453, 'role_system_action_permission', 17, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Add Work Hours<br/>Date Assigned: 2024-07-02 10:23:41', 2, '2024-07-02 10:23:41', '2024-07-02 10:23:41'),
+(2454, 'role_system_action_permission', 17, 'System Action Access: 0 -> 1<br/>', 2, '2024-07-02 10:23:42', '2024-07-02 10:23:42'),
+(2455, 'system_action', 18, 'System action created. <br/><br/>System Action Name: Update Work Hours<br/>System Action Description: Access to update the work hours.', 2, '2024-07-02 10:23:59', '2024-07-02 10:23:59'),
+(2456, 'role_system_action_permission', 18, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Update Work Hours<br/>Date Assigned: 2024-07-02 10:24:05', 2, '2024-07-02 10:24:05', '2024-07-02 10:24:05'),
+(2457, 'role_system_action_permission', 18, 'System Action Access: 0 -> 1<br/>', 2, '2024-07-02 10:24:06', '2024-07-02 10:24:06'),
+(2458, 'system_action', 19, 'System action created. <br/><br/>System Action Name: Delete Work Hours<br/>System Action Description: Access to delete the work hours.', 2, '2024-07-02 10:24:19', '2024-07-02 10:24:19'),
+(2459, 'role_system_action_permission', 19, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Delete Work Hours<br/>Date Assigned: 2024-07-02 10:24:23', 2, '2024-07-02 10:24:23', '2024-07-02 10:24:23'),
+(2460, 'role_system_action_permission', 19, 'System Action Access: 0 -> 1<br/>', 2, '2024-07-02 10:24:24', '2024-07-02 10:24:24'),
+(2461, 'work_hours', 1, 'Work hours created. <br/><br/>Day of Week: Monday<br/>Day Period: Morning<br/>Start Time: 08:00:00<br/>End Time: 12:00:00<br/>Notes: test', 2, '2024-07-02 15:52:29', '2024-07-02 15:52:29'),
+(2462, 'work_hours', 2, 'Work hours created. <br/><br/>Day of Week: Tuesday<br/>Day Period: Afternoon<br/>Start Time: 09:01:00<br/>End Time: 12:30:00<br/>Notes: testasdasd', 2, '2024-07-02 16:01:51', '2024-07-02 16:01:51'),
+(2463, 'work_hours', 3, 'Work hours created. <br/><br/>Day of Week: Wednesday<br/>Day Period: Evening<br/>Start Time: 09:03:00<br/>End Time: 16:30:00<br/>Notes: testasdasd', 2, '2024-07-02 16:02:52', '2024-07-02 16:02:52'),
+(2464, 'work_hours', 4, 'Work hours created. <br/><br/>Day of Week: Monday<br/>Day Period: Morning<br/>Start Time: 08:00:00<br/>End Time: 12:00:00<br/>Notes: test', 2, '2024-07-02 16:05:24', '2024-07-02 16:05:24'),
+(2465, 'work_hours', 5, 'Work hours created. <br/><br/>Day of Week: Thursday<br/>Day Period: Afternoon<br/>Start Time: 08:30:00<br/>End Time: 12:20:00<br/>Notes: test', 2, '2024-07-02 16:06:09', '2024-07-02 16:06:09'),
+(2466, 'work_hours', 1, 'Day of Week: Monday -> Thursday<br/>', 2, '2024-07-02 16:08:01', '2024-07-02 16:08:01'),
+(2467, 'work_hours', 2, 'Start Time: 09:01:00 -> 09:30:00<br/>End Time: 12:30:00 -> 12:35:00<br/>', 2, '2024-07-02 16:21:58', '2024-07-02 16:21:58'),
+(2468, 'work_hours', 4, 'Day Period: Morning -> Afternoon<br/>', 2, '2024-07-02 16:26:57', '2024-07-02 16:26:57'),
+(2469, 'work_hours', 6, 'Work hours created. <br/><br/>Day of Week: Saturday<br/>Day Period: Morning<br/>Start Time: 08:00:00<br/>End Time: 17:30:00', 2, '2024-07-02 16:44:12', '2024-07-02 16:44:12'),
+(2470, 'work_hours', 7, 'Work hours created. <br/><br/>Day of Week: Wednesday<br/>Day Period: Evening<br/>Start Time: 08:00:00<br/>End Time: 14:05:00', 2, '2024-07-02 16:47:08', '2024-07-02 16:47:08'),
+(2471, 'menu_item', 32, 'Menu Item created. <br/><br/>Menu Item Name: Contact Information Type<br/>Menu Item URL: contact-information-type.php<br/>Menu Item Icon: ti ti-device-mobile<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 3', 2, '2024-07-02 17:02:55', '2024-07-02 17:02:55'),
+(2472, 'role_permission', 33, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Contact Information Type<br/>Date Assigned: 2024-07-02 17:02:59', 2, '2024-07-02 17:02:59', '2024-07-02 17:02:59'),
+(2473, 'role_permission', 33, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:02:59', '2024-07-02 17:02:59'),
+(2474, 'role_permission', 33, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:03:00', '2024-07-02 17:03:00'),
+(2475, 'role_permission', 33, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:03:01', '2024-07-02 17:03:01'),
+(2476, 'role_permission', 33, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:03:02', '2024-07-02 17:03:02'),
+(2477, 'menu_item', 33, 'Menu Item created. <br/><br/>Menu Item Name: ID Type<br/>Menu Item URL: id-type.php<br/>Menu Item Icon: ti ti-id<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 9', 2, '2024-07-02 17:05:17', '2024-07-02 17:05:17'),
+(2478, 'role_permission', 34, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: ID Type<br/>Date Assigned: 2024-07-02 17:05:20', 2, '2024-07-02 17:05:20', '2024-07-02 17:05:20'),
+(2479, 'role_permission', 34, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:05:21', '2024-07-02 17:05:21'),
+(2480, 'role_permission', 34, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:05:22', '2024-07-02 17:05:22'),
+(2481, 'role_permission', 34, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:05:23', '2024-07-02 17:05:23'),
+(2482, 'role_permission', 34, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:05:23', '2024-07-02 17:05:23'),
+(2483, 'menu_item', 34, 'Menu Item created. <br/><br/>Menu Item Name: Bank<br/>Menu Item URL: bank.php<br/>Menu Item Icon: ti ti-building-bank<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 2', 2, '2024-07-02 17:06:13', '2024-07-02 17:06:13'),
+(2484, 'role_permission', 35, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Bank<br/>Date Assigned: 2024-07-02 17:06:16', 2, '2024-07-02 17:06:16', '2024-07-02 17:06:16'),
+(2485, 'role_permission', 35, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:06:17', '2024-07-02 17:06:17'),
+(2486, 'role_permission', 35, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:06:18', '2024-07-02 17:06:18'),
+(2487, 'role_permission', 35, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:06:19', '2024-07-02 17:06:19'),
+(2488, 'role_permission', 35, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:06:19', '2024-07-02 17:06:19'),
+(2489, 'menu_item', 35, 'Menu Item created. <br/><br/>Menu Item Name: Bank Account Type<br/>Menu Item URL: bank-account-type.php<br/>Menu Item Icon: ti ti-building-community<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 3', 2, '2024-07-02 17:07:16', '2024-07-02 17:07:16'),
+(2490, 'role_permission', 36, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Bank Account Type<br/>Date Assigned: 2024-07-02 17:07:21', 2, '2024-07-02 17:07:21', '2024-07-02 17:07:21'),
+(2491, 'role_permission', 36, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:07:23', '2024-07-02 17:07:23'),
+(2492, 'role_permission', 36, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:07:23', '2024-07-02 17:07:23'),
+(2493, 'role_permission', 36, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:07:24', '2024-07-02 17:07:24'),
+(2494, 'role_permission', 36, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:07:25', '2024-07-02 17:07:25'),
+(2495, 'menu_item', 35, 'Order Sequence: 3 -> 2<br/>', 2, '2024-07-02 17:08:44', '2024-07-02 17:08:44'),
+(2496, 'menu_item', 36, 'Menu Item created. <br/><br/>Menu Item Name: Relation<br/>Menu Item URL: relation.php<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 18', 2, '2024-07-02 17:09:40', '2024-07-02 17:09:40'),
+(2497, 'menu_item', 36, 'Menu Item Icon:  -> ti ti-social<br/>', 2, '2024-07-02 17:10:39', '2024-07-02 17:10:39'),
+(2498, 'role_permission', 37, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Relation<br/>Date Assigned: 2024-07-02 17:10:43', 2, '2024-07-02 17:10:43', '2024-07-02 17:10:43'),
+(2499, 'role_permission', 37, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:10:44', '2024-07-02 17:10:44'),
+(2500, 'role_permission', 37, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:10:45', '2024-07-02 17:10:45'),
+(2501, 'role_permission', 37, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:10:47', '2024-07-02 17:10:47'),
+(2502, 'role_permission', 37, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:10:48', '2024-07-02 17:10:48'),
+(2503, 'menu_item', 37, 'Menu Item created. <br/><br/>Menu Item Name: Educational Stage<br/>Menu Item URL: educational-stage.php<br/>Menu Item Icon: ti ti-school<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 5', 2, '2024-07-02 17:11:54', '2024-07-02 17:11:54'),
+(2504, 'role_permission', 38, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Educational Stage<br/>Date Assigned: 2024-07-02 17:11:57', 2, '2024-07-02 17:11:57', '2024-07-02 17:11:57'),
+(2505, 'role_permission', 38, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:11:58', '2024-07-02 17:11:58'),
+(2506, 'role_permission', 38, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:11:59', '2024-07-02 17:11:59'),
+(2507, 'role_permission', 38, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:12:00', '2024-07-02 17:12:00'),
+(2508, 'role_permission', 38, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:12:00', '2024-07-02 17:12:00'),
+(2509, 'menu_item', 38, 'Menu Item created. <br/><br/>Menu Item Name: Language<br/>Menu Item URL: language.php<br/>Menu Item Icon: ti ti-language<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 12', 2, '2024-07-02 17:21:10', '2024-07-02 17:21:10'),
+(2510, 'role_permission', 39, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Language<br/>Date Assigned: 2024-07-02 17:21:16', 2, '2024-07-02 17:21:16', '2024-07-02 17:21:16'),
+(2511, 'role_permission', 39, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:21:18', '2024-07-02 17:21:18'),
+(2512, 'role_permission', 39, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:21:18', '2024-07-02 17:21:18'),
+(2513, 'role_permission', 39, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:21:19', '2024-07-02 17:21:19'),
+(2514, 'role_permission', 39, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:21:20', '2024-07-02 17:21:20'),
+(2515, 'menu_item', 39, 'Menu Item created. <br/><br/>Menu Item Name: Language Proficiency<br/>Menu Item URL: language-proficiency.php<br/>Menu Item Icon: ti ti-messages<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 12', 2, '2024-07-02 17:23:14', '2024-07-02 17:23:14'),
+(2516, 'role_permission', 40, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Language Proficiency<br/>Date Assigned: 2024-07-02 17:23:19', 2, '2024-07-02 17:23:19', '2024-07-02 17:23:19'),
+(2517, 'role_permission', 40, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:23:21', '2024-07-02 17:23:21'),
+(2518, 'role_permission', 40, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:23:22', '2024-07-02 17:23:22'),
+(2519, 'role_permission', 40, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:23:23', '2024-07-02 17:23:23'),
+(2520, 'role_permission', 40, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:23:23', '2024-07-02 17:23:23'),
+(2521, 'menu_item', 40, 'Menu Item created. <br/><br/>Menu Item Name: Civil Status<br/>Menu Item URL: civil-status.php<br/>Menu Item Icon: ti ti-chart-circles<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 3', 2, '2024-07-02 17:26:17', '2024-07-02 17:26:17'),
+(2522, 'role_permission', 41, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Civil Status<br/>Date Assigned: 2024-07-02 17:26:21', 2, '2024-07-02 17:26:21', '2024-07-02 17:26:21'),
+(2523, 'role_permission', 41, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:26:23', '2024-07-02 17:26:23'),
+(2524, 'role_permission', 41, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:26:24', '2024-07-02 17:26:24'),
+(2525, 'role_permission', 41, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:26:25', '2024-07-02 17:26:25'),
+(2526, 'role_permission', 41, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:26:25', '2024-07-02 17:26:25'),
+(2527, 'menu_item', 41, 'Menu Item created. <br/><br/>Menu Item Name: Gender<br/>Menu Item URL: gender.php<br/>Menu Item Icon: ti ti-friends<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 7', 2, '2024-07-02 17:27:18', '2024-07-02 17:27:18'),
+(2528, 'role_permission', 42, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Gender<br/>Date Assigned: 2024-07-02 17:27:22', 2, '2024-07-02 17:27:22', '2024-07-02 17:27:22'),
+(2529, 'role_permission', 42, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:27:23', '2024-07-02 17:27:23'),
+(2530, 'role_permission', 42, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:27:24', '2024-07-02 17:27:24'),
+(2531, 'role_permission', 42, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:27:24', '2024-07-02 17:27:24'),
+(2532, 'role_permission', 42, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:27:25', '2024-07-02 17:27:25'),
+(2533, 'menu_item', 42, 'Menu Item created. <br/><br/>Menu Item Name: Blood Type<br/>Menu Item URL: blood-type.php<br/>Menu Item Icon: ti ti-droplet-filled<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 2', 2, '2024-07-02 17:28:23', '2024-07-02 17:28:23'),
+(2534, 'role_permission', 43, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Blood Type<br/>Date Assigned: 2024-07-02 17:28:26', 2, '2024-07-02 17:28:26', '2024-07-02 17:28:26'),
+(2535, 'role_permission', 43, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:28:27', '2024-07-02 17:28:27'),
+(2536, 'role_permission', 43, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:28:27', '2024-07-02 17:28:27'),
+(2537, 'role_permission', 43, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:28:28', '2024-07-02 17:28:28'),
+(2538, 'role_permission', 43, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:28:28', '2024-07-02 17:28:28'),
+(2539, 'menu_item', 43, 'Menu Item created. <br/><br/>Menu Item Name: Religion<br/>Menu Item URL: religion.php<br/>Menu Item Icon: ti ti-building-church<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 18', 2, '2024-07-02 17:29:10', '2024-07-02 17:29:10'),
+(2540, 'role_permission', 44, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Religion<br/>Date Assigned: 2024-07-02 17:29:14', 2, '2024-07-02 17:29:14', '2024-07-02 17:29:14'),
+(2541, 'role_permission', 44, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:29:15', '2024-07-02 17:29:15'),
+(2542, 'role_permission', 44, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:29:16', '2024-07-02 17:29:16'),
+(2543, 'role_permission', 44, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:29:16', '2024-07-02 17:29:16'),
+(2544, 'role_permission', 44, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:29:17', '2024-07-02 17:29:17'),
+(2545, 'menu_item', 44, 'Menu Item created. <br/><br/>Menu Item Name: Address Type<br/>Menu Item URL: address-type.php<br/>Menu Item Icon: ti ti-map-2<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 1', 2, '2024-07-02 17:30:03', '2024-07-02 17:30:03'),
+(2546, 'role_permission', 45, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Address Type<br/>Date Assigned: 2024-07-02 17:30:07', 2, '2024-07-02 17:30:07', '2024-07-02 17:30:07'),
+(2547, 'role_permission', 45, 'Read Access: 0 -> 1<br/>', 2, '2024-07-02 17:30:08', '2024-07-02 17:30:08'),
+(2548, 'role_permission', 45, 'Create Access: 0 -> 1<br/>', 2, '2024-07-02 17:30:08', '2024-07-02 17:30:08'),
+(2549, 'role_permission', 45, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:30:10', '2024-07-02 17:30:10'),
+(2550, 'role_permission', 45, 'Write Access: 1 -> 0<br/>', 2, '2024-07-02 17:30:10', '2024-07-02 17:30:10'),
+(2551, 'role_permission', 45, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-02 17:30:11', '2024-07-02 17:30:11'),
+(2552, 'role_permission', 45, 'Write Access: 0 -> 1<br/>', 2, '2024-07-02 17:30:12', '2024-07-02 17:30:12');
 
 -- --------------------------------------------------------
 
@@ -7898,7 +8065,20 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (28, 'Departure Reason', 'departure-reason.php', 'ti ti-user-minus', 6, 'Employee Configuration', 2, 'Employees', NULL, NULL, 5, '2024-06-28 10:46:48', 2),
 (29, 'Job Position', 'job-position.php', 'ti ti-id', 6, 'Employee Configuration', 2, 'Employees', NULL, NULL, 10, '2024-06-28 10:56:17', 2),
 (30, 'Schedule Type', 'schedule-type.php', '', 6, 'Employee Configuration', 2, 'Employees', 31, 'Scheduling', 2, '2024-07-01 14:52:27', 2),
-(31, 'Scheduling', '', 'ti ti-calendar-time', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 24, '2024-07-01 14:59:44', 2);
+(31, 'Scheduling', '', 'ti ti-calendar-time', 6, 'Employee Configuration', 2, 'Employees', 0, NULL, 24, '2024-07-01 14:59:44', 2),
+(32, 'Contact Information Type', 'contact-information-type.php', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-02 17:02:55', 2),
+(33, 'ID Type', 'id-type.php', 'ti ti-id', 3, 'Configurations', 1, 'Settings', 0, NULL, 9, '2024-07-02 17:05:17', 2),
+(34, 'Bank', 'bank.php', 'ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-02 17:06:13', 2),
+(35, 'Bank Account Type', 'bank-account-type.php', 'ti ti-building-community', 3, 'Configurations', 1, 'Settings', NULL, NULL, 2, '2024-07-02 17:07:16', 2),
+(36, 'Relation', 'relation.php', 'ti ti-social', 3, 'Configurations', 1, 'Settings', NULL, NULL, 18, '2024-07-02 17:09:40', 2),
+(37, 'Educational Stage', 'educational-stage.php', 'ti ti-school', 3, 'Configurations', 1, 'Settings', 0, NULL, 5, '2024-07-02 17:11:54', 2),
+(38, 'Language', 'language.php', 'ti ti-language', 3, 'Configurations', 1, 'Settings', 0, NULL, 12, '2024-07-02 17:21:10', 2),
+(39, 'Language Proficiency', 'language-proficiency.php', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', 0, NULL, 12, '2024-07-02 17:23:14', 2),
+(40, 'Civil Status', 'civil-status.php', 'ti ti-chart-circles', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-02 17:26:17', 2),
+(41, 'Gender', 'gender.php', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 0, NULL, 7, '2024-07-02 17:27:18', 2),
+(42, 'Blood Type', 'blood-type.php', 'ti ti-droplet-filled', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-02 17:28:23', 2),
+(43, 'Religion', 'religion.php', 'ti ti-building-church', 3, 'Configurations', 1, 'Settings', 0, NULL, 18, '2024-07-02 17:29:10', 2),
+(44, 'Address Type', 'address-type.php', 'ti ti-map-2', 3, 'Configurations', 1, 'Settings', 0, NULL, 1, '2024-07-02 17:30:03', 2);
 
 --
 -- Triggers `menu_item`
@@ -8383,7 +8563,20 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (29, 1, 'Administrator', 28, 'Departure Reason', 1, 1, 1, 1, '2024-06-28 10:50:01', '2024-06-28 10:50:01', 2),
 (30, 1, 'Administrator', 29, 'Job Position', 1, 1, 1, 1, '2024-06-28 10:56:21', '2024-06-28 10:56:21', 2),
 (31, 1, 'Administrator', 30, 'Schedule Type', 1, 1, 1, 1, '2024-07-01 14:52:33', '2024-07-01 14:52:33', 2),
-(32, 1, 'Administrator', 31, 'Scheduling', 1, 0, 0, 0, '2024-07-01 14:59:48', '2024-07-01 14:59:48', 2);
+(32, 1, 'Administrator', 31, 'Scheduling', 1, 0, 0, 0, '2024-07-01 14:59:48', '2024-07-01 14:59:48', 2),
+(33, 1, 'Administrator', 32, 'Contact Information Type', 1, 1, 1, 1, '2024-07-02 17:02:59', '2024-07-02 17:02:59', 2),
+(34, 1, 'Administrator', 33, 'ID Type', 1, 1, 1, 1, '2024-07-02 17:05:20', '2024-07-02 17:05:20', 2),
+(35, 1, 'Administrator', 34, 'Bank', 1, 1, 1, 1, '2024-07-02 17:06:16', '2024-07-02 17:06:16', 2),
+(36, 1, 'Administrator', 35, 'Bank Account Type', 1, 1, 1, 1, '2024-07-02 17:07:21', '2024-07-02 17:07:21', 2),
+(37, 1, 'Administrator', 36, 'Relation', 1, 1, 1, 1, '2024-07-02 17:10:43', '2024-07-02 17:10:43', 2),
+(38, 1, 'Administrator', 37, 'Educational Stage', 1, 1, 1, 1, '2024-07-02 17:11:57', '2024-07-02 17:11:57', 2),
+(39, 1, 'Administrator', 38, 'Language', 1, 1, 1, 1, '2024-07-02 17:21:16', '2024-07-02 17:21:16', 2),
+(40, 1, 'Administrator', 39, 'Language Proficiency', 1, 1, 1, 1, '2024-07-02 17:23:19', '2024-07-02 17:23:19', 2),
+(41, 1, 'Administrator', 40, 'Civil Status', 1, 1, 1, 1, '2024-07-02 17:26:21', '2024-07-02 17:26:21', 2),
+(42, 1, 'Administrator', 41, 'Gender', 1, 1, 1, 1, '2024-07-02 17:27:22', '2024-07-02 17:27:22', 2),
+(43, 1, 'Administrator', 42, 'Blood Type', 1, 1, 1, 1, '2024-07-02 17:28:26', '2024-07-02 17:28:26', 2),
+(44, 1, 'Administrator', 43, 'Religion', 1, 1, 1, 1, '2024-07-02 17:29:14', '2024-07-02 17:29:14', 2),
+(45, 1, 'Administrator', 44, 'Address Type', 1, 1, 1, 1, '2024-07-02 17:30:07', '2024-07-02 17:30:07', 2);
 
 --
 -- Triggers `role_permission`
@@ -8502,7 +8695,10 @@ INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`,
 (13, 1, 'Administrator', 13, 'Update Role System Action Access', 1, '2024-06-26 15:18:29', '2024-06-26 15:18:29', 1),
 (14, 1, 'Administrator', 14, 'Delete Role System Action Access', 1, '2024-06-26 15:18:29', '2024-06-26 15:18:29', 1),
 (15, 1, 'Administrator', 15, 'Add File Extension Access', 1, '2024-06-26 15:18:29', '2024-06-26 15:18:29', 1),
-(16, 1, 'Administrator', 16, 'Delete File Extension Access', 1, '2024-06-26 15:18:29', '2024-06-26 15:18:29', 1);
+(16, 1, 'Administrator', 16, 'Delete File Extension Access', 1, '2024-06-26 15:18:29', '2024-06-26 15:18:29', 1),
+(17, 1, 'Administrator', 17, 'Add Work Hours', 1, '2024-07-02 10:23:41', '2024-07-02 10:23:41', 2),
+(18, 1, 'Administrator', 18, 'Update Work Hours', 1, '2024-07-02 10:24:05', '2024-07-02 10:24:05', 2),
+(19, 1, 'Administrator', 19, 'Delete Work Hours', 1, '2024-07-02 10:24:23', '2024-07-02 10:24:23', 2);
 
 --
 -- Triggers `role_system_action_permission`
@@ -8648,7 +8844,9 @@ CREATE TABLE `schedule_type` (
 --
 
 INSERT INTO `schedule_type` (`schedule_type_id`, `schedule_type_name`, `created_date`, `last_log_by`) VALUES
-(1, 'Fixed', '2024-07-01 15:48:39', 2);
+(1, 'Fixed', '2024-07-01 15:48:39', 2),
+(2, 'Flexible', '2024-07-02 09:49:09', 2),
+(3, 'Shifting', '2024-07-02 09:49:26', 2);
 
 --
 -- Triggers `schedule_type`
@@ -8922,7 +9120,10 @@ INSERT INTO `system_action` (`system_action_id`, `system_action_name`, `system_a
 (13, 'Update Role System Action Access', 'Access to update the role system action access.', '2024-06-26 15:18:24', 1),
 (14, 'Delete Role System Action Access', 'Access to delete the role system action access.', '2024-06-26 15:18:24', 1),
 (15, 'Add File Extension Access', 'Access to assign the file extension to the upload setting.', '2024-06-26 15:18:24', 1),
-(16, 'Delete File Extension Access', 'Access to delete the file extension to the upload setting.', '2024-06-26 15:18:24', 1);
+(16, 'Delete File Extension Access', 'Access to delete the file extension to the upload setting.', '2024-06-26 15:18:24', 1),
+(17, 'Add Work Hours', 'Access to add the work hours.', '2024-07-02 10:23:36', 2),
+(18, 'Update Work Hours', 'Access to update the work hours.', '2024-07-02 10:23:59', 2),
+(19, 'Delete Work Hours', 'Access to delete the work hours.', '2024-07-02 10:24:19', 2);
 
 --
 -- Triggers `system_action`
@@ -9336,6 +9537,91 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `work_hours`
+--
+
+DROP TABLE IF EXISTS `work_hours`;
+CREATE TABLE `work_hours` (
+  `work_hours_id` int(10) UNSIGNED NOT NULL,
+  `work_schedule_id` int(10) UNSIGNED NOT NULL,
+  `day_of_week` varchar(20) DEFAULT NULL,
+  `day_period` varchar(20) DEFAULT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  `notes` varchar(500) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `work_hours`
+--
+DROP TRIGGER IF EXISTS `work_hours_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `work_hours_trigger_insert` AFTER INSERT ON `work_hours` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Work hours created. <br/>';
+
+    IF NEW.day_of_week <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Day of Week: ", NEW.day_of_week);
+    END IF;
+
+    IF NEW.day_period <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Day Period: ", NEW.day_period);
+    END IF;
+
+    IF NEW.start_time <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Start Time: ", NEW.start_time);
+    END IF;
+
+    IF NEW.end_time <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>End Time: ", NEW.end_time);
+    END IF;
+
+    IF NEW.notes <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Notes: ", NEW.notes);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('work_hours', NEW.work_hours_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `work_hours_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `work_hours_trigger_update` AFTER UPDATE ON `work_hours` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.day_of_week <> OLD.day_of_week THEN
+        SET audit_log = CONCAT(audit_log, "Day of Week: ", OLD.day_of_week, " -> ", NEW.day_of_week, "<br/>");
+    END IF;
+
+    IF NEW.day_period <> OLD.day_period THEN
+        SET audit_log = CONCAT(audit_log, "Day Period: ", OLD.day_period, " -> ", NEW.day_period, "<br/>");
+    END IF;
+
+    IF NEW.start_time <> OLD.start_time THEN
+        SET audit_log = CONCAT(audit_log, "Start Time: ", OLD.start_time, " -> ", NEW.start_time, "<br/>");
+    END IF;
+
+    IF NEW.end_time <> OLD.end_time THEN
+        SET audit_log = CONCAT(audit_log, "End Time: ", OLD.end_time, " -> ", NEW.end_time, "<br/>");
+    END IF;
+
+    IF NEW.notes <> OLD.notes THEN
+        SET audit_log = CONCAT(audit_log, "Notes: ", OLD.notes, " -> ", NEW.notes, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('work_hours', NEW.work_hours_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `work_location`
 --
 
@@ -9462,6 +9748,48 @@ CREATE TABLE `work_schedule` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `work_schedule`
+--
+DROP TRIGGER IF EXISTS `work_schedule_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `work_schedule_trigger_insert` AFTER INSERT ON `work_schedule` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Work schedule created. <br/>';
+
+    IF NEW.work_schedule_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Work Schedule Name: ", NEW.work_schedule_name);
+    END IF;
+
+    IF NEW.schedule_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Schedule Type Name: ", NEW.schedule_type_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('work_schedule', NEW.work_schedule_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `work_schedule_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `work_schedule_trigger_update` AFTER UPDATE ON `work_schedule` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.work_schedule_name <> OLD.work_schedule_name THEN
+        SET audit_log = CONCAT(audit_log, "Work Schedule Name: ", OLD.work_schedule_name, " -> ", NEW.work_schedule_name, "<br/>");
+    END IF;
+
+    IF NEW.schedule_type_name <> OLD.schedule_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Schedule Type Name: ", OLD.schedule_type_name, " -> ", NEW.schedule_type_name, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('work_schedule', NEW.work_schedule_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
 
 --
 -- Indexes for dumped tables
@@ -9769,6 +10097,15 @@ ALTER TABLE `user_account`
   ADD KEY `user_account_index_email` (`email`);
 
 --
+-- Indexes for table `work_hours`
+--
+ALTER TABLE `work_hours`
+  ADD PRIMARY KEY (`work_hours_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `work_schedule_id` (`work_schedule_id`),
+  ADD KEY `work_hours_index_work_hours_id` (`work_hours_id`);
+
+--
 -- Indexes for table `work_location`
 --
 ALTER TABLE `work_location`
@@ -9802,7 +10139,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2448;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2553;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -9886,7 +10223,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -9928,13 +10265,13 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
 --
 ALTER TABLE `role_system_action_permission`
-  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `role_user_account`
@@ -9946,7 +10283,7 @@ ALTER TABLE `role_user_account`
 -- AUTO_INCREMENT for table `schedule_type`
 --
 ALTER TABLE `schedule_type`
-  MODIFY `schedule_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `schedule_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `security_setting`
@@ -9964,7 +10301,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `system_action`
 --
 ALTER TABLE `system_action`
-  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `system_setting`
@@ -9997,6 +10334,12 @@ ALTER TABLE `user_account`
   MODIFY `user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `work_hours`
+--
+ALTER TABLE `work_hours`
+  MODIFY `work_hours_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `work_location`
 --
 ALTER TABLE `work_location`
@@ -10006,7 +10349,7 @@ ALTER TABLE `work_location`
 -- AUTO_INCREMENT for table `work_schedule`
 --
 ALTER TABLE `work_schedule`
-  MODIFY `work_schedule_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `work_schedule_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
@@ -10232,6 +10575,13 @@ ALTER TABLE `upload_setting_file_extension`
 --
 ALTER TABLE `user_account`
   ADD CONSTRAINT `user_account_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `work_hours`
+--
+ALTER TABLE `work_hours`
+  ADD CONSTRAINT `work_hours_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
+  ADD CONSTRAINT `work_hours_ibfk_2` FOREIGN KEY (`work_schedule_id`) REFERENCES `work_schedule` (`work_schedule_id`);
 
 --
 -- Constraints for table `work_location`

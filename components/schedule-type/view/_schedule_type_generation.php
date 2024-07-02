@@ -54,7 +54,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $response[] = [
                     'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $scheduleTypeID .'">',
-                    'JOB_POSITION_NAME' => $scheduleTypeName,
+                    'SCHEDULE_TYPE_NAME' => $scheduleTypeName,
                     'ACTION' => '<div class="d-flex gap-2">
                                     <a href="'. $pageLink .'&id='. $scheduleTypeIDEncrypted .'" class="text-info" title="View Details">
                                         <i class="ti ti-eye fs-5"></i>

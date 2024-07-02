@@ -62,17 +62,17 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">URL:</label>
+                            <label class="form-label col-md-5">Icon:</label>
                             <div class="col-md-7">
-                                <p class="form-control-static" id="menu_item_url_summary">--</p>
+                                <p class="form-control-static" id="menu_item_icon_summary">--</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <label class="form-label col-md-5">Menu Icon:</label>
+                            <label class="form-label col-md-5">URL:</label>
                             <div class="col-md-7">
-                                <p class="form-control-static" id="menu_item_icon_summary">--</p>
+                                <p class="form-control-static" id="menu_item_url_summary">--</p>
                             </div>
                         </div>
                     </div>

@@ -64,12 +64,12 @@ function workScheduleForm(){
                 success: function (response) {
                     if (response.success) {
                         setNotification(response.title, response.message, response.messageType);
-                        window.schedule = page_link + '&id=' + response.workScheduleID;
+                        window.location = page_link + '&id=' + response.workScheduleID;
                     }
                     else {
                         if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
                             setNotification(response.title, response.message, response.messageType);
-                            window.schedule = 'logout.php?logout';
+                            window.location = 'logout.php?logout';
                         }
                         else {
                             showNotification(response.title, response.message, response.messageType);

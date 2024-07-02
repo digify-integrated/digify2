@@ -14,9 +14,7 @@ session_start();
 # -------------------------------------------------------------
 class WorkScheduleController {
     private $workScheduleModel;
-    private $cityModel;
-    private $stateModel;
-    private $countryModel;
+    private $scheduleTypeModel;
     private $authenticationModel;
     private $securityModel;
     private $systemModel;
@@ -30,6 +28,7 @@ class WorkScheduleController {
     #
     # Parameters:
     # - @param WorkScheduleModel $workScheduleModel     The workScheduleModel instance for work schedule related operations.
+    # - @param ScheduleTypeModel $scheduleTypeModel     The scheduleTypeModel instance for schedule type related operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
     # - @param SystemModel $systemModel   The SystemModel instance for system related operations.
@@ -37,8 +36,9 @@ class WorkScheduleController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(WorkScheduleModel $workScheduleModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
+    public function __construct(WorkScheduleModel $workScheduleModel, ScheduleTypeModel $scheduleTypeModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
         $this->workScheduleModel = $workScheduleModel;
+        $this->scheduleTypeModel = $scheduleTypeModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
         $this->systemModel = $systemModel;
@@ -133,11 +133,20 @@ class WorkScheduleController {
                 case 'update work schedule':
                     $this->updateWorkSchedule();
                     break;
+                case 'save work hours':
+                    $this->saveWorkHours();
+                    break;
                 case 'get work schedule details':
                     $this->getWorkScheduleDetails();
                     break;
+                case 'get work hours details':
+                    $this->getWorkHoursDetails();
+                    break;
                 case 'delete work schedule':
                     $this->deleteWorkSchedule();
+                    break;
+                case 'delete work hours':
+                    $this->deleteWorkHours();
                     break;
                 case 'delete multiple work schedule':
                     $this->deleteMultipleWorkSchedule();
@@ -284,6 +293,95 @@ class WorkScheduleController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #   Save methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: saveWorkHours
+    # Description: 
+    # Saves the work hours if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveWorkHours() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['work_schedule_id']) && !empty($_POST['work_schedule_id']) && isset($_POST['work_hours_id']) && isset($_POST['day_of_week']) && !empty($_POST['day_of_week']) && isset($_POST['day_period']) && !empty($_POST['day_period']) && isset($_POST['work_from']) && !empty($_POST['work_from']) && isset($_POST['work_to']) && !empty($_POST['work_to']) && isset($_POST['notes'])) {
+            $userID = $_SESSION['user_account_id'];
+            $workScheduleID = htmlspecialchars($_POST['work_schedule_id'], ENT_QUOTES, 'UTF-8');
+            $workHoursID = htmlspecialchars($_POST['work_hours_id'], ENT_QUOTES, 'UTF-8');
+            $dayOfWeek = htmlspecialchars($_POST['day_of_week'], ENT_QUOTES, 'UTF-8');
+            $dayPeriod = htmlspecialchars($_POST['day_period'], ENT_QUOTES, 'UTF-8');
+            $workFrom = $this->systemModel->checkDate('empty', $_POST['work_from'], '', 'H:i:s', '');
+            $workTo = $this->systemModel->checkDate('empty', $_POST['work_to'], '', 'H:i:s', '');
+            $notes = $_POST['notes'];
+
+            $checkWorkHoursOverlap = $this->workScheduleModel->checkWorkHoursOverlap($workHoursID, $workScheduleID, $dayOfWeek, $dayPeriod, $workFrom, $workTo);
+            $total = $checkWorkHoursOverlap['total'] ?? 0;
+        
+            if ($total > 0) {
+                $response = [
+                    'success' => false,
+                    'title' => 'Save Work Hour Error',
+                    'message' => 'The work hour entered overlaps with the other work hours.',
+                    'messageType' => 'error'
+                ];
+
+                echo json_encode($response);
+                exit;
+            } 
+        
+            $checkWorkHoursExist = $this->workScheduleModel->checkWorkHoursExist($workScheduleID);
+            $total = $checkWorkHoursExist['total'] ?? 0;
+
+            if($total > 0){
+                $this->workScheduleModel->updateWorkHours($workHoursID, $workScheduleID, $dayOfWeek, $dayPeriod, $workFrom, $workTo, $notes, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Work Hour Success',
+                    'message' => 'The work hour has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->workScheduleModel->insertWorkHours($workScheduleID, $dayOfWeek, $dayPeriod, $workFrom, $workTo, $notes, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert Work Hour Success',
+                    'message' => 'The work hour has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -328,6 +426,67 @@ class WorkScheduleController {
                 'success' => true,
                 'title' => 'Delete Work Schedule Success',
                 'message' => 'The work schedule has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteWorkHours
+    # Description: 
+    # Delete the work hours if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteWorkHours() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['work_hours_id']) && !empty($_POST['work_hours_id'])) {
+            $workHoursID = htmlspecialchars($_POST['work_hours_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkWorkHoursExist = $this->workScheduleModel->checkWorkHoursExist($workHoursID);
+            $total = $checkWorkHoursExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Work Hour Error',
+                    'message' => 'The work hour does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->workScheduleModel->deleteWorkHours($workHoursID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete Work Hour Success',
+                'message' => 'The work hour has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -445,12 +604,73 @@ class WorkScheduleController {
             $response = [
                 'success' => true,
                 'workScheduleName' => $workScheduleDetails['work_schedule_name'] ?? null,
-                'address' => $workScheduleDetails['address'] ?? null,
-                'cityID' => $workScheduleDetails['city_id'] ?? null,
-                'cityName' => $workScheduleDetails['city_name'] . ', ' . $workScheduleDetails['state_name'] . ', ' . $workScheduleDetails['country_name'],
-                'phone' => $workScheduleDetails['phone'] ?? null,
-                'mobile' => $workScheduleDetails['mobile'] ?? null,
-                'email' => $workScheduleDetails['email'] ?? null
+                'scheduleTypeID' => $workScheduleDetails['schedule_type_id'] ?? null,
+                'scheduleTypeName' => $workScheduleDetails['schedule_type_name'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getWorkHoursDetails
+    # Description: 
+    # Handles the retrieval of work hour details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getWorkHoursDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['work_hours_id']) && !empty($_POST['work_hours_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $workHoursID = htmlspecialchars($_POST['work_hours_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkWorkScheduleExist = $this->workScheduleModel->checkWorkScheduleExist($workHoursID);
+            $total = $checkWorkScheduleExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Work Hour Details Error',
+                    'message' => 'The work hour does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $workHoursDetails = $this->workScheduleModel->getWorkHours($workHoursID);
+
+            $response = [
+                'success' => true,
+                'workHoursID' => $workHoursDetails['work_hours_id'],
+                'dayOfWeek' => $workHoursDetails['day_of_week'],
+                'dayPeriod' => $workHoursDetails['day_period'],
+                'startTime' => $this->systemModel->checkDate('empty', $workHoursDetails['start_time'], '', 'H:i', ''),
+                'endTime' => $this->systemModel->checkDate('empty', $workHoursDetails['end_time'], '', 'H:i', ''),
+                'notes' => $workHoursDetails['notes']
             ];
 
             echo json_encode($response);
@@ -477,9 +697,10 @@ require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
 require_once '../../work-schedule/model/work-schedule-model.php';
+require_once '../../schedule-type/model/schedule-type-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new WorkScheduleController(new WorkScheduleModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
+$controller = new WorkScheduleController(new WorkScheduleModel(new DatabaseModel), new ScheduleTypeModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
 $controller->handleRequest();
 
 ?>

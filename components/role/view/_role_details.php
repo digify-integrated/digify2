@@ -50,8 +50,6 @@
     </div>
 </div>
 
-
-
 <div class="datatables">
     <div class="row">
         <div class="col-12">

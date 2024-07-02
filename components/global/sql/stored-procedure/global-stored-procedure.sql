@@ -56,7 +56,7 @@ BEGIN
             WHERE user_account_id = p_user_account_id
         )
     )
-    ORDER BY am.order_sequence;
+    ORDER BY am.order_sequence, am.app_module_name;
 END //
 
 CREATE PROCEDURE buildMenuGroup(IN p_user_account_id INT, IN p_app_module_id INT)
@@ -86,7 +86,7 @@ BEGIN
     INNER JOIN role_permission AS mar ON mi.menu_item_id = mar.menu_item_id
     INNER JOIN role_user_account AS ru ON mar.role_id = ru.role_id
     WHERE mar.read_access = 1 AND ru.user_account_id = p_user_account_id AND mi.menu_group_id = p_menu_group_id
-    ORDER BY mi.order_sequence;
+    ORDER BY mi.order_sequence, mi.menu_item_name;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

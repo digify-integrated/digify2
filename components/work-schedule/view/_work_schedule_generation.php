@@ -74,6 +74,73 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
         # -------------------------------------------------------------
         #
+        # Type: work hours table
+        # Description:
+        # Generates the work hours table.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'work hours table':
+            $workScheduleID = isset($_POST['work_schedule_id']) ? htmlspecialchars($_POST['work_schedule_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateWorkHoursTable(:workScheduleID)');
+            $sql->bindValue(':workScheduleID', $workScheduleID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $sql->closeCursor();
+
+            $updateWorkHours = $globalModel->checkSystemActionAccessRights($userID, 18);
+            $deleteWorkHours = $globalModel->checkSystemActionAccessRights($userID, 19);
+
+            foreach ($options as $row) {
+                $workHoursID = $row['work_hours_id'];
+                $dayOfWeek = $row['day_of_week'];
+                $dayPeriod = $row['day_period'];
+                $startTime = $systemModel->checkDate('empty', $row['start_time'], '', 'h:i a', '');
+                $endTime = $systemModel->checkDate('empty', $row['end_time'], '', 'h:i a', '');
+                $notes = $row['notes'];
+
+                $update = '';
+                if($updateWorkHours['total'] > 0){
+                    $update = '<button class="btn btn-icon btn-success update-fixed-working-hours" type="button" data-bs-toggle="modal" data-bs-target="#create-work-hours-modal" data-work-hours-id="' . $workHoursID . '">
+                            <i class="ti ti-pencil"></i>
+                        </button>';
+                }
+
+
+                $deleteButton = '';
+                if($deleteWorkHours['total'] > 0){
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-work-hours" data-work-hours-id="' . $workHoursID . '" title="Delete Work Schedule">
+                                        <i class="ti ti-trash fs-5"></i>
+                                    </a>';
+                }
+
+                $response[] = [
+                    'DAY_OF_WEEK' => $dayOfWeek,
+                    'DAY_PERIOD' => $dayPeriod,
+                    'START_TIME' => $startTime,
+                    'END_TIME' => $endTime,
+                    'NOTES' => $notes,
+                    'ACTION' => '<div class="action-btn">
+                                    <a href="javascript:void(0);" data-work-hours-id="'. $workHoursID .'" data-bs-toggle="modal" data-bs-target="#work-hours-modal" class="text-info update-work-hours" title="View Details">
+                                        <i class="ti ti-eye fs-5"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="text-warning view-work-hours-log-notes ms-3" data-work-hours-id="' . $workHoursID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
+                                        <i class="ti ti-file-text fs-5"></i>
+                                    </a>
+                                   '. $deleteButton .'
+                                </div>'
+                ];
+            }
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
         # Type: work schedule options
         # Description:
         # Generates the work schedule options.
