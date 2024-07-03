@@ -47,7 +47,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $deleteButton = '';
                 if($scheduleTypeDeleteAccess['total'] > 0){
-                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-schedule-type" data-schedule-type-id="' . $scheduleTypeID . '" title="Delete Menu Group">
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-schedule-type" data-schedule-type-id="' . $scheduleTypeID . '" title="Delete Schedule Type">
                                     <i class="ti ti-trash fs-5"></i>
                                 </a>';
                 }

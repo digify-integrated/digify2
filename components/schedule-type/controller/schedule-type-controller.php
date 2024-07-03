@@ -130,9 +130,6 @@ class ScheduleTypeController {
                 case 'update schedule type':
                     $this->updateScheduleType();
                     break;
-                case 'update app logo':
-                    $this->updateAppLogo();
-                    break;
                 case 'get schedule type details':
                     $this->getScheduleTypeDetails();
                     break;
@@ -433,7 +430,6 @@ class ScheduleTypeController {
             }
     
             $scheduleTypeDetails = $this->scheduleTypeModel->getScheduleType($scheduleTypeID);
-            $appLogo = $this->systemModel->checkImage($scheduleTypeDetails['app_logo'] ?? null, 'schedule type logo');
 
             $response = [
                 'success' => true,

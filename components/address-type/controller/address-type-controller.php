@@ -130,9 +130,6 @@ class AddressTypeController {
                 case 'update address type':
                     $this->updateAddressType();
                     break;
-                case 'update app logo':
-                    $this->updateAppLogo();
-                    break;
                 case 'get address type details':
                     $this->getAddressTypeDetails();
                     break;
@@ -370,8 +367,8 @@ class AddressTypeController {
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete Multiple Address Type Success',
-                'message' => 'The selected address type have been deleted successfully.',
+                'title' => 'Delete Multiple Address Types Success',
+                'message' => 'The selected address types have been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -433,7 +430,6 @@ class AddressTypeController {
             }
     
             $addressTypeDetails = $this->addressTypeModel->getAddressType($addressTypeID);
-            $appLogo = $this->systemModel->checkImage($addressTypeDetails['app_logo'] ?? null, 'address type logo');
 
             $response = [
                 'success' => true,

@@ -35,7 +35,7 @@
 </div>
 
 <div class="modal fade" id="employment-type-modal" tabindex="-1" aria-labelledby="employment-type-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title fw-8">Edit Employment Type Details</h5>

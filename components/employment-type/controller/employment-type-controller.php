@@ -130,9 +130,6 @@ class EmploymentTypeController {
                 case 'update employment type':
                     $this->updateEmploymentType();
                     break;
-                case 'update app logo':
-                    $this->updateAppLogo();
-                    break;
                 case 'get employment type details':
                     $this->getEmploymentTypeDetails();
                     break;
@@ -433,7 +430,6 @@ class EmploymentTypeController {
             }
     
             $employmentTypeDetails = $this->employmentTypeModel->getEmploymentType($employmentTypeID);
-            $appLogo = $this->systemModel->checkImage($employmentTypeDetails['app_logo'] ?? null, 'employment type logo');
 
             $response = [
                 'success' => true,

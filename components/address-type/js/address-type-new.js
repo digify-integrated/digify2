@@ -17,7 +17,7 @@ function addressTypeForm(){
         },
         messages: {
             address_type_name: {
-                required: 'Please enter the address type'
+                required: 'Please enter the display name'
             },
         },
         errorPlacement: function (error, element) {

@@ -47,7 +47,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $deleteButton = '';
                 if($jobPositionDeleteAccess['total'] > 0){
-                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-job-position" data-job-position-id="' . $jobPositionID . '" title="Delete Menu Group">
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-job-position" data-job-position-id="' . $jobPositionID . '" title="Delete Job Position">
                                     <i class="ti ti-trash fs-5"></i>
                                 </a>';
                 }

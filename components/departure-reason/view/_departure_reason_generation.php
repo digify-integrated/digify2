@@ -47,7 +47,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $deleteButton = '';
                 if($departureReasonDeleteAccess['total'] > 0){
-                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-departure-reason" data-departure-reason-id="' . $departureReasonID . '" title="Delete Menu Group">
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-departure-reason" data-departure-reason-id="' . $departureReasonID . '" title="Delete Departure Reason">
                                     <i class="ti ti-trash fs-5"></i>
                                 </a>';
                 }

@@ -48,7 +48,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $deleteButton = '';
                 if($notificationSettingDeleteAccess['total'] > 0){
-                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-notification-setting" data-notification-setting-id="' . $notificationSettingID . '" title="Delete Menu Item">
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-notification-setting" data-notification-setting-id="' . $notificationSettingID . '" title="Delete Notification Setting">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';
                 }

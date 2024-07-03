@@ -387,7 +387,6 @@ function displayDetails(transaction){
                         document.getElementById('user_account_profile_picture').src = response.profilePicture;
 
                         document.getElementById('two-factor-authentication').checked = response.twoFactorAuthentication === 'Yes';
-                        document.getElementById('multiple-login-sessions').checked = response.multipleSession === 'Yes';
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {

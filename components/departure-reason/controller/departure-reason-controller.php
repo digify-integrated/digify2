@@ -130,9 +130,6 @@ class DepartureReasonController {
                 case 'update departure reason':
                     $this->updateDepartureReason();
                     break;
-                case 'update app logo':
-                    $this->updateAppLogo();
-                    break;
                 case 'get departure reason details':
                     $this->getDepartureReasonDetails();
                     break;
@@ -433,7 +430,6 @@ class DepartureReasonController {
             }
     
             $departureReasonDetails = $this->departureReasonModel->getDepartureReason($departureReasonID);
-            $appLogo = $this->systemModel->checkImage($departureReasonDetails['app_logo'] ?? null, 'departure reason logo');
 
             $response = [
                 'success' => true,

@@ -48,7 +48,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $deleteButton = '';
                 if($emailSettingDeleteAccess['total'] > 0){
-                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-email-setting" data-email-setting-id="' . $emailSettingID . '" title="Delete Menu Item">
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-email-setting" data-email-setting-id="' . $emailSettingID . '" title="Delete Email Setting">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';
                 }

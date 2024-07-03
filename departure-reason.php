@@ -22,13 +22,13 @@
                         require_once('components/global/view/_breadcrumbs.php'); 
 
                         if($newRecord){
-                            require_once('components/departure-reason/view/_departure_reason_new.php');
+                            require_once('components/department/view/_department_new.php');
                         }
                         else if(!empty($detailID)){
-                            require_once('components/departure-reason/view/_departure_reason_details.php');
+                            require_once('components/department/view/_department_details.php');
                         }
                         else{
-                            require_once('components/departure-reason/view/_departure_reason.php');
+                            require_once('components/department/view/_department.php');
                         }
                     ?>
                 </div>
@@ -45,18 +45,20 @@
 
     <script src="./assets/libs/max-length/bootstrap-maxlength.min.js"></script>
     <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
+    <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
 
     <?php
-        $scriptLink = 'departure-reason.js';
+        $scriptLink = 'department.js';
 
         if($newRecord){
-            $scriptLink = 'departure-reason-new.js';
+            $scriptLink = 'department-new.js';
         }
         else if(!empty($detailID)){
-            $scriptLink = 'departure-reason-details.js';
+            $scriptLink = 'department-details.js';
         }
 
-        echo '<script src="./components/departure-reason/js/'. $scriptLink .'?v=' . rand() .'"></script>';
+        echo '<script src="./components/department/js/'. $scriptLink .'?v=' . rand() .'"></script>';
     ?>
 </body>
 

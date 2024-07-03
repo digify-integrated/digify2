@@ -220,32 +220,6 @@ function fileExtensionTable(datatable_name, buttons = false, show_all = false){
     $(datatable_name).dataTable(settings);
 }
 
-function generateFilterOptions(type){
-    switch (type) {
-        case 'file type radio filter':
-            
-            $.ajax({
-                url: 'components/file-type/view/_file_type_generation.php',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    type : type
-                },
-                success: function(response) {
-                    document.getElementById('file-type-filter').innerHTML = response[0].filterOptions;
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                }
-            });
-            break;
-    }
-}
-
 function generateDropdownOptions(type){
     switch (type) {
         case 'file type options':

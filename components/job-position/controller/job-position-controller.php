@@ -130,9 +130,6 @@ class JobPositionController {
                 case 'update job position':
                     $this->updateJobPosition();
                     break;
-                case 'update app logo':
-                    $this->updateAppLogo();
-                    break;
                 case 'get job position details':
                     $this->getJobPositionDetails();
                     break;
@@ -433,7 +430,6 @@ class JobPositionController {
             }
     
             $jobPositionDetails = $this->jobPositionModel->getJobPosition($jobPositionID);
-            $appLogo = $this->systemModel->checkImage($jobPositionDetails['app_logo'] ?? null, 'job position logo');
 
             $response = [
                 'success' => true,

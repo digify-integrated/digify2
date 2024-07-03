@@ -13,7 +13,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label class="form-label" for="address_type_name">Address Type <span class="text-danger">*</span></label>
+                                <label class="form-label" for="address_type_name">Display Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control maxlength" id="address_type_name" name="address_type_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>

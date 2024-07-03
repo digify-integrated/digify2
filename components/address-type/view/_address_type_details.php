@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-3">Address Type:</label>
+                            <label class="form-label col-md-3">Display Name:</label>
                             <div class="col-md-9">
                                 <p class="form-control-static" id="address_type_name_summary">--</p>
                             </div>
@@ -35,7 +35,7 @@
 </div>
 
 <div class="modal fade" id="address-type-modal" tabindex="-1" aria-labelledby="address-type-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title fw-8">Edit Address Type Details</h5>
@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label class="form-label" for="address_type_name">Address Type <span class="text-danger">*</span></label>
+                                <label class="form-label" for="address_type_name">Display Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control maxlength" id="address_type_name" name="address_type_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>
