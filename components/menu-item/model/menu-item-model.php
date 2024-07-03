@@ -185,8 +185,9 @@ class MenuItemModel {
     # Returns: String.
     #
     # -------------------------------------------------------------
-    public function generateMenuItemOptions() {
-        $stmt = $this->db->getConnection()->prepare('CALL generateMenuItemOptions()');
+    public function generateMenuItemOptions($p_menu_item_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL generateMenuItemOptions(:p_menu_item_id)');
+        $stmt->bindValue(':p_menu_item_id', $p_menu_item_id, PDO::PARAM_INT);
         $stmt->execute();
         $options = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

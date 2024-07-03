@@ -1,6 +1,26 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
+            <div class="card-body">
+              <h4 class="card-title mb-0">Employee Form</h4>
+              <h6 class="card-subtitle mb-3"></h6>
+              <div id="example-vertical" class="mt-5">
+                <h3>Personal Information</h3>
+                <section>
+                  <p> Try the keyboard navigation by clicking arrow left or right! </p>
+                </section>
+                <h3>Employment Details</h3>
+                <section>
+                  <p>Wonderful transition effects.</p>
+                </section>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
             <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0">Employee Form</h5>
                 <div class="card-actions cursor-pointer ms-auto d-flex button-group">

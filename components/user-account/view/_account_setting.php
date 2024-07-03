@@ -152,7 +152,7 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-3">
-                        <div class="form-check form-switch mb-0">
+                        <div class="form-check form-switch mb-0 ml-3">
                             <?php
                                 $checkboxAttributes = ($writeAccess['total'] > 0) ? '' : 'disabled';
 

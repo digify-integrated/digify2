@@ -636,13 +636,15 @@ function generateDropdownOptions(type){
             });
             break;
         case 'menu item options':
-            
+            var menu_item_id = $('#details-id').text();
+
             $.ajax({
                 url: 'components/menu-item/view/_menu_item_generation.php',
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    type : type
+                    type : type,
+                    menu_item_id : menu_item_id
                 },
                 success: function(response) {
                     $('#parent_id').select2({
@@ -662,7 +664,7 @@ function generateDropdownOptions(type){
             });
             break;
         case 'menu item role dual listbox options':
-            const menu_item_id = $('#details-id').text();
+            var menu_item_id = $('#details-id').text();
     
             $.ajax({
                 url: 'components/role/view/_role_generation.php',

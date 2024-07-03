@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 03, 2024 at 11:30 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jul 03, 2024 at 02:28 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1201,10 +1201,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupTable` (IN `p_filt
 END$$
 
 DROP PROCEDURE IF EXISTS `generateMenuItemOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemOptions` ()   BEGIN
-	SELECT menu_item_id, menu_item_name 
-    FROM menu_item 
-    ORDER BY menu_item_name;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemOptions` (IN `p_menu_item_id` INT)   BEGIN
+    IF p_menu_item_id IS NOT NULL AND p_menu_item_id != '' THEN
+        SELECT menu_item_id, menu_item_name 
+        FROM menu_item 
+        WHERE menu_item_id != p_menu_item_id
+        ORDER BY menu_item_name;
+    ELSE
+        SELECT menu_item_id, menu_item_name 
+        FROM menu_item 
+        ORDER BY menu_item_name;
+    END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateMenuItemRoleDualListBoxOptions`$$
@@ -6211,7 +6218,17 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2867, 'menu_item', 29, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
 (2868, 'menu_item', 30, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
 (2869, 'menu_item', 31, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
-(2870, 'menu_group', 6, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00');
+(2870, 'menu_group', 6, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
+(2871, 'menu_item', 45, 'Menu Item created. <br/><br/>Menu Item Name: Personal Information<br/>Menu Item Icon: ti ti-friends<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 16', 2, '2024-07-03 19:48:43', '2024-07-03 19:48:43'),
+(2872, 'role_permission', 46, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Personal Information<br/>Date Assigned: 2024-07-03 19:48:48', 2, '2024-07-03 19:48:48', '2024-07-03 19:48:48'),
+(2873, 'role_permission', 46, 'Read Access: 0 -> 1<br/>', 2, '2024-07-03 19:48:49', '2024-07-03 19:48:49'),
+(2874, 'role_permission', 33, 'Menu Item: Contact Information Type -> Contact Info Type<br/>', 2, '2024-07-03 19:49:56', '2024-07-03 19:49:56'),
+(2875, 'menu_item', 32, 'Menu Item Name: Contact Information Type -> Contact Info Type<br/>', 2, '2024-07-03 19:49:56', '2024-07-03 19:49:56'),
+(2876, 'menu_item', 46, 'Menu Item created. <br/><br/>Menu Item Name: Financial Configurations<br/>Menu Item Icon:  ti ti-building-bank<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 6', 2, '2024-07-03 19:52:25', '2024-07-03 19:52:25'),
+(2877, 'role_permission', 47, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Financial Configurations<br/>Date Assigned: 2024-07-03 19:52:30', 2, '2024-07-03 19:52:30', '2024-07-03 19:52:30'),
+(2878, 'role_permission', 47, 'Read Access: 0 -> 1<br/>', 2, '2024-07-03 19:52:31', '2024-07-03 19:52:31'),
+(2879, 'role_permission', 47, 'Menu Item: Financial Configurations -> Financial Information<br/>', 2, '2024-07-03 19:53:38', '2024-07-03 19:53:38'),
+(2880, 'menu_item', 46, 'Menu Item Name: Financial Configurations -> Financial Information<br/>', 2, '2024-07-03 19:53:38', '2024-07-03 19:53:38');
 
 -- --------------------------------------------------------
 
@@ -9974,19 +9991,21 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (29, 'Job Position', 'job-position.php', 'ti ti-id', 6, 'Employee Configurations', 2, 'Employees', NULL, NULL, 10, '2024-06-28 10:56:17', 2),
 (30, 'Schedule Type', 'schedule-type.php', '', 6, 'Employee Configurations', 2, 'Employees', 31, 'Scheduling', 2, '2024-07-01 14:52:27', 2),
 (31, 'Scheduling', '', 'ti ti-calendar-time', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 24, '2024-07-01 14:59:44', 2),
-(32, 'Contact Information Type', 'contact-information-type.php', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-02 17:02:55', 2),
-(33, 'ID Type', 'id-type.php', 'ti ti-id', 3, 'Configurations', 1, 'Settings', 0, NULL, 9, '2024-07-02 17:05:17', 2),
-(34, 'Bank', 'bank.php', 'ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-02 17:06:13', 2),
-(35, 'Bank Account Type', 'bank-account-type.php', 'ti ti-building-community', 3, 'Configurations', 1, 'Settings', NULL, NULL, 2, '2024-07-02 17:07:16', 2),
-(36, 'Relation', 'relation.php', 'ti ti-social', 3, 'Configurations', 1, 'Settings', NULL, NULL, 18, '2024-07-02 17:09:40', 2),
-(37, 'Educational Stage', 'educational-stage.php', 'ti ti-school', 3, 'Configurations', 1, 'Settings', 0, NULL, 5, '2024-07-02 17:11:54', 2),
-(38, 'Language', 'language.php', 'ti ti-language', 3, 'Configurations', 1, 'Settings', 0, NULL, 12, '2024-07-02 17:21:10', 2),
-(39, 'Language Proficiency', 'language-proficiency.php', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', 0, NULL, 12, '2024-07-02 17:23:14', 2),
-(40, 'Civil Status', 'civil-status.php', 'ti ti-chart-circles', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-02 17:26:17', 2),
-(41, 'Gender', 'gender.php', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 0, NULL, 7, '2024-07-02 17:27:18', 2),
-(42, 'Blood Type', 'blood-type.php', 'ti ti-droplet-filled', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-02 17:28:23', 2),
-(43, 'Religion', 'religion.php', 'ti ti-building-church', 3, 'Configurations', 1, 'Settings', 0, NULL, 18, '2024-07-02 17:29:10', 2),
-(44, 'Address Type', 'address-type.php', 'ti ti-map-2', 3, 'Configurations', 1, 'Settings', 0, NULL, 1, '2024-07-02 17:30:03', 2);
+(32, 'Contact Info Type', 'contact-information-type.php', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 3, '2024-07-02 17:02:55', 2),
+(33, 'ID Type', 'id-type.php', 'ti ti-id', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 9, '2024-07-02 17:05:17', 2),
+(34, 'Bank', 'bank.php', 'ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 46, 'Financial Configurations', 2, '2024-07-02 17:06:13', 2),
+(35, 'Bank Account Type', 'bank-account-type.php', 'ti ti-building-community', 3, 'Configurations', 1, 'Settings', 46, 'Financial Configurations', 2, '2024-07-02 17:07:16', 2),
+(36, 'Relation', 'relation.php', 'ti ti-social', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 18, '2024-07-02 17:09:40', 2),
+(37, 'Educational Stage', 'educational-stage.php', 'ti ti-school', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 5, '2024-07-02 17:11:54', 2),
+(38, 'Language', 'language.php', 'ti ti-language', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 12, '2024-07-02 17:21:10', 2),
+(39, 'Language Proficiency', 'language-proficiency.php', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 12, '2024-07-02 17:23:14', 2),
+(40, 'Civil Status', 'civil-status.php', 'ti ti-chart-circles', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 3, '2024-07-02 17:26:17', 2),
+(41, 'Gender', 'gender.php', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 7, '2024-07-02 17:27:18', 2),
+(42, 'Blood Type', 'blood-type.php', 'ti ti-droplet-filled', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 2, '2024-07-02 17:28:23', 2),
+(43, 'Religion', 'religion.php', 'ti ti-building-church', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 18, '2024-07-02 17:29:10', 2),
+(44, 'Address Type', 'address-type.php', 'ti ti-map-2', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 1, '2024-07-02 17:30:03', 2),
+(45, 'Personal Information', '', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 0, NULL, 16, '2024-07-03 19:48:43', 2),
+(46, 'Financial Information', '', ' ti ti-building-bank', 3, 'Configurations', 1, 'Settings', NULL, NULL, 6, '2024-07-03 19:52:25', 2);
 
 --
 -- Triggers `menu_item`
@@ -10607,7 +10626,7 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (30, 1, 'Administrator', 29, 'Job Position', 1, 1, 1, 1, '2024-06-28 10:56:21', '2024-06-28 10:56:21', 2),
 (31, 1, 'Administrator', 30, 'Schedule Type', 1, 1, 1, 1, '2024-07-01 14:52:33', '2024-07-01 14:52:33', 2),
 (32, 1, 'Administrator', 31, 'Scheduling', 1, 0, 0, 0, '2024-07-01 14:59:48', '2024-07-01 14:59:48', 2),
-(33, 1, 'Administrator', 32, 'Contact Information Type', 1, 1, 1, 1, '2024-07-02 17:02:59', '2024-07-02 17:02:59', 2),
+(33, 1, 'Administrator', 32, 'Contact Info Type', 1, 1, 1, 1, '2024-07-02 17:02:59', '2024-07-02 17:02:59', 2),
 (34, 1, 'Administrator', 33, 'ID Type', 1, 1, 1, 1, '2024-07-02 17:05:20', '2024-07-02 17:05:20', 2),
 (35, 1, 'Administrator', 34, 'Bank', 1, 1, 1, 1, '2024-07-02 17:06:16', '2024-07-02 17:06:16', 2),
 (36, 1, 'Administrator', 35, 'Bank Account Type', 1, 1, 1, 1, '2024-07-02 17:07:21', '2024-07-02 17:07:21', 2),
@@ -10619,7 +10638,9 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (42, 1, 'Administrator', 41, 'Gender', 1, 1, 1, 1, '2024-07-02 17:27:22', '2024-07-02 17:27:22', 2),
 (43, 1, 'Administrator', 42, 'Blood Type', 1, 1, 1, 1, '2024-07-02 17:28:26', '2024-07-02 17:28:26', 2),
 (44, 1, 'Administrator', 43, 'Religion', 1, 1, 1, 1, '2024-07-02 17:29:14', '2024-07-02 17:29:14', 2),
-(45, 1, 'Administrator', 44, 'Address Type', 1, 1, 1, 1, '2024-07-02 17:30:07', '2024-07-02 17:30:07', 2);
+(45, 1, 'Administrator', 44, 'Address Type', 1, 1, 1, 1, '2024-07-02 17:30:07', '2024-07-02 17:30:07', 2),
+(46, 1, 'Administrator', 45, 'Personal Information', 1, 0, 0, 0, '2024-07-03 19:48:48', '2024-07-03 19:48:48', 2),
+(47, 1, 'Administrator', 46, 'Financial Information', 1, 0, 0, 0, '2024-07-03 19:52:30', '2024-07-03 19:52:30', 2);
 
 --
 -- Triggers `role_permission`
@@ -12302,7 +12323,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2871;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2881;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -12452,7 +12473,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -12506,7 +12527,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
