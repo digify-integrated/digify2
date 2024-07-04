@@ -9,6 +9,7 @@
     <?php require_once('components/global/view/_head.php'); ?>
     <link rel="stylesheet" href="./assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="./assets/libs/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="./assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 </head>
 <body>
     <?php require_once('components/global/view/_preloader.php'); ?>
@@ -48,6 +49,8 @@
     <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
     <script src="./assets/libs/jquery-steps/build/jquery.steps.min.js"></script>
+    <script src="./assets/js/extra-libs/moment/moment.min.js"></script>
+    <script src="./assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
     <?php
         $scriptLink = 'employee.js';

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 03, 2024 at 02:28 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jul 04, 2024 at 11:29 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1201,17 +1201,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupTable` (IN `p_filt
 END$$
 
 DROP PROCEDURE IF EXISTS `generateMenuItemOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemOptions` (IN `p_menu_item_id` INT)   BEGIN
-    IF p_menu_item_id IS NOT NULL AND p_menu_item_id != '' THEN
-        SELECT menu_item_id, menu_item_name 
-        FROM menu_item 
-        WHERE menu_item_id != p_menu_item_id
-        ORDER BY menu_item_name;
-    ELSE
-        SELECT menu_item_id, menu_item_name 
-        FROM menu_item 
-        ORDER BY menu_item_name;
-    END IF;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemOptions` ()   BEGIN
+	SELECT menu_item_id, menu_item_name 
+    FROM menu_item 
+    ORDER BY menu_item_name;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateMenuItemRoleDualListBoxOptions`$$
@@ -6218,17 +6211,7 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2867, 'menu_item', 29, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
 (2868, 'menu_item', 30, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
 (2869, 'menu_item', 31, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
-(2870, 'menu_group', 6, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
-(2871, 'menu_item', 45, 'Menu Item created. <br/><br/>Menu Item Name: Personal Information<br/>Menu Item Icon: ti ti-friends<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 16', 2, '2024-07-03 19:48:43', '2024-07-03 19:48:43'),
-(2872, 'role_permission', 46, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Personal Information<br/>Date Assigned: 2024-07-03 19:48:48', 2, '2024-07-03 19:48:48', '2024-07-03 19:48:48'),
-(2873, 'role_permission', 46, 'Read Access: 0 -> 1<br/>', 2, '2024-07-03 19:48:49', '2024-07-03 19:48:49'),
-(2874, 'role_permission', 33, 'Menu Item: Contact Information Type -> Contact Info Type<br/>', 2, '2024-07-03 19:49:56', '2024-07-03 19:49:56'),
-(2875, 'menu_item', 32, 'Menu Item Name: Contact Information Type -> Contact Info Type<br/>', 2, '2024-07-03 19:49:56', '2024-07-03 19:49:56'),
-(2876, 'menu_item', 46, 'Menu Item created. <br/><br/>Menu Item Name: Financial Configurations<br/>Menu Item Icon:  ti ti-building-bank<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 6', 2, '2024-07-03 19:52:25', '2024-07-03 19:52:25'),
-(2877, 'role_permission', 47, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Financial Configurations<br/>Date Assigned: 2024-07-03 19:52:30', 2, '2024-07-03 19:52:30', '2024-07-03 19:52:30'),
-(2878, 'role_permission', 47, 'Read Access: 0 -> 1<br/>', 2, '2024-07-03 19:52:31', '2024-07-03 19:52:31'),
-(2879, 'role_permission', 47, 'Menu Item: Financial Configurations -> Financial Information<br/>', 2, '2024-07-03 19:53:38', '2024-07-03 19:53:38'),
-(2880, 'menu_item', 46, 'Menu Item Name: Financial Configurations -> Financial Information<br/>', 2, '2024-07-03 19:53:38', '2024-07-03 19:53:38');
+(2870, 'menu_group', 6, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00');
 
 -- --------------------------------------------------------
 
@@ -9088,6 +9071,40 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `employee`
+--
+
+DROP TABLE IF EXISTS `employee`;
+CREATE TABLE `employee` (
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `employee_image` varchar(500) DEFAULT NULL,
+  `employee_digital_signature` varchar(500) DEFAULT NULL,
+  `file_as` varchar(1000) NOT NULL,
+  `first_name` varchar(300) NOT NULL,
+  `middle_name` varchar(300) DEFAULT NULL,
+  `last_name` varchar(300) NOT NULL,
+  `suffix` varchar(10) DEFAULT NULL,
+  `nickname` varchar(100) DEFAULT NULL,
+  `bio` varchar(1000) DEFAULT NULL,
+  `civil_status_id` int(10) UNSIGNED DEFAULT NULL,
+  `civil_status_name` varchar(100) DEFAULT NULL,
+  `gender_id` int(10) UNSIGNED DEFAULT NULL,
+  `gender_name` varchar(100) DEFAULT NULL,
+  `religion_id` int(10) UNSIGNED DEFAULT NULL,
+  `religion_name` varchar(100) DEFAULT NULL,
+  `blood_type_id` int(10) UNSIGNED DEFAULT NULL,
+  `blood_type_name` varchar(100) DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  `birth_place` varchar(1000) DEFAULT NULL,
+  `height` float DEFAULT NULL,
+  `weight` float DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `employment_type`
 --
 
@@ -9991,21 +10008,19 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (29, 'Job Position', 'job-position.php', 'ti ti-id', 6, 'Employee Configurations', 2, 'Employees', NULL, NULL, 10, '2024-06-28 10:56:17', 2),
 (30, 'Schedule Type', 'schedule-type.php', '', 6, 'Employee Configurations', 2, 'Employees', 31, 'Scheduling', 2, '2024-07-01 14:52:27', 2),
 (31, 'Scheduling', '', 'ti ti-calendar-time', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 24, '2024-07-01 14:59:44', 2),
-(32, 'Contact Info Type', 'contact-information-type.php', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 3, '2024-07-02 17:02:55', 2),
-(33, 'ID Type', 'id-type.php', 'ti ti-id', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 9, '2024-07-02 17:05:17', 2),
-(34, 'Bank', 'bank.php', 'ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 46, 'Financial Configurations', 2, '2024-07-02 17:06:13', 2),
-(35, 'Bank Account Type', 'bank-account-type.php', 'ti ti-building-community', 3, 'Configurations', 1, 'Settings', 46, 'Financial Configurations', 2, '2024-07-02 17:07:16', 2),
-(36, 'Relation', 'relation.php', 'ti ti-social', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 18, '2024-07-02 17:09:40', 2),
-(37, 'Educational Stage', 'educational-stage.php', 'ti ti-school', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 5, '2024-07-02 17:11:54', 2),
-(38, 'Language', 'language.php', 'ti ti-language', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 12, '2024-07-02 17:21:10', 2),
-(39, 'Language Proficiency', 'language-proficiency.php', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 12, '2024-07-02 17:23:14', 2),
-(40, 'Civil Status', 'civil-status.php', 'ti ti-chart-circles', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 3, '2024-07-02 17:26:17', 2),
-(41, 'Gender', 'gender.php', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 7, '2024-07-02 17:27:18', 2),
-(42, 'Blood Type', 'blood-type.php', 'ti ti-droplet-filled', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 2, '2024-07-02 17:28:23', 2),
-(43, 'Religion', 'religion.php', 'ti ti-building-church', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 18, '2024-07-02 17:29:10', 2),
-(44, 'Address Type', 'address-type.php', 'ti ti-map-2', 3, 'Configurations', 1, 'Settings', 45, 'Personal Information', 1, '2024-07-02 17:30:03', 2),
-(45, 'Personal Information', '', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 0, NULL, 16, '2024-07-03 19:48:43', 2),
-(46, 'Financial Information', '', ' ti ti-building-bank', 3, 'Configurations', 1, 'Settings', NULL, NULL, 6, '2024-07-03 19:52:25', 2);
+(32, 'Contact Information Type', 'contact-information-type.php', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-02 17:02:55', 2),
+(33, 'ID Type', 'id-type.php', 'ti ti-id', 3, 'Configurations', 1, 'Settings', 0, NULL, 9, '2024-07-02 17:05:17', 2),
+(34, 'Bank', 'bank.php', 'ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-02 17:06:13', 2),
+(35, 'Bank Account Type', 'bank-account-type.php', 'ti ti-building-community', 3, 'Configurations', 1, 'Settings', NULL, NULL, 2, '2024-07-02 17:07:16', 2),
+(36, 'Relation', 'relation.php', 'ti ti-social', 3, 'Configurations', 1, 'Settings', NULL, NULL, 18, '2024-07-02 17:09:40', 2),
+(37, 'Educational Stage', 'educational-stage.php', 'ti ti-school', 3, 'Configurations', 1, 'Settings', 0, NULL, 5, '2024-07-02 17:11:54', 2),
+(38, 'Language', 'language.php', 'ti ti-language', 3, 'Configurations', 1, 'Settings', 0, NULL, 12, '2024-07-02 17:21:10', 2),
+(39, 'Language Proficiency', 'language-proficiency.php', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', 0, NULL, 12, '2024-07-02 17:23:14', 2),
+(40, 'Civil Status', 'civil-status.php', 'ti ti-chart-circles', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-02 17:26:17', 2),
+(41, 'Gender', 'gender.php', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 0, NULL, 7, '2024-07-02 17:27:18', 2),
+(42, 'Blood Type', 'blood-type.php', 'ti ti-droplet-filled', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-02 17:28:23', 2),
+(43, 'Religion', 'religion.php', 'ti ti-building-church', 3, 'Configurations', 1, 'Settings', 0, NULL, 18, '2024-07-02 17:29:10', 2),
+(44, 'Address Type', 'address-type.php', 'ti ti-map-2', 3, 'Configurations', 1, 'Settings', 0, NULL, 1, '2024-07-02 17:30:03', 2);
 
 --
 -- Triggers `menu_item`
@@ -10626,7 +10641,7 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (30, 1, 'Administrator', 29, 'Job Position', 1, 1, 1, 1, '2024-06-28 10:56:21', '2024-06-28 10:56:21', 2),
 (31, 1, 'Administrator', 30, 'Schedule Type', 1, 1, 1, 1, '2024-07-01 14:52:33', '2024-07-01 14:52:33', 2),
 (32, 1, 'Administrator', 31, 'Scheduling', 1, 0, 0, 0, '2024-07-01 14:59:48', '2024-07-01 14:59:48', 2),
-(33, 1, 'Administrator', 32, 'Contact Info Type', 1, 1, 1, 1, '2024-07-02 17:02:59', '2024-07-02 17:02:59', 2),
+(33, 1, 'Administrator', 32, 'Contact Information Type', 1, 1, 1, 1, '2024-07-02 17:02:59', '2024-07-02 17:02:59', 2),
 (34, 1, 'Administrator', 33, 'ID Type', 1, 1, 1, 1, '2024-07-02 17:05:20', '2024-07-02 17:05:20', 2),
 (35, 1, 'Administrator', 34, 'Bank', 1, 1, 1, 1, '2024-07-02 17:06:16', '2024-07-02 17:06:16', 2),
 (36, 1, 'Administrator', 35, 'Bank Account Type', 1, 1, 1, 1, '2024-07-02 17:07:21', '2024-07-02 17:07:21', 2),
@@ -10638,9 +10653,7 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (42, 1, 'Administrator', 41, 'Gender', 1, 1, 1, 1, '2024-07-02 17:27:22', '2024-07-02 17:27:22', 2),
 (43, 1, 'Administrator', 42, 'Blood Type', 1, 1, 1, 1, '2024-07-02 17:28:26', '2024-07-02 17:28:26', 2),
 (44, 1, 'Administrator', 43, 'Religion', 1, 1, 1, 1, '2024-07-02 17:29:14', '2024-07-02 17:29:14', 2),
-(45, 1, 'Administrator', 44, 'Address Type', 1, 1, 1, 1, '2024-07-02 17:30:07', '2024-07-02 17:30:07', 2),
-(46, 1, 'Administrator', 45, 'Personal Information', 1, 0, 0, 0, '2024-07-03 19:48:48', '2024-07-03 19:48:48', 2),
-(47, 1, 'Administrator', 46, 'Financial Information', 1, 0, 0, 0, '2024-07-03 19:52:30', '2024-07-03 19:52:30', 2);
+(45, 1, 'Administrator', 44, 'Address Type', 1, 1, 1, 1, '2024-07-02 17:30:07', '2024-07-02 17:30:07', 2);
 
 --
 -- Triggers `role_permission`
@@ -11686,6 +11699,48 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `work_information`
+--
+
+DROP TABLE IF EXISTS `work_information`;
+CREATE TABLE `work_information` (
+  `work_information_id` int(10) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `badge_id` varchar(200) DEFAULT NULL,
+  `company_id` int(10) UNSIGNED DEFAULT NULL,
+  `company_name` varchar(100) DEFAULT NULL,
+  `employment_type_id` int(10) UNSIGNED DEFAULT NULL,
+  `employment_type_name` varchar(100) DEFAULT NULL,
+  `department_id` int(10) UNSIGNED DEFAULT NULL,
+  `department_name` varchar(100) DEFAULT NULL,
+  `job_position_id` int(10) UNSIGNED DEFAULT NULL,
+  `job_position_name` varchar(100) DEFAULT NULL,
+  `manager_id` int(10) UNSIGNED DEFAULT NULL,
+  `manager_name` varchar(100) DEFAULT NULL,
+  `work_schedule_id` int(10) UNSIGNED DEFAULT NULL,
+  `work_schedule_name` varchar(100) DEFAULT NULL,
+  `employment_status` varchar(50) NOT NULL DEFAULT 'Active',
+  `pin_code` varchar(500) DEFAULT NULL,
+  `biometrics_id` varchar(500) DEFAULT NULL,
+  `home_work_distance` double DEFAULT NULL,
+  `number_of_dependents` int(11) DEFAULT NULL,
+  `visa_number` varchar(50) DEFAULT NULL,
+  `work_permit_number` varchar(50) DEFAULT NULL,
+  `visa_expiration_date` date DEFAULT NULL,
+  `work_permit_expiration_date` date DEFAULT NULL,
+  `work_permit` varchar(500) DEFAULT NULL,
+  `onboard_date` date DEFAULT NULL,
+  `offboard_date` date DEFAULT NULL,
+  `departure_reason_id` int(10) UNSIGNED DEFAULT NULL,
+  `departure_reason_name` varchar(100) DEFAULT NULL,
+  `detailed_departure_reason` varchar(5000) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `work_location`
 --
 
@@ -11999,6 +12054,18 @@ ALTER TABLE `email_setting`
   ADD KEY `email_setting_index_email_setting_id` (`email_setting_id`);
 
 --
+-- Indexes for table `employee`
+--
+ALTER TABLE `employee`
+  ADD PRIMARY KEY (`employee_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `employee_index_employee_id` (`employee_id`),
+  ADD KEY `employee_index_civil_status_id` (`civil_status_id`),
+  ADD KEY `employee_index_gender_id` (`gender_id`),
+  ADD KEY `employee_index_religion_id` (`religion_id`),
+  ADD KEY `employee_index_blood_type_id` (`blood_type_id`);
+
+--
 -- Indexes for table `employment_type`
 --
 ALTER TABLE `employment_type`
@@ -12284,6 +12351,21 @@ ALTER TABLE `work_hours`
   ADD KEY `work_hours_index_work_hours_id` (`work_hours_id`);
 
 --
+-- Indexes for table `work_information`
+--
+ALTER TABLE `work_information`
+  ADD PRIMARY KEY (`work_information_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `work_information_index_employee_id` (`employee_id`),
+  ADD KEY `work_information_index_employment_type_id` (`employment_type_id`),
+  ADD KEY `work_information_index_department_id` (`department_id`),
+  ADD KEY `work_information_index_job_position_id` (`job_position_id`),
+  ADD KEY `work_information_index_manager_id` (`manager_id`),
+  ADD KEY `work_information_index_work_schedule_id` (`work_schedule_id`),
+  ADD KEY `work_information_index_departure_reason_id` (`departure_reason_id`),
+  ADD KEY `work_information_index_employment_status` (`employment_status`);
+
+--
 -- Indexes for table `work_location`
 --
 ALTER TABLE `work_location`
@@ -12323,7 +12405,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2881;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2871;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -12404,6 +12486,12 @@ ALTER TABLE `email_setting`
   MODIFY `email_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `employee`
+--
+ALTER TABLE `employee`
+  MODIFY `employee_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `employment_type`
 --
 ALTER TABLE `employment_type`
@@ -12473,7 +12561,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -12527,7 +12615,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -12600,6 +12688,12 @@ ALTER TABLE `user_account`
 --
 ALTER TABLE `work_hours`
   MODIFY `work_hours_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `work_information`
+--
+ALTER TABLE `work_information`
+  MODIFY `work_information_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `work_location`
@@ -12714,6 +12808,12 @@ ALTER TABLE `educational_stage`
 --
 ALTER TABLE `email_setting`
   ADD CONSTRAINT `email_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `employee`
+--
+ALTER TABLE `employee`
+  ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `employment_type`
@@ -12928,6 +13028,13 @@ ALTER TABLE `user_account`
 ALTER TABLE `work_hours`
   ADD CONSTRAINT `work_hours_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
   ADD CONSTRAINT `work_hours_ibfk_2` FOREIGN KEY (`work_schedule_id`) REFERENCES `work_schedule` (`work_schedule_id`);
+
+--
+-- Constraints for table `work_information`
+--
+ALTER TABLE `work_information`
+  ADD CONSTRAINT `work_information_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
+  ADD CONSTRAINT `work_information_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
 
 --
 -- Constraints for table `work_location`

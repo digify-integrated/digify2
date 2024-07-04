@@ -13,6 +13,15 @@
             getUICustomization();
         }
 
+        if($('.regular-datepicker').length){
+            $('.regular-datepicker').each(function() {
+                $(this).datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                });
+            });
+        }
+
         $(document).on('click','#discard-create',function() {
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             discardCreate(page_link);

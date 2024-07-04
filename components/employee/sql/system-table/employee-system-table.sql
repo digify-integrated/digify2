@@ -11,16 +11,16 @@ CREATE TABLE employee (
 	suffix VARCHAR(10),
 	nickname VARCHAR(100),
 	bio VARCHAR(1000),
-    civil_status_id INT UNSIGNED NOT NULL,
-    civil_status_name VARCHAR(100) NOT NULL,
-    gender_id INT UNSIGNED NOT NULL,
-    gender_name VARCHAR(100) NOT NULL,
+    civil_status_id INT UNSIGNED,
+    civil_status_name VARCHAR(100),
+    gender_id INT UNSIGNED,
+    gender_name VARCHAR(100),
     religion_id INT UNSIGNED,
     religion_name VARCHAR(100),
     blood_type_id INT UNSIGNED,
     blood_type_name VARCHAR(100),
-    birthday DATE NOT NULL,
-    birth_place VARCHAR(1000) NOT NULL,
+    birthday DATE,
+    birth_place VARCHAR(1000),
     height FLOAT,
     weight FLOAT,
     created_date DATETIME NOT NULL DEFAULT NOW(),
@@ -34,14 +34,14 @@ CREATE INDEX employee_index_gender_id ON employee(gender_id);
 CREATE INDEX employee_index_religion_id ON employee(religion_id);
 CREATE INDEX employee_index_blood_type_id ON employee(blood_type_id);
 
-CREATE TABLE employment_information (
-    employment_information_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+CREATE TABLE work_information (
+    work_information_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     employee_id INT UNSIGNED NOT NULL,
-    badge_id VARCHAR(500),
+    badge_id VARCHAR(200),
     company_id INT UNSIGNED,
     company_name VARCHAR(100),
-    employee_type_id INT UNSIGNED,
-    employee_type_name VARCHAR(100),
+    employment_type_id INT UNSIGNED,
+    employment_type_name VARCHAR(100),
 	department_id INT UNSIGNED,
     department_name VARCHAR(100),
 	job_position_id INT UNSIGNED,
@@ -51,8 +51,15 @@ CREATE TABLE employment_information (
 	work_schedule_id INT UNSIGNED,
     work_schedule_name VARCHAR(100),
 	employment_status VARCHAR(50) NOT NULL DEFAULT 'Active',
-    kiosk_pin_code VARCHAR(500),
+    pin_code VARCHAR(500),
     biometrics_id VARCHAR(500),
+    home_work_distance DOUBLE,
+    number_of_dependents INT,
+    visa_number VARCHAR(50),
+    work_permit_number VARCHAR(50),
+    visa_expiration_date DATE,
+    work_permit_expiration_date DATE,
+    work_permit VARCHAR(500),
     onboard_date DATE,
     offboard_date DATE,
     departure_reason_id INT UNSIGNED,
@@ -64,13 +71,13 @@ CREATE TABLE employment_information (
     FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
 );
 
-CREATE INDEX employment_info_index_employee_id ON employment_information(employee_id);
-CREATE INDEX employment_info_index_employee_type_id ON employment_information(employee_type_id);
-CREATE INDEX employment_info_index_department_id ON employment_information(department_id);
-CREATE INDEX employment_info_index_job_position_id ON employment_information(job_position_id);
-CREATE INDEX employment_info_index_manager_id ON employment_information(manager_id);
-CREATE INDEX employment_info_index_work_schedule_id ON employment_information(work_schedule_id);
-CREATE INDEX employment_info_index_departure_reason_id ON employment_information(departure_reason_id);
-CREATE INDEX employment_info_index_employment_status ON employment_information(employment_status);
+CREATE INDEX work_information_index_employee_id ON work_information(employee_id);
+CREATE INDEX work_information_index_employment_type_id ON work_information(employment_type_id);
+CREATE INDEX work_information_index_department_id ON work_information(department_id);
+CREATE INDEX work_information_index_job_position_id ON work_information(job_position_id);
+CREATE INDEX work_information_index_manager_id ON work_information(manager_id);
+CREATE INDEX work_information_index_work_schedule_id ON work_information(work_schedule_id);
+CREATE INDEX work_information_index_departure_reason_id ON work_information(departure_reason_id);
+CREATE INDEX work_information_index_employment_status ON work_information(employment_status);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
