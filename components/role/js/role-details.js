@@ -441,8 +441,15 @@ function roleForm(){
                 required: 'Please enter the description'
             }
         },
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -515,8 +522,15 @@ function roleForm(){
 
 function userAccountAssignmentForm(){
     $('#user-account-assignment-form').validate({
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -588,8 +602,15 @@ function userAccountAssignmentForm(){
 
 function rolePermissionAssignmentForm(){
     $('#role-permission-assignment-form').validate({
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -661,8 +682,15 @@ function rolePermissionAssignmentForm(){
 
 function roleSystemActionPermissionAssignmentForm(){
     $('#role-system-action-permission-assignment-form').validate({
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

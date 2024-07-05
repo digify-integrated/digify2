@@ -127,8 +127,15 @@ function appModuleForm(){
                 required: 'Please enter the order sequence'
             }
         },
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -211,8 +218,15 @@ function updateAppLogoForm(){
                 required: 'Please choose the app logo'
             }
         },
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

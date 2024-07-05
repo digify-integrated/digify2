@@ -16,7 +16,25 @@ function employeeForm(){
             },
             last_name: {
                 required: true
-            }
+            },
+            company_id: {
+                required: true
+            },
+            gender_id: {
+                required: true
+            },
+            civil_status_id: {
+                required: true
+            },
+            birthday: {
+                required: true
+            },
+            birth_place: {
+                required: true
+            },
+            onboard_date: {
+                required: true
+            },
         },
         messages: {
             first_name: {
@@ -24,10 +42,35 @@ function employeeForm(){
             },
             last_name: {
                 required: 'Please enter the last name'
-            }
+            },
+            company_id: {
+                required: 'Please choose the company'
+            },
+            gender_id: {
+                required: 'Please choose the gender'
+            },
+            civil_status_id: {
+                required: 'Please choose the civil status'
+            },
+            birthday: {
+                required: 'Please enter the date of birth'
+            },
+            birth_place: {
+                required: 'Please enter the birth place'
+            },
+            onboard_date: {
+                required: 'Please enter the on-board date'
+            },
         },
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found:', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

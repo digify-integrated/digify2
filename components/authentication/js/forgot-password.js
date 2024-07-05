@@ -10,8 +10,15 @@ $(document).ready(function () {
                 required: 'Please enter your email',
             }
         },
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

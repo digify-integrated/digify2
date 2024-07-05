@@ -534,8 +534,15 @@ function userAccountForm(){
                 required: 'Please enter the password'
             }
         },
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -622,8 +629,15 @@ function changePasswordForm(){
                 equalTo: 'The passwords you entered do not match'
             }
         },
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -696,8 +710,15 @@ function updateUserAccountProfilPictureForm(){
                 required: 'Please choose the profile picture'
             }
         },
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -765,8 +786,15 @@ function updateUserAccountProfilPictureForm(){
 
 function userAccountAssignmentForm(){
     $('#user-account-assignment-form').validate({
-        errorPlacement: function (error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 1500);
+        errorPlacement: function(error, element) {
+            var errorMessage = '';
+            $.each(this.errorMap, function(key, value) {
+                errorMessage += value;
+                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
+                    errorMessage += '<br>';
+                }
+            }.bind(this));
+            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

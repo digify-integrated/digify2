@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 04, 2024 at 11:29 AM
+-- Generation Time: Jul 05, 2024 at 11:32 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1201,10 +1201,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuGroupTable` (IN `p_filt
 END$$
 
 DROP PROCEDURE IF EXISTS `generateMenuItemOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemOptions` ()   BEGIN
-	SELECT menu_item_id, menu_item_name 
-    FROM menu_item 
-    ORDER BY menu_item_name;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateMenuItemOptions` (IN `p_menu_item_id` INT)   BEGIN
+    IF p_menu_item_id IS NOT NULL AND p_menu_item_id != '' THEN
+        SELECT menu_item_id, menu_item_name 
+        FROM menu_item 
+        WHERE menu_item_id != p_menu_item_id
+        ORDER BY menu_item_name;
+    ELSE
+        SELECT menu_item_id, menu_item_name 
+        FROM menu_item 
+        ORDER BY menu_item_name;
+    END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateMenuItemRoleDualListBoxOptions`$$
