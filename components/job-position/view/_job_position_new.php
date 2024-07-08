@@ -13,7 +13,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label class="form-label" for="job_position_name">Job Position <span class="text-danger">*</span></label>
+                                <label class="form-label" for="job_position_name">Display Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control maxlength" id="job_position_name" name="job_position_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>

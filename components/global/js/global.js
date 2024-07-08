@@ -264,7 +264,8 @@ function showNotification(notificationTitle, notificationMessage, notificationTy
         positionClass: 'toast-top-right',
         timeOut: timeOut,
         showMethod: 'fadeIn',
-        hideMethod: 'fadeOut'
+        hideMethod: 'fadeOut',
+        escapeHtml: false
     };
 
     if (!isDuplicate) {
@@ -399,18 +400,15 @@ function internalNotesForm(databaseTable, referenceID){
         },
         messages: {
             internal_note: {
-                required: 'Please enter the internal note'
+                required: 'Internal Notes'
             }
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -556,3 +554,13 @@ function getUICustomization(){
         }
       });
 }
+
+function previewImage(input, image) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById(image).src = e.target.result;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }

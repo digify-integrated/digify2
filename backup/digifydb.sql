@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 05, 2024 at 11:32 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jul 08, 2024 at 02:54 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -6218,7 +6218,11 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2867, 'menu_item', 29, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
 (2868, 'menu_item', 30, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
 (2869, 'menu_item', 31, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
-(2870, 'menu_group', 6, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00');
+(2870, 'menu_group', 6, 'Menu Group Name: Employee Configuration -> Employee Configurations<br/>', 2, '2024-07-03 16:59:00', '2024-07-03 16:59:00'),
+(2871, 'user_account', 2, 'Last Connection Date: 2024-07-02 19:52:31 -> 2024-07-08 08:50:23<br/>', 1, '2024-07-08 08:50:23', '2024-07-08 08:50:23'),
+(2872, 'user_account', 2, 'Failed Login Attempts: 0 -> 1<br/>', 1, '2024-07-08 20:26:53', '2024-07-08 20:26:53'),
+(2873, 'user_account', 2, 'Failed Login Attempts: 1 -> 0<br/>', 1, '2024-07-08 20:26:59', '2024-07-08 20:26:59'),
+(2874, 'user_account', 2, 'Last Connection Date: 2024-07-08 08:50:23 -> 2024-07-08 20:26:59<br/>', 1, '2024-07-08 20:26:59', '2024-07-08 20:26:59');
 
 -- --------------------------------------------------------
 
@@ -11291,7 +11295,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'light', 'Orange_Theme', 0, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'light', 'Aqua_Theme', 0, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -11478,7 +11482,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-02 19:52:31', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '2C0vX7SHW62Zu2gx%2Fc2kveYbZoaWsoZI8%2BNCHd9r%2F6c%3D', '2024-06-26 13:25:47', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-08 20:26:59', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '1YZjm3cHoSSOTjm9%2BTQh8tmkUGlitsPdWPeOA%2FLfKv8%3D', '2024-06-26 13:25:47', 1);
 
 --
 -- Triggers `user_account`
@@ -12412,7 +12416,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2871;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2875;
 
 --
 -- AUTO_INCREMENT for table `bank`

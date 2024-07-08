@@ -522,27 +522,24 @@ function userAccountForm(){
         },
         messages: {
             file_as: {
-                required: 'Please enter the display name'
+                required: 'Display Name'
             },
             username: {
-                required: 'Please enter the username'
+                required: 'Username'
             },
             email: {
-                required: 'Please enter the email'
+                required: 'Email'
             },
             password: {
-                required: 'Please enter the password'
+                required: 'Password'
             }
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -622,22 +619,19 @@ function changePasswordForm(){
           },
         messages: {
             new_password: {
-                required: 'Please enter password'
+                required: 'Password'
             },
             confirm_password: {
-                required: 'Please re-enter your password for confirmation',
+                required: 'Confirm password',
                 equalTo: 'The passwords you entered do not match'
             }
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -707,18 +701,15 @@ function updateUserAccountProfilPictureForm(){
         },
         messages: {
             profile_picture: {
-                required: 'Please choose the profile picture'
+                required: 'Profile Picture'
             }
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -787,14 +778,11 @@ function updateUserAccountProfilPictureForm(){
 function userAccountAssignmentForm(){
     $('#user-account-assignment-form').validate({
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

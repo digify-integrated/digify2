@@ -7,6 +7,14 @@
                 </div>
                 <hr class="m-0" />
                 <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-lg-12">
+                            <label for="employee_image" class="cursor-pointer">
+                                <img src="./assets/images/default/upload-placeholder.png" alt="employee-image" id="employee-image" class="img-fluid" width="120" height="120">
+                                <input type="file" class="form-control d-none" id="employee_image" name="employee_image" onchange="previewImage(this, 'employee-image')">
+                            </label>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3 row align-items-center">

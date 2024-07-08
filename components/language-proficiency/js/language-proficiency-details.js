@@ -103,21 +103,18 @@ function languageProficiencyForm(){
         },
         messages: {
             language_proficiency_name: {
-                required: 'Please enter the display name'
+                required: 'Display Name'
             },
             language_proficiency_description: {
-                required: 'Please enter the description'
+                required: 'Description'
             }
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

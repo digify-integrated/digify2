@@ -38,39 +38,36 @@ function emailSettingForm(){
         },
         messages: {
             email_setting_name: {
-                required: 'Please enter the display name'
+                required: 'Display Name'
             },
             mail_host: {
-                required: 'Please enter the host'
+                required: 'Host'
             },
             port: {
-                required: 'Please enter the port'
+                required: 'Port'
             },
             mail_username: {
-                required: 'Please enter the mail username'
+                required: 'Mail User Name'
             },
             mail_password: {
-                required: 'Please enter the mail password'
+                required: 'Mail Password'
             },
             mail_from_name: {
-                required: 'Please enter the mail from name'
+                required: 'Mail From Name'
             },
             mail_from_email: {
-                required: 'Please enter the mail from email'
+                required: 'Mail From Email'
             },
             email_setting_description: {
-                required: 'Please enter the description'
+                required: 'Description'
             }
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

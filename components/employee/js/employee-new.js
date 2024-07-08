@@ -38,39 +38,36 @@ function employeeForm(){
         },
         messages: {
             first_name: {
-                required: 'Please enter the first name'
+                required: 'First Name'
             },
             last_name: {
-                required: 'Please enter the last name'
+                required: 'Last Name'
             },
             company_id: {
-                required: 'Please choose the company'
+                required: 'Company'
             },
             gender_id: {
-                required: 'Please choose the gender'
+                required: 'Gender'
             },
             civil_status_id: {
-                required: 'Please choose the civil status'
+                required: 'Civil Status'
             },
             birthday: {
-                required: 'Please enter the date of birth'
+                required: 'Date of Birth'
             },
             birth_place: {
-                required: 'Please enter the birth place'
+                required: 'Birth Place'
             },
             onboard_date: {
-                required: 'Please enter the on-board date'
+                required: 'On-board Date'
             },
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found:', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

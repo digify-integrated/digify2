@@ -59,33 +59,30 @@ function otpForm(){
         },
         messages: {
             otp_code_1: {
-                required: 'Please enter your security code',
+                required: 'Security Code',
             },
             otp_code_2: {
-                required: 'Please enter your security code'
+                required: 'Security Code'
             },
             otp_code_3: {
-                required: 'Please enter your security code'
+                required: 'Security Code'
             },
             otp_code_4: {
-                required: 'Please enter your security code'
+                required: 'Security Code'
             },
             otp_code_5: {
-                required: 'Please enter your security code'
+                required: 'Security Code'
             },
             otp_code_6: {
-                required: 'Please enter your security code'
+                required: 'Security Code'
             }
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

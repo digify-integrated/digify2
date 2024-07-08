@@ -41,36 +41,33 @@ function securitySettingsForm(){
         },
         messages: {
             max_failed_login: {
-                required: 'Please enter the max failed login attempt'
+                required: 'Max Failed Login Attempt'
             },
             max_failed_otp_attempt: {
-                required: 'Please enter the max failed OTP validation attempt'
+                required: 'Max Failed OTP Validation Attempt'
             },
             password_expiry_duration: {
-                required: 'Please enter the password validity period'
+                required: 'Password Validity Period'
             },
             otp_duration: {
-                required: 'Please enter the one-time password validity period'
+                required: 'One-time Password Validity Period'
             },
             reset_password_token_duration: {
-                required: 'Please enter the password reset token validity period'
+                required: 'Password Reset Token Validity Period'
             },
             session_inactivity_limit: {
-                required: 'Please enter the session inactivity limit'
+                required: 'Session Inactivity Limit'
             },
             password_recovery_link: {
-                required: 'Please enter the password recovery link'
+                required: 'Password Recovery Link'
             }
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

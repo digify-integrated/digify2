@@ -25,24 +25,21 @@ function workLocationForm(){
         },
         messages: {
             work_location_name: {
-                required: 'Please enter the display name'
+                required: 'Display Name'
             },
             address: {
-                required: 'Please enter the address'
+                required: 'Address'
             },
             city_id: {
-                required: 'Please choose the city'
+                required: 'City'
             }
         },
         errorPlacement: function(error, element) {
-            var errorMessage = '';
+            var errorList = [];
             $.each(this.errorMap, function(key, value) {
-                errorMessage += value;
-                if (key!== Object.keys(this.errorMap)[Object.keys(this.errorMap).length - 1]) {
-                    errorMessage += '<br>';
-                }
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Attention Required: Error Found', errorMessage, 'error', 1500);
+            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group row">
-                            <label class="form-label col-md-3">Job Position:</label>
+                            <label class="form-label col-md-3">Display Name:</label>
                             <div class="col-md-9">
                                 <p class="form-control-static" id="job_position_name_summary">--</p>
                             </div>
@@ -46,7 +46,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label class="form-label" for="job_position_name">Job Position <span class="text-danger">*</span></label>
+                                <label class="form-label" for="job_position_name">Display Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control maxlength" id="job_position_name" name="job_position_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>
