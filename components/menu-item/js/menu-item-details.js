@@ -258,7 +258,7 @@ function menuItemForm(){
             $.each(this.errorMap, function(key, value) {
                 errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -336,7 +336,7 @@ function rolePermissionAssignmentForm(){
             $.each(this.errorMap, function(key, value) {
                 errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

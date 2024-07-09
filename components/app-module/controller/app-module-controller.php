@@ -445,7 +445,7 @@ class AppModuleController {
                 ];
                 
                 echo json_encode($response);
-                exit;           
+                exit;
             }
 
             $this->appModuleModel->updateAppLogo($appModuleID, $filePath, $userID);

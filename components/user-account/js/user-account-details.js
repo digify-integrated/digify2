@@ -539,7 +539,7 @@ function userAccountForm(){
             $.each(this.errorMap, function(key, value) {
                 errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -631,7 +631,7 @@ function changePasswordForm(){
             $.each(this.errorMap, function(key, value) {
                 errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -709,7 +709,7 @@ function updateUserAccountProfilPictureForm(){
             $.each(this.errorMap, function(key, value) {
                 errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -782,7 +782,7 @@ function userAccountAssignmentForm(){
             $.each(this.errorMap, function(key, value) {
                 errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
             }.bind(this));
-            showNotification('Invalid fields:', '<ul>' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
         },
         highlight: function(element) {
             var inputElement = $(element);

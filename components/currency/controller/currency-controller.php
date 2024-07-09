@@ -438,6 +438,9 @@ class CurrencyController {
                 'success' => true,
                 'currencyName' => $currencyDetails['currency_name'] ?? null,
                 'currencySymbol' => $currencyDetails['currency_symbol'] ?? null,
+                'currencyCode' => $currencyDetails['currency_code'] ?? null,
+                'exchangeRateDisplay' => number_format($currencyDetails['exchange_rate'] ?? 0, 2),
+                'exchangeRate' => $currencyDetails['exchange_rate'] ?? null
             ];
 
             echo json_encode($response);

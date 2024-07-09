@@ -37,6 +37,24 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="form-label col-md-5">Currency Code:</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" id="currency_code_summary">--</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="form-label col-md-5">Exchange Rate:</label>
+                            <div class="col-md-7">
+                                <p class="form-control-static" id="exchange_rate_summary">--</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

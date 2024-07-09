@@ -3,17 +3,17 @@ session_start();
 
 # -------------------------------------------------------------
 #
-# Function: DepartmentController
+# Function: EmployeeController
 # Description: 
-# The DepartmentController class handles department related operations and interactions.
+# The EmployeeController class handles employee related operations and interactions.
 #
 # Parameters: None
 #
 # Returns: None
 #
 # -------------------------------------------------------------
-class DepartmentController {
-    private $departmentModel;
+class EmployeeController {
+    private $employeeModel;
     private $authenticationModel;
     private $securityModel;
 
@@ -21,19 +21,19 @@ class DepartmentController {
     #
     # Function: __construct
     # Description: 
-    # The constructor initializes the object with the provided departmentModel, AuthenticationModel and SecurityModel instances.
-    # These instances are used for department related, user related operations and security related operations, respectively.
+    # The constructor initializes the object with the provided employeeModel, AuthenticationModel and SecurityModel instances.
+    # These instances are used for employee related, user related operations and security related operations, respectively.
     #
     # Parameters:
-    # - @param DepartmentModel $departmentModel     The departmentModel instance for department related operations.
+    # - @param EmployeeModel $employeeModel     The employeeModel instance for employee related operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(DepartmentModel $departmentModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
-        $this->departmentModel = $departmentModel;
+    public function __construct(EmployeeModel $employeeModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+        $this->employeeModel = $employeeModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
     }
@@ -121,20 +121,20 @@ class DepartmentController {
             $transaction = isset($_POST['transaction']) ? $_POST['transaction'] : null;
 
             switch ($transaction) {
-                case 'add department':
-                    $this->addDepartment();
+                case 'add employee':
+                    $this->addEmployee();
                     break;
-                case 'update department':
-                    $this->updateDepartment();
+                case 'update employee':
+                    $this->updateEmployee();
                     break;
-                case 'get department details':
-                    $this->getDepartmentDetails();
+                case 'get employee details':
+                    $this->getEmployeeDetails();
                     break;
-                case 'delete department':
-                    $this->deleteDepartment();
+                case 'delete employee':
+                    $this->deleteEmployee();
                     break;
-                case 'delete multiple department':
-                    $this->deleteMultipleDepartment();
+                case 'delete multiple employee':
+                    $this->deleteMultipleEmployee();
                     break;
                 default:
                     $response = [
@@ -157,36 +157,217 @@ class DepartmentController {
 
     # -------------------------------------------------------------
     #
-    # Function: addDepartment
+    # Function: addEmployee
     # Description: 
-    # Inserts a department.
+    # Inserts a employee.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function addDepartment() {
+    public function addEmployee() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['department_name']) && !empty($_POST['department_name']) && isset($_POST['parent_department_id']) && isset($_POST['manager_id'])) {
+        if (isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['middle_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['suffix']) && isset($_POST['department_id']) && isset($_POST['manager_id']) && isset($_POST['job_position_id']) && isset($_POST['company_id']) && !empty($_POST['company_id']) && isset($_POST['work_location_id']) && isset($_POST['home_work_distance']) && isset($_POST['work_schedule_id']) && isset($_POST['time_off_approver_id']) && isset($_POST['nickname']) && isset($_POST['blood_type_id']) && isset($_POST['religion_id']) && isset($_POST['height']) && isset($_POST['weight']) && isset($_POST['visa_number']) && isset($_POST['visa_expiration_date']) && isset($_POST['work_permit_number']) && isset($_POST['work_permit_expiration_date']) && isset($_POST['pin_code']) && isset($_POST['badge_id']) && isset($_POST['employment_type_id']) && isset($_POST['onboard_date']) && isset($_POST['gender_id']) && !empty($_POST['gender_id']) && isset($_POST['civil_status_id']) && !empty($_POST['civil_status_id']) && isset($_POST['birthday']) && !empty($_POST['birthday'])) {
             $userID = $_SESSION['user_account_id'];
-            $departmentName = $_POST['department_name'];
-            $parentDepartmentID = htmlspecialchars($_POST['parent_department_id'], ENT_QUOTES, 'UTF-8');
+            $firstName = $_POST['first_name'];
+            $middleName = $_POST['middle_name'];
+            $lastName = $_POST['last_name'];
+            $suffix = $_POST['suffix'];
+            $nickname = $_POST['nickname'];
+            $birthPlace = $_POST['birth_place'];
+            $departmentID = htmlspecialchars($_POST['department_id'], ENT_QUOTES, 'UTF-8');
             $managerID = htmlspecialchars($_POST['manager_id'], ENT_QUOTES, 'UTF-8');
+            $jobPositionID = htmlspecialchars($_POST['job_position_id'], ENT_QUOTES, 'UTF-8');
+            $companyID = htmlspecialchars($_POST['company_id'], ENT_QUOTES, 'UTF-8');
+            $workLocationID = htmlspecialchars($_POST['work_location_id'], ENT_QUOTES, 'UTF-8');
+            $homeWorkDistance = htmlspecialchars($_POST['home_work_distance'], ENT_QUOTES, 'UTF-8');
+            $workScheduleID = htmlspecialchars($_POST['work_schedule_id'], ENT_QUOTES, 'UTF-8');
+            $timeOffApproverID = htmlspecialchars($_POST['time_off_approver_id'], ENT_QUOTES, 'UTF-8');
+            $genderID = htmlspecialchars($_POST['gender_id'], ENT_QUOTES, 'UTF-8');
+            $civilStatusID = htmlspecialchars($_POST['civil_status_id'], ENT_QUOTES, 'UTF-8');
+            $birthday = $this->systemModel->checkDate('empty', $_POST['birthday'], '', 'Y-m-d', '');
+            $visaExpirationDate = $this->systemModel->checkDate('empty', $_POST['visa_expiration_date'], '', 'Y-m-d', '');
+            $workPermitExpirationDate = $this->systemModel->checkDate('empty', $_POST['work_permit_expiration_date'], '', 'Y-m-d', '');
+            $onboardDate = $this->systemModel->checkDate('empty', $_POST['onboard_date'], '', 'Y-m-d', '');
+            $bloodTypeID = htmlspecialchars($_POST['blood_type_id'], ENT_QUOTES, 'UTF-8');
+            $religionID = htmlspecialchars($_POST['religion_id'], ENT_QUOTES, 'UTF-8');
+            $height = htmlspecialchars($_POST['height'], ENT_QUOTES, 'UTF-8');
+            $weight = htmlspecialchars($_POST['weight'], ENT_QUOTES, 'UTF-8');
+            $visaNumber = htmlspecialchars($_POST['visa_number'], ENT_QUOTES, 'UTF-8');
+            $workPermitNumber = htmlspecialchars($_POST['work_permit_number'], ENT_QUOTES, 'UTF-8');
+            $pinCode = htmlspecialchars($_POST['pin_code'], ENT_QUOTES, 'UTF-8');
+            $badgeID = htmlspecialchars($_POST['badge_id'], ENT_QUOTES, 'UTF-8');
+            $employmentTypeID = htmlspecialchars($_POST['employment_type_id'], ENT_QUOTES, 'UTF-8');
 
-            $parentDepartmentDetails = $this->departmentModel->getDepartment($parentDepartmentID);
-            $parentDepartmentName = $parentDepartmentDetails['department_name'] ?? '';
-        
-            $departmentID = $this->departmentModel->insertDepartment($departmentName, $parentDepartmentID, $parentDepartmentName, '', '', $userID);
+            $civilStatusDetails = $this->civilStatusModel->getCivilStatus($civilStatusID);
+            $civilStatusName = $civilStatusDetails['civil_status_name'] ?? '';
+
+            $genderDetails = $this->genderModel->getGender($genderID);
+            $genderName = $genderDetails['gender_name'] ?? '';
+
+            $religionDetails = $this->religionModel->getReligion($religionID);
+            $religionName = $religionDetails['religion_name'] ?? '';
+
+            $bloodTypeDetails = $this->bloodTypeModel->getBloodType($bloodTypeID);
+            $bloodTypeName = $bloodTypeDetails['blood_type_name'] ?? '';
+
+            $companyDetails = $this->companyModel->getCompany($companyID);
+            $companyName = $companyDetails['company_name'] ?? '';
+
+            $employmentTypeDetails = $this->employmentTypeModel->getEmploymentType($employmentTypeID);
+            $employmentTypeName = $employmentTypeDetails['employment_type_name'] ?? '';
+
+            $departmentDetails = $this->departmentModel->getDepartment($departmentID);
+            $departmentName = $departmentDetails['department_name'] ?? '';
+
+            $jobPositionDetails = $this->jobPositionModel->getJobPosition($jobPositionID);
+            $jobPositionName = $jobPositionDetails['job_position_name'] ?? '';
+
+            $managerDetails = $this->employeeModel->getEmployee($managerID);
+            $managerName = $managerDetails['file_as'] ?? '';
+
+            $workScheduleDetails = $this->workScheduleModel->getWorkSchedule($workScheduleID);
+            $workScheduleName = $workScheduleDetails['work_schedule_name'] ?? '';
+
+            $timeOffapproverDetails = $this->employeeModel->getEmployee($timeOffApproverID);
+            $timeOffApproverName = $timeOffapproverDetails['file_as'] ?? '';
+
+            $employeeID = $this->employeeModel->insertEmployee($firstName, $middleName, $lastName, $suffix, $nickname, $civilStatusID, $civilStatusName, $genderID, $genderName, $religionID, $religionName, $bloodTypeID, $bloodTypeName, $birthday, $birthPlace, $height, $weight, $userID);
+
+            $this->employeeModel->insertWorkInformation($employeeID, $badgeID, $companyID, $companyName, $employmentTypeID, $employmentTypeName, $departmentID, $departmentName, $jobPositionID, $jobPositionName, $managerID, $managerName, $workScheduleID, $workScheduleName, $pinCode, $homeWorkDistance, $visaNumber, $workPermitNumber, $visaExpirationDate, $workPermitExpirationDate, $onboardDate, $timeOffApproverID, $timeOffApproverName, $userID);
+
+            $employeeImageFileName = $_FILES['employee_image']['name'];
+            $employeeImageFileSize = $_FILES['employee_image']['size'];
+            $employeeImageFileError = $_FILES['employee_image']['error'];
+            $employeeImageTempName = $_FILES['employee_image']['tmp_name'];
+            $employeeImageFileExtension = explode('.', $employeeImageFileName);
+            $employeeImageActualFileExtension = strtolower(end($employeeImageFileExtension));
+
+            if ($employeeImageFileError === 0 && $employeeImageFileSize > 0) {
+                $uploadSetting = $this->uploadSettingModel->getUploadSetting(1);
+                $maxFileSize = $uploadSetting['max_file_size'];
+    
+                $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(1);
+                $allowedFileExtensions = [];
+    
+                foreach ($uploadSettingFileExtension as $row) {
+                    $allowedFileExtensions[] = $row['file_extension'];
+                }
+    
+                if (!in_array($employeeImageActualFileExtension, $allowedFileExtensions)) {
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'The file uploaded is not supported.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if(empty($employeeImageTempName)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'Please choose the employee image.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($employeeImageFileError){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'An error occurred while uploading the file.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($employeeImageFileSize > ($maxFileSize * 1024)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'The employee image exceeds the maximum allowed size of ' . number_format($maxFileSize) . ' kb.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $fileName = $this->securityModel->generateFileName();
+                $fileNew = $fileName . '.' . $employeeImageActualFileExtension;
+                
+                define('PROJECT_BASE_DIR', dirname(__DIR__));
+                define('EMPLOYEE_IMAGE_DIR', 'image/');
+    
+                $directory = PROJECT_BASE_DIR. '/'. EMPLOYEE_IMAGE_DIR. $employeeID. '/';
+                $fileDestination = $directory. $fileNew;
+                $filePath = './components/employee/image/'. $employeeID . '/' . $fileNew;
+    
+                $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
+    
+                if(!$directoryChecker){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => $directoryChecker,
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                if(!move_uploaded_file($employeeImageTempName, $fileDestination)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'The employee image cannot be uploaded due to an error.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $this->employeeModel->updateEmployeeImage($employeeID, $filePath, $userID);
+    
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Employee Image Success',
+                    'message' => 'The employee image has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+            }
+
+            $workPermitFileName = $_FILES['work_permit']['name'];
+            $workPermitFileSize = $_FILES['work_permit']['size'];
+            $workPermitFileError = $_FILES['work_permit']['error'];
+            $workPermitTempName = $_FILES['work_permit']['tmp_name'];
+            $workPermitFileExtension = explode('.', $workPermitFileName);
+            $workPermitActualFileExtension = strtolower(end($workPermitFileExtension));
+
+            if ($workPermitFileError === 0 && $workPermitFileSize > 0) {
+
+            }
     
             $response = [
                 'success' => true,
-                'departmentID' => $this->securityModel->encryptData($departmentID),
-                'title' => 'Insert Department Success',
-                'message' => 'The department has been inserted successfully.',
+                'employeeID' => $this->securityModel->encryptData($employeeID),
+                'title' => 'Insert Employee Success',
+                'message' => 'The employee has been inserted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -213,36 +394,36 @@ class DepartmentController {
 
     # -------------------------------------------------------------
     #
-    # Function: updateDepartment
+    # Function: updateEmployee
     # Description: 
-    # Updates the department if it exists; otherwise, return an error message.
+    # Updates the employee if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function updateDepartment() {
+    public function updateEmployee() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
         
-        if (isset($_POST['department_name']) && !empty($_POST['department_name']) && isset($_POST['parent_department_id']) && isset($_POST['manager_id'])) {
+        if (isset($_POST['employee_name']) && !empty($_POST['employee_name']) && isset($_POST['parent_employee_id']) && isset($_POST['manager_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $departmentID = htmlspecialchars($_POST['department_id'], ENT_QUOTES, 'UTF-8');
-            $departmentName = $_POST['department_name'];
-            $parentDepartmentID = htmlspecialchars($_POST['parent_department_id'], ENT_QUOTES, 'UTF-8');
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeName = $_POST['employee_name'];
+            $parentEmployeeID = htmlspecialchars($_POST['parent_employee_id'], ENT_QUOTES, 'UTF-8');
             $managerID = htmlspecialchars($_POST['manager_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkDepartmentExist = $this->departmentModel->checkDepartmentExist($departmentID);
-            $total = $checkDepartmentExist['total'] ?? 0;
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Update Department Error',
-                    'message' => 'The department does not exist.',
+                    'title' => 'Update Employee Error',
+                    'message' => 'The employee does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -250,15 +431,15 @@ class DepartmentController {
                 exit;
             }
 
-            $parentDepartmentDetails = $this->departmentModel->getDepartment($parentDepartmentID);
-            $parentDepartmentName = $parentDepartmentDetails['department_name'] ?? '';
+            $parentEmployeeDetails = $this->employeeModel->getEmployee($parentEmployeeID);
+            $parentEmployeeName = $parentEmployeeDetails['employee_name'] ?? '';
 
-            $this->departmentModel->updateDepartment($departmentID, $departmentName, $parentDepartmentID, $parentDepartmentName, '', '', $userID);
+            $this->employeeModel->updateEmployee($employeeID, $employeeName, $parentEmployeeID, $parentEmployeeName, '', '', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Update Department Success',
-                'message' => 'The department has been updated successfully.',
+                'title' => 'Update Employee Success',
+                'message' => 'The employee has been updated successfully.',
                 'messageType' => 'success'
             ];
             
@@ -285,32 +466,32 @@ class DepartmentController {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteDepartment
+    # Function: deleteEmployee
     # Description: 
-    # Delete the department if it exists; otherwise, return an error message.
+    # Delete the employee if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function deleteDepartment() {
+    public function deleteEmployee() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['department_id']) && !empty($_POST['department_id'])) {
-            $departmentID = htmlspecialchars($_POST['department_id'], ENT_QUOTES, 'UTF-8');
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkDepartmentExist = $this->departmentModel->checkDepartmentExist($departmentID);
-            $total = $checkDepartmentExist['total'] ?? 0;
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Delete Department Error',
-                    'message' => 'The department does not exist.',
+                    'title' => 'Delete Employee Error',
+                    'message' => 'The employee does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -318,12 +499,12 @@ class DepartmentController {
                 exit;
             }
 
-            $this->departmentModel->deleteDepartment($departmentID);
+            $this->employeeModel->deleteEmployee($employeeID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete Department Success',
-                'message' => 'The department has been deleted successfully.',
+                'title' => 'Delete Employee Success',
+                'message' => 'The employee has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -346,36 +527,36 @@ class DepartmentController {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteMultipleDepartment
+    # Function: deleteMultipleEmployee
     # Description: 
-    # Delete the selected departments if it exists; otherwise, skip it.
+    # Delete the selected employees if it exists; otherwise, skip it.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function deleteMultipleDepartment() {
+    public function deleteMultipleEmployee() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['department_id']) && !empty($_POST['department_id'])) {
-            $departmentIDs = $_POST['department_id'];
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $employeeIDs = $_POST['employee_id'];
     
-            foreach($departmentIDs as $departmentID){
-                $checkDepartmentExist = $this->departmentModel->checkDepartmentExist($departmentID);
-                $total = $checkDepartmentExist['total'] ?? 0;
+            foreach($employeeIDs as $employeeID){
+                $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+                $total = $checkEmployeeExist['total'] ?? 0;
 
                 if($total > 0){
-                    $this->departmentModel->deleteDepartment($departmentID);
+                    $this->employeeModel->deleteEmployee($employeeID);
                 }
             }
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete Multiple Departments Success',
-                'message' => 'The selected departments have been deleted successfully.',
+                'title' => 'Delete Multiple Employees Success',
+                'message' => 'The selected employees have been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -402,33 +583,33 @@ class DepartmentController {
 
     # -------------------------------------------------------------
     #
-    # Function: getDepartmentDetails
+    # Function: getEmployeeDetails
     # Description: 
-    # Handles the retrieval of department details.
+    # Handles the retrieval of employee details.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function getDepartmentDetails() {
+    public function getEmployeeDetails() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
     
-        if (isset($_POST['department_id']) && !empty($_POST['department_id'])) {
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $departmentID = htmlspecialchars($_POST['department_id'], ENT_QUOTES, 'UTF-8');
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkDepartmentExist = $this->departmentModel->checkDepartmentExist($departmentID);
-            $total = $checkDepartmentExist['total'] ?? 0;
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Get Department Details Error',
-                    'message' => 'The department does not exist.',
+                    'title' => 'Get Employee Details Error',
+                    'message' => 'The employee does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -436,15 +617,15 @@ class DepartmentController {
                 exit;
             }
     
-            $departmentDetails = $this->departmentModel->getDepartment($departmentID);
+            $employeeDetails = $this->employeeModel->getEmployee($employeeID);
 
             $response = [
                 'success' => true,
-                'departmentName' => $departmentDetails['department_name'] ?? null,
-                'parentDepartmentID' => $departmentDetails['parent_department_id'] ?? '',
-                'parentDepartmentName' => $departmentDetails['parent_department_name'] ?? null,
-                'managerID' => $departmentDetails['manager_id'] ?? '',
-                'managerName' => $departmentDetails['manager_name'] ?? null
+                'employeeName' => $employeeDetails['employee_name'] ?? null,
+                'parentEmployeeID' => $employeeDetails['parent_employee_id'] ?? '',
+                'parentEmployeeName' => $employeeDetails['parent_employee_name'] ?? null,
+                'managerID' => $employeeDetails['manager_id'] ?? '',
+                'managerName' => $employeeDetails['manager_name'] ?? null
             ];
 
             echo json_encode($response);
@@ -470,10 +651,10 @@ require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../department/model/department-model.php';
+require_once '../../employee/model/employee-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new DepartmentController(new DepartmentModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>

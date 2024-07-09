@@ -1,9 +1,13 @@
 <div class="row">
     <div class="col-12">
         <form id="employee-form" method="post" action="#">
-            <div class="card">
-                <div class="card-body">
+            <div class="card mb-0">
+                <div class="card-body d-flex align-items-center">
                     <h5 class="card-title mb-0">Employee Information</h5>
+                    <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                        <button type="submit" form="employee-form" class="btn btn-success mb-0" id="submit-data">Save</button>
+                        <button type="button" id="discard-create" class="btn btn-outline-danger mb-0">Discard</button>
+                    </div>
                 </div>
                 <hr class="m-0" />
                 <div class="card-body">
@@ -38,7 +42,7 @@
                             <div class="row align-items-center">
                                 <label for="manager_id" class="form-label col-lg-3 col-form-label">Manager</label>
                                 <div class="col-lg-9">
-                                    <select id="manager_id" name="manager_id" class="select2 form-control"></select>
+                                    <select id="manager_id" name="manager_id" class="select2 form-control"><option value="">--</option></select>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +117,7 @@
                             <div class="row align-items-center">
                                 <label for="time_off_approver_id" class="form-label col-lg-3 col-form-label">Time Off <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Select the user responsible for approving &quot;Time Off&quot; of this employee."></span></label>
                                 <div class="col-lg-9">
-                                    <select id="time_off_approver_id" name="time_off_approver_id" class="select2 form-control"></select>
+                                    <select id="time_off_approver_id" name="time_off_approver_id" class="select2 form-control"><option value="">--</option></select>
                                 </div>
                             </div>
                         </div>
@@ -290,19 +294,6 @@
                                             <i class="ti ti-calendar fs-5"></i>
                                         </span>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <hr class="m-0" />
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="form-actions">
-                                <div class="d-flex justify-content-end gap-6">
-                                    <button type="submit" form="employee-form" class="btn btn-success mb-0" id="submit-data">Save</button>
-                                    <button type="button" id="discard-create" class="btn btn-outline-danger mb-0">Discard</button>
                                 </div>
                             </div>
                         </div>

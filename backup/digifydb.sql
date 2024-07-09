@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 08, 2024 at 02:54 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jul 09, 2024 at 11:32 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -6222,7 +6222,192 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (2871, 'user_account', 2, 'Last Connection Date: 2024-07-02 19:52:31 -> 2024-07-08 08:50:23<br/>', 1, '2024-07-08 08:50:23', '2024-07-08 08:50:23'),
 (2872, 'user_account', 2, 'Failed Login Attempts: 0 -> 1<br/>', 1, '2024-07-08 20:26:53', '2024-07-08 20:26:53'),
 (2873, 'user_account', 2, 'Failed Login Attempts: 1 -> 0<br/>', 1, '2024-07-08 20:26:59', '2024-07-08 20:26:59'),
-(2874, 'user_account', 2, 'Last Connection Date: 2024-07-08 08:50:23 -> 2024-07-08 20:26:59<br/>', 1, '2024-07-08 20:26:59', '2024-07-08 20:26:59');
+(2874, 'user_account', 2, 'Last Connection Date: 2024-07-08 08:50:23 -> 2024-07-08 20:26:59<br/>', 1, '2024-07-08 20:26:59', '2024-07-08 20:26:59'),
+(2875, 'user_account', 2, 'Last Connection Date: 2024-07-08 20:26:59 -> 2024-07-09 08:43:27<br/>', 1, '2024-07-09 08:43:27', '2024-07-09 08:43:27'),
+(2876, 'menu_item', 45, 'Menu Item created. <br/><br/>Menu Item Name: User Identity<br/>Menu Item Icon: ti ti-friends<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 21', 2, '2024-07-09 08:54:59', '2024-07-09 08:54:59'),
+(2877, 'role_permission', 46, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: User Identity<br/>Date Assigned: 2024-07-09 08:55:04', 2, '2024-07-09 08:55:04', '2024-07-09 08:55:04'),
+(2878, 'role_permission', 46, 'Read Access: 0 -> 1<br/>', 2, '2024-07-09 08:55:06', '2024-07-09 08:55:06'),
+(2879, 'menu_item', 46, 'Menu Item created. <br/><br/>Menu Item Name: Contact Information<br/>Menu Item Icon: ti ti-device-mobile<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 3', 2, '2024-07-09 08:59:29', '2024-07-09 08:59:29'),
+(2880, 'role_permission', 47, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Contact Information<br/>Date Assigned: 2024-07-09 08:59:33', 2, '2024-07-09 08:59:33', '2024-07-09 08:59:33'),
+(2881, 'role_permission', 47, 'Read Access: 0 -> 1<br/>', 2, '2024-07-09 08:59:34', '2024-07-09 08:59:34'),
+(2882, 'role_permission', 33, 'Menu Item: Contact Information Type -> Contact Info Type<br/>', 2, '2024-07-09 09:00:39', '2024-07-09 09:00:39'),
+(2883, 'menu_item', 32, 'Menu Item Name: Contact Information Type -> Contact Info Type<br/>', 2, '2024-07-09 09:00:39', '2024-07-09 09:00:39'),
+(2884, 'menu_item', 47, 'Menu Item created. <br/><br/>Menu Item Name: Language Configurations<br/>Menu Item Icon: ti ti-messages<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 12', 2, '2024-07-09 09:02:08', '2024-07-09 09:02:08'),
+(2885, 'role_permission', 48, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Language Configurations<br/>Date Assigned: 2024-07-09 09:02:12', 2, '2024-07-09 09:02:12', '2024-07-09 09:02:12'),
+(2886, 'role_permission', 48, 'Read Access: 0 -> 1<br/>', 2, '2024-07-09 09:02:13', '2024-07-09 09:02:13'),
+(2887, 'role_permission', 48, 'Menu Item: Language Configurations -> Language Settings<br/>', 2, '2024-07-09 09:02:57', '2024-07-09 09:02:57'),
+(2888, 'menu_item', 47, 'Menu Item Name: Language Configurations -> Language Settings<br/>', 2, '2024-07-09 09:02:57', '2024-07-09 09:02:57'),
+(2889, 'menu_item', 48, 'Menu Item created. <br/><br/>Menu Item Name: Banking Configuration<br/>Menu Item Icon:  ti ti-building-bank<br/>Menu Group Name: Configurations<br/>App Module: Settings<br/>Order Sequence: 2', 2, '2024-07-09 09:04:13', '2024-07-09 09:04:13'),
+(2890, 'role_permission', 49, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Banking Configuration<br/>Date Assigned: 2024-07-09 09:04:17', 2, '2024-07-09 09:04:17', '2024-07-09 09:04:17'),
+(2891, 'role_permission', 49, 'Read Access: 0 -> 1<br/>', 2, '2024-07-09 09:04:20', '2024-07-09 09:04:20'),
+(2892, 'currency', 2, 'Currency created. <br/><br/>Currency Name:  Afghan Afghani <br/>Currency Code:  AFN <br/>Currency Symbol:  ؋ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2893, 'currency', 3, 'Currency created. <br/><br/>Currency Name:  Albanian Lek <br/>Currency Code:  ALL <br/>Currency Symbol:  Lek ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2894, 'currency', 4, 'Currency created. <br/><br/>Currency Name:  Armenian Dram <br/>Currency Code:  AMD <br/>Currency Symbol:  դր. ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2895, 'currency', 5, 'Currency created. <br/><br/>Currency Name:  Angolan Kwanza <br/>Currency Code:  AOA <br/>Currency Symbol:  Kz ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2896, 'currency', 6, 'Currency created. <br/><br/>Currency Name:  Argentine Peso <br/>Currency Code:  ARS <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2897, 'currency', 7, 'Currency created. <br/><br/>Currency Name:  Australian Dollar <br/>Currency Code:  AUD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2898, 'currency', 8, 'Currency created. <br/><br/>Currency Name:  Aruban Florin <br/>Currency Code:  AWG <br/>Currency Symbol:  ƒ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2899, 'currency', 9, 'Currency created. <br/><br/>Currency Name:  Azerbaijani Manat <br/>Currency Code:  AZN <br/>Currency Symbol:  ₼ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2900, 'currency', 10, 'Currency created. <br/><br/>Currency Name:  Bosnia-Herzegovina Convertible Mark <br/>Currency Code:  BAM <br/>Currency Symbol:  KM ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2901, 'currency', 11, 'Currency created. <br/><br/>Currency Name:  Barbadian Dollar <br/>Currency Code:  BBD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2902, 'currency', 12, 'Currency created. <br/><br/>Currency Name:  Bangladeshi Taka <br/>Currency Code:  BDT <br/>Currency Symbol:  ৳ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2903, 'currency', 13, 'Currency created. <br/><br/>Currency Name:  Bulgarian Lev <br/>Currency Code:  BGN <br/>Currency Symbol:  лв ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2904, 'currency', 14, 'Currency created. <br/><br/>Currency Name:  Bahraini Dinar <br/>Currency Code:  BHD <br/>Currency Symbol: .د.ب ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2905, 'currency', 15, 'Currency created. <br/><br/>Currency Name:  Burundian Franc <br/>Currency Code:  BIF <br/>Currency Symbol:  FBu ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2906, 'currency', 16, 'Currency created. <br/><br/>Currency Name:  Bermudan Dollar <br/>Currency Code:  BMD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2907, 'currency', 17, 'Currency created. <br/><br/>Currency Name:  Brunei Dollar <br/>Currency Code:  BND <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2908, 'currency', 18, 'Currency created. <br/><br/>Currency Name:  Bolivian Boliviano <br/>Currency Code:  BOB <br/>Currency Symbol:  Bs. ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2909, 'currency', 19, 'Currency created. <br/><br/>Currency Name:  Brazilian Real <br/>Currency Code:  BRL <br/>Currency Symbol:  R$ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2910, 'currency', 20, 'Currency created. <br/><br/>Currency Name:  Bahamian Dollar <br/>Currency Code:  BSD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2911, 'currency', 21, 'Currency created. <br/><br/>Currency Name:  Bitcoin <br/>Currency Code:  BTC <br/>Currency Symbol:  ₿ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2912, 'currency', 22, 'Currency created. <br/><br/>Currency Name:  Bhutanese Ngultrum <br/>Currency Code:  BTN <br/>Currency Symbol:  Nu. ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2913, 'currency', 23, 'Currency created. <br/><br/>Currency Name:  Botswanan Pula <br/>Currency Code:  BWP <br/>Currency Symbol:  P ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2914, 'currency', 24, 'Currency created. <br/><br/>Currency Name:  Belarusian Ruble <br/>Currency Code:  BYR <br/>Currency Symbol:  Br ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2915, 'currency', 25, 'Currency created. <br/><br/>Currency Name:  Belize Dollar <br/>Currency Code:  BZD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2916, 'currency', 26, 'Currency created. <br/><br/>Currency Name:  Canadian Dollar <br/>Currency Code:  CAD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2917, 'currency', 27, 'Currency created. <br/><br/>Currency Name:  Congolese Franc <br/>Currency Code:  CDF <br/>Currency Symbol:  FC ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2918, 'currency', 28, 'Currency created. <br/><br/>Currency Name:  Chilean Unit of Account (UF) <br/>Currency Code:  CLF <br/>Currency Symbol:  UF ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2919, 'currency', 29, 'Currency created. <br/><br/>Currency Name:  Chilean Peso <br/>Currency Code:  CLP <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2920, 'currency', 30, 'Currency created. <br/><br/>Currency Name:  Chinese Yuan <br/>Currency Code:  CNY <br/>Currency Symbol:  ¥ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2921, 'currency', 31, 'Currency created. <br/><br/>Currency Name:  Colombian Peso <br/>Currency Code:  COP <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2922, 'currency', 32, 'Currency created. <br/><br/>Currency Name:  Costa Rican Colón <br/>Currency Code:  CRC <br/>Currency Symbol:  ₡ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2923, 'currency', 33, 'Currency created. <br/><br/>Currency Name:  Cuban Convertible Peso <br/>Currency Code:  CUC <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2924, 'currency', 34, 'Currency created. <br/><br/>Currency Name:  Cuban Peso <br/>Currency Code:  CUP <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2925, 'currency', 35, 'Currency created. <br/><br/>Currency Name:  Cape Verdean Escudo <br/>Currency Code:  CVE <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2926, 'currency', 36, 'Currency created. <br/><br/>Currency Name:  Czech Republic Koruna <br/>Currency Code:  CZK <br/>Currency Symbol:  Kč ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2927, 'currency', 37, 'Currency created. <br/><br/>Currency Name:  Djiboutian Franc <br/>Currency Code:  DJF <br/>Currency Symbol:  Fdj ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2928, 'currency', 38, 'Currency created. <br/><br/>Currency Name:  Danish Krone <br/>Currency Code:  DKK <br/>Currency Symbol:  kr ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2929, 'currency', 39, 'Currency created. <br/><br/>Currency Name:  Dominican Peso <br/>Currency Code:  DOP <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2930, 'currency', 40, 'Currency created. <br/><br/>Currency Name:  Egyptian Pound <br/>Currency Code:  EGP <br/>Currency Symbol:  £ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2931, 'currency', 41, 'Currency created. <br/><br/>Currency Name:  Eritrean Nakfa <br/>Currency Code:  ERN <br/>Currency Symbol:  Nfk ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2932, 'currency', 42, 'Currency created. <br/><br/>Currency Name:  Ethiopian Birr <br/>Currency Code:  ETB <br/>Currency Symbol:  Br ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2933, 'currency', 43, 'Currency created. <br/><br/>Currency Name:  Euro <br/>Currency Code:  EUR <br/>Currency Symbol:  € ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2934, 'currency', 44, 'Currency created. <br/><br/>Currency Name:  Fijian Dollar <br/>Currency Code:  FJD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:17', '2024-07-09 10:10:17'),
+(2935, 'currency', 1, 'Currency created. <br/><br/>Currency Name:  Afghan Afghani <br/>Currency Code:  AFN <br/>Currency Symbol:  ؋ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2936, 'currency', 2, 'Currency created. <br/><br/>Currency Name:  Albanian Lek <br/>Currency Code:  ALL <br/>Currency Symbol:  Lek ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2937, 'currency', 3, 'Currency created. <br/><br/>Currency Name:  Armenian Dram <br/>Currency Code:  AMD <br/>Currency Symbol:  դր. ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2938, 'currency', 4, 'Currency created. <br/><br/>Currency Name:  Angolan Kwanza <br/>Currency Code:  AOA <br/>Currency Symbol:  Kz ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2939, 'currency', 5, 'Currency created. <br/><br/>Currency Name:  Argentine Peso <br/>Currency Code:  ARS <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2940, 'currency', 6, 'Currency created. <br/><br/>Currency Name:  Australian Dollar <br/>Currency Code:  AUD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2941, 'currency', 7, 'Currency created. <br/><br/>Currency Name:  Aruban Florin <br/>Currency Code:  AWG <br/>Currency Symbol:  ƒ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2942, 'currency', 8, 'Currency created. <br/><br/>Currency Name:  Azerbaijani Manat <br/>Currency Code:  AZN <br/>Currency Symbol:  ₼ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2943, 'currency', 9, 'Currency created. <br/><br/>Currency Name:  Bosnia-Herzegovina Convertible Mark <br/>Currency Code:  BAM <br/>Currency Symbol:  KM ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2944, 'currency', 10, 'Currency created. <br/><br/>Currency Name:  Barbadian Dollar <br/>Currency Code:  BBD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2945, 'currency', 11, 'Currency created. <br/><br/>Currency Name:  Bangladeshi Taka <br/>Currency Code:  BDT <br/>Currency Symbol:  ৳ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2946, 'currency', 12, 'Currency created. <br/><br/>Currency Name:  Bulgarian Lev <br/>Currency Code:  BGN <br/>Currency Symbol:  лв ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2947, 'currency', 13, 'Currency created. <br/><br/>Currency Name:  Bahraini Dinar <br/>Currency Code:  BHD <br/>Currency Symbol: .د.ب ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2948, 'currency', 14, 'Currency created. <br/><br/>Currency Name:  Burundian Franc <br/>Currency Code:  BIF <br/>Currency Symbol:  FBu ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2949, 'currency', 15, 'Currency created. <br/><br/>Currency Name:  Bermudan Dollar <br/>Currency Code:  BMD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2950, 'currency', 16, 'Currency created. <br/><br/>Currency Name:  Brunei Dollar <br/>Currency Code:  BND <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2951, 'currency', 17, 'Currency created. <br/><br/>Currency Name:  Bolivian Boliviano <br/>Currency Code:  BOB <br/>Currency Symbol:  Bs. ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2952, 'currency', 18, 'Currency created. <br/><br/>Currency Name:  Brazilian Real <br/>Currency Code:  BRL <br/>Currency Symbol:  R$ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2953, 'currency', 19, 'Currency created. <br/><br/>Currency Name:  Bahamian Dollar <br/>Currency Code:  BSD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2954, 'currency', 20, 'Currency created. <br/><br/>Currency Name:  Bitcoin <br/>Currency Code:  BTC <br/>Currency Symbol:  ₿ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2955, 'currency', 21, 'Currency created. <br/><br/>Currency Name:  Bhutanese Ngultrum <br/>Currency Code:  BTN <br/>Currency Symbol:  Nu. ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2956, 'currency', 22, 'Currency created. <br/><br/>Currency Name:  Botswanan Pula <br/>Currency Code:  BWP <br/>Currency Symbol:  P ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2957, 'currency', 23, 'Currency created. <br/><br/>Currency Name:  Belarusian Ruble <br/>Currency Code:  BYR <br/>Currency Symbol:  Br ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2958, 'currency', 24, 'Currency created. <br/><br/>Currency Name:  Belize Dollar <br/>Currency Code:  BZD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2959, 'currency', 25, 'Currency created. <br/><br/>Currency Name:  Canadian Dollar <br/>Currency Code:  CAD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2960, 'currency', 26, 'Currency created. <br/><br/>Currency Name:  Congolese Franc <br/>Currency Code:  CDF <br/>Currency Symbol:  FC ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2961, 'currency', 27, 'Currency created. <br/><br/>Currency Name:  Chilean Unit of Account (UF) <br/>Currency Code:  CLF <br/>Currency Symbol:  UF ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2962, 'currency', 28, 'Currency created. <br/><br/>Currency Name:  Chilean Peso <br/>Currency Code:  CLP <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2963, 'currency', 29, 'Currency created. <br/><br/>Currency Name:  Chinese Yuan <br/>Currency Code:  CNY <br/>Currency Symbol:  ¥ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2964, 'currency', 30, 'Currency created. <br/><br/>Currency Name:  Colombian Peso <br/>Currency Code:  COP <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2965, 'currency', 31, 'Currency created. <br/><br/>Currency Name:  Costa Rican Colón <br/>Currency Code:  CRC <br/>Currency Symbol:  ₡ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2966, 'currency', 32, 'Currency created. <br/><br/>Currency Name:  Cuban Convertible Peso <br/>Currency Code:  CUC <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2967, 'currency', 33, 'Currency created. <br/><br/>Currency Name:  Cuban Peso <br/>Currency Code:  CUP <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2968, 'currency', 34, 'Currency created. <br/><br/>Currency Name:  Cape Verdean Escudo <br/>Currency Code:  CVE <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2969, 'currency', 35, 'Currency created. <br/><br/>Currency Name:  Czech Republic Koruna <br/>Currency Code:  CZK <br/>Currency Symbol:  Kč ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2970, 'currency', 36, 'Currency created. <br/><br/>Currency Name:  Djiboutian Franc <br/>Currency Code:  DJF <br/>Currency Symbol:  Fdj ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2971, 'currency', 37, 'Currency created. <br/><br/>Currency Name:  Danish Krone <br/>Currency Code:  DKK <br/>Currency Symbol:  kr ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2972, 'currency', 38, 'Currency created. <br/><br/>Currency Name:  Dominican Peso <br/>Currency Code:  DOP <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2973, 'currency', 39, 'Currency created. <br/><br/>Currency Name:  Egyptian Pound <br/>Currency Code:  EGP <br/>Currency Symbol:  £ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2974, 'currency', 40, 'Currency created. <br/><br/>Currency Name:  Eritrean Nakfa <br/>Currency Code:  ERN <br/>Currency Symbol:  Nfk ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2975, 'currency', 41, 'Currency created. <br/><br/>Currency Name:  Ethiopian Birr <br/>Currency Code:  ETB <br/>Currency Symbol:  Br ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2976, 'currency', 42, 'Currency created. <br/><br/>Currency Name:  Euro <br/>Currency Code:  EUR <br/>Currency Symbol:  € ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2977, 'currency', 43, 'Currency created. <br/><br/>Currency Name:  Fijian Dollar <br/>Currency Code:  FJD <br/>Currency Symbol:  $ ', 1, '2024-07-09 10:10:45', '2024-07-09 10:10:45'),
+(2978, 'currency', 1, 'Currency created. <br/><br/>Currency Name: United States Dollar<br/>Currency Code: USD<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2979, 'currency', 2, 'Currency created. <br/><br/>Currency Name: Euro<br/>Currency Code: EUR<br/>Currency Symbol: €', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2980, 'currency', 3, 'Currency created. <br/><br/>Currency Name: British Pound<br/>Currency Code: GBP<br/>Currency Symbol: £', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2981, 'currency', 4, 'Currency created. <br/><br/>Currency Name: Japanese Yen<br/>Currency Code: JPY<br/>Currency Symbol: ¥', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2982, 'currency', 5, 'Currency created. <br/><br/>Currency Name: Australian Dollar<br/>Currency Code: AUD<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2983, 'currency', 6, 'Currency created. <br/><br/>Currency Name: Canadian Dollar<br/>Currency Code: CAD<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2984, 'currency', 7, 'Currency created. <br/><br/>Currency Name: Swiss Franc<br/>Currency Code: CHF<br/>Currency Symbol: CHF', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2985, 'currency', 8, 'Currency created. <br/><br/>Currency Name: Chinese Yuan<br/>Currency Code: CNY<br/>Currency Symbol: ¥', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2986, 'currency', 9, 'Currency created. <br/><br/>Currency Name: Indian Rupee<br/>Currency Code: INR<br/>Currency Symbol: ₹', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2987, 'currency', 10, 'Currency created. <br/><br/>Currency Name: Mexican Peso<br/>Currency Code: MXN<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2988, 'currency', 11, 'Currency created. <br/><br/>Currency Name: Brazilian Real<br/>Currency Code: BRL<br/>Currency Symbol: R$', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2989, 'currency', 12, 'Currency created. <br/><br/>Currency Name: South African Rand<br/>Currency Code: ZAR<br/>Currency Symbol: R', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2990, 'currency', 13, 'Currency created. <br/><br/>Currency Name: Russian Ruble<br/>Currency Code: RUB<br/>Currency Symbol: ₽', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2991, 'currency', 14, 'Currency created. <br/><br/>Currency Name: South Korean Won<br/>Currency Code: KRW<br/>Currency Symbol: ₩', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2992, 'currency', 15, 'Currency created. <br/><br/>Currency Name: Turkish Lira<br/>Currency Code: TRY<br/>Currency Symbol: ₺', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2993, 'currency', 16, 'Currency created. <br/><br/>Currency Name: Singapore Dollar<br/>Currency Code: SGD<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2994, 'currency', 17, 'Currency created. <br/><br/>Currency Name: Malaysian Ringgit<br/>Currency Code: MYR<br/>Currency Symbol: RM', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2995, 'currency', 18, 'Currency created. <br/><br/>Currency Name: Hong Kong Dollar<br/>Currency Code: HKD<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2996, 'currency', 19, 'Currency created. <br/><br/>Currency Name: New Zealand Dollar<br/>Currency Code: NZD<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2997, 'currency', 20, 'Currency created. <br/><br/>Currency Name: Norwegian Krone<br/>Currency Code: NOK<br/>Currency Symbol: kr', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2998, 'currency', 21, 'Currency created. <br/><br/>Currency Name: Swedish Krona<br/>Currency Code: SEK<br/>Currency Symbol: kr', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(2999, 'currency', 22, 'Currency created. <br/><br/>Currency Name: Danish Krone<br/>Currency Code: DKK<br/>Currency Symbol: kr', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3000, 'currency', 23, 'Currency created. <br/><br/>Currency Name: Polish Zloty<br/>Currency Code: PLN<br/>Currency Symbol: zł', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3001, 'currency', 24, 'Currency created. <br/><br/>Currency Name: Thai Baht<br/>Currency Code: THB<br/>Currency Symbol: ฿', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3002, 'currency', 25, 'Currency created. <br/><br/>Currency Name: Indonesian Rupiah<br/>Currency Code: IDR<br/>Currency Symbol: Rp', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3003, 'currency', 26, 'Currency created. <br/><br/>Currency Name: Philippine Peso<br/>Currency Code: PHP<br/>Currency Symbol: ₱', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3004, 'currency', 27, 'Currency created. <br/><br/>Currency Name: Czech Koruna<br/>Currency Code: CZK<br/>Currency Symbol: Kč', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3005, 'currency', 28, 'Currency created. <br/><br/>Currency Name: Hungarian Forint<br/>Currency Code: HUF<br/>Currency Symbol: ft', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3006, 'currency', 29, 'Currency created. <br/><br/>Currency Name: Israeli Shekel<br/>Currency Code: ILS<br/>Currency Symbol: ₪', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3007, 'currency', 30, 'Currency created. <br/><br/>Currency Name: Chilean Peso<br/>Currency Code: CLP<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3008, 'currency', 31, 'Currency created. <br/><br/>Currency Name: Pakistani Rupee<br/>Currency Code: PKR<br/>Currency Symbol: ₨', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3009, 'currency', 32, 'Currency created. <br/><br/>Currency Name: Saudi Riyal<br/>Currency Code: SAR<br/>Currency Symbol: ﷼', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3010, 'currency', 33, 'Currency created. <br/><br/>Currency Name: United Arab Emirates Dirham<br/>Currency Code: AED<br/>Currency Symbol: د.إ', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3011, 'currency', 34, 'Currency created. <br/><br/>Currency Name: Egyptian Pound<br/>Currency Code: EGP<br/>Currency Symbol: £', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3012, 'currency', 35, 'Currency created. <br/><br/>Currency Name: Vietnamese Dong<br/>Currency Code: VND<br/>Currency Symbol: ₫', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3013, 'currency', 36, 'Currency created. <br/><br/>Currency Name: Bangladeshi Taka<br/>Currency Code: BDT<br/>Currency Symbol: ৳', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3014, 'currency', 37, 'Currency created. <br/><br/>Currency Name: Argentine Peso<br/>Currency Code: ARS<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3015, 'currency', 38, 'Currency created. <br/><br/>Currency Name: Colombian Peso<br/>Currency Code: COP<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3016, 'currency', 39, 'Currency created. <br/><br/>Currency Name: Peruvian Sol<br/>Currency Code: PEN<br/>Currency Symbol: S/', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3017, 'currency', 40, 'Currency created. <br/><br/>Currency Name: Qatari Riyal<br/>Currency Code: QAR<br/>Currency Symbol: ﷼', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3018, 'currency', 41, 'Currency created. <br/><br/>Currency Name: Kuwaiti Dinar<br/>Currency Code: KWD<br/>Currency Symbol: د.ك', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3019, 'currency', 42, 'Currency created. <br/><br/>Currency Name: Bahraini Dinar<br/>Currency Code: BHD<br/>Currency Symbol: .د.ب', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3020, 'currency', 43, 'Currency created. <br/><br/>Currency Name: Omani Rial<br/>Currency Code: OMR<br/>Currency Symbol: ﷼', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3021, 'currency', 44, 'Currency created. <br/><br/>Currency Name: Jordanian Dinar<br/>Currency Code: JOD<br/>Currency Symbol: د.أ', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3022, 'currency', 45, 'Currency created. <br/><br/>Currency Name: Moroccan Dirham<br/>Currency Code: MAD<br/>Currency Symbol: د.م', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3023, 'currency', 46, 'Currency created. <br/><br/>Currency Name: Nigerian Naira<br/>Currency Code: NGN<br/>Currency Symbol: ₦', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3024, 'currency', 47, 'Currency created. <br/><br/>Currency Name: Ghanaian Cedi<br/>Currency Code: GHS<br/>Currency Symbol: ₵', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3025, 'currency', 48, 'Currency created. <br/><br/>Currency Name: Ethiopian Birr<br/>Currency Code: ETB<br/>Currency Symbol: Br', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3026, 'currency', 49, 'Currency created. <br/><br/>Currency Name: Tanzanian Shilling<br/>Currency Code: TZS<br/>Currency Symbol: Sh', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3027, 'currency', 50, 'Currency created. <br/><br/>Currency Name: Kenyan Shilling<br/>Currency Code: KES<br/>Currency Symbol: Sh', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3028, 'currency', 51, 'Currency created. <br/><br/>Currency Name: Ugandan Shilling<br/>Currency Code: UGX<br/>Currency Symbol: Sh', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3029, 'currency', 52, 'Currency created. <br/><br/>Currency Name: Sri Lankan Rupee<br/>Currency Code: LKR<br/>Currency Symbol: Rs', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3030, 'currency', 53, 'Currency created. <br/><br/>Currency Name: Myanmar Kyat<br/>Currency Code: MMK<br/>Currency Symbol: K', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3031, 'currency', 54, 'Currency created. <br/><br/>Currency Name: Mauritian Rupee<br/>Currency Code: MUR<br/>Currency Symbol: ₨', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3032, 'currency', 55, 'Currency created. <br/><br/>Currency Name: Trinidad and Tobago Dollar<br/>Currency Code: TTD<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3033, 'currency', 56, 'Currency created. <br/><br/>Currency Name: Barbadian Dollar<br/>Currency Code: BBD<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3034, 'currency', 57, 'Currency created. <br/><br/>Currency Name: Fijian Dollar<br/>Currency Code: FJD<br/>Currency Symbol: $', 1, '2024-07-09 10:31:21', '2024-07-09 10:31:21'),
+(3035, 'company', 1, 'Company created. <br/><br/>Company Name: Christian General Motors Inc.<br/>Legal Name: Christian General Motors Inc.<br/>Address: Km 112<br/>City: City of Cabanatuan<br/>State: Nueva Ecija<br/>Country: Philippines<br/>Currency: Philippine Peso<br/>Currency Symbol: ₱', 2, '2024-07-09 10:31:57', '2024-07-09 10:31:57'),
+(3036, 'upload_setting', 3, 'Upload Setting created. <br/><br/>Upload Setting Name: Employee Image<br/>Upload Setting Description: Sets the upload setting when uploading employee image.<br/>Max File Size: 800', 2, '2024-07-09 11:08:34', '2024-07-09 11:08:34'),
+(3037, 'upload_setting_file_extension', 15, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Employee Image<br/>File Extension Name: JPEG<br/>File Extension: jpeg<br/>Date Assigned: 2024-07-09 11:08:48', 2, '2024-07-09 11:08:48', '2024-07-09 11:08:48'),
+(3038, 'upload_setting_file_extension', 16, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Employee Image<br/>File Extension Name: JPG<br/>File Extension: jpg<br/>Date Assigned: 2024-07-09 11:08:48', 2, '2024-07-09 11:08:48', '2024-07-09 11:08:48'),
+(3039, 'upload_setting_file_extension', 17, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Employee Image<br/>File Extension Name: PNG<br/>File Extension: png<br/>Date Assigned: 2024-07-09 11:08:48', 2, '2024-07-09 11:08:48', '2024-07-09 11:08:48'),
+(3040, 'upload_setting', 4, 'Upload Setting created. <br/><br/>Upload Setting Name: Employee Work Permit<br/>Upload Setting Description: Sets the upload setting when uploading employee work permit.<br/>Max File Size: 800', 2, '2024-07-09 11:18:55', '2024-07-09 11:18:55'),
+(3041, 'upload_setting_file_extension', 18, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Employee Work Permit<br/>File Extension Name: PDF<br/>File Extension: pdf<br/>Date Assigned: 2024-07-09 11:19:02', 2, '2024-07-09 11:19:02', '2024-07-09 11:19:02'),
+(3042, 'department', 1, 'Department created. <br/><br/>Department Name: Data Center', 2, '2024-07-09 11:20:27', '2024-07-09 11:20:27'),
+(3043, 'job_position', 1, 'Job position created. <br/><br/>Job Position Name: Data Center Staff', 2, '2024-07-09 11:20:54', '2024-07-09 11:20:54'),
+(3044, 'work_location', 1, 'Work location created. <br/><br/>Work Location Name: CGMI<br/>Address: Km 112<br/>City: City of Cabanatuan<br/>State: Nueva Ecija<br/>Country: Philippines', 2, '2024-07-09 11:21:15', '2024-07-09 11:21:15'),
+(3045, 'work_schedule', 1, 'Work schedule created. <br/><br/>Work Schedule Name: Regular<br/>Schedule Type Name: Fixed', 2, '2024-07-09 11:21:25', '2024-07-09 11:21:25'),
+(3046, 'employment_type', 1, 'Employment type created. <br/><br/>Employment Type Name: Full-time', 2, '2024-07-09 11:22:08', '2024-07-09 11:22:08'),
+(3047, 'employment_type', 2, 'Employment type created. <br/><br/>Employment Type Name: Part-time', 2, '2024-07-09 11:22:21', '2024-07-09 11:22:21'),
+(3048, 'employment_type', 3, 'Employment type created. <br/><br/>Employment Type Name: Temporary', 2, '2024-07-09 11:23:35', '2024-07-09 11:23:35'),
+(3049, 'employment_type', 4, 'Employment type created. <br/><br/>Employment Type Name: Contract', 2, '2024-07-09 11:23:44', '2024-07-09 11:23:44'),
+(3050, 'employment_type', 5, 'Employment type created. <br/><br/>Employment Type Name: Freelance', 2, '2024-07-09 11:23:51', '2024-07-09 11:23:51'),
+(3051, 'employment_type', 6, 'Employment type created. <br/><br/>Employment Type Name: Internship', 2, '2024-07-09 11:23:56', '2024-07-09 11:23:56'),
+(3052, 'employment_type', 7, 'Employment type created. <br/><br/>Employment Type Name: Seasonal', 2, '2024-07-09 11:24:01', '2024-07-09 11:24:01'),
+(3053, 'employment_type', 8, 'Employment type created. <br/><br/>Employment Type Name: Casual', 2, '2024-07-09 11:24:06', '2024-07-09 11:24:06'),
+(3054, 'employment_type', 9, 'Employment type created. <br/><br/>Employment Type Name: Consultant', 2, '2024-07-09 11:24:13', '2024-07-09 11:24:13'),
+(3055, 'employment_type', 10, 'Employment type created. <br/><br/>Employment Type Name: Apprentice', 2, '2024-07-09 11:24:17', '2024-07-09 11:24:17'),
+(3056, 'employment_type', 11, 'Employment type created. <br/><br/>Employment Type Name: Probationary', 2, '2024-07-09 11:24:22', '2024-07-09 11:24:22'),
+(3057, 'employment_type', 12, 'Employment type created. <br/><br/>Employment Type Name: Volunteer', 2, '2024-07-09 11:24:28', '2024-07-09 11:24:28'),
+(3058, 'employment_type', 13, 'Employment type created. <br/><br/>Employment Type Name: Remote', 2, '2024-07-09 11:24:32', '2024-07-09 11:24:32'),
+(3059, 'employment_type', 14, 'Employment type created. <br/><br/>Employment Type Name: On-call', 2, '2024-07-09 11:24:39', '2024-07-09 11:24:39');
 
 -- --------------------------------------------------------
 
@@ -8220,6 +8405,13 @@ CREATE TABLE `company` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `company`
+--
+
+INSERT INTO `company` (`company_id`, `company_name`, `legal_name`, `address`, `city_id`, `city_name`, `state_id`, `state_name`, `country_id`, `country_name`, `currency_id`, `currency_name`, `currency_symbol`, `tax_id`, `phone`, `mobile`, `email`, `website`, `company_logo`, `created_date`, `last_log_by`) VALUES
+(1, 'Christian General Motors Inc.', 'Christian General Motors Inc.', 'Km 112', 257, 'City of Cabanatuan', 13, 'Nueva Ecija', 174, 'Philippines', 26, 'Philippine Peso', '₱', '', '', '', '', '', NULL, '2024-07-09 10:31:57', 2);
+
+--
 -- Triggers `company`
 --
 DROP TRIGGER IF EXISTS `company_trigger_insert`;
@@ -8719,10 +8911,75 @@ DROP TABLE IF EXISTS `currency`;
 CREATE TABLE `currency` (
   `currency_id` int(10) UNSIGNED NOT NULL,
   `currency_name` varchar(100) NOT NULL,
+  `currency_code` varchar(10) NOT NULL,
   `currency_symbol` varchar(10) NOT NULL,
+  `exchange_rate` double NOT NULL DEFAULT 0,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `currency`
+--
+
+INSERT INTO `currency` (`currency_id`, `currency_name`, `currency_code`, `currency_symbol`, `exchange_rate`, `created_date`, `last_log_by`) VALUES
+(1, 'United States Dollar', 'USD', '$', 0, '2024-07-09 10:31:21', 1),
+(2, 'Euro', 'EUR', '€', 0, '2024-07-09 10:31:21', 1),
+(3, 'British Pound', 'GBP', '£', 0, '2024-07-09 10:31:21', 1),
+(4, 'Japanese Yen', 'JPY', '¥', 0, '2024-07-09 10:31:21', 1),
+(5, 'Australian Dollar', 'AUD', '$', 0, '2024-07-09 10:31:21', 1),
+(6, 'Canadian Dollar', 'CAD', '$', 0, '2024-07-09 10:31:21', 1),
+(7, 'Swiss Franc', 'CHF', 'CHF', 0, '2024-07-09 10:31:21', 1),
+(8, 'Chinese Yuan', 'CNY', '¥', 0, '2024-07-09 10:31:21', 1),
+(9, 'Indian Rupee', 'INR', '₹', 0, '2024-07-09 10:31:21', 1),
+(10, 'Mexican Peso', 'MXN', '$', 0, '2024-07-09 10:31:21', 1),
+(11, 'Brazilian Real', 'BRL', 'R$', 0, '2024-07-09 10:31:21', 1),
+(12, 'South African Rand', 'ZAR', 'R', 0, '2024-07-09 10:31:21', 1),
+(13, 'Russian Ruble', 'RUB', '₽', 0, '2024-07-09 10:31:21', 1),
+(14, 'South Korean Won', 'KRW', '₩', 0, '2024-07-09 10:31:21', 1),
+(15, 'Turkish Lira', 'TRY', '₺', 0, '2024-07-09 10:31:21', 1),
+(16, 'Singapore Dollar', 'SGD', '$', 0, '2024-07-09 10:31:21', 1),
+(17, 'Malaysian Ringgit', 'MYR', 'RM', 0, '2024-07-09 10:31:21', 1),
+(18, 'Hong Kong Dollar', 'HKD', '$', 0, '2024-07-09 10:31:21', 1),
+(19, 'New Zealand Dollar', 'NZD', '$', 0, '2024-07-09 10:31:21', 1),
+(20, 'Norwegian Krone', 'NOK', 'kr', 0, '2024-07-09 10:31:21', 1),
+(21, 'Swedish Krona', 'SEK', 'kr', 0, '2024-07-09 10:31:21', 1),
+(22, 'Danish Krone', 'DKK', 'kr', 0, '2024-07-09 10:31:21', 1),
+(23, 'Polish Zloty', 'PLN', 'zł', 0, '2024-07-09 10:31:21', 1),
+(24, 'Thai Baht', 'THB', '฿', 0, '2024-07-09 10:31:21', 1),
+(25, 'Indonesian Rupiah', 'IDR', 'Rp', 0, '2024-07-09 10:31:21', 1),
+(26, 'Philippine Peso', 'PHP', '₱', 0, '2024-07-09 10:31:21', 1),
+(27, 'Czech Koruna', 'CZK', 'Kč', 0, '2024-07-09 10:31:21', 1),
+(28, 'Hungarian Forint', 'HUF', 'ft', 0, '2024-07-09 10:31:21', 1),
+(29, 'Israeli Shekel', 'ILS', '₪', 0, '2024-07-09 10:31:21', 1),
+(30, 'Chilean Peso', 'CLP', '$', 0, '2024-07-09 10:31:21', 1),
+(31, 'Pakistani Rupee', 'PKR', '₨', 0, '2024-07-09 10:31:21', 1),
+(32, 'Saudi Riyal', 'SAR', '﷼', 0, '2024-07-09 10:31:21', 1),
+(33, 'United Arab Emirates Dirham', 'AED', 'د.إ', 0, '2024-07-09 10:31:21', 1),
+(34, 'Egyptian Pound', 'EGP', '£', 0, '2024-07-09 10:31:21', 1),
+(35, 'Vietnamese Dong', 'VND', '₫', 0, '2024-07-09 10:31:21', 1),
+(36, 'Bangladeshi Taka', 'BDT', '৳', 0, '2024-07-09 10:31:21', 1),
+(37, 'Argentine Peso', 'ARS', '$', 0, '2024-07-09 10:31:21', 1),
+(38, 'Colombian Peso', 'COP', '$', 0, '2024-07-09 10:31:21', 1),
+(39, 'Peruvian Sol', 'PEN', 'S/', 0, '2024-07-09 10:31:21', 1),
+(40, 'Qatari Riyal', 'QAR', '﷼', 0, '2024-07-09 10:31:21', 1),
+(41, 'Kuwaiti Dinar', 'KWD', 'د.ك', 0, '2024-07-09 10:31:21', 1),
+(42, 'Bahraini Dinar', 'BHD', '.د.ب', 0, '2024-07-09 10:31:21', 1),
+(43, 'Omani Rial', 'OMR', '﷼', 0, '2024-07-09 10:31:21', 1),
+(44, 'Jordanian Dinar', 'JOD', 'د.أ', 0, '2024-07-09 10:31:21', 1),
+(45, 'Moroccan Dirham', 'MAD', 'د.م', 0, '2024-07-09 10:31:21', 1),
+(46, 'Nigerian Naira', 'NGN', '₦', 0, '2024-07-09 10:31:21', 1),
+(47, 'Ghanaian Cedi', 'GHS', '₵', 0, '2024-07-09 10:31:21', 1),
+(48, 'Ethiopian Birr', 'ETB', 'Br', 0, '2024-07-09 10:31:21', 1),
+(49, 'Tanzanian Shilling', 'TZS', 'Sh', 0, '2024-07-09 10:31:21', 1),
+(50, 'Kenyan Shilling', 'KES', 'Sh', 0, '2024-07-09 10:31:21', 1),
+(51, 'Ugandan Shilling', 'UGX', 'Sh', 0, '2024-07-09 10:31:21', 1),
+(52, 'Sri Lankan Rupee', 'LKR', 'Rs', 0, '2024-07-09 10:31:21', 1),
+(53, 'Myanmar Kyat', 'MMK', 'K', 0, '2024-07-09 10:31:21', 1),
+(54, 'Mauritian Rupee', 'MUR', '₨', 0, '2024-07-09 10:31:21', 1),
+(55, 'Trinidad and Tobago Dollar', 'TTD', '$', 0, '2024-07-09 10:31:21', 1),
+(56, 'Barbadian Dollar', 'BBD', '$', 0, '2024-07-09 10:31:21', 1),
+(57, 'Fijian Dollar', 'FJD', '$', 0, '2024-07-09 10:31:21', 1);
 
 --
 -- Triggers `currency`
@@ -8736,8 +8993,16 @@ CREATE TRIGGER `currency_trigger_insert` AFTER INSERT ON `currency` FOR EACH ROW
         SET audit_log = CONCAT(audit_log, "<br/>Currency Name: ", NEW.currency_name);
     END IF;
 
+    IF NEW.currency_code <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Currency Code: ", NEW.currency_code);
+    END IF;
+
     IF NEW.currency_symbol <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Currency Symbol: ", NEW.currency_symbol);
+    END IF;
+
+    IF NEW.exchange_rate <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Exchange Rate: ", NEW.exchange_rate);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
@@ -8754,8 +9019,16 @@ CREATE TRIGGER `currency_trigger_update` AFTER UPDATE ON `currency` FOR EACH ROW
         SET audit_log = CONCAT(audit_log, "Currency Name: ", OLD.currency_name, " -> ", NEW.currency_name, "<br/>");
     END IF;
 
+    IF NEW.currency_code <> OLD.currency_code THEN
+        SET audit_log = CONCAT(audit_log, "Currency Code: ", OLD.currency_code, " -> ", NEW.currency_code, "<br/>");
+    END IF;
+
     IF NEW.currency_symbol <> OLD.currency_symbol THEN
         SET audit_log = CONCAT(audit_log, "Currency Symbol: ", OLD.currency_symbol, " -> ", NEW.currency_symbol, "<br/>");
+    END IF;
+
+    IF NEW.exchange_rate <> OLD.exchange_rate THEN
+        SET audit_log = CONCAT(audit_log, "Exchange Rate: ", OLD.exchange_rate, " -> ", NEW.exchange_rate, "<br/>");
     END IF;
     
     IF LENGTH(audit_log) > 0 THEN
@@ -8783,6 +9056,13 @@ CREATE TABLE `department` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `department`
+--
+
+INSERT INTO `department` (`department_id`, `department_name`, `parent_department_id`, `parent_department_name`, `manager_id`, `manager_name`, `created_date`, `last_log_by`) VALUES
+(1, 'Data Center', 0, '', 0, '', '2024-07-09 11:20:27', 2);
 
 --
 -- Triggers `department`
@@ -9090,13 +9370,11 @@ CREATE TABLE `employee` (
   `employee_id` int(10) UNSIGNED NOT NULL,
   `employee_image` varchar(500) DEFAULT NULL,
   `employee_digital_signature` varchar(500) DEFAULT NULL,
-  `file_as` varchar(1000) NOT NULL,
   `first_name` varchar(300) NOT NULL,
   `middle_name` varchar(300) DEFAULT NULL,
   `last_name` varchar(300) NOT NULL,
   `suffix` varchar(10) DEFAULT NULL,
   `nickname` varchar(100) DEFAULT NULL,
-  `bio` varchar(1000) DEFAULT NULL,
   `civil_status_id` int(10) UNSIGNED DEFAULT NULL,
   `civil_status_name` varchar(100) DEFAULT NULL,
   `gender_id` int(10) UNSIGNED DEFAULT NULL,
@@ -9113,6 +9391,136 @@ CREATE TABLE `employee` (
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Triggers `employee`
+--
+DROP TRIGGER IF EXISTS `employee_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `employee_trigger_insert` AFTER INSERT ON `employee` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee created. <br/>';
+
+    IF NEW.first_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>First Name: ", NEW.first_name);
+    END IF;
+
+    IF NEW.middle_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Middle Name: ", NEW.middle_name);
+    END IF;
+
+    IF NEW.last_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Last Name: ", NEW.last_name);
+    END IF;
+
+    IF NEW.suffix <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Suffix: ", NEW.suffix);
+    END IF;
+
+    IF NEW.nickname <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Nickname: ", NEW.nickname);
+    END IF;
+
+    IF NEW.civil_status_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Civil Status Name: ", NEW.civil_status_name);
+    END IF;
+
+    IF NEW.gender_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Gender Name: ", NEW.gender_name);
+    END IF;
+
+    IF NEW.religion_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Religion Name: ", NEW.religion_name);
+    END IF;
+
+    IF NEW.blood_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Blood Type Name: ", NEW.blood_type_name);
+    END IF;
+
+    IF NEW.birthday <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Date of Birth: ", NEW.birthday);
+    END IF;
+
+    IF NEW.birth_place <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Birth Place: ", NEW.birth_place);
+    END IF;
+
+    IF NEW.height <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Height: ", NEW.height);
+    END IF;
+
+    IF NEW.weight <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Weight: ", NEW.weight);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee', NEW.employee_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `employee_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `employee_trigger_update` AFTER UPDATE ON `employee` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.first_name <> OLD.first_name THEN
+        SET audit_log = CONCAT(audit_log, "First Name: ", OLD.first_name, " -> ", NEW.first_name, "<br/>");
+    END IF;
+
+    IF NEW.middle_name <> OLD.middle_name THEN
+        SET audit_log = CONCAT(audit_log, "Middle Name: ", OLD.middle_name, " -> ", NEW.middle_name, "<br/>");
+    END IF;
+
+    IF NEW.last_name <> OLD.last_name THEN
+        SET audit_log = CONCAT(audit_log, "Last Name: ", OLD.last_name, " -> ", NEW.last_name, "<br/>");
+    END IF;
+
+    IF NEW.suffix <> OLD.suffix THEN
+        SET audit_log = CONCAT(audit_log, "Suffix: ", OLD.suffix, " -> ", NEW.suffix, "<br/>");
+    END IF;
+
+    IF NEW.nickname <> OLD.nickname THEN
+        SET audit_log = CONCAT(audit_log, "Nickname: ", OLD.nickname, " -> ", NEW.nickname, "<br/>");
+    END IF;
+
+    IF NEW.civil_status_name <> OLD.civil_status_name THEN
+        SET audit_log = CONCAT(audit_log, "Civil Status Name: ", OLD.civil_status_name, " -> ", NEW.civil_status_name, "<br/>");
+    END IF;
+
+    IF NEW.gender_name <> OLD.gender_name THEN
+        SET audit_log = CONCAT(audit_log, "Gender Name: ", OLD.gender_name, " -> ", NEW.gender_name, "<br/>");
+    END IF;
+
+    IF NEW.religion_name <> OLD.religion_name THEN
+        SET audit_log = CONCAT(audit_log, "Religion Name: ", OLD.religion_name, " -> ", NEW.religion_name, "<br/>");
+    END IF;
+
+    IF NEW.blood_type_name <> OLD.blood_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Blood Type Name: ", OLD.blood_type_name, " -> ", NEW.blood_type_name, "<br/>");
+    END IF;
+
+    IF NEW.birthday <> OLD.birthday THEN
+        SET audit_log = CONCAT(audit_log, "Date of Birth: ", OLD.birthday, " -> ", NEW.birthday, "<br/>");
+    END IF;
+
+    IF NEW.birth_place <> OLD.birth_place THEN
+        SET audit_log = CONCAT(audit_log, "Birth Place: ", OLD.birth_place, " -> ", NEW.birth_place, "<br/>");
+    END IF;
+
+    IF NEW.height <> OLD.height THEN
+        SET audit_log = CONCAT(audit_log, "Height: ", OLD.height, " -> ", NEW.height, "<br/>");
+    END IF;
+
+    IF NEW.weight <> OLD.weight THEN
+        SET audit_log = CONCAT(audit_log, "Weight: ", OLD.weight, " -> ", NEW.weight, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee', NEW.employee_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -9126,6 +9534,26 @@ CREATE TABLE `employment_type` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employment_type`
+--
+
+INSERT INTO `employment_type` (`employment_type_id`, `employment_type_name`, `created_date`, `last_log_by`) VALUES
+(1, 'Full-time', '2024-07-09 11:22:08', 2),
+(2, 'Part-time', '2024-07-09 11:22:21', 2),
+(3, 'Temporary', '2024-07-09 11:23:35', 2),
+(4, 'Contract', '2024-07-09 11:23:44', 2),
+(5, 'Freelance', '2024-07-09 11:23:51', 2),
+(6, 'Internship', '2024-07-09 11:23:56', 2),
+(7, 'Seasonal', '2024-07-09 11:24:01', 2),
+(8, 'Casual', '2024-07-09 11:24:06', 2),
+(9, 'Consultant', '2024-07-09 11:24:13', 2),
+(10, 'Apprentice', '2024-07-09 11:24:17', 2),
+(11, 'Probationary', '2024-07-09 11:24:22', 2),
+(12, 'Volunteer', '2024-07-09 11:24:28', 2),
+(13, 'Remote', '2024-07-09 11:24:32', 2),
+(14, 'On-call', '2024-07-09 11:24:39', 2);
 
 --
 -- Triggers `employment_type`
@@ -9575,6 +10003,13 @@ CREATE TABLE `job_position` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `job_position`
+--
+
+INSERT INTO `job_position` (`job_position_id`, `job_position_name`, `created_date`, `last_log_by`) VALUES
+(1, 'Data Center Staff', '2024-07-09 11:20:54', 2);
+
+--
 -- Triggers `job_position`
 --
 DROP TRIGGER IF EXISTS `job_position_trigger_insert`;
@@ -10019,19 +10454,23 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (29, 'Job Position', 'job-position.php', 'ti ti-id', 6, 'Employee Configurations', 2, 'Employees', NULL, NULL, 10, '2024-06-28 10:56:17', 2),
 (30, 'Schedule Type', 'schedule-type.php', '', 6, 'Employee Configurations', 2, 'Employees', 31, 'Scheduling', 2, '2024-07-01 14:52:27', 2),
 (31, 'Scheduling', '', 'ti ti-calendar-time', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 24, '2024-07-01 14:59:44', 2),
-(32, 'Contact Information Type', 'contact-information-type.php', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-02 17:02:55', 2),
-(33, 'ID Type', 'id-type.php', 'ti ti-id', 3, 'Configurations', 1, 'Settings', 0, NULL, 9, '2024-07-02 17:05:17', 2),
-(34, 'Bank', 'bank.php', 'ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-02 17:06:13', 2),
-(35, 'Bank Account Type', 'bank-account-type.php', 'ti ti-building-community', 3, 'Configurations', 1, 'Settings', NULL, NULL, 2, '2024-07-02 17:07:16', 2),
-(36, 'Relation', 'relation.php', 'ti ti-social', 3, 'Configurations', 1, 'Settings', NULL, NULL, 18, '2024-07-02 17:09:40', 2),
-(37, 'Educational Stage', 'educational-stage.php', 'ti ti-school', 3, 'Configurations', 1, 'Settings', 0, NULL, 5, '2024-07-02 17:11:54', 2),
-(38, 'Language', 'language.php', 'ti ti-language', 3, 'Configurations', 1, 'Settings', 0, NULL, 12, '2024-07-02 17:21:10', 2),
-(39, 'Language Proficiency', 'language-proficiency.php', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', 0, NULL, 12, '2024-07-02 17:23:14', 2),
-(40, 'Civil Status', 'civil-status.php', 'ti ti-chart-circles', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-02 17:26:17', 2),
-(41, 'Gender', 'gender.php', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 0, NULL, 7, '2024-07-02 17:27:18', 2),
-(42, 'Blood Type', 'blood-type.php', 'ti ti-droplet-filled', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-02 17:28:23', 2),
-(43, 'Religion', 'religion.php', 'ti ti-building-church', 3, 'Configurations', 1, 'Settings', 0, NULL, 18, '2024-07-02 17:29:10', 2),
-(44, 'Address Type', 'address-type.php', 'ti ti-map-2', 3, 'Configurations', 1, 'Settings', 0, NULL, 1, '2024-07-02 17:30:03', 2);
+(32, 'Contact Info Type', 'contact-information-type.php', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 46, 'Contact Information', 3, '2024-07-02 17:02:55', 2),
+(33, 'ID Type', 'id-type.php', 'ti ti-id', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 9, '2024-07-02 17:05:17', 2),
+(34, 'Bank', 'bank.php', 'ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 48, 'Banking Configuration', 2, '2024-07-02 17:06:13', 2),
+(35, 'Bank Account Type', 'bank-account-type.php', 'ti ti-building-community', 3, 'Configurations', 1, 'Settings', 48, 'Banking Configuration', 2, '2024-07-02 17:07:16', 2),
+(36, 'Relation', 'relation.php', 'ti ti-social', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 18, '2024-07-02 17:09:40', 2),
+(37, 'Educational Stage', 'educational-stage.php', 'ti ti-school', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 5, '2024-07-02 17:11:54', 2),
+(38, 'Language', 'language.php', 'ti ti-language', 3, 'Configurations', 1, 'Settings', 47, 'Language Configurations', 12, '2024-07-02 17:21:10', 2),
+(39, 'Language Proficiency', 'language-proficiency.php', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', 47, 'Language Settings', 12, '2024-07-02 17:23:14', 2),
+(40, 'Civil Status', 'civil-status.php', 'ti ti-chart-circles', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 3, '2024-07-02 17:26:17', 2),
+(41, 'Gender', 'gender.php', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 7, '2024-07-02 17:27:18', 2),
+(42, 'Blood Type', 'blood-type.php', 'ti ti-droplet-filled', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 2, '2024-07-02 17:28:23', 2),
+(43, 'Religion', 'religion.php', 'ti ti-building-church', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 18, '2024-07-02 17:29:10', 2),
+(44, 'Address Type', 'address-type.php', 'ti ti-map-2', 3, 'Configurations', 1, 'Settings', 46, 'Contact Information', 1, '2024-07-02 17:30:03', 2),
+(45, 'User Identity', '', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 0, NULL, 21, '2024-07-09 08:54:59', 2),
+(46, 'Contact Information', '', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-09 08:59:29', 2),
+(47, 'Language Settings', '', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', NULL, NULL, 12, '2024-07-09 09:02:08', 2),
+(48, 'Banking Configuration', '', ' ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-09 09:04:13', 2);
 
 --
 -- Triggers `menu_item`
@@ -10652,7 +11091,7 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (30, 1, 'Administrator', 29, 'Job Position', 1, 1, 1, 1, '2024-06-28 10:56:21', '2024-06-28 10:56:21', 2),
 (31, 1, 'Administrator', 30, 'Schedule Type', 1, 1, 1, 1, '2024-07-01 14:52:33', '2024-07-01 14:52:33', 2),
 (32, 1, 'Administrator', 31, 'Scheduling', 1, 0, 0, 0, '2024-07-01 14:59:48', '2024-07-01 14:59:48', 2),
-(33, 1, 'Administrator', 32, 'Contact Information Type', 1, 1, 1, 1, '2024-07-02 17:02:59', '2024-07-02 17:02:59', 2),
+(33, 1, 'Administrator', 32, 'Contact Info Type', 1, 1, 1, 1, '2024-07-02 17:02:59', '2024-07-02 17:02:59', 2),
 (34, 1, 'Administrator', 33, 'ID Type', 1, 1, 1, 1, '2024-07-02 17:05:20', '2024-07-02 17:05:20', 2),
 (35, 1, 'Administrator', 34, 'Bank', 1, 1, 1, 1, '2024-07-02 17:06:16', '2024-07-02 17:06:16', 2),
 (36, 1, 'Administrator', 35, 'Bank Account Type', 1, 1, 1, 1, '2024-07-02 17:07:21', '2024-07-02 17:07:21', 2),
@@ -10664,7 +11103,11 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (42, 1, 'Administrator', 41, 'Gender', 1, 1, 1, 1, '2024-07-02 17:27:22', '2024-07-02 17:27:22', 2),
 (43, 1, 'Administrator', 42, 'Blood Type', 1, 1, 1, 1, '2024-07-02 17:28:26', '2024-07-02 17:28:26', 2),
 (44, 1, 'Administrator', 43, 'Religion', 1, 1, 1, 1, '2024-07-02 17:29:14', '2024-07-02 17:29:14', 2),
-(45, 1, 'Administrator', 44, 'Address Type', 1, 1, 1, 1, '2024-07-02 17:30:07', '2024-07-02 17:30:07', 2);
+(45, 1, 'Administrator', 44, 'Address Type', 1, 1, 1, 1, '2024-07-02 17:30:07', '2024-07-02 17:30:07', 2),
+(46, 1, 'Administrator', 45, 'User Identity', 1, 0, 0, 0, '2024-07-09 08:55:04', '2024-07-09 08:55:04', 2),
+(47, 1, 'Administrator', 46, 'Contact Information', 1, 0, 0, 0, '2024-07-09 08:59:33', '2024-07-09 08:59:33', 2),
+(48, 1, 'Administrator', 47, 'Language Settings', 1, 0, 0, 0, '2024-07-09 09:02:12', '2024-07-09 09:02:12', 2),
+(49, 1, 'Administrator', 48, 'Banking Configuration', 1, 0, 0, 0, '2024-07-09 09:04:17', '2024-07-09 09:04:17', 2);
 
 --
 -- Triggers `role_permission`
@@ -11319,7 +11762,9 @@ CREATE TABLE `upload_setting` (
 
 INSERT INTO `upload_setting` (`upload_setting_id`, `upload_setting_name`, `upload_setting_description`, `max_file_size`, `created_date`, `last_log_by`) VALUES
 (1, 'App Logo', 'Sets the upload setting when uploading app logo.', 800, '2024-06-26 16:34:32', 1),
-(2, 'Internal Notes Attachment', 'Sets the upload setting when uploading internal notes attachement.', 800, '2024-06-26 16:34:32', 1);
+(2, 'Internal Notes Attachment', 'Sets the upload setting when uploading internal notes attachement.', 800, '2024-06-26 16:34:32', 1),
+(3, 'Employee Image', 'Sets the upload setting when uploading employee image.', 800, '2024-07-09 11:08:34', 2),
+(4, 'Employee Work Permit', 'Sets the upload setting when uploading employee work permit.', 800, '2024-07-09 11:18:55', 2);
 
 --
 -- Triggers `upload_setting`
@@ -11408,7 +11853,11 @@ INSERT INTO `upload_setting_file_extension` (`upload_setting_file_extension_id`,
 (11, 2, 'Internal Notes Attachment', 92, 'XLS', 'xls', '2024-06-26 16:38:37', '2024-06-26 16:38:37', 1),
 (12, 2, 'Internal Notes Attachment', 94, 'XLSX', 'xlsx', '2024-06-26 16:38:37', '2024-06-26 16:38:37', 1),
 (13, 2, 'Internal Notes Attachment', 89, 'PPT', 'ppt', '2024-06-26 16:38:37', '2024-06-26 16:38:37', 1),
-(14, 2, 'Internal Notes Attachment', 90, 'PPTX', 'pptx', '2024-06-26 16:38:37', '2024-06-26 16:38:37', 1);
+(14, 2, 'Internal Notes Attachment', 90, 'PPTX', 'pptx', '2024-06-26 16:38:37', '2024-06-26 16:38:37', 1),
+(15, 3, 'Employee Image', 62, 'JPEG', 'jpeg', '2024-07-09 11:08:48', '2024-07-09 11:08:48', 2),
+(16, 3, 'Employee Image', 61, 'JPG', 'jpg', '2024-07-09 11:08:48', '2024-07-09 11:08:48', 2),
+(17, 3, 'Employee Image', 63, 'PNG', 'png', '2024-07-09 11:08:48', '2024-07-09 11:08:48', 2),
+(18, 4, 'Employee Work Permit', 127, 'PDF', 'pdf', '2024-07-09 11:19:02', '2024-07-09 11:19:02', 2);
 
 --
 -- Triggers `upload_setting_file_extension`
@@ -11482,7 +11931,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-08 20:26:59', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '1YZjm3cHoSSOTjm9%2BTQh8tmkUGlitsPdWPeOA%2FLfKv8%3D', '2024-06-26 13:25:47', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-09 08:43:27', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'yTUho0LBF%2BaefAelFN68GCmLD7gj1p1x06%2FKnwiJ9Uw%3D', '2024-06-26 13:25:47', 1);
 
 --
 -- Triggers `user_account`
@@ -11774,6 +12223,13 @@ CREATE TABLE `work_location` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `work_location`
+--
+
+INSERT INTO `work_location` (`work_location_id`, `work_location_name`, `address`, `city_id`, `city_name`, `state_id`, `state_name`, `country_id`, `country_name`, `phone`, `mobile`, `email`, `created_date`, `last_log_by`) VALUES
+(1, 'CGMI', 'Km 112', 257, 'City of Cabanatuan', 13, 'Nueva Ecija', 174, 'Philippines', '', '', '', '2024-07-09 11:21:15', 2);
+
+--
 -- Triggers `work_location`
 --
 DROP TRIGGER IF EXISTS `work_location_trigger_insert`;
@@ -11878,6 +12334,13 @@ CREATE TABLE `work_schedule` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `work_schedule`
+--
+
+INSERT INTO `work_schedule` (`work_schedule_id`, `work_schedule_name`, `schedule_type_id`, `schedule_type_name`, `created_date`, `last_log_by`) VALUES
+(1, 'Regular', 1, 'Fixed', '2024-07-09 11:21:25', 2);
 
 --
 -- Triggers `work_schedule`
@@ -12416,7 +12879,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2875;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3060;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -12452,7 +12915,7 @@ ALTER TABLE `civil_status`
 -- AUTO_INCREMENT for table `company`
 --
 ALTER TABLE `company`
-  MODIFY `company_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `company_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `contact_information_type`
@@ -12470,13 +12933,13 @@ ALTER TABLE `country`
 -- AUTO_INCREMENT for table `currency`
 --
 ALTER TABLE `currency`
-  MODIFY `currency_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `currency_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `department`
 --
 ALTER TABLE `department`
-  MODIFY `department_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `department_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `departure_reason`
@@ -12506,7 +12969,7 @@ ALTER TABLE `employee`
 -- AUTO_INCREMENT for table `employment_type`
 --
 ALTER TABLE `employment_type`
-  MODIFY `employment_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `employment_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `file_extension`
@@ -12548,7 +13011,7 @@ ALTER TABLE `internal_notes_attachment`
 -- AUTO_INCREMENT for table `job_position`
 --
 ALTER TABLE `job_position`
-  MODIFY `job_position_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `job_position_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `language`
@@ -12572,7 +13035,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -12626,7 +13089,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -12680,13 +13143,13 @@ ALTER TABLE `ui_customization_setting`
 -- AUTO_INCREMENT for table `upload_setting`
 --
 ALTER TABLE `upload_setting`
-  MODIFY `upload_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `upload_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `upload_setting_file_extension`
 --
 ALTER TABLE `upload_setting_file_extension`
-  MODIFY `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `user_account`
@@ -12710,13 +13173,13 @@ ALTER TABLE `work_information`
 -- AUTO_INCREMENT for table `work_location`
 --
 ALTER TABLE `work_location`
-  MODIFY `work_location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `work_location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `work_schedule`
 --
 ALTER TABLE `work_schedule`
-  MODIFY `work_schedule_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `work_schedule_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
