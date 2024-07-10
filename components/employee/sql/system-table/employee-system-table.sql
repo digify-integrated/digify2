@@ -4,6 +4,7 @@ CREATE TABLE employee (
     employee_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     employee_image VARCHAR(500),
 	employee_digital_signature VARCHAR(500),
+    full_name VARCHAR(1000) NOT NULL,
     first_name VARCHAR(300) NOT NULL,
 	middle_name VARCHAR(300),
 	last_name VARCHAR(300) NOT NULL,

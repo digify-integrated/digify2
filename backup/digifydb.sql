@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 09, 2024 at 11:32 AM
+-- Generation Time: Jul 10, 2024 at 11:37 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -6407,7 +6407,8 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3056, 'employment_type', 11, 'Employment type created. <br/><br/>Employment Type Name: Probationary', 2, '2024-07-09 11:24:22', '2024-07-09 11:24:22'),
 (3057, 'employment_type', 12, 'Employment type created. <br/><br/>Employment Type Name: Volunteer', 2, '2024-07-09 11:24:28', '2024-07-09 11:24:28'),
 (3058, 'employment_type', 13, 'Employment type created. <br/><br/>Employment Type Name: Remote', 2, '2024-07-09 11:24:32', '2024-07-09 11:24:32'),
-(3059, 'employment_type', 14, 'Employment type created. <br/><br/>Employment Type Name: On-call', 2, '2024-07-09 11:24:39', '2024-07-09 11:24:39');
+(3059, 'employment_type', 14, 'Employment type created. <br/><br/>Employment Type Name: On-call', 2, '2024-07-09 11:24:39', '2024-07-09 11:24:39'),
+(3060, 'user_account', 2, 'Last Connection Date: 2024-07-09 08:43:27 -> 2024-07-10 11:08:15<br/>', 1, '2024-07-10 11:08:15', '2024-07-10 11:08:15');
 
 -- --------------------------------------------------------
 
@@ -9370,6 +9371,7 @@ CREATE TABLE `employee` (
   `employee_id` int(10) UNSIGNED NOT NULL,
   `employee_image` varchar(500) DEFAULT NULL,
   `employee_digital_signature` varchar(500) DEFAULT NULL,
+  `full_name` varchar(1000) NOT NULL,
   `first_name` varchar(300) NOT NULL,
   `middle_name` varchar(300) DEFAULT NULL,
   `last_name` varchar(300) NOT NULL,
@@ -9398,6 +9400,10 @@ DROP TRIGGER IF EXISTS `employee_trigger_insert`;
 DELIMITER $$
 CREATE TRIGGER `employee_trigger_insert` AFTER INSERT ON `employee` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Employee created. <br/>';
+
+    IF NEW.full_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Full Name: ", NEW.full_name);
+    END IF;
 
     IF NEW.first_name <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>First Name: ", NEW.first_name);
@@ -9460,6 +9466,10 @@ DROP TRIGGER IF EXISTS `employee_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `employee_trigger_update` AFTER UPDATE ON `employee` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.full_name <> OLD.full_name THEN
+        SET audit_log = CONCAT(audit_log, "Full Name: ", OLD.full_name, " -> ", NEW.full_name, "<br/>");
+    END IF;
 
     IF NEW.first_name <> OLD.first_name THEN
         SET audit_log = CONCAT(audit_log, "First Name: ", OLD.first_name, " -> ", NEW.first_name, "<br/>");
@@ -11931,7 +11941,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-09 08:43:27', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'yTUho0LBF%2BaefAelFN68GCmLD7gj1p1x06%2FKnwiJ9Uw%3D', '2024-06-26 13:25:47', 1);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-10 11:08:15', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '1QMfjkY%2FH%2Bk29PzLMZe0KCuDdn5t1mrIfsM%2BH%2BjsIuE%3D', '2024-06-26 13:25:47', 1);
 
 --
 -- Triggers `user_account`
@@ -12879,7 +12889,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3060;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3061;
 
 --
 -- AUTO_INCREMENT for table `bank`

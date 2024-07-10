@@ -6,6 +6,10 @@ FOR EACH ROW
 BEGIN
     DECLARE audit_log TEXT DEFAULT '';
 
+    IF NEW.full_name <> OLD.full_name THEN
+        SET audit_log = CONCAT(audit_log, "Full Name: ", OLD.full_name, " -> ", NEW.full_name, "<br/>");
+    END IF;
+
     IF NEW.first_name <> OLD.first_name THEN
         SET audit_log = CONCAT(audit_log, "First Name: ", OLD.first_name, " -> ", NEW.first_name, "<br/>");
     END IF;
@@ -69,6 +73,10 @@ AFTER INSERT ON employee
 FOR EACH ROW
 BEGIN
     DECLARE audit_log TEXT DEFAULT 'Employee created. <br/>';
+
+    IF NEW.full_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Full Name: ", NEW.full_name);
+    END IF;
 
     IF NEW.first_name <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>First Name: ", NEW.first_name);

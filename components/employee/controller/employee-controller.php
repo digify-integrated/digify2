@@ -14,6 +14,15 @@ session_start();
 # -------------------------------------------------------------
 class EmployeeController {
     private $employeeModel;
+    private $genderModel;
+    private $religionModel;
+    private $bloodTypeModel;
+    private $companyModel;
+    private $employmentTypeModel;
+    private $departmentModel;
+    private $jobPositionModel;
+    private $workScheduleModel;
+    private $uploadSettingModel;
     private $authenticationModel;
     private $securityModel;
 
@@ -26,14 +35,32 @@ class EmployeeController {
     #
     # Parameters:
     # - @param EmployeeModel $employeeModel     The employeeModel instance for employee related operations.
+    # - @param GenderModel $genderModel     The GenderModel instance for gender operations.
+    # - @param ReligionModel $religionModel     The ReligionModel instance for religion operations.
+    # - @param BloodTypeModel $bloodTypeModel     The BloodTypeModel instance for blood type operations.
+    # - @param CompanyModel $companyModel     The CompanyModel instance for company operations.
+    # - @param EmploymentTypeModel $employmentTypeModel     The EmploymentTypeModel instance for employment type operations.
+    # - @param DepartmentModel $departmentModel     The DepartmentModel instance for department operations.
+    # - @param JobPositionModel $jobPositionModel     The JobPositionModel instance for job position operations.
+    # - @param WorkScheduleModel $workScheduleModel     The WorkScheduleModel instance for work schedule operations.
+    # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(EmployeeModel $employeeModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkScheduleModel $workScheduleModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
         $this->employeeModel = $employeeModel;
+        $this->genderModel = $genderModel;
+        $this->religionModel = $religionModel;
+        $this->bloodTypeModel = $bloodTypeModel;
+        $this->companyModel = $companyModel;
+        $this->employmentTypeModel = $employmentTypeModel;
+        $this->departmentModel = $departmentModel;
+        $this->jobPositionModel = $jobPositionModel;
+        $this->workScheduleModel = $workScheduleModel;
+        $this->uploadSettingModel = $uploadSettingModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
     }
@@ -203,6 +230,13 @@ class EmployeeController {
             $badgeID = htmlspecialchars($_POST['badge_id'], ENT_QUOTES, 'UTF-8');
             $employmentTypeID = htmlspecialchars($_POST['employment_type_id'], ENT_QUOTES, 'UTF-8');
 
+            $fullNameParts = array_filter([$firstName, $middleName, $lastName]);
+            $fullName = implode(' ', $fullNameParts);
+
+            if (!empty($suffix)) {
+                $fullName .= ', ' . $suffix;
+            }
+
             $civilStatusDetails = $this->civilStatusModel->getCivilStatus($civilStatusID);
             $civilStatusName = $civilStatusDetails['civil_status_name'] ?? '';
 
@@ -228,13 +262,13 @@ class EmployeeController {
             $jobPositionName = $jobPositionDetails['job_position_name'] ?? '';
 
             $managerDetails = $this->employeeModel->getEmployee($managerID);
-            $managerName = $managerDetails['file_as'] ?? '';
+            $managerName = $managerDetails['full_name'] ?? '';
 
             $workScheduleDetails = $this->workScheduleModel->getWorkSchedule($workScheduleID);
             $workScheduleName = $workScheduleDetails['work_schedule_name'] ?? '';
 
             $timeOffapproverDetails = $this->employeeModel->getEmployee($timeOffApproverID);
-            $timeOffApproverName = $timeOffapproverDetails['file_as'] ?? '';
+            $timeOffApproverName = $timeOffapproverDetails['full_name'] ?? '';
 
             $employeeID = $this->employeeModel->insertEmployee($firstName, $middleName, $lastName, $suffix, $nickname, $civilStatusID, $civilStatusName, $genderID, $genderName, $religionID, $religionName, $bloodTypeID, $bloodTypeName, $birthday, $birthPlace, $height, $weight, $userID);
 
@@ -248,10 +282,10 @@ class EmployeeController {
             $employeeImageActualFileExtension = strtolower(end($employeeImageFileExtension));
 
             if ($employeeImageFileError === 0 && $employeeImageFileSize > 0) {
-                $uploadSetting = $this->uploadSettingModel->getUploadSetting(1);
+                $uploadSetting = $this->uploadSettingModel->getUploadSetting(3);
                 $maxFileSize = $uploadSetting['max_file_size'];
     
-                $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(1);
+                $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(3);
                 $allowedFileExtensions = [];
     
                 foreach ($uploadSettingFileExtension as $row) {
@@ -360,7 +394,108 @@ class EmployeeController {
             $workPermitActualFileExtension = strtolower(end($workPermitFileExtension));
 
             if ($workPermitFileError === 0 && $workPermitFileSize > 0) {
-
+                $uploadSetting = $this->uploadSettingModel->getUploadSetting(4);
+                $maxFileSize = $uploadSetting['max_file_size'];
+    
+                $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(4);
+                $allowedFileExtensions = [];
+    
+                foreach ($uploadSettingFileExtension as $row) {
+                    $allowedFileExtensions[] = $row['file_extension'];
+                }
+    
+                if (!in_array($employeeImageActualFileExtension, $allowedFileExtensions)) {
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'The file uploaded is not supported.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if(empty($employeeImageTempName)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'Please choose the work permit.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($employeeImageFileError){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'An error occurred while uploading the file.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($employeeImageFileSize > ($maxFileSize * 1024)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'The work permit exceeds the maximum allowed size of ' . number_format($maxFileSize) . ' kb.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $fileName = $this->securityModel->generateFileName();
+                $fileNew = $fileName . '.' . $employeeImageActualFileExtension;
+                
+                define('PROJECT_BASE_DIR', dirname(__DIR__));
+                define('EMPLOYEE_IMAGE_DIR', 'image/');
+    
+                $directory = PROJECT_BASE_DIR. '/'. EMPLOYEE_IMAGE_DIR. $employeeID. '/';
+                $fileDestination = $directory. $fileNew;
+                $filePath = './components/employee/work-permit/'. $employeeID . '/' . $fileNew;
+    
+                $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
+    
+                if(!$directoryChecker){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => $directoryChecker,
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                if(!move_uploaded_file($employeeImageTempName, $fileDestination)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'The work permit cannot be uploaded due to an error.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $this->employeeModel->updateWorkPermit($employeeID, $filePath, $userID);
+    
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Work Permit Success',
+                    'message' => 'The work permit has been updated successfully.',
+                    'messageType' => 'success'
+                ];
             }
     
             $response = [
@@ -652,9 +787,18 @@ require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
 require_once '../../employee/model/employee-model.php';
+require_once '../../gender/model/gender-model.php';
+require_once '../../religion/model/religion-model.php';
+require_once '../../blood-type/model/blood-type-model.php';
+require_once '../../company/model/company-model.php';
+require_once '../../employment-type/model/employment-type-model.php';
+require_once '../../department/model/department-model.php';
+require_once '../../job-position/model/job-position-model.php';
+require_once '../../work-schedule/model/work-schedule-model.php';
+require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>
