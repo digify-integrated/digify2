@@ -1,0 +1,235 @@
+<div class="row mb-3">
+                        <div class="col-lg-12">
+                            <label for="employee_image" class="cursor-pointer">
+                                <img src="./assets/images/default/upload-placeholder.png" alt="employee-image" id="employee-image" class="img-fluid" width="120" height="120">
+                                <input type="file" class="form-control d-none" id="employee_image" name="employee_image" onchange="previewImage(this, 'employee-image')">
+                            </label>
+                        </div>
+                    </div>
+
+                    
+
+            $employeeImageFileName = $_FILES['employee_image']['name'];
+            $employeeImageFileSize = $_FILES['employee_image']['size'];
+            $employeeImageFileError = $_FILES['employee_image']['error'];
+            $employeeImageTempName = $_FILES['employee_image']['tmp_name'];
+            $employeeImageFileExtension = explode('.', $employeeImageFileName);
+            $employeeImageActualFileExtension = strtolower(end($employeeImageFileExtension));
+
+            if ($employeeImageFileError === 0 && $employeeImageFileSize > 0) {
+                $uploadSetting = $this->uploadSettingModel->getUploadSetting(3);
+                $maxFileSize = $uploadSetting['max_file_size'];
+    
+                $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(3);
+                $allowedFileExtensions = [];
+    
+                foreach ($uploadSettingFileExtension as $row) {
+                    $allowedFileExtensions[] = $row['file_extension'];
+                }
+    
+                if (!in_array($employeeImageActualFileExtension, $allowedFileExtensions)) {
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'The file uploaded is not supported.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if(empty($employeeImageTempName)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'Please choose the employee image.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($employeeImageFileError){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'An error occurred while uploading the file.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($employeeImageFileSize > ($maxFileSize * 1024)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'The employee image exceeds the maximum allowed size of ' . number_format($maxFileSize) . ' kb.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $fileName = $this->securityModel->generateFileName();
+                $fileNew = $fileName . '.' . $employeeImageActualFileExtension;
+                
+                define('PROJECT_BASE_DIR', dirname(__DIR__));
+                define('EMPLOYEE_IMAGE_DIR', 'image/');
+    
+                $directory = PROJECT_BASE_DIR. '/'. EMPLOYEE_IMAGE_DIR. $employeeID. '/';
+                $fileDestination = $directory. $fileNew;
+                $filePath = './components/employee/'. $employeeID . '/image/' . $fileNew;
+    
+                $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
+    
+                if(!$directoryChecker){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => $directoryChecker,
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                if(!move_uploaded_file($employeeImageTempName, $fileDestination)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Employee Image Error',
+                        'message' => 'The employee image cannot be uploaded due to an error.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $this->employeeModel->updateEmployeeImage($employeeID, $filePath, $userID);
+    
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Employee Image Success',
+                    'message' => 'The employee image has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+            }
+
+            $workPermitFileName = $_FILES['work_permit']['name'];
+            $workPermitFileSize = $_FILES['work_permit']['size'];
+            $workPermitFileError = $_FILES['work_permit']['error'];
+            $workPermitTempName = $_FILES['work_permit']['tmp_name'];
+            $workPermitFileExtension = explode('.', $workPermitFileName);
+            $workPermitActualFileExtension = strtolower(end($workPermitFileExtension));
+
+            if ($workPermitFileError === 0 && $workPermitFileSize > 0) {
+                $uploadSetting = $this->uploadSettingModel->getUploadSetting(4);
+                $maxFileSize = $uploadSetting['max_file_size'];
+    
+                $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(4);
+                $allowedFileExtensions = [];
+    
+                foreach ($uploadSettingFileExtension as $row) {
+                    $allowedFileExtensions[] = $row['file_extension'];
+                }
+    
+                if (!in_array($workPermitActualFileExtension, $allowedFileExtensions)) {
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'The file uploaded is not supported.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if(empty($workPermitTempName)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'Please choose the work permit.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($workPermitFileError){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'An error occurred while uploading the file.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($workPermitFileSize > ($maxFileSize * 1024)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'The work permit exceeds the maximum allowed size of ' . number_format($maxFileSize) . ' kb.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $fileName = $this->securityModel->generateFileName();
+                $fileNew = $fileName . '.' . $employeeImageActualFileExtension;
+                
+                define('PROJECT_BASE_DIR', dirname(__DIR__));
+                define('EMPLOYEE_IMAGE_DIR', 'image/');
+    
+                $directory = PROJECT_BASE_DIR. '/'. EMPLOYEE_IMAGE_DIR. $employeeID. '/';
+                $fileDestination = $directory. $fileNew;
+                $filePath = './components/employee/'. $employeeID . '/work-permit/' . $fileNew;
+    
+                $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
+    
+                if(!$directoryChecker){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => $directoryChecker,
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                if(!move_uploaded_file($employeeImageTempName, $fileDestination)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Update Work Permit Error',
+                        'message' => 'The work permit cannot be uploaded due to an error.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $this->employeeModel->updateWorkPermit($employeeID, $filePath, $userID);
+    
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Work Permit Success',
+                    'message' => 'The work permit has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+            }
+    

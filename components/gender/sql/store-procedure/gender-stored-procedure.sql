@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateGender(IN p_gender_id INT, IN p_gender_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee
+    SET gender_name = p_gender_name,
+        last_log_by = p_last_log_by
+    WHERE gender_id = p_gender_id;
+
     UPDATE gender
     SET gender_name = p_gender_name,
         last_log_by = p_last_log_by
     WHERE gender_id = p_gender_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

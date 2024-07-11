@@ -22,13 +22,13 @@
                         require_once('components/global/view/_breadcrumbs.php'); 
 
                         if($newRecord){
-                            require_once('components/department/view/_department_new.php');
+                            require_once('components/departure-reason/view/_departure_reason_new.php');
                         }
                         else if(!empty($detailID)){
-                            require_once('components/department/view/_department_details.php');
+                            require_once('components/departure-reason/view/_departure_reason_details.php');
                         }
                         else{
-                            require_once('components/department/view/_department.php');
+                            require_once('components/departure-reason/view/_departure_reason.php');
                         }
                     ?>
                 </div>
@@ -49,16 +49,16 @@
     <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
 
     <?php
-        $scriptLink = 'department.js';
+        $scriptLink = 'departure-reason.js';
 
         if($newRecord){
-            $scriptLink = 'department-new.js';
+            $scriptLink = 'departure-reason-new.js';
         }
         else if(!empty($detailID)){
-            $scriptLink = 'department-details.js';
+            $scriptLink = 'departure-reason-details.js';
         }
 
-        echo '<script src="./components/department/js/'. $scriptLink .'?v=' . rand() .'"></script>';
+        echo '<script src="./components/departure-reason/js/'. $scriptLink .'?v=' . rand() .'"></script>';
     ?>
 </body>
 

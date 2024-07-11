@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateCivilStatus(IN p_civil_status_id INT, IN p_civil_status_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee
+    SET civil_status_name = p_civil_status_name,
+        last_log_by = p_last_log_by
+    WHERE civil_status_id = p_civil_status_id;
+
     UPDATE civil_status
     SET civil_status_name = p_civil_status_name,
         last_log_by = p_last_log_by
     WHERE civil_status_id = p_civil_status_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

@@ -21,6 +21,12 @@ BEGIN
     SET p_employee_id = LAST_INSERT_ID();
 END //
 
+CREATE PROCEDURE insertWorkInformation(IN p_employee_id INT, IN p_badge_id VARCHAR(200), IN p_company_id INT, IN p_company_name VARCHAR(100), IN p_employment_type_id INT, IN p_employment_type_name VARCHAR(100), IN p_department_id INT, IN p_department_name VARCHAR(100), IN p_job_position_id INT, IN p_job_position_name VARCHAR(100), IN p_work_location_id INT, IN p_work_location_name VARCHAR(100), IN p_manager_id INT, IN p_manager_name VARCHAR(100), IN p_work_schedule_id INT, IN p_work_schedule_name VARCHAR(100), IN p_pin_code VARCHAR(500), IN p_home_work_distance DOUBLE, IN p_visa_number VARCHAR(50), IN p_work_permit_number VARCHAR(50), IN p_visa_expiration_date DATE, IN p_work_permit_expiration_date DATE, IN p_onboard_date DATE, IN p_time_off_approver_id INT, IN p_time_off_approver_name VARCHAR(100), IN p_last_log_by INT)
+BEGIN
+    INSERT INTO work_information (employee_id, badge_id, company_id, company_name, employment_type_id, employment_type_name, department_id, department_name, job_position_id, job_position_name, work_location_id, work_location_name, manager_id, manager_name, work_schedule_id, work_schedule_name, pin_code, home_work_distance, visa_number, work_permit_number, visa_expiration_date, work_permit_expiration_date, onboard_date, time_off_approver_id, time_off_approver_name, last_log_by) 
+	VALUES(p_employee_id, p_badge_id, p_company_id, p_company_name, p_employment_type_id, p_employment_type_name, p_department_id, p_department_name, p_job_position_id, p_job_position_name, p_work_location_id, p_work_location_name, p_manager_id, p_manager_name, p_work_schedule_id, p_work_schedule_name, p_pin_code, p_home_work_distance, p_visa_number, p_work_permit_number, p_visa_expiration_date, p_work_permit_expiration_date, p_onboard_date, p_time_off_approver_id, p_time_off_approver_name, p_last_log_by);
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Update Stored Procedure */
@@ -40,15 +46,44 @@ BEGIN
     WHERE manager_id = p_employee_id;
 
     UPDATE employee
-    SET employee_name = p_employee_name,
-        parent_employee_id = p_parent_employee_id,
-        parent_employee_name = p_parent_employee_name,
-        manager_id = p_manager_id,
-        manager_name = p_manager_name,
+    SET full_name = p_full_name,
+        first_name = p_first_name,
+        middle_name = p_middle_name,
+        last_name = p_last_name,
+        suffix = p_suffix,
+        nickname = p_nickname,
+        civil_status_id = p_civil_status_id,
+        civil_status_name = p_civil_status_name,
+        gender_id = p_gender_id,
+        gender_name = p_gender_name,
+        religion_id = p_religion_id,
+        religion_name = p_religion_name,
+        blood_type_id = p_blood_type_id,
+        blood_type_name = p_blood_type_name,
+        birthday = p_birthday,
+        birth_place = p_birth_place,
+        height = p_height,
+        weight = p_weight,
         last_log_by = p_last_log_by
     WHERE employee_id = p_employee_id;
 
     COMMIT;
+END //
+
+CREATE PROCEDURE updateEmployeeImage(IN p_employee_id INT, IN p_employee_image VARCHAR(500), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee
+    SET employee_image = p_employee_image,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE updateWorkPermit(IN p_employee_id INT, IN p_work_permit VARCHAR(500), IN p_last_log_by INT)
+BEGIN
+    UPDATE work_information
+    SET work_permit = p_work_permit,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -57,7 +92,17 @@ END //
 
 CREATE PROCEDURE deleteEmployee(IN p_employee_id INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM work_information WHERE employee_id = p_employee_id;
     DELETE FROM employee WHERE employee_id = p_employee_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

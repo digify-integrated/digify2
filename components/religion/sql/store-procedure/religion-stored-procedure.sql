@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateReligion(IN p_religion_id INT, IN p_religion_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee
+    SET religion_name = p_religion_name,
+        last_log_by = p_last_log_by
+    WHERE religion_id = p_religion_id;
+
     UPDATE religion
     SET religion_name = p_religion_name,
         last_log_by = p_last_log_by
     WHERE religion_id = p_religion_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

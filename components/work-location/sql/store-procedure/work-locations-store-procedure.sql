@@ -34,6 +34,11 @@ BEGIN
 
     START TRANSACTION;
 
+    UPDATE work_information
+    SET work_location_name = p_work_location_name,
+        last_log_by = p_last_log_by
+    WHERE work_location_id = p_work_location_id;
+
     UPDATE work_location
     SET work_location_name = p_work_location_name,
         address = p_address,

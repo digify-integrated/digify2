@@ -441,7 +441,7 @@ class DepartmentController {
             $response = [
                 'success' => true,
                 'departmentName' => $departmentDetails['department_name'] ?? null,
-                'parentDepartmentID' => $departmentDetails['parent_department_id'] ?? '',
+                'parentDepartmentID' => !empty($departmentDetails['parent_department_id']) ? $departmentDetails['parent_department_id'] : '',
                 'parentDepartmentName' => $departmentDetails['parent_department_name'] ?? null,
                 'managerID' => $departmentDetails['manager_id'] ?? '',
                 'managerName' => $departmentDetails['manager_name'] ?? null

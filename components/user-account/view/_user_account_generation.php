@@ -109,6 +109,111 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
         # -------------------------------------------------------------
         #
+        # Type: all user account options
+        # Description:
+        # Generates the active user account options.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'all user account options':
+            $generationType = 'All';
+            $sql = $databaseModel->getConnection()->prepare('CALL generateUserAccountOptions(:generationType)');
+            $sql->bindValue(':generationType', $generationType, PDO::PARAM_STR);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $sql->closeCursor();
+
+            $response[] = [
+                'id' => '0',
+                'text' => '--'
+            ];
+
+            foreach ($options as $row) {
+                $response[] = [
+                    'id' => $row['user_account_id'],
+                    'text' => $row['file_as']
+                ];
+            }
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: active user account options
+        # Description:
+        # Generates the active user account options.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'active user account options':
+            $generationType = 'Active';
+            $sql = $databaseModel->getConnection()->prepare('CALL generateUserAccountOptions(:generationType)');
+            $sql->bindValue(':generationType', $generationType, PDO::PARAM_STR);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $sql->closeCursor();
+
+            $response[] = [
+                'id' => '0',
+                'text' => '--'
+            ];
+
+            foreach ($options as $row) {
+                $response[] = [
+                    'id' => $row['user_account_id'],
+                    'text' => $row['file_as']
+                ];
+            }
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: inactive user account options
+        # Description:
+        # Generates the inactive user account options.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'inactive user account options':
+            $generationType = 'Deactivated';
+            $sql = $databaseModel->getConnection()->prepare('CALL generateUserAccountOptions(:generationType)');
+            $sql->bindValue(':generationType', $generationType, PDO::PARAM_STR);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $sql->closeCursor();
+
+            $response[] = [
+                'id' => '0',
+                'text' => '--'
+            ];
+
+            foreach ($options as $row) {
+                $response[] = [
+                    'id' => $row['user_account_id'],
+                    'text' => $row['file_as']
+                ];
+            }
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
         # Type: role user account dual listbox options
         # Description:
         # Generates the role user account dual listbox options.

@@ -34,6 +34,11 @@ BEGIN
 
     START TRANSACTION;
 
+    UPDATE work_information
+    SET company_name = p_company_name,
+        last_log_by = p_last_log_by
+    WHERE company_id = p_company_id;
+
     UPDATE company
     SET company_name = p_company_name,
         legal_name = p_legal_name,

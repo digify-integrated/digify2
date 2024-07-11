@@ -58,12 +58,26 @@ END //
 
 CREATE PROCEDURE updateWorkSchedule(IN p_work_schedule_id INT, IN p_work_schedule_name VARCHAR(100), IN p_schedule_type_id INT, IN p_schedule_type_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE work_information
+    SET work_schedule_name = p_work_schedule_name,
+        last_log_by = p_last_log_by
+    WHERE work_schedule_id = p_work_schedule_id;
+
     UPDATE work_schedule
     SET work_schedule_name = p_work_schedule_name,
         schedule_type_id = p_schedule_type_id,
         schedule_type_name = p_schedule_type_name,
         last_log_by = p_last_log_by
     WHERE work_schedule_id = p_work_schedule_id;
+
+    COMMIT;
 END //
 
 CREATE PROCEDURE updateWorkHours(IN p_work_hours_id INT, IN p_work_schedule_id INT, IN p_day_of_week VARCHAR(20), IN p_day_period VARCHAR(20), IN p_start_time TIME, IN p_end_time TIME, IN p_notes VARCHAR(500), IN p_last_log_by INT)

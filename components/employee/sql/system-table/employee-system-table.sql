@@ -46,6 +46,8 @@ CREATE TABLE work_information (
     department_name VARCHAR(100),
 	job_position_id INT UNSIGNED,
     job_position_name VARCHAR(100),
+	work_location_id INT UNSIGNED,
+    work_location_name VARCHAR(100),
 	manager_id INT UNSIGNED,
     manager_name VARCHAR(300),
 	work_schedule_id INT UNSIGNED,
@@ -77,6 +79,7 @@ CREATE INDEX work_information_index_department_id ON work_information(department
 CREATE INDEX work_information_index_job_position_id ON work_information(job_position_id);
 CREATE INDEX work_information_index_manager_id ON work_information(manager_id);
 CREATE INDEX work_information_index_work_schedule_id ON work_information(work_schedule_id);
+CREATE INDEX work_information_index_work_location_id ON work_information(work_location_id);
 CREATE INDEX work_information_index_departure_reason_id ON work_information(departure_reason_id);
 CREATE INDEX work_information_index_employment_status ON work_information(employment_status);
 

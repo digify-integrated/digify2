@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateBloodType(IN p_blood_type_id INT, IN p_blood_type_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee
+    SET blood_type_name = p_blood_type_name,
+        last_log_by = p_last_log_by
+    WHERE blood_type_id = p_blood_type_id;
+
     UPDATE blood_type
     SET blood_type_name = p_blood_type_name,
         last_log_by = p_last_log_by
     WHERE blood_type_id = p_blood_type_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

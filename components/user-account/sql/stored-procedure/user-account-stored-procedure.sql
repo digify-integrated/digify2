@@ -48,6 +48,11 @@ BEGIN
 
     START TRANSACTION;
 
+    UPDATE work_information
+    SET time_off_approver_name = p_file_as,
+        last_log_by = p_last_log_by
+    WHERE time_off_approver_id = p_user_account_id;
+
     UPDATE role_user_account
     SET file_as = p_file_as,
         last_log_by = p_last_log_by
@@ -177,6 +182,25 @@ BEGIN
     PREPARE stmt FROM query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
+END //
+
+CREATE PROCEDURE generateUserAccountOptions(IN p_generation_type VARCHAR(20))
+BEGIN
+	IF p_generation_type = 'Active' THEN
+        SELECT user_account_id, file_as 
+        FROM user_account 
+        WHERE active = 'Yes'
+        ORDER BY file_as;
+    ELSEIF p_generation_type = 'Deactivated' THEN
+       SELECT user_account_id, file_as 
+        FROM user_account 
+        WHERE active = 'No'
+        ORDER BY file_as;
+    ELSE
+        SELECT user_account_id, file_as 
+        FROM user_account
+        ORDER BY file_as;
+    END IF;
 END //
 
 CREATE PROCEDURE generateRoleUserAccountDualListBoxOptions(IN p_role_id INT)

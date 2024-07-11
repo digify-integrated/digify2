@@ -30,7 +30,7 @@
                     <div class="card overflow-hidden rounded-2 border">
                         <div class="position-relative">
                             <a href="./eco-shop-detail.html" class="hover-img d-block overflow-hidden">
-                                <img src="./assets/images/products/s11.jpg" class="card-img-top rounded-0" alt="employee-image">
+                                <img src="./assets/images/profile/user-1.jpg" class="card-img-top rounded-0" alt="employee-image">
                             </a>
                         </div>
                         <div class="card-body pt-3 p-4">
@@ -40,38 +40,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <nav>
-                        <ul class="pagination justify-content-center w-100">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="javascript:void(0)" tabindex="-1" aria-disabled="true">Previous</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">1</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="javascript:void(0)">Next</a>
-                            </li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
         </div>

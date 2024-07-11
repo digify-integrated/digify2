@@ -12,6 +12,7 @@
         generateDropdownOptions('blood type options');
         generateDropdownOptions('religion options');
         generateDropdownOptions('employment type options');
+        generateDropdownOptions('active user account options');
         
         if($('#employee-form').length){
             employeeForm();
@@ -31,6 +32,12 @@ function employeeForm(){
             company_id: {
                 required: true
             },
+            department_id: {
+                required: true
+            },
+            job_position_id: {
+                required: true
+            },
             gender_id: {
                 required: true
             },
@@ -45,7 +52,7 @@ function employeeForm(){
             },
             onboard_date: {
                 required: true
-            },
+            }
         },
         messages: {
             first_name: {
@@ -56,6 +63,12 @@ function employeeForm(){
             },
             company_id: {
                 required: 'Company'
+            },
+            department_id: {
+                required: 'Department'
+            },
+            job_position_id: {
+                required: 'Job Position'
             },
             gender_id: {
                 required: 'Gender'
@@ -71,7 +84,7 @@ function employeeForm(){
             },
             onboard_date: {
                 required: 'On-board Date'
-            },
+            }
         },
         errorPlacement: function(error, element) {
             var errorList = [];
@@ -101,16 +114,11 @@ function employeeForm(){
         submitHandler: function(form) {
             const transaction = 'add employee';
             const page_link = document.getElementById('page-link').getAttribute('href');
-
-            var formData = new FormData(form);
-            formData.append('transaction', transaction);
           
             $.ajax({
                 type: 'POST',
                 url: 'components/employee/controller/employee-controller.php',
-                data: formData,
-                processData: false,
-                contentType: false,
+                data: $(form).serialize() + '&transaction=' + transaction,
                 dataType: 'json',
                 beforeSend: function() {
                     disableFormSubmitButton('submit-data');
@@ -162,7 +170,7 @@ function generateDropdownOptions(type){
                     $('#department_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
@@ -187,7 +195,7 @@ function generateDropdownOptions(type){
                     $('#job_position_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
@@ -212,7 +220,7 @@ function generateDropdownOptions(type){
                     $('#company_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
@@ -237,7 +245,7 @@ function generateDropdownOptions(type){
                     $('#work_location_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
@@ -262,7 +270,7 @@ function generateDropdownOptions(type){
                     $('#work_schedule_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
@@ -287,7 +295,7 @@ function generateDropdownOptions(type){
                     $('#gender_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
@@ -312,7 +320,7 @@ function generateDropdownOptions(type){
                     $('#civil_status_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
@@ -337,7 +345,7 @@ function generateDropdownOptions(type){
                     $('#blood_type_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
@@ -362,7 +370,7 @@ function generateDropdownOptions(type){
                     $('#religion_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
@@ -387,7 +395,32 @@ function generateDropdownOptions(type){
                     $('#employment_type_id').select2({
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'active user account options':
+            
+            $.ajax({
+                url: 'components/user-account/view/_user_account_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#time_off_approver_id').select2({
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {

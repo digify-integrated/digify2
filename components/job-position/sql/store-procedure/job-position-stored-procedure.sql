@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateJobPosition(IN p_job_position_id INT, IN p_job_position_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE work_information
+    SET job_position_name = p_job_position_name,
+        last_log_by = p_last_log_by
+    WHERE job_position_id = p_job_position_id;
+
     UPDATE job_position
     SET job_position_name = p_job_position_name,
         last_log_by = p_last_log_by
     WHERE job_position_id = p_job_position_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

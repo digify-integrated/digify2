@@ -25,12 +25,26 @@ END //
 
 /* Update Stored Procedure */
 
+
 CREATE PROCEDURE updateDepartureReason(IN p_departure_reason_id INT, IN p_departure_reason_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE work_information
+    SET departure_reason_name = p_departure_reason_name,
+    WHERE departure_reason_id = p_departure_reason_id;
+
     UPDATE departure_reason
     SET departure_reason_name = p_departure_reason_name,
         last_log_by = p_last_log_by
     WHERE departure_reason_id = p_departure_reason_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

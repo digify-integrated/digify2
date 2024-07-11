@@ -92,7 +92,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
             $sql->closeCursor();
 
             $response[] = [
-                'id' => '0',
+                'id' => '',
                 'text' => '--'
             ];
 

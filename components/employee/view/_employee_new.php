@@ -11,14 +11,6 @@
                 </div>
                 <hr class="m-0" />
                 <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-lg-12">
-                            <label for="employee_image" class="cursor-pointer">
-                                <img src="./assets/images/default/upload-placeholder.png" alt="employee-image" id="employee-image" class="img-fluid" width="120" height="120">
-                                <input type="file" class="form-control d-none" id="employee_image" name="employee_image" onchange="previewImage(this, 'employee-image')">
-                            </label>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3 row align-items-center">
@@ -34,7 +26,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row align-items-center">
-                                <label for="department_id" class="form-label col-lg-3 col-form-label">Department</label>
+                                <label for="department_id" class="form-label col-lg-3 col-form-label">Department <span class="text-danger">*</span></label>
                                 <div class="col-lg-9">
                                     <select id="department_id" name="department_id" class="select2 form-control"></select>
                                 </div>
@@ -60,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="row align-items-center">
-                                <label for="job_position_id" class="form-label col-lg-3 col-form-label">Job Position</label>
+                                <label for="job_position_id" class="form-label col-lg-3 col-form-label">Job Position <span class="text-danger">*</span></label>
                                 <div class="col-lg-9">
                                     <select id="job_position_id" name="job_position_id" class="select2 form-control"></select>
                                 </div>
@@ -117,7 +109,7 @@
                             <div class="row align-items-center">
                                 <label for="time_off_approver_id" class="form-label col-lg-3 col-form-label">Time Off <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Select the user responsible for approving &quot;Time Off&quot; of this employee."></span></label>
                                 <div class="col-lg-9">
-                                    <select id="time_off_approver_id" name="time_off_approver_id" class="select2 form-control"><option value="">--</option></select>
+                                    <select id="time_off_approver_id" name="time_off_approver_id" class="select2 form-control"></select>
                                 </div>
                             </div>
                         </div>
@@ -240,12 +232,6 @@
                                             <i class="ti ti-calendar fs-5"></i>
                                         </span>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="mb-3 row align-items-center">
-                                <label for="work_permit" class="form-label col-lg-6 col-form-label">Work Permit</label>
-                                <div class="col-lg-6">
-                                    <input type="file" class="form-control" id="work_permit" name="work_permit">
                                 </div>
                             </div>
                         </div>
