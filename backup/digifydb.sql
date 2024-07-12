@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 11, 2024 at 11:27 AM
+-- Generation Time: Jul 12, 2024 at 11:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1036,6 +1036,70 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmailSettingTable` ()   BEG
     SELECT email_setting_id, email_setting_name, email_setting_description 
     FROM email_setting
     ORDER BY email_setting_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmployeeCard`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeCard` (IN `p_search_value` TEXT, IN `p_filter_by_company` INT, IN `p_filter_by_department` INT, IN `p_filter_by_job_position` INT, IN `p_filter_by_employee_status` VARCHAR(50), IN `p_filter_by_employment_type` INT, IN `p_filter_by_gender` INT, IN `p_filter_by_civil_status` INT, IN `p_limit` INT, IN `p_offset` INT)   BEGIN
+    DECLARE query TEXT;
+    DECLARE search_query TEXT;
+
+    SET query = '
+        SELECT employee.employee_id AS employee_id, full_name, department_name, job_position_name, employment_status, employee_image
+        FROM employee 
+        LEFT JOIN work_information ON work_information.employee_id = employee.employee_id
+        WHERE 1=1';
+
+    IF p_search_value IS NOT NULL AND p_search_value <> '' THEN
+        SET search_query = CONCAT('%', p_search_value, '%');
+        SET query = CONCAT(query, ' AND (
+            first_name LIKE ? OR
+            middle_name LIKE ? OR
+            last_name LIKE ? OR
+            department_name LIKE ? OR
+            job_position_name LIKE ? OR
+            employment_status LIKE ?
+        )');
+    END IF;
+
+    IF p_filter_by_company IS NOT NULL AND p_filter_by_company <> 0 THEN
+        SET query = CONCAT(query, ' AND company_id = ', p_filter_by_company);
+    END IF;
+
+    IF p_filter_by_department IS NOT NULL AND p_filter_by_department <> 0 THEN
+        SET query = CONCAT(query, ' AND department_id = ', p_filter_by_department);
+    END IF;
+
+    IF p_filter_by_job_position IS NOT NULL AND p_filter_by_job_position <> 0 THEN
+        SET query = CONCAT(query, ' AND job_position_id = ', p_filter_by_job_position);
+    END IF;
+
+    IF p_filter_by_employee_status IS NOT NULL AND p_filter_by_employee_status <> '' THEN
+        SET query = CONCAT(query, ' AND employment_status = ', QUOTE(p_filter_by_employee_status));
+    END IF;
+
+    IF p_filter_by_employment_type IS NOT NULL AND p_filter_by_employment_type <> 0 THEN
+        SET query = CONCAT(query, ' AND employment_type_id = ', p_filter_by_employment_type);
+    END IF;
+
+    IF p_filter_by_gender IS NOT NULL AND p_filter_by_gender <> 0 THEN
+        SET query = CONCAT(query, ' AND gender_id = ', p_filter_by_gender);
+    END IF;
+
+    IF p_filter_by_civil_status IS NOT NULL AND p_filter_by_civil_status <> 0 THEN
+        SET query = CONCAT(query, ' AND civil_status_id = ', p_filter_by_civil_status);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY full_name LIMIT ? OFFSET ?');
+
+    PREPARE stmt FROM query;
+
+    IF p_search_value IS NOT NULL AND p_search_value <> '' THEN
+        EXECUTE stmt USING search_query, search_query, search_query, search_query, search_query, search_query, p_limit, p_offset;
+    ELSE
+        EXECUTE stmt USING p_limit, p_offset;
+    END IF;
+
+    DEALLOCATE PREPARE stmt;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateEmploymentTypeOptions`$$
@@ -6686,7 +6750,10 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3103, 'user_account', 2, 'File As: Administrators -> Administrator<br/>', 2, '2024-07-11 16:39:01', '2024-07-11 16:39:01'),
 (3104, 'departure_reason', 1, 'Departure reason created. <br/><br/>Departure Reason Name: test', 2, '2024-07-11 16:40:07', '2024-07-11 16:40:07'),
 (3105, 'departure_reason', 1, 'Departure Reason Name: test -> tests<br/>', 2, '2024-07-11 16:40:17', '2024-07-11 16:40:17'),
-(3106, 'employee', 1, 'Employee created. <br/><br/>Full Name: Lawrence De Vera Agulto<br/>First Name: Lawrence<br/>Middle Name: De Vera<br/>Last Name: Agulto<br/>Civil Status Name: Married<br/>Gender Name: Female<br/>Date of Birth: 2024-07-11<br/>Birth Place: cab', 2, '2024-07-11 16:47:01', '2024-07-11 16:47:01');
+(3106, 'employee', 1, 'Employee created. <br/><br/>Full Name: Lawrence De Vera Agulto<br/>First Name: Lawrence<br/>Middle Name: De Vera<br/>Last Name: Agulto<br/>Civil Status Name: Married<br/>Gender Name: Female<br/>Date of Birth: 2024-07-11<br/>Birth Place: cab', 2, '2024-07-11 16:47:01', '2024-07-11 16:47:01'),
+(3107, 'user_account', 2, 'Last Connection Date: 2024-07-11 08:40:24 -> 2024-07-12 08:44:54<br/>', 2, '2024-07-12 08:44:54', '2024-07-12 08:44:54'),
+(3108, 'employee', 2, 'Employee created. <br/><br/>Full Name: lennard de vera<br/>First Name: lennard<br/>Last Name: de vera<br/>Civil Status Name: Engaged<br/>Gender Name: Female<br/>Date of Birth: 2024-08-01<br/>Birth Place: asdasd', 2, '2024-07-12 16:36:31', '2024-07-12 16:36:31'),
+(3109, 'employee', 3, 'Employee created. <br/><br/>Full Name: john doe<br/>First Name: john<br/>Last Name: doe<br/>Civil Status Name: Divorced<br/>Gender Name: Male<br/>Date of Birth: 2024-07-24<br/>Birth Place: asdasd', 2, '2024-07-12 16:45:48', '2024-07-12 16:45:48');
 
 -- --------------------------------------------------------
 
@@ -9676,7 +9743,9 @@ CREATE TABLE `employee` (
 --
 
 INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `created_date`, `last_log_by`) VALUES
-(1, NULL, NULL, 'Lawrence De Vera Agulto', 'Lawrence', 'De Vera', 'Agulto', '', '', 4, 'Married', 2, 'Female', 0, '', 0, '', '2024-07-11', 'cab', 0, 0, '2024-07-11 16:47:01', 2);
+(1, NULL, NULL, 'Lawrence De Vera Agulto', 'Lawrence', 'De Vera', 'Agulto', '', '', 4, 'Married', 2, 'Female', 0, '', 0, '', '2024-07-11', 'cab', 0, 0, '2024-07-11 16:47:01', 2),
+(2, NULL, NULL, 'lennard de vera', 'lennard', '', 'de vera', '', '', 2, 'Engaged', 2, 'Female', 0, '', 0, '', '2024-08-01', 'asdasd', 0, 0, '2024-07-12 16:36:31', 2),
+(3, NULL, NULL, 'john doe', 'john', '', 'doe', '', '', 1, 'Divorced', 1, 'Male', 0, '', 0, '', '2024-07-24', 'asdasd', 0, 0, '2024-07-12 16:45:48', 2);
 
 --
 -- Triggers `employee`
@@ -12226,7 +12295,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-11 08:40:24', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'pvR436isQSE1eq1R81VvC44r8fhyPx0RPDQI%2Bhlr%2BF4%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-12 08:44:54', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'vLWKDKp8UXvup7utUA%2BAla3p1Xf29U2EuWV0mdMbKp0%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -12501,7 +12570,9 @@ CREATE TABLE `work_information` (
 --
 
 INSERT INTO `work_information` (`work_information_id`, `employee_id`, `employee_resume`, `badge_id`, `company_id`, `company_name`, `employment_type_id`, `employment_type_name`, `department_id`, `department_name`, `job_position_id`, `job_position_name`, `work_location_id`, `work_location_name`, `manager_id`, `manager_name`, `work_schedule_id`, `work_schedule_name`, `employment_status`, `pin_code`, `home_work_distance`, `visa_number`, `work_permit_number`, `visa_expiration_date`, `work_permit_expiration_date`, `work_permit`, `onboard_date`, `offboard_date`, `time_off_approver_id`, `time_off_approver_name`, `departure_reason_id`, `departure_reason_name`, `detailed_departure_reason`, `created_date`, `last_log_by`) VALUES
-(1, 1, NULL, '', 1, 'Christian General Motors Inc.', 0, '', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', '', 0, '', '', NULL, NULL, NULL, '2024-07-10', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-11 16:47:01', 2);
+(1, 1, NULL, '', 1, 'Christian General Motors Inc.', 0, '', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', '', 0, '', '', NULL, NULL, NULL, '2024-07-10', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-11 16:47:01', 2),
+(2, 2, NULL, '', 1, 'Christian General Motors Inc.', 0, '', 1, 'Data Center', 1, 'Data Center Staff', 0, '', 0, '', 0, '', 'Active', '', 0, '', '', NULL, NULL, NULL, '2024-07-11', NULL, 0, '', NULL, NULL, NULL, '2024-07-12 16:36:31', 2),
+(3, 3, NULL, '', 1, 'Christian General Motors Inc.', 0, '', 1, 'Data Center', 1, 'Data Center Staff', 0, '', 0, '', 0, '', 'Active', '', 0, '', '', NULL, NULL, NULL, '2024-07-16', NULL, 0, '', NULL, NULL, NULL, '2024-07-12 16:45:48', 2);
 
 -- --------------------------------------------------------
 
@@ -13185,7 +13256,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3107;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3110;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -13269,7 +13340,7 @@ ALTER TABLE `email_setting`
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `employee_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `employee_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `employment_type`
@@ -13473,7 +13544,7 @@ ALTER TABLE `work_hours`
 -- AUTO_INCREMENT for table `work_information`
 --
 ALTER TABLE `work_information`
-  MODIFY `work_information_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `work_information_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `work_location`
