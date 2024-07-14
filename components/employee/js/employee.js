@@ -2,8 +2,6 @@
     'use strict';
 
     $(function() {
-        
-
         generateDropdownOptions('company options');
         generateDropdownOptions('department options');
         generateDropdownOptions('job position options');
@@ -63,7 +61,7 @@
                         $('#employee-card').append(card.EMPLOYEE_CARD);
                     });
         
-                    offset += limit;
+                    offset += 0;
                     isFetching = false;
                 },
                 error: function(xhr, status, error) {
@@ -84,11 +82,13 @@
         });
         
         $('#datatable-search').on('keyup', function() {
+            offset = 0;
             employeeCards(true);
         });
         
         $(document).on('click','#apply-filter',function() {
-            employeeCards(true);
+            offset = 0;
+            employeeCards(true);            
             $('#filter-offcanvas').offcanvas('hide');
         });
        

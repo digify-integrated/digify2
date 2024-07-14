@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 12, 2024 at 11:31 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jul 14, 2024 at 02:55 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1041,7 +1041,6 @@ END$$
 DROP PROCEDURE IF EXISTS `generateEmployeeCard`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeCard` (IN `p_search_value` TEXT, IN `p_filter_by_company` INT, IN `p_filter_by_department` INT, IN `p_filter_by_job_position` INT, IN `p_filter_by_employee_status` VARCHAR(50), IN `p_filter_by_employment_type` INT, IN `p_filter_by_gender` INT, IN `p_filter_by_civil_status` INT, IN `p_limit` INT, IN `p_offset` INT)   BEGIN
     DECLARE query TEXT;
-    DECLARE search_query TEXT;
 
     SET query = '
         SELECT employee.employee_id AS employee_id, full_name, department_name, job_position_name, employment_status, employee_image
@@ -1050,7 +1049,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeCard` (IN `p_search
         WHERE 1=1';
 
     IF p_search_value IS NOT NULL AND p_search_value <> '' THEN
-        SET search_query = CONCAT('%', p_search_value, '%');
         SET query = CONCAT(query, ' AND (
             first_name LIKE ? OR
             middle_name LIKE ? OR
@@ -1061,42 +1059,41 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeCard` (IN `p_search
         )');
     END IF;
 
-    IF p_filter_by_company IS NOT NULL AND p_filter_by_company <> 0 THEN
-        SET query = CONCAT(query, ' AND company_id = ', p_filter_by_company);
+    IF p_filter_by_company IS NOT NULL AND p_filter_by_company <> '' THEN
+        SET query = CONCAT(query, ' AND company_id =', p_filter_by_company);
     END IF;
 
-    IF p_filter_by_department IS NOT NULL AND p_filter_by_department <> 0 THEN
-        SET query = CONCAT(query, ' AND department_id = ', p_filter_by_department);
+    IF p_filter_by_department IS NOT NULL AND p_filter_by_department <> '' THEN
+        SET query = CONCAT(query, ' AND department_id =', p_filter_by_department);
     END IF;
 
-    IF p_filter_by_job_position IS NOT NULL AND p_filter_by_job_position <> 0 THEN
-        SET query = CONCAT(query, ' AND job_position_id = ', p_filter_by_job_position);
+    IF p_filter_by_job_position IS NOT NULL AND p_filter_by_job_position <> '' THEN
+        SET query = CONCAT(query, ' AND job_position_id =', p_filter_by_job_position);
     END IF;
 
     IF p_filter_by_employee_status IS NOT NULL AND p_filter_by_employee_status <> '' THEN
-        SET query = CONCAT(query, ' AND employment_status = ', QUOTE(p_filter_by_employee_status));
+        SET query = CONCAT(query, ' AND employment_status =', QUOTE(p_filter_by_employee_status));
     END IF;
 
-    IF p_filter_by_employment_type IS NOT NULL AND p_filter_by_employment_type <> 0 THEN
-        SET query = CONCAT(query, ' AND employment_type_id = ', p_filter_by_employment_type);
+    IF p_filter_by_employment_type IS NOT NULL AND p_filter_by_employment_type <> '' THEN
+        SET query = CONCAT(query, ' AND employment_type_id =', p_filter_by_employment_type);
     END IF;
 
-    IF p_filter_by_gender IS NOT NULL AND p_filter_by_gender <> 0 THEN
-        SET query = CONCAT(query, ' AND gender_id = ', p_filter_by_gender);
+    IF p_filter_by_gender IS NOT NULL AND p_filter_by_gender <> '' THEN
+        SET query = CONCAT(query, ' AND gender_id =', p_filter_by_gender);
     END IF;
 
-    IF p_filter_by_civil_status IS NOT NULL AND p_filter_by_civil_status <> 0 THEN
-        SET query = CONCAT(query, ' AND civil_status_id = ', p_filter_by_civil_status);
+    IF p_filter_by_civil_status IS NOT NULL AND p_filter_by_civil_status <> '' THEN
+        SET query = CONCAT(query, ' AND civil_status_id =', p_filter_by_civil_status);
     END IF;
 
-    SET query = CONCAT(query, ' ORDER BY full_name LIMIT ? OFFSET ?');
+    SET query = CONCAT(query, ' ORDER BY full_name LIMIT ?, ?;');
 
     PREPARE stmt FROM query;
-
     IF p_search_value IS NOT NULL AND p_search_value <> '' THEN
-        EXECUTE stmt USING search_query, search_query, search_query, search_query, search_query, search_query, p_limit, p_offset;
+        EXECUTE stmt USING CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), p_offset, p_limit;
     ELSE
-        EXECUTE stmt USING p_limit, p_offset;
+        EXECUTE stmt USING p_offset, p_limit;
     END IF;
 
     DEALLOCATE PREPARE stmt;
@@ -6753,7 +6750,10 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3106, 'employee', 1, 'Employee created. <br/><br/>Full Name: Lawrence De Vera Agulto<br/>First Name: Lawrence<br/>Middle Name: De Vera<br/>Last Name: Agulto<br/>Civil Status Name: Married<br/>Gender Name: Female<br/>Date of Birth: 2024-07-11<br/>Birth Place: cab', 2, '2024-07-11 16:47:01', '2024-07-11 16:47:01'),
 (3107, 'user_account', 2, 'Last Connection Date: 2024-07-11 08:40:24 -> 2024-07-12 08:44:54<br/>', 2, '2024-07-12 08:44:54', '2024-07-12 08:44:54'),
 (3108, 'employee', 2, 'Employee created. <br/><br/>Full Name: lennard de vera<br/>First Name: lennard<br/>Last Name: de vera<br/>Civil Status Name: Engaged<br/>Gender Name: Female<br/>Date of Birth: 2024-08-01<br/>Birth Place: asdasd', 2, '2024-07-12 16:36:31', '2024-07-12 16:36:31'),
-(3109, 'employee', 3, 'Employee created. <br/><br/>Full Name: john doe<br/>First Name: john<br/>Last Name: doe<br/>Civil Status Name: Divorced<br/>Gender Name: Male<br/>Date of Birth: 2024-07-24<br/>Birth Place: asdasd', 2, '2024-07-12 16:45:48', '2024-07-12 16:45:48');
+(3109, 'employee', 3, 'Employee created. <br/><br/>Full Name: john doe<br/>First Name: john<br/>Last Name: doe<br/>Civil Status Name: Divorced<br/>Gender Name: Male<br/>Date of Birth: 2024-07-24<br/>Birth Place: asdasd', 2, '2024-07-12 16:45:48', '2024-07-12 16:45:48'),
+(3110, 'user_account', 2, 'Last Connection Date: 2024-07-12 08:44:54 -> 2024-07-14 08:10:44<br/>', 2, '2024-07-14 08:10:44', '2024-07-14 08:10:44'),
+(3111, 'user_account', 2, 'Last Connection Date: 2024-07-14 08:10:44 -> 2024-07-14 11:16:52<br/>', 2, '2024-07-14 11:16:52', '2024-07-14 11:16:52'),
+(3112, 'user_account', 2, 'Last Connection Date: 2024-07-14 11:16:52 -> 2024-07-14 18:19:26<br/>', 2, '2024-07-14 18:19:26', '2024-07-14 18:19:26');
 
 -- --------------------------------------------------------
 
@@ -12102,7 +12102,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'light', 'Aqua_Theme', 0, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'light', 'Orange_Theme', 0, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -12295,7 +12295,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-12 08:44:54', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'vLWKDKp8UXvup7utUA%2BAla3p1Xf29U2EuWV0mdMbKp0%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-14 18:19:26', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'Y%2B1kYqC0V3rcJSXqLHcTn5BiiQCja09Ndxq7ra7DjTs%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -13256,7 +13256,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3110;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3113;
 
 --
 -- AUTO_INCREMENT for table `bank`

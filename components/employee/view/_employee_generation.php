@@ -84,16 +84,16 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
         #
         # -------------------------------------------------------------
         case 'employee cards':
-            $searchValue = isset($_POST['search_value']) ? htmlspecialchars($_POST['search_value'], ENT_QUOTES, 'UTF-8') : null;
-            $filterByCompany = isset($_POST['filter_by_company']) ? htmlspecialchars($_POST['filter_by_company'], ENT_QUOTES, 'UTF-8') : null;
-            $filterByDepartment = isset($_POST['filter_by_department']) ? htmlspecialchars($_POST['filter_by_department'], ENT_QUOTES, 'UTF-8') : null;
-            $filterByJobPosition = isset($_POST['filter_by_job_position']) ? htmlspecialchars($_POST['filter_by_job_position'], ENT_QUOTES, 'UTF-8') : null;
-            $filterByEmployeeStatus = isset($_POST['filter_by_employee_status']) ? htmlspecialchars($_POST['filter_by_employee_status'], ENT_QUOTES, 'UTF-8') : null;
-            $filterByEmploymentType = isset($_POST['filter_by_employment_type']) ? htmlspecialchars($_POST['filter_by_employment_type'], ENT_QUOTES, 'UTF-8') : null;
-            $filterByGender = isset($_POST['filter_by_gender']) ? htmlspecialchars($_POST['filter_by_gender'], ENT_QUOTES, 'UTF-8') : null;
-            $filterByCivilStatus = isset($_POST['filter_by_civil_status']) ? htmlspecialchars($_POST['filter_by_civil_status'], ENT_QUOTES, 'UTF-8') : null;
-            $limit = isset($_POST['limit']) ? htmlspecialchars($_POST['limit'], ENT_QUOTES, 'UTF-8') : null;
-            $offset = isset($_POST['offset']) ? htmlspecialchars($_POST['offset'], ENT_QUOTES, 'UTF-8') : null;
+            $searchValue = isset($_POST['search_value']) ? $_POST['search_value'] : null;
+            $filterByCompany = isset($_POST['filter_by_company']) ? $_POST['filter_by_company'] : null;
+            $filterByDepartment = isset($_POST['filter_by_department']) ? $_POST['filter_by_department'] : null;
+            $filterByJobPosition = isset($_POST['filter_by_job_position']) ? $_POST['filter_by_job_position'] : null;
+            $filterByEmployeeStatus = isset($_POST['filter_by_employee_status']) ? $_POST['filter_by_employee_status'] : null;
+            $filterByEmploymentType = isset($_POST['filter_by_employment_type']) ? $_POST['filter_by_employment_type'] : null;
+            $filterByGender = isset($_POST['filter_by_gender']) ? $_POST['filter_by_gender'] : null;
+            $filterByCivilStatus = isset($_POST['filter_by_civil_status']) ? $_POST['filter_by_civil_status'] : null;
+            $limit = isset($_POST['limit']) ? $_POST['limit'] : null;
+            $offset = isset($_POST['offset']) ? $_POST['offset'] : null;
 
             $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeCard(:searchValue, :filterByCompany, :filterByDepartment, :filterByJobPosition, :filterByEmployeeStatus, :filterByEmploymentType, :filterByGender, :filterByCivilStatus, :limit, :offset)');
             $sql->bindValue(':searchValue', $searchValue, PDO::PARAM_STR);
@@ -133,14 +133,10 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                         </div>
                                         <div class="card-body pt-3 p-4">
                                             <a href="'. $pageLink .'&id='. $employeeIDEncrypted .'" class="hover-img d-block overflow-hidden">
-                                                <h6 class="fw-bold fs-4 text-primary">'. $fullName .'</h6>
-                                                <div class="d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="fs-2 text-muted">'. $departmentName .'</span>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="fs-2 text-muted">'. $jobPositionName .'</span>
-                                                    </div>
+                                                <div>
+                                                    <h6 class="fw-bold fs-4 text-primary">'. $fullName .'</h6>
+                                                    <p class="mb-0 fs-2 text-muted">'. $jobPositionName .'</p>
+                                                    <p class="mb-0 fs-2 text-muted">'. $departmentName .'</p>
                                                 </div>
                                             </a>
                                         </div>

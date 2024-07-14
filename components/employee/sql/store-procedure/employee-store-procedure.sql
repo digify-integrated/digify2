@@ -128,7 +128,6 @@ END //
 CREATE PROCEDURE generateEmployeeCard(IN p_search_value TEXT, IN p_filter_by_company INT, IN p_filter_by_department INT, IN p_filter_by_job_position INT, IN p_filter_by_employee_status VARCHAR(50), IN p_filter_by_employment_type INT, IN p_filter_by_gender INT, IN p_filter_by_civil_status INT, IN p_limit INT, IN p_offset INT)
 BEGIN
     DECLARE query TEXT;
-    DECLARE search_query TEXT;
 
     SET query = '
         SELECT employee.employee_id AS employee_id, full_name, department_name, job_position_name, employment_status, employee_image
@@ -137,7 +136,6 @@ BEGIN
         WHERE 1=1';
 
     IF p_search_value IS NOT NULL AND p_search_value <> '' THEN
-        SET search_query = CONCAT('%', p_search_value, '%');
         SET query = CONCAT(query, ' AND (
             first_name LIKE ? OR
             middle_name LIKE ? OR
@@ -148,42 +146,41 @@ BEGIN
         )');
     END IF;
 
-    IF p_filter_by_company IS NOT NULL AND p_filter_by_company <> 0 THEN
-        SET query = CONCAT(query, ' AND company_id = ', p_filter_by_company);
+    IF p_filter_by_company IS NOT NULL AND p_filter_by_company <> '' THEN
+        SET query = CONCAT(query, ' AND company_id =', p_filter_by_company);
     END IF;
 
-    IF p_filter_by_department IS NOT NULL AND p_filter_by_department <> 0 THEN
-        SET query = CONCAT(query, ' AND department_id = ', p_filter_by_department);
+    IF p_filter_by_department IS NOT NULL AND p_filter_by_department <> '' THEN
+        SET query = CONCAT(query, ' AND department_id =', p_filter_by_department);
     END IF;
 
-    IF p_filter_by_job_position IS NOT NULL AND p_filter_by_job_position <> 0 THEN
-        SET query = CONCAT(query, ' AND job_position_id = ', p_filter_by_job_position);
+    IF p_filter_by_job_position IS NOT NULL AND p_filter_by_job_position <> '' THEN
+        SET query = CONCAT(query, ' AND job_position_id =', p_filter_by_job_position);
     END IF;
 
     IF p_filter_by_employee_status IS NOT NULL AND p_filter_by_employee_status <> '' THEN
-        SET query = CONCAT(query, ' AND employment_status = ', QUOTE(p_filter_by_employee_status));
+        SET query = CONCAT(query, ' AND employment_status =', QUOTE(p_filter_by_employee_status));
     END IF;
 
-    IF p_filter_by_employment_type IS NOT NULL AND p_filter_by_employment_type <> 0 THEN
-        SET query = CONCAT(query, ' AND employment_type_id = ', p_filter_by_employment_type);
+    IF p_filter_by_employment_type IS NOT NULL AND p_filter_by_employment_type <> '' THEN
+        SET query = CONCAT(query, ' AND employment_type_id =', p_filter_by_employment_type);
     END IF;
 
-    IF p_filter_by_gender IS NOT NULL AND p_filter_by_gender <> 0 THEN
-        SET query = CONCAT(query, ' AND gender_id = ', p_filter_by_gender);
+    IF p_filter_by_gender IS NOT NULL AND p_filter_by_gender <> '' THEN
+        SET query = CONCAT(query, ' AND gender_id =', p_filter_by_gender);
     END IF;
 
-    IF p_filter_by_civil_status IS NOT NULL AND p_filter_by_civil_status <> 0 THEN
-        SET query = CONCAT(query, ' AND civil_status_id = ', p_filter_by_civil_status);
+    IF p_filter_by_civil_status IS NOT NULL AND p_filter_by_civil_status <> '' THEN
+        SET query = CONCAT(query, ' AND civil_status_id =', p_filter_by_civil_status);
     END IF;
 
-    SET query = CONCAT(query, ' ORDER BY full_name LIMIT ? OFFSET ?');
+    SET query = CONCAT(query, ' ORDER BY full_name LIMIT ?, ?;');
 
     PREPARE stmt FROM query;
-
     IF p_search_value IS NOT NULL AND p_search_value <> '' THEN
-        EXECUTE stmt USING search_query, search_query, search_query, search_query, search_query, search_query, p_limit, p_offset;
+        EXECUTE stmt USING CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), p_offset, p_limit;
     ELSE
-        EXECUTE stmt USING p_limit, p_offset;
+        EXECUTE stmt USING p_offset, p_limit;
     END IF;
 
     DEALLOCATE PREPARE stmt;
