@@ -1,51 +1,35 @@
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-lg-4">
         <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Department</h5>
-                <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                    <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <?php
-                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Department</a></li>' : '';
-                            echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-department">Delete Department</button></li>' : '';
-                        ?>
-                    </ul>
+            <div class="card-body p-4 d-flex align-items-center gap-3">
+                <img src="./assets/images/profile/user-1.jpg" alt="matdash-img" class="rounded-circle" width="80" height="80">
+                <div>
+                    <h4 class="card-title mb-1">Leo Pratt</h4>
+                    <span class="fs-2 d-flex align-items-center">
+                        <i class="ti ti-map-pin text-dark fs-3 me-1 mb-2"></i>Bulgaria
+                    </span>
+                    <span class="badge bg-success-subtle text-success">Active</span>
                 </div>
-                <?php
-                    echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#department-modal" id="edit-details">Edit</button>
-                                                        </div>' : '';
-                ?>
+                <a href="javascript:void(0)" class="link text-dark d-flex align-items-center justify-content-center fw-medium py-1 px-2 ms-auto"><i class="ti ti-pencil me-1 fs-6"></i></a>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-3">Display Name:</label>
-                            <div class="col-md-9">
-                                <p class="form-control-static" id="department_name_summary">--</p>
-                            </div>
+            <div class="card-body p-0">
+                <p class="text-justify border-top p-4 pb-0 aboutscroll">
+                    Lorem ipsum dolor sit ametetur adipisicing elit, sed do
+                    eiusmod tempor incididunt adipisicing elit, sed do eiusmod
+                    tempor incididunLorem ipsum dolor sit ametetur adipisicing
+                    elit, sed do eiusmod tempor incididuntt
+                </p>
+                <div class="p-4 border-top">
+                    <div class="row text-center">
+                        <div class="col-6 border-end">
+                            <a href="javascript:void(0)" class="link text-dark d-flex align-items-center justify-content-center fw-medium">
+                                <i class="ti ti-device-desktop-off me-1 fs-6"></i>Disable System Access
+                            </a>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-3">Parent Department:</label>
-                            <div class="col-md-9">
-                                <p class="form-control-static" id="parent_department_name_summary">--</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-3">Manager:</label>
-                            <div class="col-md-9">
-                                <p class="form-control-static" id="manager_name_summary">--</p>
-                            </div>
+                        <div class="col-6">
+                            <a href="javascript:void(0)" class="link text-dark d-flex align-items-center justify-content-center fw-medium">
+                                <i class="ti ti-qrcode me-1 fs-6"></i>QR Code
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -53,48 +37,3 @@
         </div>
     </div>
 </div>
-
-<div id="department-modal" class="modal fade" tabindex="-1" aria-labelledby="department-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-r">
-        <div class="modal-content">
-            <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8">Edit Department Details</h5>
-                <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="department-form" method="post" action="#">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="department_name">Display Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control maxlength" id="department_name" name="department_name" maxlength="100" autocomplete="off">
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <label class="form-label" for="parent_department_id">Parent Department</label>
-                            <div class="mb-3">
-                                <select id="parent_department_id" name="parent_department_id" class="select2 form-control"></select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <label class="form-label" for="manager_id">Manager</label>
-                            <div class="mb-3">
-                                <select id="manager_id" name="manager_id" class="select2 form-control">
-                                    <option value="0">--</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer border-top">
-                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="department-form" class="btn btn-success" id="submit-data">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php require_once('components/global/view/_internal_log_notes.php'); ?>
