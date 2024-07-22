@@ -47,7 +47,7 @@
                             $menuItemDetails = $menuItemModel->getMenuItem($menuItemID);
                             $menuItemURL = $menuItemDetails['menu_item_url'];
                                     
-                            $apps .= '<div class="col-lg-2 hover-img">
+                            $apps .= '<div class="col-lg-2">
                                         <a href="'. $menuItemURL .'?app_module_id='. $securityModel->encryptData($appModuleID) .'&page_id='. $securityModel->encryptData($menuItemID) .'">
                                             <div class="card" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="'. $appModuleDescription .'">
                                                 <div class="card-body text-center">

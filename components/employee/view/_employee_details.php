@@ -1,35 +1,172 @@
 <div class="row">
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-body p-4 d-flex align-items-center gap-3">
-                <img src="./assets/images/profile/user-1.jpg" alt="matdash-img" class="rounded-circle" width="80" height="80">
-                <div>
-                    <h4 class="card-title mb-1">Leo Pratt</h4>
-                    <span class="fs-2 d-flex align-items-center">
-                        <i class="ti ti-map-pin text-dark fs-3 me-1 mb-2"></i>Bulgaria
-                    </span>
-                    <span class="badge bg-success-subtle text-success">Active</span>
-                </div>
-                <a href="javascript:void(0)" class="link text-dark d-flex align-items-center justify-content-center fw-medium py-1 px-2 ms-auto"><i class="ti ti-pencil me-1 fs-6"></i></a>
-            </div>
+    <div class="col-lg-12">
+        <div class="card overflow-hidden">
             <div class="card-body p-0">
-                <p class="text-justify border-top p-4 pb-0 aboutscroll">
-                    Lorem ipsum dolor sit ametetur adipisicing elit, sed do
-                    eiusmod tempor incididunt adipisicing elit, sed do eiusmod
-                    tempor incididunLorem ipsum dolor sit ametetur adipisicing
-                    elit, sed do eiusmod tempor incididuntt
-                </p>
-                <div class="p-4 border-top">
-                    <div class="row text-center">
-                        <div class="col-6 border-end">
-                            <a href="javascript:void(0)" class="link text-dark d-flex align-items-center justify-content-center fw-medium">
-                                <i class="ti ti-device-desktop-off me-1 fs-6"></i>Disable System Access
-                            </a>
+                <img src="./assets/images/backgrounds/profilebg.jpg" alt="matdash-img" class="img-fluid">
+                <div class="row align-items-center">
+                    <div class="col-lg-2 mt-n3 order-lg-2 order-1">
+                        <div class="mt-n5 ms-5">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <div class="d-flex align-items-center justify-content-center round-110">
+                                    <div class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden round-100">
+                                        <img src="./assets/images/profile/user-1.jpg" alt="matdash-img" class="w-100 h-100">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <a href="javascript:void(0)" class="link text-dark d-flex align-items-center justify-content-center fw-medium">
-                                <i class="ti ti-qrcode me-1 fs-6"></i>QR Code
-                            </a>
+                    </div>
+                    <div class="col-lg-6 order-last my-3">
+                        <h5 class="mb-0">David McMichael</h5>
+                        <p class="mb-0">Designer</p>
+                    </div>
+                    <div class="col-lg-4 order-last">
+                        <ul class="list-unstyled d-flex align-items-center justify-content-center justify-content-lg-end my-3 mx-4 pe-4 gap-3">
+                            <li>
+                                <button class="btn btn-danger text-nowrap"><i class="ti ti-archive me-1"></i> Archive</button>
+                            </li>
+                            <li>
+                                <button class="btn btn-primary text-nowrap"><i class="ti ti-qrcode me-1"></i> QR Code</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">About</h5>
+                <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                    <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-pencil me-1 fs-6"></i></a>
+                </div>
+            </div>
+            <hr class="m-0" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-justify aboutscroll">
+                            Lorem ipsum dolor sit ametetur adipisicing elit, sed do
+                            eiusmod tempor incididunt adipisicing elit, sed do eiusmod
+                            tempor incididunLorem ipsum dolor sit ametetur adipisicing
+                            elit, sed do eiusmod tempor incididuntt
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Private Information</h5>
+                <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                    <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-pencil me-1 fs-6"></i></a>
+                </div>
+            </div>
+            <hr class="m-0" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="form-label col-md-6">Nickname</label>
+                                    <div class="col-md-6">
+                                        <p class="form-control-static" id="nickname_summary">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="form-label col-md-6">Civil Status</label>
+                                    <div class="col-md-6">
+                                        <p class="form-control-static" id="civil_status_summary">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="form-label col-md-6">Place of Birth</label>
+                                    <div class="col-md-6">
+                                        <p class="form-control-static" id="place_of_birth_summary">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="form-label col-md-6">Height</label>
+                                    <div class="col-md-6">
+                                        <p class="form-control-static" id="height_summary">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="form-label col-md-6">Weight</label>
+                                    <div class="col-md-6">
+                                        <p class="form-control-static" id="weight_summary">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="form-label col-md-6">Gender</label>
+                                    <div class="col-md-6">
+                                        <p class="form-control-static" id="gender_summary">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="form-label col-md-6">Date of Birth</label>
+                                    <div class="col-md-6">
+                                        <p class="form-control-static" id="date_of_birth_summary">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="form-label col-md-6">Blood Type</label>
+                                    <div class="col-md-6">
+                                        <p class="form-control-static" id="date_of_birth_summary">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    <label class="form-label col-md-6">Religion</label>
+                                    <div class="col-md-6">
+                                        <p class="form-control-static" id="religion_summary">--</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

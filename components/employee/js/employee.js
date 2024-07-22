@@ -61,7 +61,7 @@
                         $('#employee-card').append(card.EMPLOYEE_CARD);
                     });
         
-                    offset += 0;
+                    offset += limit;
                     isFetching = false;
                 },
                 error: function(xhr, status, error) {

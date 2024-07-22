@@ -201,7 +201,7 @@
                                 <label class="form-label col-lg-12 col-form-label fs-4">Work Permit</label>
                             </div>
                             <div class="mb-3 row align-items-center">
-                                <label for="visa_number" class="form-label col-lg-6 col-form-label">Visa No</label>
+                                <label for="visa_number" class="form-label col-lg-6 col-form-label">Visa No.</label>
                                 <div class="col-lg-6">
                                     <input type="text" class="form-control maxlength" id="visa_number" name="visa_number" maxlength="50" autocomplete="off">
                                 </div>
@@ -218,7 +218,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row align-items-center">
-                                <label for="work_permit_number" class="form-label col-lg-6 col-form-label">Work Permit No</label>
+                                <label for="work_permit_number" class="form-label col-lg-6 col-form-label">Work Permit No.</label>
                                 <div class="col-lg-6">
                                     <input type="text" class="form-control maxlength" id="work_permit_number" name="work_permit_number" maxlength="50" autocomplete="off">
                                 </div>
