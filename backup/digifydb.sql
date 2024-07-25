@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2024 at 02:55 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jul 25, 2024 at 11:06 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -6753,7 +6753,13 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3109, 'employee', 3, 'Employee created. <br/><br/>Full Name: john doe<br/>First Name: john<br/>Last Name: doe<br/>Civil Status Name: Divorced<br/>Gender Name: Male<br/>Date of Birth: 2024-07-24<br/>Birth Place: asdasd', 2, '2024-07-12 16:45:48', '2024-07-12 16:45:48'),
 (3110, 'user_account', 2, 'Last Connection Date: 2024-07-12 08:44:54 -> 2024-07-14 08:10:44<br/>', 2, '2024-07-14 08:10:44', '2024-07-14 08:10:44'),
 (3111, 'user_account', 2, 'Last Connection Date: 2024-07-14 08:10:44 -> 2024-07-14 11:16:52<br/>', 2, '2024-07-14 11:16:52', '2024-07-14 11:16:52'),
-(3112, 'user_account', 2, 'Last Connection Date: 2024-07-14 11:16:52 -> 2024-07-14 18:19:26<br/>', 2, '2024-07-14 18:19:26', '2024-07-14 18:19:26');
+(3112, 'user_account', 2, 'Last Connection Date: 2024-07-14 11:16:52 -> 2024-07-14 18:19:26<br/>', 2, '2024-07-14 18:19:26', '2024-07-14 18:19:26'),
+(3113, 'user_account', 2, 'Last Connection Date: 2024-07-14 18:19:26 -> 2024-07-22 09:34:46<br/>', 2, '2024-07-22 09:34:46', '2024-07-22 09:34:46'),
+(3114, 'user_account', 2, 'Failed Login Attempts: 0 -> 1<br/>', 2, '2024-07-22 10:41:14', '2024-07-22 10:41:14'),
+(3115, 'user_account', 2, 'Failed Login Attempts: 1 -> 0<br/>', 2, '2024-07-22 10:41:17', '2024-07-22 10:41:17'),
+(3116, 'user_account', 2, 'Last Connection Date: 2024-07-22 09:34:46 -> 2024-07-22 10:41:17<br/>', 2, '2024-07-22 10:41:17', '2024-07-22 10:41:17'),
+(3117, 'user_account', 2, 'Last Connection Date: 2024-07-22 10:41:17 -> 2024-07-24 09:14:30<br/>', 2, '2024-07-24 09:14:30', '2024-07-24 09:14:30'),
+(3118, 'user_account', 2, 'Last Connection Date: 2024-07-24 09:14:30 -> 2024-07-25 10:05:27<br/>', 2, '2024-07-25 10:05:27', '2024-07-25 10:05:27');
 
 -- --------------------------------------------------------
 
@@ -9721,6 +9727,7 @@ CREATE TABLE `employee` (
   `middle_name` varchar(300) DEFAULT NULL,
   `last_name` varchar(300) NOT NULL,
   `suffix` varchar(10) DEFAULT NULL,
+  `about` varchar(500) DEFAULT NULL,
   `nickname` varchar(100) DEFAULT NULL,
   `civil_status_id` int(10) UNSIGNED DEFAULT NULL,
   `civil_status_name` varchar(100) DEFAULT NULL,
@@ -9742,10 +9749,10 @@ CREATE TABLE `employee` (
 -- Dumping data for table `employee`
 --
 
-INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `created_date`, `last_log_by`) VALUES
-(1, NULL, NULL, 'Lawrence De Vera Agulto', 'Lawrence', 'De Vera', 'Agulto', '', '', 4, 'Married', 2, 'Female', 0, '', 0, '', '2024-07-11', 'cab', 0, 0, '2024-07-11 16:47:01', 2),
-(2, NULL, NULL, 'lennard de vera', 'lennard', '', 'de vera', '', '', 2, 'Engaged', 2, 'Female', 0, '', 0, '', '2024-08-01', 'asdasd', 0, 0, '2024-07-12 16:36:31', 2),
-(3, NULL, NULL, 'john doe', 'john', '', 'doe', '', '', 1, 'Divorced', 1, 'Male', 0, '', 0, '', '2024-07-24', 'asdasd', 0, 0, '2024-07-12 16:45:48', 2);
+INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `created_date`, `last_log_by`) VALUES
+(1, NULL, NULL, 'Lawrence De Vera Agulto', 'Lawrence', 'De Vera', 'Agulto', '', NULL, '', 4, 'Married', 2, 'Female', 0, '', 0, '', '2024-07-11', 'cab', 0, 0, '2024-07-11 16:47:01', 2),
+(2, NULL, NULL, 'lennard de vera', 'lennard', '', 'de vera', '', NULL, '', 2, 'Engaged', 2, 'Female', 0, '', 0, '', '2024-08-01', 'asdasd', 0, 0, '2024-07-12 16:36:31', 2),
+(3, NULL, NULL, 'john doe', 'john', '', 'doe', '', NULL, '', 1, 'Divorced', 1, 'Male', 0, '', 0, '', '2024-07-24', 'asdasd', 0, 0, '2024-07-12 16:45:48', 2);
 
 --
 -- Triggers `employee`
@@ -12102,7 +12109,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'light', 'Orange_Theme', 0, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -12295,7 +12302,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-14 18:19:26', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'Y%2B1kYqC0V3rcJSXqLHcTn5BiiQCja09Ndxq7ra7DjTs%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-25 10:05:27', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'MTwK%2FSFwcitQfBeMYpNghtCSumkUGHaD%2B2wHyWRupfg%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -13256,7 +13263,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3113;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3119;
 
 --
 -- AUTO_INCREMENT for table `bank`

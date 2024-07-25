@@ -92,15 +92,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row align-items-center">
-                                <label class="form-label col-lg-12 col-form-label fs-4">Schedule</label>
-                            </div>
-                            <div class="row align-items-center">
-                                <label for="work_schedule_id" class="form-label col-lg-5 col-form-label">Work Schedule</label>
-                                <div class="col-lg-7">
-                                    <select id="work_schedule_id" name="work_schedule_id" class="select2 form-control"></select>
-                                </div>
-                            </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="row align-items-center">
