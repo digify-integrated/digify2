@@ -2,15 +2,52 @@
     'use strict';
 
     $(function() {
-        generateDropdownOptions('department options');
-        displayDetails('get department details');
+        //generateDropdownOptions('department options');
+        displayDetails('get employee details');
+        displayDetails('get work information details');
 
-        if($('#department-form').length){
+        /*if($('#department-form').length){
             departmentForm();
-        }
+        }*/
 
         $(document).on('click','#edit-details',function() {
             displayDetails('get department details');
+        });
+
+        $(document).on('click','#add-experience-details',function() {
+            $('#experience-title').text('Add Experience');
+        });
+
+        $(document).on('click','#add-education-details',function() {
+            $('#education-title').text('Add Education');
+        });
+
+        $(document).on('click','#add-address-details',function() {
+            $('#address-title').text('Add Address');
+        });
+
+        $(document).on('click','#add-contact-information-details',function() {
+            $('#contact-information-title').text('Add Contact Information');
+        });
+
+        $(document).on('click','#add-id-records-details',function() {
+            $('#id-records-title').text('Add ID Records');
+        });
+
+        $(document).on('click','#add-bank-account-details',function() {
+            $('#bank-account-title').text('Add Bank Account');
+        });
+
+        $(document).on('click','#add-licenses-details',function() {
+            $('#licenses-title').text('Add Licenses');
+        });
+
+        $(document).on('click','#add-emergency-contact-details',function() {
+            $('#emergency-contact-title').text('Add Emergency Contact');
+        });
+
+        $(document).on('click','#add-language-details',function() {
+            $('#language-title').text('Add Language');
         });
 
         $(document).on('click','#delete-department',function() {
@@ -85,9 +122,9 @@
         }
 
         if($('#internal-notes-form').length){
-            const department_id = $('#details-id').text();
+            const employee_id = $('#details-id').text();
 
-            internalNotesForm('department', department_id);
+            internalNotesForm('employee', employee_id);
         }
     });
 })(jQuery);
