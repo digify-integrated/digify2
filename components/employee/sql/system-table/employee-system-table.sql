@@ -23,21 +23,6 @@ CREATE TABLE employee (
     birth_place VARCHAR(1000),
     height FLOAT,
     weight FLOAT,
-    created_date DATETIME NOT NULL DEFAULT NOW(),
-    last_log_by INT UNSIGNED NOT NULL,
-    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
-);
-
-CREATE INDEX employee_index_employee_id ON employee(employee_id);
-CREATE INDEX employee_index_civil_status_id ON employee(civil_status_id);
-CREATE INDEX employee_index_gender_id ON employee(gender_id);
-CREATE INDEX employee_index_religion_id ON employee(religion_id);
-CREATE INDEX employee_index_blood_type_id ON employee(blood_type_id);
-
-CREATE TABLE work_information (
-    work_information_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    employee_id INT UNSIGNED NOT NULL,
-    employee_resume VARCHAR(500),
     badge_id VARCHAR(200),
     company_id INT UNSIGNED,
     company_name VARCHAR(100),
@@ -70,18 +55,21 @@ CREATE TABLE work_information (
     detailed_departure_reason VARCHAR(5000),
     created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
-    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id),
-    FOREIGN KEY (employee_id) REFERENCES employee(employee_id)
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
 );
 
-CREATE INDEX work_information_index_employee_id ON work_information(employee_id);
-CREATE INDEX work_information_index_employment_type_id ON work_information(employment_type_id);
-CREATE INDEX work_information_index_department_id ON work_information(department_id);
-CREATE INDEX work_information_index_job_position_id ON work_information(job_position_id);
-CREATE INDEX work_information_index_manager_id ON work_information(manager_id);
-CREATE INDEX work_information_index_work_schedule_id ON work_information(work_schedule_id);
-CREATE INDEX work_information_index_work_location_id ON work_information(work_location_id);
-CREATE INDEX work_information_index_departure_reason_id ON work_information(departure_reason_id);
-CREATE INDEX work_information_index_employment_status ON work_information(employment_status);
+CREATE INDEX employee_index_employee_id ON employee(employee_id);
+CREATE INDEX employee_index_civil_status_id ON employee(civil_status_id);
+CREATE INDEX employee_index_gender_id ON employee(gender_id);
+CREATE INDEX employee_index_religion_id ON employee(religion_id);
+CREATE INDEX employee_index_blood_type_id ON employee(blood_type_id);
+CREATE INDEX employee_index_employment_type_id ON employee(employment_type_id);
+CREATE INDEX employee_index_department_id ON employee(department_id);
+CREATE INDEX employee_index_job_position_id ON employee(job_position_id);
+CREATE INDEX employee_index_manager_id ON employee(manager_id);
+CREATE INDEX employee_index_work_schedule_id ON employee(work_schedule_id);
+CREATE INDEX employee_index_work_location_id ON employee(work_location_id);
+CREATE INDEX employee_index_departure_reason_id ON employee(departure_reason_id);
+CREATE INDEX employee_index_employment_status ON employee(employment_status);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

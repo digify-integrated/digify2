@@ -103,6 +103,15 @@
                                     <select id="time_off_approver_id" name="time_off_approver_id" class="select2 form-control"></select>
                                 </div>
                             </div>
+                            <div class="row align-items-center">
+                                <label class="form-label col-lg-12 col-form-label fs-4">Schedule</label>
+                            </div>
+                            <div class="row align-items-center">
+                                <label for="work_schedule_id" class="form-label col-lg-3 col-form-label">Work Schedule</span></label>
+                                <div class="col-lg-9">
+                                    <select id="work_schedule_id" name="work_schedule_id" class="select2 form-control"></select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -139,7 +148,7 @@
                                 <label for="birthday" class="form-label col-lg-4 col-form-label">Date of Birth <span class="text-danger">*</span></label>
                                 <div class="col-lg-8">
                                     <div class="input-group">
-                                        <input type="text" class="form-control regular-datepicker" id="birthday" name="birthday"/>
+                                        <input type="text" class="form-control regular-datepicker" id="birthday" name="birthday" autocomplete="off"/>
                                         <span class="input-group-text">
                                             <i class="ti ti-calendar fs-5"></i>
                                         </span>
@@ -201,7 +210,7 @@
                                 <label for="visa_expiration_date" class="form-label col-lg-6 col-form-label">Visa Expiration Date</label>
                                 <div class="col-lg-6">
                                     <div class="input-group">
-                                        <input type="text" class="form-control regular-datepicker" id="visa_expiration_date" name="visa_expiration_date"/>
+                                        <input type="text" class="form-control regular-datepicker" id="visa_expiration_date" name="visa_expiration_date" autocomplete="off"/>
                                         <span class="input-group-text">
                                             <i class="ti ti-calendar fs-5"></i>
                                         </span>
@@ -218,7 +227,7 @@
                                 <label for="work_permit_expiration_date" class="form-label col-lg-6 col-form-label">Work Permit Expiration Date</label>
                                 <div class="col-lg-6">
                                     <div class="input-group">
-                                        <input type="text" class="form-control regular-datepicker" id="work_permit_expiration_date" name="work_permit_expiration_date"/>
+                                        <input type="text" class="form-control regular-datepicker" id="work_permit_expiration_date" name="work_permit_expiration_date" autocomplete="off"/>
                                         <span class="input-group-text">
                                             <i class="ti ti-calendar fs-5"></i>
                                         </span>
@@ -266,7 +275,7 @@
                                 <label for="onboard_date" class="form-label col-lg-4 col-form-label">On-Board Date <span class="text-danger">*</span></label>
                                 <div class="col-lg-8">
                                     <div class="input-group">
-                                        <input type="text" class="form-control regular-datepicker" id="onboard_date" name="onboard_date"/>
+                                        <input type="text" class="form-control regular-datepicker" id="onboard_date" name="onboard_date" autocomplete="off"/>
                                         <span class="input-group-text">
                                             <i class="ti ti-calendar fs-5"></i>
                                         </span>

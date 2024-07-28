@@ -110,15 +110,15 @@
         });
 
         if($('#log-notes-main').length){
-            const department_id = $('#details-id').text();
+            const employee_id = $('#details-id').text();
 
-            logNotesMain('department', department_id);
+            logNotesMain('employee', employee_id);
         }
 
         if($('#internal-notes').length){
-            const department_id = $('#details-id').text();
+            const employee_id = $('#details-id').text();
 
-            internalNotes('department', department_id);
+            internalNotes('employee', employee_id);
         }
 
         if($('#internal-notes-form').length){

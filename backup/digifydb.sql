@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 25, 2024 at 11:06 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Jul 28, 2024 at 02:41 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1043,9 +1043,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeCard` (IN `p_search
     DECLARE query TEXT;
 
     SET query = '
-        SELECT employee.employee_id AS employee_id, full_name, department_name, job_position_name, employment_status, employee_image
+        SELECT employee_id, full_name, department_name, job_position_name, employment_status, employee_image
         FROM employee 
-        LEFT JOIN work_information ON work_information.employee_id = employee.employee_id
         WHERE 1=1';
 
     IF p_search_value IS NOT NULL AND p_search_value <> '' THEN
@@ -2041,9 +2040,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmailSetting` (IN `p_email_se
 END$$
 
 DROP PROCEDURE IF EXISTS `insertEmployee`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployee` (IN `p_full_name` VARCHAR(1000), IN `p_first_name` VARCHAR(300), IN `p_middle_name` VARCHAR(300), IN `p_last_name` VARCHAR(300), IN `p_suffix` VARCHAR(10), IN `p_nickname` VARCHAR(100), IN `p_civil_status_id` INT, IN `p_civil_status_name` VARCHAR(100), IN `p_gender_id` INT, IN `p_gender_name` VARCHAR(100), IN `p_religion_id` INT, IN `p_religion_name` VARCHAR(100), IN `p_blood_type_id` INT, IN `p_blood_type_name` VARCHAR(100), IN `p_birthday` DATE, IN `p_birth_place` VARCHAR(1000), IN `p_height` FLOAT, IN `p_weight` FLOAT, IN `p_last_log_by` INT, OUT `p_employee_id` INT)   BEGIN
-    INSERT INTO employee (full_name, first_name, middle_name, last_name, suffix, nickname, civil_status_id, civil_status_name, gender_id, gender_name, religion_id, religion_name, blood_type_id, blood_type_name, birthday, birth_place, height, weight, last_log_by) 
-	VALUES(p_full_name, p_first_name, p_middle_name, p_last_name, p_suffix, p_nickname, p_civil_status_id, p_civil_status_name, p_gender_id, p_gender_name, p_religion_id, p_religion_name, p_blood_type_id, p_blood_type_name, p_birthday, p_birth_place, p_height, p_weight, p_last_log_by);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployee` (IN `p_full_name` VARCHAR(1000), IN `p_first_name` VARCHAR(300), IN `p_middle_name` VARCHAR(300), IN `p_last_name` VARCHAR(300), IN `p_suffix` VARCHAR(10), IN `p_nickname` VARCHAR(100), IN `p_civil_status_id` INT, IN `p_civil_status_name` VARCHAR(100), IN `p_gender_id` INT, IN `p_gender_name` VARCHAR(100), IN `p_religion_id` INT, IN `p_religion_name` VARCHAR(100), IN `p_blood_type_id` INT, IN `p_blood_type_name` VARCHAR(100), IN `p_birthday` DATE, IN `p_birth_place` VARCHAR(1000), IN `p_height` FLOAT, IN `p_weight` FLOAT, IN `p_badge_id` VARCHAR(200), IN `p_company_id` INT, IN `p_company_name` VARCHAR(100), IN `p_employment_type_id` INT, IN `p_employment_type_name` VARCHAR(100), IN `p_department_id` INT, IN `p_department_name` VARCHAR(100), IN `p_job_position_id` INT, IN `p_job_position_name` VARCHAR(100), IN `p_work_location_id` INT, IN `p_work_location_name` VARCHAR(100), IN `p_manager_id` INT, IN `p_manager_name` VARCHAR(100), IN `p_work_schedule_id` INT, IN `p_work_schedule_name` VARCHAR(100), IN `p_pin_code` VARCHAR(500), IN `p_home_work_distance` DOUBLE, IN `p_visa_number` VARCHAR(50), IN `p_work_permit_number` VARCHAR(50), IN `p_visa_expiration_date` DATE, IN `p_work_permit_expiration_date` DATE, IN `p_onboard_date` DATE, IN `p_time_off_approver_id` INT, IN `p_time_off_approver_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_employee_id` INT)   BEGIN
+    INSERT INTO employee (full_name, first_name, middle_name, last_name, suffix, nickname, civil_status_id, civil_status_name, gender_id, gender_name, religion_id, religion_name, blood_type_id, blood_type_name, birthday, birth_place, height, weight, badge_id, company_id, company_name, employment_type_id, employment_type_name, department_id, department_name, job_position_id, job_position_name, work_location_id, work_location_name, manager_id, manager_name, work_schedule_id, work_schedule_name, pin_code, home_work_distance, visa_number, work_permit_number, visa_expiration_date, work_permit_expiration_date, onboard_date, time_off_approver_id, time_off_approver_name, last_log_by) 
+	VALUES(p_full_name, p_first_name, p_middle_name, p_last_name, p_suffix, p_nickname, p_civil_status_id, p_civil_status_name, p_gender_id, p_gender_name, p_religion_id, p_religion_name, p_blood_type_id, p_blood_type_name, p_birthday, p_birth_place, p_height, p_weight, p_badge_id, p_company_id, p_company_name, p_employment_type_id, p_employment_type_name, p_department_id, p_department_name, p_job_position_id, p_job_position_name, p_work_location_id, p_work_location_name, p_manager_id, p_manager_name, p_work_schedule_id, p_work_schedule_name, p_pin_code, p_home_work_distance, p_visa_number, p_work_permit_number, p_visa_expiration_date, p_work_permit_expiration_date, p_onboard_date, p_time_off_approver_id, p_time_off_approver_name, p_last_log_by);
 	
     SET p_employee_id = LAST_INSERT_ID();
 END$$
@@ -2280,12 +2279,6 @@ DROP PROCEDURE IF EXISTS `insertWorkHours`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkHours` (IN `p_work_schedule_id` INT, IN `p_day_of_week` VARCHAR(20), IN `p_day_period` VARCHAR(20), IN `p_start_time` TIME, IN `p_end_time` TIME, IN `p_notes` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO work_hours (work_schedule_id, day_of_week, day_period, start_time, end_time, notes, last_log_by) 
 	VALUES(p_work_schedule_id, p_day_of_week, p_day_period, p_start_time, p_end_time, p_notes, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertWorkInformation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkInformation` (IN `p_employee_id` INT, IN `p_badge_id` VARCHAR(200), IN `p_company_id` INT, IN `p_company_name` VARCHAR(100), IN `p_employment_type_id` INT, IN `p_employment_type_name` VARCHAR(100), IN `p_department_id` INT, IN `p_department_name` VARCHAR(100), IN `p_job_position_id` INT, IN `p_job_position_name` VARCHAR(100), IN `p_work_location_id` INT, IN `p_work_location_name` VARCHAR(100), IN `p_manager_id` INT, IN `p_manager_name` VARCHAR(100), IN `p_work_schedule_id` INT, IN `p_work_schedule_name` VARCHAR(100), IN `p_pin_code` VARCHAR(500), IN `p_home_work_distance` DOUBLE, IN `p_visa_number` VARCHAR(50), IN `p_work_permit_number` VARCHAR(50), IN `p_visa_expiration_date` DATE, IN `p_work_permit_expiration_date` DATE, IN `p_onboard_date` DATE, IN `p_time_off_approver_id` INT, IN `p_time_off_approver_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO work_information (employee_id, badge_id, company_id, company_name, employment_type_id, employment_type_name, department_id, department_name, job_position_id, job_position_name, work_location_id, work_location_name, manager_id, manager_name, work_schedule_id, work_schedule_name, pin_code, home_work_distance, visa_number, work_permit_number, visa_expiration_date, work_permit_expiration_date, onboard_date, time_off_approver_id, time_off_approver_name, last_log_by) 
-	VALUES(p_employee_id, p_badge_id, p_company_id, p_company_name, p_employment_type_id, p_employment_type_name, p_department_id, p_department_name, p_job_position_id, p_job_position_name, p_work_location_id, p_work_location_name, p_manager_id, p_manager_name, p_work_schedule_id, p_work_schedule_name, p_pin_code, p_home_work_distance, p_visa_number, p_work_permit_number, p_visa_expiration_date, p_work_permit_expiration_date, p_onboard_date, p_time_off_approver_id, p_time_off_approver_name, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertWorkLocation`$$
@@ -6759,7 +6752,9 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3115, 'user_account', 2, 'Failed Login Attempts: 1 -> 0<br/>', 2, '2024-07-22 10:41:17', '2024-07-22 10:41:17'),
 (3116, 'user_account', 2, 'Last Connection Date: 2024-07-22 09:34:46 -> 2024-07-22 10:41:17<br/>', 2, '2024-07-22 10:41:17', '2024-07-22 10:41:17'),
 (3117, 'user_account', 2, 'Last Connection Date: 2024-07-22 10:41:17 -> 2024-07-24 09:14:30<br/>', 2, '2024-07-24 09:14:30', '2024-07-24 09:14:30'),
-(3118, 'user_account', 2, 'Last Connection Date: 2024-07-24 09:14:30 -> 2024-07-25 10:05:27<br/>', 2, '2024-07-25 10:05:27', '2024-07-25 10:05:27');
+(3118, 'user_account', 2, 'Last Connection Date: 2024-07-24 09:14:30 -> 2024-07-25 10:05:27<br/>', 2, '2024-07-25 10:05:27', '2024-07-25 10:05:27'),
+(3119, 'user_account', 2, 'Last Connection Date: 2024-07-25 10:05:27 -> 2024-07-28 09:17:17<br/>', 2, '2024-07-28 09:17:17', '2024-07-28 09:17:17'),
+(3120, 'employee', 2, 'Employee created. <br/><br/>Full Name: Lennard De Vera Agulto, Suffix<br/>First Name: Lennard<br/>Middle Name: De Vera<br/>Last Name: Agulto<br/>Suffix: Suffix<br/>Nickname: Nickname<br/>Civil Status Name: Divorced<br/>Gender Name: Female<br/>Religion Name: Aglipayan Church<br/>Blood Type Name: A+<br/>Date of Birth: 2024-07-28<br/>Birth Place: Place of b=Birth<br/>Height: 20<br/>Weight: 20<br/>Badge ID: Badge ID<br/>Company Name: Christian General Motors Inc.<br/>Employment Type Name: Apprentice<br/>Department Name: Data Center<br/>Job Position Name: Data Center Staff<br/>Work Schedule Name: Regular<br/>Employment Status: Active<br/>PIN Code: Pin Code<br/>Home Work Distance: 20<br/>Visa Number: Visa No<br/>Work Permit Number: Work Permit No<br/>Visa Expiration Date: 2024-07-29<br/>Work Permit Expiration Date: 2024-07-30<br/>On-Board Date: 2024-07-31<br/>Time Off Approver Name: Administrator', 2, '2024-07-28 20:40:04', '2024-07-28 20:40:04');
 
 -- --------------------------------------------------------
 
@@ -9741,6 +9736,36 @@ CREATE TABLE `employee` (
   `birth_place` varchar(1000) DEFAULT NULL,
   `height` float DEFAULT NULL,
   `weight` float DEFAULT NULL,
+  `badge_id` varchar(200) DEFAULT NULL,
+  `company_id` int(10) UNSIGNED DEFAULT NULL,
+  `company_name` varchar(100) DEFAULT NULL,
+  `employment_type_id` int(10) UNSIGNED DEFAULT NULL,
+  `employment_type_name` varchar(100) DEFAULT NULL,
+  `department_id` int(10) UNSIGNED DEFAULT NULL,
+  `department_name` varchar(100) DEFAULT NULL,
+  `job_position_id` int(10) UNSIGNED DEFAULT NULL,
+  `job_position_name` varchar(100) DEFAULT NULL,
+  `work_location_id` int(10) UNSIGNED DEFAULT NULL,
+  `work_location_name` varchar(100) DEFAULT NULL,
+  `manager_id` int(10) UNSIGNED DEFAULT NULL,
+  `manager_name` varchar(300) DEFAULT NULL,
+  `work_schedule_id` int(10) UNSIGNED DEFAULT NULL,
+  `work_schedule_name` varchar(100) DEFAULT NULL,
+  `employment_status` varchar(50) NOT NULL DEFAULT 'Active',
+  `pin_code` varchar(500) DEFAULT NULL,
+  `home_work_distance` double DEFAULT NULL,
+  `visa_number` varchar(50) DEFAULT NULL,
+  `work_permit_number` varchar(50) DEFAULT NULL,
+  `visa_expiration_date` date DEFAULT NULL,
+  `work_permit_expiration_date` date DEFAULT NULL,
+  `work_permit` varchar(500) DEFAULT NULL,
+  `onboard_date` date DEFAULT NULL,
+  `offboard_date` date DEFAULT NULL,
+  `time_off_approver_id` int(10) UNSIGNED DEFAULT NULL,
+  `time_off_approver_name` varchar(300) DEFAULT NULL,
+  `departure_reason_id` int(10) UNSIGNED DEFAULT NULL,
+  `departure_reason_name` varchar(100) DEFAULT NULL,
+  `detailed_departure_reason` varchar(5000) DEFAULT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -9749,10 +9774,9 @@ CREATE TABLE `employee` (
 -- Dumping data for table `employee`
 --
 
-INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `created_date`, `last_log_by`) VALUES
-(1, NULL, NULL, 'Lawrence De Vera Agulto', 'Lawrence', 'De Vera', 'Agulto', '', NULL, '', 4, 'Married', 2, 'Female', 0, '', 0, '', '2024-07-11', 'cab', 0, 0, '2024-07-11 16:47:01', 2),
-(2, NULL, NULL, 'lennard de vera', 'lennard', '', 'de vera', '', NULL, '', 2, 'Engaged', 2, 'Female', 0, '', 0, '', '2024-08-01', 'asdasd', 0, 0, '2024-07-12 16:36:31', 2),
-(3, NULL, NULL, 'john doe', 'john', '', 'doe', '', NULL, '', 1, 'Divorced', 1, 'Male', 0, '', 0, '', '2024-07-24', 'asdasd', 0, 0, '2024-07-12 16:45:48', 2);
+INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `badge_id`, `company_id`, `company_name`, `employment_type_id`, `employment_type_name`, `department_id`, `department_name`, `job_position_id`, `job_position_name`, `work_location_id`, `work_location_name`, `manager_id`, `manager_name`, `work_schedule_id`, `work_schedule_name`, `employment_status`, `pin_code`, `home_work_distance`, `visa_number`, `work_permit_number`, `visa_expiration_date`, `work_permit_expiration_date`, `work_permit`, `onboard_date`, `offboard_date`, `time_off_approver_id`, `time_off_approver_name`, `departure_reason_id`, `departure_reason_name`, `detailed_departure_reason`, `created_date`, `last_log_by`) VALUES
+(1, NULL, NULL, 'Lawrence De Vera Agulto, Suffix', 'Lawrence', 'De Vera', 'Agulto', 'Suffix', NULL, 'nickname', 2, 'Engaged', 2, 'Female', 1, 'Aglipayan Church', 1, 'A+', '2024-07-28', 'place of birth', 1, 2, 'badge id', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'pincode', 20, 'visa no', 'work permit no', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:03:54', 2),
+(2, NULL, NULL, 'Lennard De Vera Agulto, Suffix', 'Lennard', 'De Vera', 'Agulto', 'Suffix', NULL, 'Nickname', 1, 'Divorced', 2, 'Female', 1, 'Aglipayan Church', 1, 'A+', '2024-07-28', 'Place of b=Birth', 20, 20, 'Badge ID', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Code', 20, 'Visa No', 'Work Permit No', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:40:04', 2);
 
 --
 -- Triggers `employee`
@@ -9816,6 +9840,82 @@ CREATE TRIGGER `employee_trigger_insert` AFTER INSERT ON `employee` FOR EACH ROW
 
     IF NEW.weight <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Weight: ", NEW.weight);
+    END IF;
+
+    IF NEW.badge_id <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Badge ID: ", NEW.badge_id);
+    END IF;
+
+    IF NEW.company_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Company Name: ", NEW.company_name);
+    END IF;
+
+    IF NEW.employment_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Employment Type Name: ", NEW.employment_type_name);
+    END IF;
+
+    IF NEW.department_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Department Name: ", NEW.department_name);
+    END IF;
+
+    IF NEW.job_position_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Job Position Name: ", NEW.job_position_name);
+    END IF;
+
+    IF NEW.manager_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Manager Name: ", NEW.manager_name);
+    END IF;
+
+    IF NEW.work_schedule_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Work Schedule Name: ", NEW.work_schedule_name);
+    END IF;
+
+    IF NEW.employment_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Employment Status: ", NEW.employment_status);
+    END IF;
+
+    IF NEW.pin_code <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>PIN Code: ", NEW.pin_code);
+    END IF;
+
+    IF NEW.home_work_distance <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Home Work Distance: ", NEW.home_work_distance);
+    END IF;
+
+    IF NEW.visa_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Visa Number: ", NEW.visa_number);
+    END IF;
+
+    IF NEW.work_permit_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Work Permit Number: ", NEW.work_permit_number);
+    END IF;
+
+    IF NEW.visa_expiration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Visa Expiration Date: ", NEW.visa_expiration_date);
+    END IF;
+
+    IF NEW.work_permit_expiration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Work Permit Expiration Date: ", NEW.work_permit_expiration_date);
+    END IF;
+
+    IF NEW.onboard_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>On-Board Date: ", NEW.onboard_date);
+    END IF;
+
+    IF NEW.offboard_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Off-Board Date: ", NEW.offboard_date);
+    END IF;
+
+    IF NEW.time_off_approver_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Time Off Approver Name: ", NEW.time_off_approver_name);
+    END IF;
+
+    IF NEW.departure_reason_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Departure Reason Name: ", NEW.departure_reason_name);
+    END IF;
+
+    IF NEW.detailed_departure_reason <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Detailed Departure Reason: ", NEW.detailed_departure_reason);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
@@ -9882,6 +9982,82 @@ CREATE TRIGGER `employee_trigger_update` AFTER UPDATE ON `employee` FOR EACH ROW
 
     IF NEW.weight <> OLD.weight THEN
         SET audit_log = CONCAT(audit_log, "Weight: ", OLD.weight, " -> ", NEW.weight, "<br/>");
+    END IF;
+
+    IF NEW.badge_id <> OLD.badge_id THEN
+        SET audit_log = CONCAT(audit_log, "Badge ID: ", OLD.badge_id, " -> ", NEW.badge_id, "<br/>");
+    END IF;
+
+    IF NEW.company_name <> OLD.company_name THEN
+        SET audit_log = CONCAT(audit_log, "Company Name: ", OLD.company_name, " -> ", NEW.company_name, "<br/>");
+    END IF;
+
+    IF NEW.employment_type_name <> OLD.employment_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Employment Type Name: ", OLD.employment_type_name, " -> ", NEW.employment_type_name, "<br/>");
+    END IF;
+
+    IF NEW.department_name <> OLD.department_name THEN
+        SET audit_log = CONCAT(audit_log, "Department Name: ", OLD.department_name, " -> ", NEW.department_name, "<br/>");
+    END IF;
+
+    IF NEW.job_position_name <> OLD.job_position_name THEN
+        SET audit_log = CONCAT(audit_log, "Job Position Name: ", OLD.job_position_name, " -> ", NEW.job_position_name, "<br/>");
+    END IF;
+
+    IF NEW.manager_name <> OLD.manager_name THEN
+        SET audit_log = CONCAT(audit_log, "Manager Name: ", OLD.manager_name, " -> ", NEW.manager_name, "<br/>");
+    END IF;
+
+    IF NEW.work_schedule_name <> OLD.work_schedule_name THEN
+        SET audit_log = CONCAT(audit_log, "Work Schedule Name: ", OLD.work_schedule_name, " -> ", NEW.work_schedule_name, "<br/>");
+    END IF;
+
+    IF NEW.employment_status <> OLD.employment_status THEN
+        SET audit_log = CONCAT(audit_log, "Employment Status: ", OLD.employment_status, " -> ", NEW.employment_status, "<br/>");
+    END IF;
+
+    IF NEW.pin_code <> OLD.pin_code THEN
+        SET audit_log = CONCAT(audit_log, "PIN Code: ", OLD.pin_code, " -> ", NEW.pin_code, "<br/>");
+    END IF;
+
+    IF NEW.home_work_distance <> OLD.home_work_distance THEN
+        SET audit_log = CONCAT(audit_log, "Home Work Distance: ", OLD.home_work_distance, " -> ", NEW.home_work_distance, "<br/>");
+    END IF;
+
+    IF NEW.visa_number <> OLD.visa_number THEN
+        SET audit_log = CONCAT(audit_log, "Visa Number: ", OLD.visa_number, " -> ", NEW.visa_number, "<br/>");
+    END IF;
+
+    IF NEW.work_permit_number <> OLD.work_permit_number THEN
+        SET audit_log = CONCAT(audit_log, "Work Permit Number: ", OLD.work_permit_number, " -> ", NEW.work_permit_number, "<br/>");
+    END IF;
+
+    IF NEW.visa_expiration_date <> OLD.visa_expiration_date THEN
+        SET audit_log = CONCAT(audit_log, "Visa Expiration Date: ", OLD.visa_expiration_date, " -> ", NEW.visa_expiration_date, "<br/>");
+    END IF;
+
+    IF NEW.work_permit_expiration_date <> OLD.work_permit_expiration_date THEN
+        SET audit_log = CONCAT(audit_log, "Work Permit Expiration Date: ", OLD.work_permit_expiration_date, " -> ", NEW.work_permit_expiration_date, "<br/>");
+    END IF;
+
+    IF NEW.onboard_date <> OLD.onboard_date THEN
+        SET audit_log = CONCAT(audit_log, "On-Board Date: ", OLD.onboard_date, " -> ", NEW.onboard_date, "<br/>");
+    END IF;
+
+    IF NEW.offboard_date <> OLD.offboard_date THEN
+        SET audit_log = CONCAT(audit_log, "Off-Board Date: ", OLD.offboard_date, " -> ", NEW.offboard_date, "<br/>");
+    END IF;
+
+    IF NEW.time_off_approver_name <> OLD.time_off_approver_name THEN
+        SET audit_log = CONCAT(audit_log, "Time Off Approver Name: ", OLD.time_off_approver_name, " -> ", NEW.time_off_approver_name, "<br/>");
+    END IF;
+
+    IF NEW.departure_reason_name <> OLD.departure_reason_name THEN
+        SET audit_log = CONCAT(audit_log, "Departure Reason Name: ", OLD.departure_reason_name, " -> ", NEW.departure_reason_name, "<br/>");
+    END IF;
+
+    IF NEW.detailed_departure_reason <> OLD.detailed_departure_reason THEN
+        SET audit_log = CONCAT(audit_log, "Detailed Departure Reason: ", OLD.detailed_departure_reason, " -> ", NEW.detailed_departure_reason, "<br/>");
     END IF;
     
     IF LENGTH(audit_log) > 0 THEN
@@ -12109,7 +12285,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 1, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -12302,7 +12478,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-25 10:05:27', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'MTwK%2FSFwcitQfBeMYpNghtCSumkUGHaD%2B2wHyWRupfg%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-28 09:17:17', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '987ZyiaS1z8Uple17h5Omp%2BvMAoOPr9yXPcoyldLZSg%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -12526,60 +12702,6 @@ CREATE TRIGGER `work_hours_trigger_update` AFTER UPDATE ON `work_hours` FOR EACH
 END
 $$
 DELIMITER ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `work_information`
---
-
-DROP TABLE IF EXISTS `work_information`;
-CREATE TABLE `work_information` (
-  `work_information_id` int(10) UNSIGNED NOT NULL,
-  `employee_id` int(10) UNSIGNED NOT NULL,
-  `employee_resume` varchar(500) DEFAULT NULL,
-  `badge_id` varchar(200) DEFAULT NULL,
-  `company_id` int(10) UNSIGNED DEFAULT NULL,
-  `company_name` varchar(100) DEFAULT NULL,
-  `employment_type_id` int(10) UNSIGNED DEFAULT NULL,
-  `employment_type_name` varchar(100) DEFAULT NULL,
-  `department_id` int(10) UNSIGNED DEFAULT NULL,
-  `department_name` varchar(100) DEFAULT NULL,
-  `job_position_id` int(10) UNSIGNED DEFAULT NULL,
-  `job_position_name` varchar(100) DEFAULT NULL,
-  `work_location_id` int(10) UNSIGNED DEFAULT NULL,
-  `work_location_name` varchar(100) DEFAULT NULL,
-  `manager_id` int(10) UNSIGNED DEFAULT NULL,
-  `manager_name` varchar(300) DEFAULT NULL,
-  `work_schedule_id` int(10) UNSIGNED DEFAULT NULL,
-  `work_schedule_name` varchar(100) DEFAULT NULL,
-  `employment_status` varchar(50) NOT NULL DEFAULT 'Active',
-  `pin_code` varchar(500) DEFAULT NULL,
-  `home_work_distance` double DEFAULT NULL,
-  `visa_number` varchar(50) DEFAULT NULL,
-  `work_permit_number` varchar(50) DEFAULT NULL,
-  `visa_expiration_date` date DEFAULT NULL,
-  `work_permit_expiration_date` date DEFAULT NULL,
-  `work_permit` varchar(500) DEFAULT NULL,
-  `onboard_date` date DEFAULT NULL,
-  `offboard_date` date DEFAULT NULL,
-  `time_off_approver_id` int(10) UNSIGNED DEFAULT NULL,
-  `time_off_approver_name` varchar(300) DEFAULT NULL,
-  `departure_reason_id` int(10) UNSIGNED DEFAULT NULL,
-  `departure_reason_name` varchar(100) DEFAULT NULL,
-  `detailed_departure_reason` varchar(5000) DEFAULT NULL,
-  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `last_log_by` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `work_information`
---
-
-INSERT INTO `work_information` (`work_information_id`, `employee_id`, `employee_resume`, `badge_id`, `company_id`, `company_name`, `employment_type_id`, `employment_type_name`, `department_id`, `department_name`, `job_position_id`, `job_position_name`, `work_location_id`, `work_location_name`, `manager_id`, `manager_name`, `work_schedule_id`, `work_schedule_name`, `employment_status`, `pin_code`, `home_work_distance`, `visa_number`, `work_permit_number`, `visa_expiration_date`, `work_permit_expiration_date`, `work_permit`, `onboard_date`, `offboard_date`, `time_off_approver_id`, `time_off_approver_name`, `departure_reason_id`, `departure_reason_name`, `detailed_departure_reason`, `created_date`, `last_log_by`) VALUES
-(1, 1, NULL, '', 1, 'Christian General Motors Inc.', 0, '', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', '', 0, '', '', NULL, NULL, NULL, '2024-07-10', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-11 16:47:01', 2),
-(2, 2, NULL, '', 1, 'Christian General Motors Inc.', 0, '', 1, 'Data Center', 1, 'Data Center Staff', 0, '', 0, '', 0, '', 'Active', '', 0, '', '', NULL, NULL, NULL, '2024-07-11', NULL, 0, '', NULL, NULL, NULL, '2024-07-12 16:36:31', 2),
-(3, 3, NULL, '', 1, 'Christian General Motors Inc.', 0, '', 1, 'Data Center', 1, 'Data Center Staff', 0, '', 0, '', 0, '', 'Active', '', 0, '', '', NULL, NULL, NULL, '2024-07-16', NULL, 0, '', NULL, NULL, NULL, '2024-07-12 16:45:48', 2);
 
 -- --------------------------------------------------------
 
@@ -12920,7 +13042,15 @@ ALTER TABLE `employee`
   ADD KEY `employee_index_civil_status_id` (`civil_status_id`),
   ADD KEY `employee_index_gender_id` (`gender_id`),
   ADD KEY `employee_index_religion_id` (`religion_id`),
-  ADD KEY `employee_index_blood_type_id` (`blood_type_id`);
+  ADD KEY `employee_index_blood_type_id` (`blood_type_id`),
+  ADD KEY `employee_index_employment_type_id` (`employment_type_id`),
+  ADD KEY `employee_index_department_id` (`department_id`),
+  ADD KEY `employee_index_job_position_id` (`job_position_id`),
+  ADD KEY `employee_index_manager_id` (`manager_id`),
+  ADD KEY `employee_index_work_schedule_id` (`work_schedule_id`),
+  ADD KEY `employee_index_work_location_id` (`work_location_id`),
+  ADD KEY `employee_index_departure_reason_id` (`departure_reason_id`),
+  ADD KEY `employee_index_employment_status` (`employment_status`);
 
 --
 -- Indexes for table `employment_type`
@@ -13208,22 +13338,6 @@ ALTER TABLE `work_hours`
   ADD KEY `work_hours_index_work_hours_id` (`work_hours_id`);
 
 --
--- Indexes for table `work_information`
---
-ALTER TABLE `work_information`
-  ADD PRIMARY KEY (`work_information_id`),
-  ADD KEY `last_log_by` (`last_log_by`),
-  ADD KEY `work_information_index_employee_id` (`employee_id`),
-  ADD KEY `work_information_index_employment_type_id` (`employment_type_id`),
-  ADD KEY `work_information_index_department_id` (`department_id`),
-  ADD KEY `work_information_index_job_position_id` (`job_position_id`),
-  ADD KEY `work_information_index_manager_id` (`manager_id`),
-  ADD KEY `work_information_index_work_schedule_id` (`work_schedule_id`),
-  ADD KEY `work_information_index_work_location_id` (`work_location_id`),
-  ADD KEY `work_information_index_departure_reason_id` (`departure_reason_id`),
-  ADD KEY `work_information_index_employment_status` (`employment_status`);
-
---
 -- Indexes for table `work_location`
 --
 ALTER TABLE `work_location`
@@ -13263,7 +13377,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3119;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3121;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -13347,7 +13461,7 @@ ALTER TABLE `email_setting`
 -- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee`
-  MODIFY `employee_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `employee_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `employment_type`
@@ -13546,12 +13660,6 @@ ALTER TABLE `user_account`
 --
 ALTER TABLE `work_hours`
   MODIFY `work_hours_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `work_information`
---
-ALTER TABLE `work_information`
-  MODIFY `work_information_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `work_location`
@@ -13886,13 +13994,6 @@ ALTER TABLE `user_account`
 ALTER TABLE `work_hours`
   ADD CONSTRAINT `work_hours_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
   ADD CONSTRAINT `work_hours_ibfk_2` FOREIGN KEY (`work_schedule_id`) REFERENCES `work_schedule` (`work_schedule_id`);
-
---
--- Constraints for table `work_information`
---
-ALTER TABLE `work_information`
-  ADD CONSTRAINT `work_information_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
-  ADD CONSTRAINT `work_information_ibfk_2` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`);
 
 --
 -- Constraints for table `work_location`

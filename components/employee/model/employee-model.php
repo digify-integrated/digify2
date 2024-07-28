@@ -143,48 +143,6 @@ class EmployeeModel {
     # - $p_birth_place (date): The birth place.
     # - $p_height (date): The height.
     # - $p_weight (date): The weight.
-    # - $p_last_log_by (int): The last logged user.
-    #
-    # Returns: String
-    #
-    # -------------------------------------------------------------
-    public function insertEmployee($p_full_name, $p_first_name, $p_middle_name, $p_last_name, $p_suffix, $p_nickname, $p_civil_status_id, $p_civil_status_name, $p_gender_id, $p_gender_name, $p_religion_id, $p_religion_name, $p_blood_type_id, $p_blood_type_name, $p_birthday, $p_birth_place, $p_height, $p_weight, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertEmployee(:p_full_name, :p_first_name, :p_middle_name, :p_last_name, :p_suffix, :p_nickname, :p_civil_status_id, :p_civil_status_name, :p_gender_id, :p_gender_name, :p_religion_id, :p_religion_name, :p_blood_type_id, :p_blood_type_name, :p_birthday, :p_birth_place, :p_height, :p_weight, :p_last_log_by, @p_employee_id)');
-        $stmt->bindValue(':p_full_name', $p_full_name, PDO::PARAM_STR);
-        $stmt->bindValue(':p_first_name', $p_first_name, PDO::PARAM_STR);
-        $stmt->bindValue(':p_middle_name', $p_middle_name, PDO::PARAM_STR);
-        $stmt->bindValue(':p_last_name', $p_last_name, PDO::PARAM_STR);
-        $stmt->bindValue(':p_suffix', $p_suffix, PDO::PARAM_STR);
-        $stmt->bindValue(':p_nickname', $p_nickname, PDO::PARAM_STR);
-        $stmt->bindValue(':p_civil_status_id', $p_civil_status_id, PDO::PARAM_INT);
-        $stmt->bindValue(':p_civil_status_name', $p_civil_status_name, PDO::PARAM_STR);
-        $stmt->bindValue(':p_gender_id', $p_gender_id, PDO::PARAM_INT);
-        $stmt->bindValue(':p_gender_name', $p_gender_name, PDO::PARAM_STR);
-        $stmt->bindValue(':p_religion_id', $p_religion_id, PDO::PARAM_INT);
-        $stmt->bindValue(':p_religion_name', $p_religion_name, PDO::PARAM_STR);
-        $stmt->bindValue(':p_blood_type_id', $p_blood_type_id, PDO::PARAM_INT);
-        $stmt->bindValue(':p_blood_type_name', $p_blood_type_name, PDO::PARAM_STR);
-        $stmt->bindValue(':p_birthday', $p_birthday, PDO::PARAM_STR);
-        $stmt->bindValue(':p_birth_place', $p_birth_place, PDO::PARAM_STR);
-        $stmt->bindValue(':p_height', $p_height, PDO::PARAM_STR);
-        $stmt->bindValue(':p_weight', $p_weight, PDO::PARAM_STR);
-        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
-        $stmt->execute();
-        
-        $result = $this->db->getConnection()->query('SELECT @p_employee_id AS employee_id');
-        $menuItemID = $result->fetch(PDO::FETCH_ASSOC)['employee_id'];
-        
-        return $menuItemID;
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: insertWorkInformation
-    # Description: Inserts the work information.
-    #
-    # Parameters:
-    # - $p_employee_id (int): The employee ID.
     # - $p_badge_id (string): The badge ID.
     # - $p_company_id (int): The company ID.
     # - $p_company_name (string): The company name.
@@ -214,9 +172,26 @@ class EmployeeModel {
     # Returns: String
     #
     # -------------------------------------------------------------
-    public function insertWorkInformation($p_employee_id, $p_badge_id, $p_company_id, $p_company_name, $p_employment_type_id, $p_employment_type_name, $p_department_id, $p_department_name, $p_job_position_id, $p_job_position_name, $p_work_location_id, $p_work_location_name, $p_manager_id, $p_manager_name, $p_work_schedule_id, $p_work_schedule_name, $p_pin_code, $p_home_work_distance, $p_visa_number, $p_work_permit_number, $p_visa_expiration_date, $p_work_permit_expiration_date, $p_onboard_date, $p_time_off_approver_id, $p_time_off_approver_name, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertWorkInformation(:p_employee_id, :p_badge_id, :p_company_id, :p_company_name, :p_employment_type_id, :p_employment_type_name, :p_department_id, :p_department_name, :p_job_position_id, :p_job_position_name, :p_work_location_id, :p_work_location_name, :p_manager_id, :p_manager_name, :p_work_schedule_id, :p_work_schedule_name, :p_pin_code, :p_home_work_distance, :p_visa_number, :p_work_permit_number, :p_visa_expiration_date, :p_work_permit_expiration_date, :p_onboard_date, :p_time_off_approver_id, :p_time_off_approver_name, :p_last_log_by)');
-        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+    public function insertEmployee($p_full_name, $p_first_name, $p_middle_name, $p_last_name, $p_suffix, $p_nickname, $p_civil_status_id, $p_civil_status_name, $p_gender_id, $p_gender_name, $p_religion_id, $p_religion_name, $p_blood_type_id, $p_blood_type_name, $p_birthday, $p_birth_place, $p_height, $p_weight, $p_badge_id, $p_company_id, $p_company_name, $p_employment_type_id, $p_employment_type_name, $p_department_id, $p_department_name, $p_job_position_id, $p_job_position_name, $p_work_location_id, $p_work_location_name, $p_manager_id, $p_manager_name, $p_work_schedule_id, $p_work_schedule_name, $p_pin_code, $p_home_work_distance, $p_visa_number, $p_work_permit_number, $p_visa_expiration_date, $p_work_permit_expiration_date, $p_onboard_date, $p_time_off_approver_id, $p_time_off_approver_name, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployee(:p_full_name, :p_first_name, :p_middle_name, :p_last_name, :p_suffix, :p_nickname, :p_civil_status_id, :p_civil_status_name, :p_gender_id, :p_gender_name, :p_religion_id, :p_religion_name, :p_blood_type_id, :p_blood_type_name, :p_birthday, :p_birth_place, :p_height, :p_weight, :p_badge_id, :p_company_id, :p_company_name, :p_employment_type_id, :p_employment_type_name, :p_department_id, :p_department_name, :p_job_position_id, :p_job_position_name, :p_work_location_id, :p_work_location_name, :p_manager_id, :p_manager_name, :p_work_schedule_id, :p_work_schedule_name, :p_pin_code, :p_home_work_distance, :p_visa_number, :p_work_permit_number, :p_visa_expiration_date, :p_work_permit_expiration_date, :p_onboard_date, :p_time_off_approver_id, :p_time_off_approver_name, :p_last_log_by, @p_employee_id)');
+        $stmt->bindValue(':p_full_name', $p_full_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_first_name', $p_first_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_middle_name', $p_middle_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_name', $p_last_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_suffix', $p_suffix, PDO::PARAM_STR);
+        $stmt->bindValue(':p_nickname', $p_nickname, PDO::PARAM_STR);
+        $stmt->bindValue(':p_civil_status_id', $p_civil_status_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_civil_status_name', $p_civil_status_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_gender_id', $p_gender_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_gender_name', $p_gender_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_religion_id', $p_religion_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_religion_name', $p_religion_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_blood_type_id', $p_blood_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_blood_type_name', $p_blood_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_birthday', $p_birthday, PDO::PARAM_STR);
+        $stmt->bindValue(':p_birth_place', $p_birth_place, PDO::PARAM_STR);
+        $stmt->bindValue(':p_height', $p_height, PDO::PARAM_STR);
+        $stmt->bindValue(':p_weight', $p_weight, PDO::PARAM_STR);
         $stmt->bindValue(':p_badge_id', $p_badge_id, PDO::PARAM_STR);
         $stmt->bindValue(':p_company_id', $p_company_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_company_name', $p_company_name, PDO::PARAM_STR);
@@ -243,6 +218,11 @@ class EmployeeModel {
         $stmt->bindValue(':p_time_off_approver_name', $p_time_off_approver_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
+        
+        $result = $this->db->getConnection()->query('SELECT @p_employee_id AS employee_id');
+        $menuItemID = $result->fetch(PDO::FETCH_ASSOC)['employee_id'];
+        
+        return $menuItemID;
     }
     # -------------------------------------------------------------
 

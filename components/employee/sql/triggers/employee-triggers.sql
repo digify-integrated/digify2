@@ -61,84 +61,6 @@ BEGIN
     IF NEW.weight <> OLD.weight THEN
         SET audit_log = CONCAT(audit_log, "Weight: ", OLD.weight, " -> ", NEW.weight, "<br/>");
     END IF;
-    
-    IF LENGTH(audit_log) > 0 THEN
-        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('employee', NEW.employee_id, audit_log, NEW.last_log_by, NOW());
-    END IF;
-END //
-
-CREATE TRIGGER employee_trigger_insert
-AFTER INSERT ON employee
-FOR EACH ROW
-BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Employee created. <br/>';
-
-    IF NEW.full_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Full Name: ", NEW.full_name);
-    END IF;
-
-    IF NEW.first_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>First Name: ", NEW.first_name);
-    END IF;
-
-    IF NEW.middle_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Middle Name: ", NEW.middle_name);
-    END IF;
-
-    IF NEW.last_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Last Name: ", NEW.last_name);
-    END IF;
-
-    IF NEW.suffix <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Suffix: ", NEW.suffix);
-    END IF;
-
-    IF NEW.nickname <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Nickname: ", NEW.nickname);
-    END IF;
-
-    IF NEW.civil_status_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Civil Status Name: ", NEW.civil_status_name);
-    END IF;
-
-    IF NEW.gender_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Gender Name: ", NEW.gender_name);
-    END IF;
-
-    IF NEW.religion_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Religion Name: ", NEW.religion_name);
-    END IF;
-
-    IF NEW.blood_type_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Blood Type Name: ", NEW.blood_type_name);
-    END IF;
-
-    IF NEW.birthday <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Date of Birth: ", NEW.birthday);
-    END IF;
-
-    IF NEW.birth_place <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Birth Place: ", NEW.birth_place);
-    END IF;
-
-    IF NEW.height <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Height: ", NEW.height);
-    END IF;
-
-    IF NEW.weight <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Weight: ", NEW.weight);
-    END IF;
-
-    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('employee', NEW.employee_id, audit_log, NEW.last_log_by, NOW());
-END //
-
-CREATE TRIGGER work_information_trigger_update
-AFTER UPDATE ON work_information
-FOR EACH ROW
-BEGIN
-    DECLARE audit_log TEXT DEFAULT '';
 
     IF NEW.badge_id <> OLD.badge_id THEN
         SET audit_log = CONCAT(audit_log, "Badge ID: ", OLD.badge_id, " -> ", NEW.badge_id, "<br/>");
@@ -218,15 +140,71 @@ BEGIN
     
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('work_information', NEW.employee_id, audit_log, NEW.last_log_by, NOW());
+        VALUES ('employee', NEW.employee_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END //
 
-CREATE TRIGGER work_information_trigger_insert
-AFTER INSERT ON work_information
+CREATE TRIGGER employee_trigger_insert
+AFTER INSERT ON employee
 FOR EACH ROW
 BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Work information created. <br/>';
+    DECLARE audit_log TEXT DEFAULT 'Employee created. <br/>';
+
+    IF NEW.full_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Full Name: ", NEW.full_name);
+    END IF;
+
+    IF NEW.first_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>First Name: ", NEW.first_name);
+    END IF;
+
+    IF NEW.middle_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Middle Name: ", NEW.middle_name);
+    END IF;
+
+    IF NEW.last_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Last Name: ", NEW.last_name);
+    END IF;
+
+    IF NEW.suffix <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Suffix: ", NEW.suffix);
+    END IF;
+
+    IF NEW.nickname <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Nickname: ", NEW.nickname);
+    END IF;
+
+    IF NEW.civil_status_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Civil Status Name: ", NEW.civil_status_name);
+    END IF;
+
+    IF NEW.gender_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Gender Name: ", NEW.gender_name);
+    END IF;
+
+    IF NEW.religion_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Religion Name: ", NEW.religion_name);
+    END IF;
+
+    IF NEW.blood_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Blood Type Name: ", NEW.blood_type_name);
+    END IF;
+
+    IF NEW.birthday <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Date of Birth: ", NEW.birthday);
+    END IF;
+
+    IF NEW.birth_place <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Birth Place: ", NEW.birth_place);
+    END IF;
+
+    IF NEW.height <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Height: ", NEW.height);
+    END IF;
+
+    IF NEW.weight <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Weight: ", NEW.weight);
+    END IF;
 
     IF NEW.badge_id <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Badge ID: ", NEW.badge_id);
@@ -305,5 +283,5 @@ BEGIN
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('work_information', NEW.employee_id, audit_log, NEW.last_log_by, NOW());
+    VALUES ('employee', NEW.employee_id, audit_log, NEW.last_log_by, NOW());
 END //

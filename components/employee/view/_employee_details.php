@@ -16,16 +16,16 @@
                         </div>
                     </div>
                     <div class="col-lg-4 order-last my-3 text-center text-lg-start">
-                        <h6 class="mb-0">Marielle Angelica Corsino Apuya</h6>
+                        <h6 class="mb-0">Lawrence De Vera Agulto</h6>
                         <p class="mb-0">SECURITY GUARD / HELPER</p>
                     </div>
                     <div class="col-lg-5 order-last">
-                        <ul class="list-unstyled d-flex align-items-center justify-content-center my-3 mx-4 pe-4 gap-3">
+                        <ul class="list-unstyled d-flex align-items-center justify-content-center my-3 mx-4 gap-3">
                             <li>
                                 <button class="btn btn-danger text-nowrap"><i class="ti ti-archive"></i> Archive</button>
                             </li>
                             <li>
-                                <button class="btn btn-primary text-nowrap"><i class="ti ti-qrcode"></i> QR Code</button>
+                                <button class="btn btn-info text-nowrap"><i class="ti ti-qrcode"></i> QR Code</button>
                             </li>
                         </ul>
                     </div>
@@ -280,20 +280,28 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center gap-3">
                                 <div>
                                     <h5 class="fs-4 fw-semibold">Junior Software Developer</h5>
                                     <p class="mb-0">Micromax Computer System · Full-time</p>
                                     <p class="mb-0">Feb 2018 - Jul 2019 · 1 yr 6 mos</p>
                                     <p class="mb-2">704 Anolid, Mangaldan, Pangasinan · Hybrid</p>
-                                    <p class="text-dark">As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.</p>
                                 </div>
                             </div>
-                            <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                                <i class="ti ti-pencil"></i>
-                            </a>
+                            <div class="d-flex mb-2">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
                         </div>
+                        <p class="text-dark text-justify">As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.</p>
                     </div>
                 </div>
             </div>
@@ -312,20 +320,28 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex align-items-center gap-3">
                                 <div>
                                     <h5 class="fs-4 fw-semibold">AMA Computer College Cabanatuan</h5>
                                     <p class="mb-0">Micromax Computer System · Full-time</p>
                                     <p class="mb-2">Feb 2018 - Jul 2019 · 1 yr 6 mos</p>
                                     <p class="mb-0 text-dark">Activities and societies: asdasd</p>
-                                    <p class="mb-0 text-dark">asdasd</p>
                                 </div>
                             </div>
-                            <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                                <i class="ti ti-pencil"></i>
-                            </a>
+                            <div class="d-flex mb-2">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
                         </div>
+                        <p class="text-dark text-justify">As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.</p>
                     </div>
                 </div>
             </div>
@@ -466,15 +482,25 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <p class="mb-1 fs-2">Home Address</p>
-                                <h6 class="fw-semibold mb-2 fs-3">1 Rsr appartment Bantug bulalo Cabanatuan City, City of Cabanatuan, Nueva Ecija, Philippines</h6>
-                                <span class="badge bg-info">Alternate</span>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div>
+                                    <p class="mb-1 fs-2">Home Address</p>
+                                    <h6 class="fw-semibold mb-2 fs-3">1 Rsr appartment Bantug bulalo Cabanatuan City, City of Cabanatuan, Nueva Ecija, Philippines</h6>
+                                    <span class="badge bg-info">Alternate</span>
+                                </div>
                             </div>
-                            <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                              <i class="ti ti-pencil"></i>
-                            </a>
+                            <div class="d-flex">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -495,16 +521,37 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div>
-                                <p class="mb-1 fs-2">Phone number</p>
-                                <h6 class="fw-semibold mb-2">+1 (203) 3458</h6>
+                            <div class="d-flex align-items-center gap-3">
+                                <div>
+                                    <h6 class="fw-semibold mb-1">Personal</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="d-flex align-items-center gap-2 py-2">
+                                            <i class="ti ti-mail text-dark fs-4"></i>
+                                            <span class="text-dark">l.agulto@gmail.com</span>
+                                        </li>
+                                        <li class="d-flex align-items-center gap-2 py-2">
+                                            <i class="ti ti-device-mobile text-dark fs-4"></i>
+                                            <span class="text-dark">0951654987</span>
+                                        </li>
+                                        <li class="d-flex align-items-center gap-2 py-2">
+                                            <i class="ti ti-phone text-dark fs-4"></i>
+                                            <span class="text-dark">0654987</span>
+                                        </li>
+                                    </ul>
+                                    <span class="badge bg-info">Alternate</span>
+                                </div>
                             </div>
-                            <span class="badge bg-info">Primary</span>
-                        </div>
-                        <div class="d-flex mb-2">
-                            <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                              <i class="ti ti-pencil"></i>
-                            </a>
+                            <div class="d-flex">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -526,20 +573,24 @@
                     <div class="col-md-12">
                         <img src="./assets/images/backgrounds/profilebg.jpg" alt="matdash-img" class="card-img w-100 object-fit-cover mb-3" height="100">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div>
                                 <h6 class="fw-semibold mb-2">Government Service Insurance System (GSIS) ID</h6>
                                 <p class="mb-1 fs-2 text-dark">1211-554444315</p>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
                             </div>
                         </div>
-                        <div class="d-flex mb-2">
-                            <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                                <i class="ti ti-file-text fs-5"></i>
-                            </a>
-                            <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                                <i class="ti ti-pencil"></i>
-                            </a>
-                        </div>
-                            
                     </div>
                 </div>
             </div>
@@ -559,14 +610,24 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div>
-                                <p class="mb-1 fs-2">Checking Account</p>
-                                <h6 class="fw-semibold mb-2">RCBC (Rizal Commercial Banking Corporation)</h6>
-                                <p class="mb-1 fs-2">test</p>
+                            <div class="d-flex align-items-center gap-3">
+                                <div>
+                                    <p class="mb-1 fs-2">Checking Account</p>
+                                    <h6 class="fw-semibold mb-2">RCBC (Rizal Commercial Banking Corporation)</h6>
+                                    <p class="mb-1 fs-2">test</p>
+                                </div>
                             </div>
-                            <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                              <i class="ti ti-pencil"></i>
-                            </a>
+                            <div class="d-flex">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -596,9 +657,17 @@
                                     <p class="mb-0">Expires on: Jul 24, 2024</p>
                                 </div>
                             </div>
-                            <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                                <i class="ti ti-pencil"></i>
-                            </a>
+                            <div class="d-flex">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -619,32 +688,38 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div>
-                                <h6 class="fw-semibold mb-1">Lawrence</h6>
-                                <p class="mb-2 fs-2">Brother</p>
+                            <div class="d-flex align-items-center gap-3">
+                                <div>
+                                    <h6 class="fw-semibold mb-1">Lawrence De Vera Agulto</h6>
+                                    <p class="mb-2 fs-2">Brother-In-Law</p>
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="d-flex align-items-center gap-2 py-2">
+                                            <i class="ti ti-mail text-dark fs-4"></i>
+                                            <span class="text-dark">l.agulto@gmail.com</span>
+                                        </li>
+                                        <li class="d-flex align-items-center gap-2 py-2">
+                                            <i class="ti ti-device-mobile text-dark fs-4"></i>
+                                            <span class="text-dark">0951654987</span>
+                                        </li>
+                                        <li class="d-flex align-items-center gap-2 py-2">
+                                            <i class="ti ti-phone text-dark fs-4"></i>
+                                            <span class="text-dark">0654987</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                            <ul class="list-unstyled mb-0">
-                                    <li class="d-flex align-items-center gap-2 py-2">
-                                        <i class="ti ti-mail text-primary fs-4"></i>
-                                        <span class="text-dark">test@gmail.com</span>
-                                    </li>
-                                    <li class="d-flex align-items-center gap-2 py-2">
-                                        <i class="ti ti-device-mobile text-primary fs-4"></i>
-                                        <span class="text-dark">0951654987</span>
-                                    </li>
-                                    <li class="d-flex align-items-center gap-2 py-2">
-                                        <i class="ti ti-phone text-primary fs-4"></i>
-                                        <span class="text-dark">0654987</span>
-                                    </li>
-                                </ul>
+                            <div class="d-flex">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div class="d-flex mb-2">
-                        <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                            <i class="ti ti-pencil"></i>
-                            </a>
-                        </div>
-                        
-                        
                     </div>
                 </div>
             </div>
@@ -670,9 +745,17 @@
                                     <p class="mb-0">Conversational</p>
                                 </div>
                             </div>
-                            <a href="javascript:void(0);" class="text-dark fs-6 d-flex align-items-center justify-content-center bg-transparent p-2 fs-4 rounded-circle">
-                                <i class="ti ti-pencil"></i>
-                            </a>
+                            <div class="d-flex">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -680,6 +763,8 @@
         </div>
     </div>
 </div>
+
+<?php require_once('components/global/view/_internal_log_notes.php'); ?>
 
 <div id="about-modal" class="modal fade" tabindex="-1" aria-labelledby="about-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">

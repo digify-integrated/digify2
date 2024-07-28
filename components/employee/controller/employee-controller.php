@@ -285,9 +285,7 @@ class EmployeeController {
             $timeOffapproverDetails = $this->userAccountModel->getUserAccount($timeOffApproverID, null);
             $timeOffApproverName = $timeOffapproverDetails['file_as'] ?? '';
 
-            $employeeID = $this->employeeModel->insertEmployee($fullName, $firstName, $middleName, $lastName, $suffix, $nickname, $civilStatusID, $civilStatusName, $genderID, $genderName, $religionID, $religionName, $bloodTypeID, $bloodTypeName, $birthday, $birthPlace, $height, $weight, $userID);
-
-            $this->employeeModel->insertWorkInformation($employeeID, $badgeID, $companyID, $companyName, $employmentTypeID, $employmentTypeName, $departmentID, $departmentName, $jobPositionID, $jobPositionName, $workLocationID, $workLocationName, $managerID, $managerName, $workScheduleID, $workScheduleName, $pinCode, $homeWorkDistance, $visaNumber, $workPermitNumber, $visaExpirationDate, $workPermitExpirationDate, $onboardDate, $timeOffApproverID, $timeOffApproverName, $userID);
+            $employeeID = $this->employeeModel->insertEmployee($fullName, $firstName, $middleName, $lastName, $suffix, $nickname, $civilStatusID, $civilStatusName, $genderID, $genderName, $religionID, $religionName, $bloodTypeID, $bloodTypeName, $birthday, $birthPlace, $height, $weight, $badgeID, $companyID, $companyName, $employmentTypeID, $employmentTypeName, $departmentID, $departmentName, $jobPositionID, $jobPositionName, $workLocationID, $workLocationName, $managerID, $managerName, $workScheduleID, $workScheduleName, $pinCode, $homeWorkDistance, $visaNumber, $workPermitNumber, $visaExpirationDate, $workPermitExpirationDate, $onboardDate, $timeOffApproverID, $timeOffApproverName, $userID);
             
             $response = [
                 'success' => true,
@@ -303,7 +301,8 @@ class EmployeeController {
         else{
             $response = [
                 'success' => false,
-                'title' => 'Transaction Error',
+                #'title' => 'Transaction Error',
+                'title' => $_POST['work_schedule_id'],
                 'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
                 'messageType' => 'error'
             ];
