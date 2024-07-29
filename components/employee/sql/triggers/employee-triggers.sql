@@ -26,6 +26,10 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "Suffix: ", OLD.suffix, " -> ", NEW.suffix, "<br/>");
     END IF;
 
+    IF NEW.about <> OLD.about THEN
+        SET audit_log = CONCAT(audit_log, "About: ", OLD.about, " -> ", NEW.about, "<br/>");
+    END IF;
+
     IF NEW.nickname <> OLD.nickname THEN
         SET audit_log = CONCAT(audit_log, "Nickname: ", OLD.nickname, " -> ", NEW.nickname, "<br/>");
     END IF;
@@ -168,6 +172,10 @@ BEGIN
 
     IF NEW.suffix <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Suffix: ", NEW.suffix);
+    END IF;
+
+    IF NEW.about <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>About: ", NEW.about);
     END IF;
 
     IF NEW.nickname <> '' THEN

@@ -163,11 +163,29 @@ class EmployeeController {
                 case 'add employee':
                     $this->addEmployee();
                     break;
-                case 'update employee':
-                    $this->updateEmployee();
+                case 'update employee about':
+                    $this->updateEmployeeAbout();
                     break;
-                case 'get employee details':
-                    $this->getEmployeeDetails();
+                case 'update employee private information':
+                    $this->updateEmployeePrivateInformation();
+                    break;
+                case 'update employee work information':
+                    $this->updateEmployeeWorkInformation();
+                    break;
+                case 'update hr settings information':
+                    $this->updateEmployeeHRSettings();
+                    break;
+                case 'get about details':
+                    $this->getAboutDetails();
+                    break;
+                case 'get private information details':
+                    $this->getPrivateInformationDetails();
+                    break;
+                case 'get work information details':
+                    $this->getWorkInformationDetails();
+                    break;
+                case 'get hr settings details':
+                    $this->getHRSettingsDetails();
                     break;
                 case 'delete employee':
                     $this->deleteEmployee();
@@ -301,8 +319,7 @@ class EmployeeController {
         else{
             $response = [
                 'success' => false,
-                #'title' => 'Transaction Error',
-                'title' => $_POST['work_schedule_id'],
+                'title' => 'Transaction Error',
                 'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
                 'messageType' => 'error'
             ];
@@ -319,26 +336,24 @@ class EmployeeController {
 
     # -------------------------------------------------------------
     #
-    # Function: updateEmployee
+    # Function: updateEmployeeAbout
     # Description: 
-    # Updates the employee if it exists; otherwise, return an error message.
+    # Updates the employee about if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function updateEmployee() {
+    public function updateEmployeeAbout() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
         
-        if (isset($_POST['employee_name']) && !empty($_POST['employee_name']) && isset($_POST['parent_employee_id']) && isset($_POST['manager_id'])) {
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['about']) && !empty($_POST['about'])) {
             $userID = $_SESSION['user_account_id'];
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
-            $employeeName = $_POST['employee_name'];
-            $parentEmployeeID = htmlspecialchars($_POST['parent_employee_id'], ENT_QUOTES, 'UTF-8');
-            $managerID = htmlspecialchars($_POST['manager_id'], ENT_QUOTES, 'UTF-8');
+            $about = $_POST['about'];
         
             $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
             $total = $checkEmployeeExist['total'] ?? 0;
@@ -347,7 +362,7 @@ class EmployeeController {
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Update Employee Error',
+                    'title' => 'Update About Error',
                     'message' => 'The employee does not exist.',
                     'messageType' => 'error'
                 ];
@@ -356,14 +371,265 @@ class EmployeeController {
                 exit;
             }
 
-            $parentEmployeeDetails = $this->employeeModel->getEmployee($parentEmployeeID);
-            $parentEmployeeName = $parentEmployeeDetails['employee_name'] ?? '';
-
-            $this->employeeModel->updateEmployee($employeeID, $employeeName, $parentEmployeeID, $parentEmployeeName, '', '', $userID);
+            $this->employeeModel->updateEmployeeAbout($employeeID, $about, $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Update Employee Success',
+                'title' => 'Update About Success',
+                'message' => 'The employee has been updated successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeePrivateInformation
+    # Description: 
+    # Updates the employee private information if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeePrivateInformation() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['middle_name']) && isset($_POST['nickname']) && isset($_POST['gender_id']) && !empty($_POST['gender_id']) && isset($_POST['civil_status_id']) && !empty($_POST['civil_status_id']) && isset($_POST['birthday']) && !empty($_POST['birthday']) && isset($_POST['birth_place']) && !empty($_POST['birth_place']) && isset($_POST['suffix']) && isset($_POST['blood_type_id']) && isset($_POST['religion_id']) && isset($_POST['height']) && isset($_POST['weight'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $firstName = $_POST['first_name'];
+            $lastName = $_POST['last_name'];
+            $middleName = $_POST['middle_name'];
+            $suffix = $_POST['suffix'];
+            $nickname = $_POST['nickname'];
+            $genderID = htmlspecialchars($_POST['gender_id'], ENT_QUOTES, 'UTF-8');
+            $civilStatusID = htmlspecialchars($_POST['civil_status_id'], ENT_QUOTES, 'UTF-8');
+            $bloodTypeID = htmlspecialchars($_POST['blood_type_id'], ENT_QUOTES, 'UTF-8');
+            $religionID = htmlspecialchars($_POST['religion_id'], ENT_QUOTES, 'UTF-8');
+            $birthday = $this->systemModel->checkDate('empty', $_POST['birthday'], '', 'Y-m-d', '');
+            $birthPlace = $_POST['birth_place'];
+            $height = $_POST['height'];
+            $weight = $_POST['weight'];
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Update Private Information Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $fullNameParts = array_filter([$firstName, $middleName, $lastName]);
+            $fullName = implode(' ', $fullNameParts);
+
+            if (!empty($suffix)) {
+                $fullName .= ', ' . $suffix;
+            }
+
+            $civilStatusDetails = $this->civilStatusModel->getCivilStatus($civilStatusID);
+            $civilStatusName = $civilStatusDetails['civil_status_name'] ?? '';
+
+            $genderDetails = $this->genderModel->getGender($genderID);
+            $genderName = $genderDetails['gender_name'] ?? '';
+
+            $religionDetails = $this->religionModel->getReligion($religionID);
+            $religionName = $religionDetails['religion_name'] ?? '';
+
+            $bloodTypeDetails = $this->bloodTypeModel->getBloodType($bloodTypeID);
+            $bloodTypeName = $bloodTypeDetails['blood_type_name'] ?? '';
+
+            $this->employeeModel->updateEmployeePrivateInformation($employeeID, $fullName, $firstName, $middleName, $lastName, $suffix, $nickname, $civilStatusID, $civilStatusName, $genderID, $genderName, $religionID, $religionName, $bloodTypeID, $bloodTypeName, $birthday, $birthPlace, $height, $weight, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Update Private Information Success',
+                'message' => 'The private information has been updated successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeWorkInformation
+    # Description: 
+    # Updates the employee work information if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeWorkInformation() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['department_id']) && !empty($_POST['department_id']) && isset($_POST['manager_id']) && isset($_POST['company_id']) && !empty($_POST['company_id']) && isset($_POST['work_location_id']) && isset($_POST['home_work_distance']) && isset($_POST['work_schedule_id']) && isset($_POST['job_position_id']) && !empty($_POST['job_position_id']) && isset($_POST['time_off_approver_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $departmentID = htmlspecialchars($_POST['department_id'], ENT_QUOTES, 'UTF-8');
+            $managerID = htmlspecialchars($_POST['manager_id'], ENT_QUOTES, 'UTF-8');
+            $companyID = htmlspecialchars($_POST['company_id'], ENT_QUOTES, 'UTF-8');
+            $workLocationID = htmlspecialchars($_POST['work_location_id'], ENT_QUOTES, 'UTF-8');
+            $homeWorkDistance = $_POST['home_work_distance'];
+            $workScheduleID = htmlspecialchars($_POST['work_schedule_id'], ENT_QUOTES, 'UTF-8');
+            $jobPositionID = htmlspecialchars($_POST['job_position_id'], ENT_QUOTES, 'UTF-8');
+            $timeOffApproverID = htmlspecialchars($_POST['time_off_approver_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Update Work Information Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $companyDetails = $this->companyModel->getCompany($companyID);
+            $companyName = $companyDetails['company_name'] ?? '';
+
+            $departmentDetails = $this->departmentModel->getDepartment($departmentID);
+            $departmentName = $departmentDetails['department_name'] ?? '';
+
+            $jobPositionDetails = $this->jobPositionModel->getJobPosition($jobPositionID);
+            $jobPositionName = $jobPositionDetails['job_position_name'] ?? '';
+
+            $managerDetails = $this->employeeModel->getEmployee($managerID);
+            $managerName = $managerDetails['full_name'] ?? '';
+
+            $workScheduleDetails = $this->workScheduleModel->getWorkSchedule($workScheduleID);
+            $workScheduleName = $workScheduleDetails['work_schedule_name'] ?? '';
+
+            $workLocationDetails = $this->workLocationModel->getWorkLocation($workLocationID);
+            $workLocationName = $workLocationDetails['work_location_name'] ?? '';
+
+            $timeOffapproverDetails = $this->userAccountModel->getUserAccount($timeOffApproverID, null);
+            $timeOffApproverName = $timeOffapproverDetails['file_as'] ?? '';
+
+            $this->employeeModel->updateEmployeeWorkInformation($employeeID, $companyID, $companyName, $departmentID, $departmentName, $jobPositionID, $jobPositionName, $workLocationID, $workLocationName, $managerID, $managerName, $workScheduleID, $workScheduleName, $homeWorkDistance, $timeOffApproverID, $timeOffApproverName, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Update Work Information Success',
+                'message' => 'The work information has been updated successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeHRSettings
+    # Description: 
+    # Updates the employee HR settings if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeHRSettings() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['pin_code']) && isset($_POST['badge_id']) && isset($_POST['employment_type_id']) && isset($_POST['onboard_date']) && !empty($_POST['onboard_date'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $pinCode = $_POST['pin_code'];
+            $badgeID = $_POST['badge_id'];
+            $employmentTypeID = htmlspecialchars($_POST['employment_type_id'], ENT_QUOTES, 'UTF-8');
+            $onboardDate = $this->systemModel->checkDate('empty', $_POST['onboard_date'], '', 'Y-m-d', '');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Update HR Settings Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $employmentTypeDetails = $this->employmentTypeModel->getEmploymentType($employmentTypeID);
+            $employmentTypeName = $employmentTypeDetails['employment_type_name'] ?? '';
+
+            $this->employeeModel->updateEmployeeHRSettings($employeeID, $badgeID, $employmentTypeID, $employmentTypeName, $pinCode, $onboardDate, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Update HR Settings Success',
                 'message' => 'The employee has been updated successfully.',
                 'messageType' => 'success'
             ];
@@ -508,16 +774,16 @@ class EmployeeController {
 
     # -------------------------------------------------------------
     #
-    # Function: getEmployeeDetails
+    # Function: getAboutDetails
     # Description: 
-    # Handles the retrieval of employee details.
+    # Handles the retrieval of employee about details.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function getEmployeeDetails() {
+    public function getAboutDetails() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
@@ -546,11 +812,158 @@ class EmployeeController {
 
             $response = [
                 'success' => true,
-                'employeeName' => $employeeDetails['employee_name'] ?? null,
-                'parentEmployeeID' => $employeeDetails['parent_employee_id'] ?? '',
-                'parentEmployeeName' => $employeeDetails['parent_employee_name'] ?? null,
-                'managerID' => $employeeDetails['manager_id'] ?? '',
-                'managerName' => $employeeDetails['manager_name'] ?? null
+                'about' => $employeeDetails['about'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getPrivateInformationDetails
+    # Description: 
+    # Handles the retrieval of employee private information details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getPrivateInformationDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Employee Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeDetails = $this->employeeModel->getEmployee($employeeID);
+
+            $response = [
+                'success' => true,
+                'fullName' => $employeeDetails['full_name'] ?? null,
+                'firstName' => $employeeDetails['first_name'] ?? null,
+                'middleName' => $employeeDetails['middle_name'] ?? null,
+                'lastName' => $employeeDetails['last_name'] ?? null,
+                'suffix' => $employeeDetails['suffix'] ?? null,
+                'nickname' => $employeeDetails['nickname'] ?? null,
+                'civilStatusID' => $employeeDetails['civil_status_id'] ?? null,
+                'civilStatusName' => $employeeDetails['civil_status_name'] ?? null,
+                'genderID' => $employeeDetails['gender_id'] ?? null,
+                'genderName' => $employeeDetails['gender_name'] ?? null,
+                'religionID' => $employeeDetails['religion_id'] ?? null,
+                'religionName' => $employeeDetails['religion_name'] ?? null,
+                'bloodTypeID' => $employeeDetails['blood_type_id'] ?? null,
+                'bloodTypeName' => $employeeDetails['blood_type_name'] ?? null,
+                'birthday' => $this->systemModel->checkDate('empty', $employeeDetails['birthday'], '', 'm/d/Y', ''),
+                'birthPlace' => $employeeDetails['birth_place'] ?? null,
+                'height' => $employeeDetails['height'] ?? null,
+                'weight' => $employeeDetails['weight'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getWorkInformationDetails
+    # Description: 
+    # Handles the retrieval of employee work information details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getWorkInformationDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Employee Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeDetails = $this->employeeModel->getEmployee($employeeID);
+
+            $response = [
+                'success' => true,
+                'companyID' => $employeeDetails['company_id'] ?? null,
+                'companyName' => $employeeDetails['company_name'] ?? null,
+                'departmentID' => $employeeDetails['department_id'] ?? null,
+                'departmentName' => $employeeDetails['department_name'] ?? null,
+                'jobPositionID' => $employeeDetails['job_position_id'] ?? null,
+                'jobPositionName' => $employeeDetails['job_position_name'] ?? null,
+                'workLocationID' => $employeeDetails['work_location_id'] ?? null,
+                'workLocationName' => $employeeDetails['work_location_name'] ?? null,
+                'managerID' => $employeeDetails['manager_id'] ?? null,
+                'managerName' => $employeeDetails['manager_name'] ?? null,
+                'workScheduleID' => $employeeDetails['work_schedule_id'] ?? null,
+                'workScheduleName' => $employeeDetails['work_schedule_name'] ?? null,
+                'homeWorkDistance' => $employeeDetails['home_work_distance'] ?? null,
+                'timeOffApproverID' => $employeeDetails['time_off_approver_id'] ?? null,
+                'timeOffApproverName' => $employeeDetails['time_off_approver_name'] ?? null
             ];
 
             echo json_encode($response);

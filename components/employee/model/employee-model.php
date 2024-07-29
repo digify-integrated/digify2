@@ -17,8 +17,30 @@ class EmployeeModel {
 
     # -------------------------------------------------------------
     #
-    # Function: updateEmployee
-    # Description: Updates the employee.
+    # Function: updateEmployeeAbout
+    # Description: Updates the employee about.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_about (string): The about.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeAbout($p_employee_id, $p_about, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeAbout(:p_employee_id, :p_about, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_about', $p_about, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeePrivateInformation
+    # Description: Updates the employee private information.
     #
     # Parameters:
     # - $p_employee_id (int): The employee ID.
@@ -45,8 +67,8 @@ class EmployeeModel {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateEmployee($p_employee_id, $p_full_name, $p_first_name, $p_middle_name, $p_last_name, $p_suffix, $p_nickname, $p_civil_status_name, $p_gender_id, $p_gender_name, $p_religion_id, $p_religion_name, $p_blood_type_id, $p_blood_type_name, $p_birthday, $p_birth_place, $p_height, $p_weight, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateEmployee(:p_full_name, :p_first_name, :p_middle_name, :p_last_name, :p_suffix, :p_nickname, :p_civil_status_id, :p_civil_status_name, :p_gender_id, :p_gender_name, :p_religion_id, :p_religion_name, :p_blood_type_id, :p_blood_type_name, :p_birthday, :p_birth_place, :p_height, :p_weight, :p_last_log_by)');
+    public function updateEmployeePrivateInformation($p_employee_id, $p_full_name, $p_first_name, $p_middle_name, $p_last_name, $p_suffix, $p_nickname, $p_civil_status_id, $p_civil_status_name, $p_gender_id, $p_gender_name, $p_religion_id, $p_religion_name, $p_blood_type_id, $p_blood_type_name, $p_birthday, $p_birth_place, $p_height, $p_weight, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeePrivateInformation(:p_employee_id, :p_full_name, :p_first_name, :p_middle_name, :p_last_name, :p_suffix, :p_nickname, :p_civil_status_id, :p_civil_status_name, :p_gender_id, :p_gender_name, :p_religion_id, :p_religion_name, :p_blood_type_id, :p_blood_type_name, :p_birthday, :p_birth_place, :p_height, :p_weight, :p_last_log_by)');
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_full_name', $p_full_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_first_name', $p_first_name, PDO::PARAM_STR);
@@ -73,6 +95,86 @@ class EmployeeModel {
 
     # -------------------------------------------------------------
     #
+    # Function: updateEmployeeWorkInformation
+    # Description: Updates the employee work information.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_badge_id (string): The badge ID.
+    # - $p_company_id (int): The company ID.
+    # - $p_company_name (string): The company name.
+    # - $p_department_id (int): The department ID.
+    # - $p_department_name (string): The department name.
+    # - $p_job_position_id (int): The job position ID.
+    # - $p_job_position_name (string): The job position name.
+    # - $p_work_location_id (int): The work location ID.
+    # - $p_work_location_name (string): The work location name.
+    # - $p_manager_id (int): The manager ID.
+    # - $p_manager_name (string): The manager name.
+    # - $p_work_schedule_id (int): The work schedule ID.
+    # - $p_work_schedule_name (string): The work schedule name.
+    # - $p_home_work_distance (double): The home work distance.
+    # - $p_time_off_approver_id (int): The time off approver ID.
+    # - $p_time_off_approver_name (string): The time off approver name.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeWorkInformation($p_employee_id, $p_company_id, $p_company_name, $p_department_id, $p_department_name, $p_job_position_id, $p_job_position_name, $p_work_location_id, $p_work_location_name, $p_manager_id, $p_manager_name, $p_work_schedule_id, $p_work_schedule_name, $p_home_work_distance, $p_time_off_approver_id, $p_time_off_approver_name, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeWorkInformation(:p_employee_id, :p_company_id, :p_company_name, :p_department_id, :p_department_name, :p_job_position_id, :p_job_position_name, :p_work_location_id, :p_work_location_name, :p_manager_id, :p_manager_name, :p_work_schedule_id, :p_work_schedule_name, :p_home_work_distance, :p_time_off_approver_id, :p_time_off_approver_name, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_company_id', $p_company_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_company_name', $p_company_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_department_id', $p_department_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_department_name', $p_department_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_job_position_id', $p_job_position_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_job_position_name', $p_job_position_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_work_location_id', $p_work_location_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_work_location_name', $p_work_location_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_manager_id', $p_manager_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_manager_name', $p_manager_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_work_schedule_id', $p_work_schedule_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_work_schedule_name', $p_work_schedule_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_home_work_distance', $p_home_work_distance, PDO::PARAM_STR);
+        $stmt->bindValue(':p_time_off_approver_id', $p_time_off_approver_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_time_off_approver_name', $p_time_off_approver_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeHRSettings
+    # Description: Updates the employee hr settings.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_badge_id (string): The badge ID.
+    # - $p_employment_type_id (int): The employment type ID.
+    # - $p_employment_type_name (string): The employment type name.
+    # - $p_pin_code (string): The pin code.
+    # - $p_onboard_date (date): The on-board date.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeHRSettings($p_employee_id, $p_badge_id, $p_employment_type_id, $p_employment_type_name, $p_pin_code, $p_onboard_date, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeHRSettings(:p_employee_id, :p_badge_id, :p_employment_type_id, :p_employment_type_name, :p_pin_code, :p_onboard_date, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_badge_id', $p_badge_id, PDO::PARAM_STR);
+        $stmt->bindValue(':p_employment_type_id', $p_employment_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employment_type_name', $p_employment_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_pin_code', $p_pin_code, PDO::PARAM_STR);
+        $stmt->bindValue(':p_onboard_date', $p_onboard_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: updateEmployeeImage
     # Description: Updates the employee image.
     #
@@ -88,28 +190,6 @@ class EmployeeModel {
         $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeImage(:p_employee_id, :p_employee_image, :p_last_log_by)');
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_employee_image', $p_employee_image, PDO::PARAM_STR);
-        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
-        $stmt->execute();
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: updateWorkPermit
-    # Description: Updates the work permit file.
-    #
-    # Parameters:
-    # - $p_employee_id (int): The employee ID.
-    # - $p_work_permit (string): The work permit file path file.
-    # - $p_last_log_by (int): The last logged user.
-    #
-    # Returns: None
-    #
-    # -------------------------------------------------------------
-    public function updateWorkPermit($p_employee_id, $p_work_permit, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateWorkPermit(:p_employee_id, :p_work_permit, :p_last_log_by)');
-        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
-        $stmt->bindValue(':p_work_permit', $p_work_permit, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }

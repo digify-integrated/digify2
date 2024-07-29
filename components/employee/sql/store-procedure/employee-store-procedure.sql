@@ -25,8 +25,6 @@ END //
 
 /* Update Stored Procedure */
 
-
-
 CREATE PROCEDURE updateEmployeeImage(IN p_employee_id INT, IN p_employee_image VARCHAR(500), IN p_last_log_by INT)
 BEGIN
     UPDATE employee
@@ -35,10 +33,69 @@ BEGIN
     WHERE employee_id = p_employee_id;
 END //
 
-CREATE PROCEDURE updateWorkPermit(IN p_employee_id INT, IN p_work_permit VARCHAR(500), IN p_last_log_by INT)
+CREATE PROCEDURE updateEmployeeAbout(IN p_employee_id INT, IN p_about VARCHAR(500), IN p_last_log_by INT)
 BEGIN
-    UPDATE work_information
-    SET work_permit = p_work_permit,
+    UPDATE employee
+    SET about = p_about,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE updateEmployeePrivateInformation(IN p_employee_id INT, IN p_full_name VARCHAR(1000), IN p_first_name VARCHAR(300), IN p_middle_name VARCHAR(300), IN p_last_name VARCHAR(300), IN p_suffix VARCHAR(10), IN p_nickname VARCHAR(100), IN p_civil_status_id INT, IN p_civil_status_name VARCHAR(100), IN p_gender_id INT, IN p_gender_name VARCHAR(100), IN p_religion_id INT, IN p_religion_name VARCHAR(100), IN p_blood_type_id INT, IN p_blood_type_name VARCHAR(100), IN p_birthday DATE, IN p_birth_place VARCHAR(1000), IN p_height FLOAT, IN p_weight FLOAT, IN p_last_log_by INT)
+BEGIN
+    UPDATE employee
+    SET full_name = p_full_name,
+        first_name = p_first_name,
+        middle_name = p_middle_name,
+        last_name = p_last_name,
+        suffix = p_suffix,
+        nickname = p_nickname,
+        civil_status_id = p_civil_status_id,
+        civil_status_name = p_civil_status_name,
+        gender_id = p_gender_id,
+        gender_name = p_gender_name,
+        religion_id = p_religion_id,
+        religion_name = p_religion_name,
+        blood_type_id = p_blood_type_id,
+        blood_type_name = p_blood_type_name,
+        birthday = p_birthday,
+        birth_place = p_birth_place,
+        height = p_height,
+        weight = p_weight,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE updateEmployeeWorkInformation(IN p_employee_id INT, IN p_company_id INT, IN p_company_name VARCHAR(100), IN p_department_id INT, IN p_department_name VARCHAR(100), IN p_job_position_id INT, IN p_job_position_name VARCHAR(100), IN p_work_location_id INT, IN p_work_location_name VARCHAR(100), IN p_manager_id INT, IN p_manager_name VARCHAR(100), IN p_work_schedule_id INT, IN p_work_schedule_name VARCHAR(100), IN p_home_work_distance DOUBLE, IN p_time_off_approver_id INT, IN p_time_off_approver_name VARCHAR(100), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee
+    SET company_id = p_company_id,
+        company_name = p_company_name,
+        department_id = p_department_id,
+        department_name = p_department_name,
+        job_position_id = p_job_position_id,
+        job_position_name = p_job_position_name,
+        work_location_id = p_work_location_id,
+        work_location_name = p_work_location_name,
+        manager_id = p_manager_id,
+        manager_name = p_manager_name,
+        work_schedule_id = p_work_schedule_id,
+        work_schedule_name = p_work_schedule_name,
+        home_work_distance = p_home_work_distance,
+        time_off_approver_id = p_time_off_approver_id,
+        time_off_approver_name = p_time_off_approver_name,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE updateEmployeeHRSettings(IN p_employee_id INT, IN p_badge_id VARCHAR(200), IN p_employment_type_id INT, IN p_employment_type_name VARCHAR(100), IN p_pin_code VARCHAR(500), IN p_onboard_date DATE, IN p_last_log_by INT)
+BEGIN
+    UPDATE employee
+    SET badge_id = p_badge_id,
+        employment_type_id = p_employment_type_id,
+        employment_type_name = p_employment_type_name,
+        pin_code = p_pin_code,
+        onboard_date = p_onboard_date,
         last_log_by = p_last_log_by
     WHERE employee_id = p_employee_id;
 END //
@@ -75,12 +132,6 @@ END //
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Generate Stored Procedure */
-
-CREATE PROCEDURE generateEmployeeTable()
-BEGIN
-    SELECT employee_id, employee_name, parent_employee_name, manager_name 
-    FROM employee;
-END //
 
 CREATE PROCEDURE generateEmployeeCard(IN p_search_value TEXT, IN p_filter_by_company INT, IN p_filter_by_department INT, IN p_filter_by_job_position INT, IN p_filter_by_employee_status VARCHAR(50), IN p_filter_by_employment_type INT, IN p_filter_by_gender INT, IN p_filter_by_civil_status INT, IN p_limit INT, IN p_offset INT)
 BEGIN

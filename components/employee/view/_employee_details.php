@@ -8,16 +8,19 @@
                         <div class="mt-n5">
                             <div class="d-flex align-items-center justify-content-center mb-2">
                                 <div class="d-flex align-items-center justify-content-center round-110">
-                                    <div class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden round-100">
-                                        <img src="./assets/images/profile/user-1.jpg" alt="matdash-img" class="w-100 h-100">
+                                    <div class="border border-4 border-white d-flex align-items-center justify-content-center overflow-hidden round-100">
+                                        <label for="employee_image" class="cursor-pointer bg-light">
+                                            <img src="./assets/images/default/upload-placeholder.png" alt="employee-image" id="employee-image" class="img-fluid" width="100" height="100">
+                                            <input type="file" class="form-control d-none" id="employee_image" name="employee_image" onchange="previewImage(this, 'employee-image')">
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 order-last my-3 text-center text-lg-start">
-                        <h6 class="mb-0">Lawrence De Vera Agulto</h6>
-                        <p class="mb-0">SECURITY GUARD / HELPER</p>
+                        <h6 class="mb-0" id="employee_full_name_summary">Lawrence De Vera Agulto</h6>
+                        <p class="mb-0" id="employee_job_position_summary">SECURITY GUARD / HELPER</p>
                     </div>
                     <div class="col-lg-5 order-last">
                         <ul class="list-unstyled d-flex align-items-center justify-content-center my-3 mx-4 gap-3">
@@ -46,11 +49,8 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <p class="text-justify aboutscroll">
-                            Lorem ipsum dolor sit ametetur adipisicing elit, sed do
-                            eiusmod tempor incididunt adipisicing elit, sed do eiusmod
-                            tempor incididunLorem ipsum dolor sit ametetur adipisicing
-                            elit, sed do eiusmod tempor incididuntt
+                        <p class="text-justify aboutscroll mb-0" id="about_summary">
+                            No about found.
                         </p>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                                 <div class="form-group row">
                                     <label class="form-label col-md-5">Blood Type</label>
                                     <div class="col-md-7">
-                                        <p class="form-control-static" id="date_of_birth_summary">--</p>
+                                        <p class="form-control-static" id="blood_type_summary">--</p>
                                     </div>
                                 </div>
                             </div>
@@ -185,7 +185,7 @@
                                 <div class="form-group row">
                                     <label class="form-label col-md-5">Department</label>
                                     <div class="col-md-7">
-                                        <p class="form-control-static" id="company_summary">--</p>
+                                        <p class="form-control-static" id="department_summary">--</p>
                                     </div>
                                 </div>
                             </div>
@@ -349,6 +349,84 @@
 
         <div class="card">
             <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Address</h5>
+                <?php
+                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#address-modal" id="add-address-details"></i></a>
+                                                        </div>' : '';
+                ?>
+            </div>
+            <hr class="m-0" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div>
+                                    <p class="mb-1 fs-2">Home Address</p>
+                                    <h6 class="fw-semibold mb-2 fs-3">1 Rsr appartment Bantug bulalo Cabanatuan City, City of Cabanatuan, Nueva Ecija, Philippines</h6>
+                                    <span class="badge bg-info">Alternate</span>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Bank Account</h5>
+                <?php
+                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-modal" id="add-bank-details"></i></a>
+                                                        </div>' : '';
+                ?>
+            </div>
+            <hr class="m-0" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div>
+                                    <p class="mb-1 fs-2">Checking Account</p>
+                                    <h6 class="fw-semibold mb-2">RCBC (Rizal Commercial Banking Corporation)</h6>
+                                    <p class="mb-1 fs-2">test</p>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-pencil"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-file-text"></i>
+                                </a>
+                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0">HR Settings</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
@@ -359,7 +437,7 @@
             <hr class="m-0" />
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -380,8 +458,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -419,7 +495,7 @@
             <hr class="m-0" />
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -440,8 +516,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group row">
@@ -460,46 +534,6 @@
                                         <p class="form-control-static" id="work_permit_expiration_date_summary">--</p>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Address</h5>
-                <?php
-                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#address-modal" id="add-address-details"></i></a>
-                                                        </div>' : '';
-                ?>
-            </div>
-            <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <p class="mb-1 fs-2">Home Address</p>
-                                    <h6 class="fw-semibold mb-2 fs-3">1 Rsr appartment Bantug bulalo Cabanatuan City, City of Cabanatuan, Nueva Ecija, Philippines</h6>
-                                    <span class="badge bg-info">Alternate</span>
-                                </div>
-                            </div>
-                            <div class="d-flex">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
                             </div>
                         </div>
                     </div>
@@ -577,44 +611,6 @@
                                 <div>
                                 <h6 class="fw-semibold mb-2">Government Service Insurance System (GSIS) ID</h6>
                                 <p class="mb-1 fs-2 text-dark">1211-554444315</p>
-                                </div>
-                            </div>
-                            <div class="d-flex">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Bank Account</h5>
-                <?php
-                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-modal" id="add-bank-details"></i></a>
-                                                        </div>' : '';
-                ?>
-            </div>
-            <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <p class="mb-1 fs-2">Checking Account</p>
-                                    <h6 class="fw-semibold mb-2">RCBC (Rizal Commercial Banking Corporation)</h6>
-                                    <p class="mb-1 fs-2">test</p>
                                 </div>
                             </div>
                             <div class="d-flex">
@@ -778,7 +774,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label class="form-label" for="about_name">About <span class="text-danger">*</span></label>
+                                <label class="form-label" for="about">About <span class="text-danger">*</span></label>
                                 <textarea class="form-control" id="about" name="about" maxlength="500"></textarea>
                             </div>
                         </div>
@@ -787,7 +783,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="about-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="about-form" class="btn btn-success" id="submit-about-data">Save changes</button>
             </div>
         </div>
     </div>
@@ -830,16 +826,16 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="gender_id" class="form-label">Gender <span class="text-danger">*</span></label>
                                     <div class="mb-3">
-                                        <label for="gender_id" class="form-label">Gender <span class="text-danger">*</span></label>
                                         <select id="gender_id" name="gender_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="civil_status_id" class="form-label">Civil Status <span class="text-danger">*</span></label>
                                     <div class="mb-3">
-                                        <label for="civil_status_id" class="form-label">Civil Status <span class="text-danger">*</span></label>
                                         <select id="civil_status_id" name="civil_status_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
@@ -885,16 +881,16 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="blood_type_id" class="form-label">Blood Type</label>
                                     <div class="mb-3">
-                                        <label for="blood_type_id" class="form-label">Blood Type</label>
                                         <select id="blood_type_id" name="blood_type_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="religion_id" class="form-label">Religion</label>
                                     <div class="mb-3">
-                                        <label for="religion_id" class="form-label">Religion</label>
                                         <select id="religion_id" name="religion_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
@@ -931,7 +927,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="private-information-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="private-information-form" class="btn btn-success" id="submit-private-information-data">Save changes</button>
             </div>
         </div>
     </div>
@@ -950,32 +946,34 @@
                         <div class="col-lg-6">
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="department_id" class="form-label">Department <span class="text-danger">*</span></label>
                                     <div class="mb-3">
-                                        <label for="department_id" class="form-label">Department <span class="text-danger">*</span></label>
                                         <select id="department_id" name="department_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="manager_id" class="form-label">Manager</label>
                                     <div class="mb-3">
-                                        <label for="manager_id" class="form-label">Manager</label>
-                                        <select id="manager_id" name="manager_id" class="select2 form-control"></select>
+                                        <select id="manager_id" name="manager_id" class="select2 form-control">
+                                            <option value="">--</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="company_id" class="form-label">Company <span class="text-danger">*</span></label>
                                     <div class="mb-3">
-                                        <label for="company_id" class="form-label">Company <span class="text-danger">*</span></label>
                                         <select id="company_id" name="company_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="work_location_id" class="form-label">Work Location</label>
                                     <div class="mb-3">
-                                        <label for="work_location_id" class="form-label">Work Location</label>
                                         <select id="work_location_id" name="work_location_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
@@ -995,24 +993,24 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="work_schedule_id" class="form-label">Work Schedule</label>
                                     <div class="mb-3">
-                                        <label for="work_schedule_id" class="form-label">Work Schedule</label>
                                         <select id="work_schedule_id" name="work_schedule_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="job_position_id" class="form-label">Job Position <span class="text-danger">*</span></label>
                                     <div class="mb-3">
-                                        <label for="job_position_id" class="form-label">Job Position <span class="text-danger">*</span></label>
                                         <select id="job_position_id" name="job_position_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="time_off_approver_id" class="form-label">Time Off <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Select the user responsible for approving &quot;Time Off&quot; of this employee."></span></label>
                                     <div class="mb-3">
-                                        <label for="time_off_approver_id" class="form-label">Time Off <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Select the user responsible for approving &quot;Time Off&quot; of this employee."></span></label>
                                         <select id="time_off_approver_id" name="time_off_approver_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
@@ -1023,7 +1021,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="work-information-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="work-information-form" class="btn btn-success" id="submit-work-information-data">Save changes</button>
             </div>
         </div>
     </div>
@@ -1242,8 +1240,8 @@
                         <div class="col-lg-6">
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <label for="employment_type_id" class="form-label">Employment Type</label>
                                     <div class="mb-3">
-                                        <label for="employment_type_id" class="form-label">Employment Type</label>
                                         <select id="employment_type_id" name="employment_type_id" class="select2 form-control"></select>
                                     </div>
                                 </div>
@@ -1267,7 +1265,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="hr-settings-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="hr-settings-form" class="btn btn-success" id="submit-hr-settings-data">Save changes</button>
             </div>
         </div>
     </div>

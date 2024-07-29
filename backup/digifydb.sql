@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 28, 2024 at 02:41 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Jul 29, 2024 at 11:33 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -2701,10 +2701,77 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployee` (IN `p_employee_id`
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateEmployeeAbout`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeAbout` (IN `p_employee_id` INT, IN `p_about` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee
+    SET about = p_about,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateEmployeeHRSettings`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeHRSettings` (IN `p_employee_id` INT, IN `p_badge_id` VARCHAR(200), IN `p_employment_type_id` INT, IN `p_employment_type_name` VARCHAR(100), IN `p_pin_code` VARCHAR(500), IN `p_onboard_date` DATE, IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee
+    SET badge_id = p_badge_id,
+        employment_type_id = p_employment_type_id,
+        employment_type_name = p_employment_type_name,
+        pin_code = p_pin_code,
+        onboard_date = p_onboard_date,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateEmployeeImage`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeImage` (IN `p_employee_id` INT, IN `p_employee_image` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     UPDATE employee
     SET employee_image = p_employee_image,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateEmployeePrivateInformation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeePrivateInformation` (IN `p_employee_id` INT, IN `p_full_name` VARCHAR(1000), IN `p_first_name` VARCHAR(300), IN `p_middle_name` VARCHAR(300), IN `p_last_name` VARCHAR(300), IN `p_suffix` VARCHAR(10), IN `p_nickname` VARCHAR(100), IN `p_civil_status_id` INT, IN `p_civil_status_name` VARCHAR(100), IN `p_gender_id` INT, IN `p_gender_name` VARCHAR(100), IN `p_religion_id` INT, IN `p_religion_name` VARCHAR(100), IN `p_blood_type_id` INT, IN `p_blood_type_name` VARCHAR(100), IN `p_birthday` DATE, IN `p_birth_place` VARCHAR(1000), IN `p_height` FLOAT, IN `p_weight` FLOAT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee
+    SET full_name = p_full_name,
+        first_name = p_first_name,
+        middle_name = p_middle_name,
+        last_name = p_last_name,
+        suffix = p_suffix,
+        nickname = p_nickname,
+        civil_status_id = p_civil_status_id,
+        civil_status_name = p_civil_status_name,
+        gender_id = p_gender_id,
+        gender_name = p_gender_name,
+        religion_id = p_religion_id,
+        religion_name = p_religion_name,
+        blood_type_id = p_blood_type_id,
+        blood_type_name = p_blood_type_name,
+        birthday = p_birthday,
+        birth_place = p_birth_place,
+        height = p_height,
+        weight = p_weight,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateEmployeeWorkInformation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeWorkInformation` (IN `p_employee_id` INT, IN `p_company_id` INT, IN `p_company_name` VARCHAR(100), IN `p_department_id` INT, IN `p_department_name` VARCHAR(100), IN `p_job_position_id` INT, IN `p_job_position_name` VARCHAR(100), IN `p_work_location_id` INT, IN `p_work_location_name` VARCHAR(100), IN `p_manager_id` INT, IN `p_manager_name` VARCHAR(100), IN `p_work_schedule_id` INT, IN `p_work_schedule_name` VARCHAR(100), IN `p_home_work_distance` DOUBLE, IN `p_time_off_approver_id` INT, IN `p_time_off_approver_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee
+    SET company_id = p_company_id,
+        company_name = p_company_name,
+        department_id = p_department_id,
+        department_name = p_department_name,
+        job_position_id = p_job_position_id,
+        job_position_name = p_job_position_name,
+        work_location_id = p_work_location_id,
+        work_location_name = p_work_location_name,
+        manager_id = p_manager_id,
+        manager_name = p_manager_name,
+        work_schedule_id = p_work_schedule_id,
+        work_schedule_name = p_work_schedule_name,
+        home_work_distance = p_home_work_distance,
+        time_off_approver_id = p_time_off_approver_id,
+        time_off_approver_name = p_time_off_approver_name,
         last_log_by = p_last_log_by
     WHERE employee_id = p_employee_id;
 END$$
@@ -3414,14 +3481,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkLocation` (IN `p_work_loc
     WHERE work_location_id = p_work_location_id;
 
     COMMIT;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateWorkPermit`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkPermit` (IN `p_employee_id` INT, IN `p_work_permit` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
-    UPDATE work_information
-    SET work_permit = p_work_permit,
-        last_log_by = p_last_log_by
-    WHERE employee_id = p_employee_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateWorkSchedule`$$
@@ -6754,7 +6813,14 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3117, 'user_account', 2, 'Last Connection Date: 2024-07-22 10:41:17 -> 2024-07-24 09:14:30<br/>', 2, '2024-07-24 09:14:30', '2024-07-24 09:14:30'),
 (3118, 'user_account', 2, 'Last Connection Date: 2024-07-24 09:14:30 -> 2024-07-25 10:05:27<br/>', 2, '2024-07-25 10:05:27', '2024-07-25 10:05:27'),
 (3119, 'user_account', 2, 'Last Connection Date: 2024-07-25 10:05:27 -> 2024-07-28 09:17:17<br/>', 2, '2024-07-28 09:17:17', '2024-07-28 09:17:17'),
-(3120, 'employee', 2, 'Employee created. <br/><br/>Full Name: Lennard De Vera Agulto, Suffix<br/>First Name: Lennard<br/>Middle Name: De Vera<br/>Last Name: Agulto<br/>Suffix: Suffix<br/>Nickname: Nickname<br/>Civil Status Name: Divorced<br/>Gender Name: Female<br/>Religion Name: Aglipayan Church<br/>Blood Type Name: A+<br/>Date of Birth: 2024-07-28<br/>Birth Place: Place of b=Birth<br/>Height: 20<br/>Weight: 20<br/>Badge ID: Badge ID<br/>Company Name: Christian General Motors Inc.<br/>Employment Type Name: Apprentice<br/>Department Name: Data Center<br/>Job Position Name: Data Center Staff<br/>Work Schedule Name: Regular<br/>Employment Status: Active<br/>PIN Code: Pin Code<br/>Home Work Distance: 20<br/>Visa Number: Visa No<br/>Work Permit Number: Work Permit No<br/>Visa Expiration Date: 2024-07-29<br/>Work Permit Expiration Date: 2024-07-30<br/>On-Board Date: 2024-07-31<br/>Time Off Approver Name: Administrator', 2, '2024-07-28 20:40:04', '2024-07-28 20:40:04');
+(3120, 'employee', 2, 'Employee created. <br/><br/>Full Name: Lennard De Vera Agulto, Suffix<br/>First Name: Lennard<br/>Middle Name: De Vera<br/>Last Name: Agulto<br/>Suffix: Suffix<br/>Nickname: Nickname<br/>Civil Status Name: Divorced<br/>Gender Name: Female<br/>Religion Name: Aglipayan Church<br/>Blood Type Name: A+<br/>Date of Birth: 2024-07-28<br/>Birth Place: Place of b=Birth<br/>Height: 20<br/>Weight: 20<br/>Badge ID: Badge ID<br/>Company Name: Christian General Motors Inc.<br/>Employment Type Name: Apprentice<br/>Department Name: Data Center<br/>Job Position Name: Data Center Staff<br/>Work Schedule Name: Regular<br/>Employment Status: Active<br/>PIN Code: Pin Code<br/>Home Work Distance: 20<br/>Visa Number: Visa No<br/>Work Permit Number: Work Permit No<br/>Visa Expiration Date: 2024-07-29<br/>Work Permit Expiration Date: 2024-07-30<br/>On-Board Date: 2024-07-31<br/>Time Off Approver Name: Administrator', 2, '2024-07-28 20:40:04', '2024-07-28 20:40:04'),
+(3121, 'user_account', 2, 'Last Connection Date: 2024-07-28 09:17:17 -> 2024-07-29 09:27:57<br/>', 2, '2024-07-29 09:27:57', '2024-07-29 09:27:57'),
+(3122, 'employee', 2, 'About: No about found. -> No about found.s<br/>', 2, '2024-07-29 11:39:49', '2024-07-29 11:39:49'),
+(3123, 'employee', 2, 'About: No about found.s -> No about found.<br/>', 2, '2024-07-29 11:39:56', '2024-07-29 11:39:56'),
+(3124, 'employee', 2, 'Birth Place: Place of b=Birth -> Place of Birth<br/>', 2, '2024-07-29 14:09:40', '2024-07-29 14:09:40'),
+(3125, 'employee', 2, 'Full Name: Lennard De Vera Agulto, Suffix -> Lennard De Vera Agultos, Suffix<br/>Last Name: Agulto -> Agultos<br/>Civil Status Name: Divorced -> Married<br/>Gender Name: Female -> Male<br/>Date of Birth: 2024-07-28 -> 2024-07-30<br/>Height: 20 -> 21<br/>Weight: 20 -> 21<br/>', 2, '2024-07-29 14:18:36', '2024-07-29 14:18:36'),
+(3126, 'employee', 2, 'Blood Type Name: A+ -> A-<br/>', 2, '2024-07-29 14:18:51', '2024-07-29 14:18:51'),
+(3127, 'employee', 2, 'Home Work Distance: 20 -> 25<br/>', 2, '2024-07-29 15:13:14', '2024-07-29 15:13:14');
 
 -- --------------------------------------------------------
 
@@ -9722,7 +9788,7 @@ CREATE TABLE `employee` (
   `middle_name` varchar(300) DEFAULT NULL,
   `last_name` varchar(300) NOT NULL,
   `suffix` varchar(10) DEFAULT NULL,
-  `about` varchar(500) DEFAULT NULL,
+  `about` varchar(500) DEFAULT 'No about found.',
   `nickname` varchar(100) DEFAULT NULL,
   `civil_status_id` int(10) UNSIGNED DEFAULT NULL,
   `civil_status_name` varchar(100) DEFAULT NULL,
@@ -9776,7 +9842,7 @@ CREATE TABLE `employee` (
 
 INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `badge_id`, `company_id`, `company_name`, `employment_type_id`, `employment_type_name`, `department_id`, `department_name`, `job_position_id`, `job_position_name`, `work_location_id`, `work_location_name`, `manager_id`, `manager_name`, `work_schedule_id`, `work_schedule_name`, `employment_status`, `pin_code`, `home_work_distance`, `visa_number`, `work_permit_number`, `visa_expiration_date`, `work_permit_expiration_date`, `work_permit`, `onboard_date`, `offboard_date`, `time_off_approver_id`, `time_off_approver_name`, `departure_reason_id`, `departure_reason_name`, `detailed_departure_reason`, `created_date`, `last_log_by`) VALUES
 (1, NULL, NULL, 'Lawrence De Vera Agulto, Suffix', 'Lawrence', 'De Vera', 'Agulto', 'Suffix', NULL, 'nickname', 2, 'Engaged', 2, 'Female', 1, 'Aglipayan Church', 1, 'A+', '2024-07-28', 'place of birth', 1, 2, 'badge id', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'pincode', 20, 'visa no', 'work permit no', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:03:54', 2),
-(2, NULL, NULL, 'Lennard De Vera Agulto, Suffix', 'Lennard', 'De Vera', 'Agulto', 'Suffix', NULL, 'Nickname', 1, 'Divorced', 2, 'Female', 1, 'Aglipayan Church', 1, 'A+', '2024-07-28', 'Place of b=Birth', 20, 20, 'Badge ID', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Code', 20, 'Visa No', 'Work Permit No', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:40:04', 2);
+(2, NULL, NULL, 'Lennard De Vera Agultos, Suffix', 'Lennard', 'De Vera', 'Agultos', 'Suffix', 'No about found.', 'Nickname', 4, 'Married', 1, 'Male', 1, 'Aglipayan Church', 2, 'A-', '2024-07-30', 'Place of Birth', 21, 21, 'Badge ID', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Code', 25, 'Visa No', 'Work Permit No', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:40:04', 2);
 
 --
 -- Triggers `employee`
@@ -9804,6 +9870,10 @@ CREATE TRIGGER `employee_trigger_insert` AFTER INSERT ON `employee` FOR EACH ROW
 
     IF NEW.suffix <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Suffix: ", NEW.suffix);
+    END IF;
+
+    IF NEW.about <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>About: ", NEW.about);
     END IF;
 
     IF NEW.nickname <> '' THEN
@@ -9946,6 +10016,10 @@ CREATE TRIGGER `employee_trigger_update` AFTER UPDATE ON `employee` FOR EACH ROW
 
     IF NEW.suffix <> OLD.suffix THEN
         SET audit_log = CONCAT(audit_log, "Suffix: ", OLD.suffix, " -> ", NEW.suffix, "<br/>");
+    END IF;
+
+    IF NEW.about <> OLD.about THEN
+        SET audit_log = CONCAT(audit_log, "About: ", OLD.about, " -> ", NEW.about, "<br/>");
     END IF;
 
     IF NEW.nickname <> OLD.nickname THEN
@@ -12285,7 +12359,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 1, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -12478,7 +12552,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-28 09:17:17', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '987ZyiaS1z8Uple17h5Omp%2BvMAoOPr9yXPcoyldLZSg%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-29 09:27:57', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '9Jbc%2BdLCOoxQbik56g7yXjvE7ZdtueF3qEGsEJRjDF4%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -13377,7 +13451,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3121;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3128;
 
 --
 -- AUTO_INCREMENT for table `bank`

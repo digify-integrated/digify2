@@ -9,7 +9,7 @@ CREATE TABLE employee (
 	middle_name VARCHAR(300),
 	last_name VARCHAR(300) NOT NULL,
 	suffix VARCHAR(10),
-	about VARCHAR(500),
+	about VARCHAR(500) DEFAULT 'No about found.',
 	nickname VARCHAR(100),
     civil_status_id INT UNSIGNED,
     civil_status_name VARCHAR(100),

@@ -2,16 +2,40 @@
     'use strict';
 
     $(function() {
-        //generateDropdownOptions('department options');
-        displayDetails('get employee details');
+        generateDropdownOptions('department options');
+        generateDropdownOptions('job position options');
+        generateDropdownOptions('company options');
+        generateDropdownOptions('work location options');
+        generateDropdownOptions('work schedule options');
+        generateDropdownOptions('gender options');
+        generateDropdownOptions('civil status options');
+        generateDropdownOptions('blood type options');
+        generateDropdownOptions('religion options');
+        generateDropdownOptions('employment type options');
+        generateDropdownOptions('active user account options');
+        
+        displayDetails('get about details');
+        displayDetails('get private information details');
         displayDetails('get work information details');
 
-        /*if($('#department-form').length){
-            departmentForm();
-        }*/
+        if($('#about-form').length){
+            aboutForm();
+        }
 
-        $(document).on('click','#edit-details',function() {
-            displayDetails('get department details');
+        if($('#private-information-form').length){
+            privateInformationForm();
+        }
+
+        if($('#work-information-form').length){
+            workInformationForm();
+        }
+
+        if($('#hr-settings-form').length){
+            hrSettingsForm();
+        }
+
+        $(document).on('click','#edit-about-details',function() {
+            displayDetails('get about details');
         });
 
         $(document).on('click','#add-experience-details',function() {
@@ -50,14 +74,14 @@
             $('#language-title').text('Add Language');
         });
 
-        $(document).on('click','#delete-department',function() {
-            const department_id = $('#details-id').text();
+        $(document).on('click','#delete-employee',function() {
+            const employee_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete department';
+            const transaction = 'delete employee';
     
             Swal.fire({
-                title: 'Confirm Department Deletion',
-                text: 'Are you sure you want to delete this department?',
+                title: 'Confirm employee Deletion',
+                text: 'Are you sure you want to delete this employee?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -71,10 +95,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/department/controller/department-controller.php',
+                        url: 'components/employee/controller/employee-controller.php',
                         dataType: 'json',
                         data: {
-                            department_id : department_id, 
+                            employee_id : employee_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -129,16 +153,16 @@
     });
 })(jQuery);
 
-function departmentForm(){
-    $('#department-form').validate({
+function aboutForm(){
+    $('#about-form').validate({
         rules: {
-            department_name: {
+            about: {
                 required: true
             }
         },
         messages: {
-            department_name: {
-                required: 'Please enter the display name'
+            about: {
+                required: 'Please enter the about'
             }
         },
         errorPlacement: function(error, element) {
@@ -167,23 +191,23 @@ function departmentForm(){
             }
         },
         submitHandler: function(form) {
-            const department_id = $('#details-id').text();
+            const employee_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
-            const transaction = 'update department';
+            const transaction = 'update employee about';
           
             $.ajax({
                 type: 'POST',
-                url: 'components/department/controller/department-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&department_id=' + department_id,
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
                 dataType: 'json',
                 beforeSend: function() {
-                    disableFormSubmitButton('submit-data');
+                    disableFormSubmitButton('submit-about-data');
                 },
                 success: function (response) {
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
-                        displayDetails('get department details');
-                        $('#department-modal').modal('hide');
+                        displayDetails('get about details');
+                        $('#about-modal').modal('hide');
                     }
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -207,8 +231,314 @@ function departmentForm(){
                     showErrorDialog(fullErrorMessage);
                 },
                 complete: function() {
-                    enableFormSubmitButton('submit-data');
-                    logNotesMain('department', department_id);
+                    enableFormSubmitButton('submit-about-data');
+                    logNotesMain('employee', employee_id);
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function privateInformationForm(){
+    $('#private-information-form').validate({
+        rules: {
+            first_name: {
+                required: true
+            },
+            last_name: {
+                required: true
+            },
+            gender_id: {
+                required: true
+            },
+            civil_status_id: {
+                required: true
+            },
+            birthday: {
+                required: true
+            },
+            birth_place: {
+                required: true
+            }
+        },
+        messages: {
+            first_name: {
+                required: 'Please enter the first name'
+            },
+            last_name: {
+                required: 'Please enter the last name'
+            },
+            gender_id: {
+                required: 'Please choose the gender'
+            },
+            civil_status_id: {
+                required: 'Please choose the civil status'
+            },
+            birthday: {
+                required: 'Please enter the birthday'
+            },
+            birth_place: {
+                required: 'Please enter the birth place'
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorList = [];
+            $.each(this.errorMap, function(key, value) {
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
+            }.bind(this));
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'update employee private information';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-private-information-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        displayDetails('get private information details');
+                        $('#private-information-modal').modal('hide');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-private-information-data');
+                    logNotesMain('employee', employee_id);
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function workInformationForm(){
+    $('#work-information-form').validate({
+        rules: {
+            department_id: {
+                required: true
+            },
+            company_id: {
+                required: true
+            },
+            job_position_id: {
+                required: true
+            }
+        },
+        messages: {
+            department_id: {
+                required: 'Please choose the department'
+            },
+            company_id: {
+                required: 'Please choose the company'
+            },
+            job_position_id: {
+                required: 'Please choose the job position'
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorList = [];
+            $.each(this.errorMap, function(key, value) {
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
+            }.bind(this));
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'update employee work information';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-work-information-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        displayDetails('get work information details');
+                        $('#work-information-modal').modal('hide');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-work-information-data');
+                    logNotesMain('employee', employee_id);
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function hrSettingsForm(){
+    $('#hr-settings-form').validate({
+        rules: {
+            onboard_date: {
+                required: true
+            }
+        },
+        messages: {
+            onboard_date: {
+                required: 'Please enter the on-board date'
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorList = [];
+            $.each(this.errorMap, function(key, value) {
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
+            }.bind(this));
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'update employee hr settings';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-hr-settings-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        displayDetails('get work information details');
+                        $('#hr-settings-modal').modal('hide');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-hr-settings-data');
+                    logNotesMain('employee', employee_id);
                 }
             });
         
@@ -219,31 +549,202 @@ function departmentForm(){
 
 function displayDetails(transaction){
     switch (transaction) {
-        case 'get department details':
-            var department_id = $('#details-id').text();
-            const page_link = document.getElementById('page-link').getAttribute('href');
+        case 'get about details':
+            var employee_id = $('#details-id').text();
+            var page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
-                url: 'components/department/controller/department-controller.php',
+                url: 'components/employee/controller/employee-controller.php',
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    department_id : department_id, 
+                    employee_id : employee_id, 
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('department-form');
+                    resetModalForm('about-form');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#department_name').val(response.departmentName);
-                        
-                        $('#parent_department_id').val(response.parentDepartmentID).trigger('change');
+                        $('#about').val(response.about);
+
+                        $('#about_summary').text(response.about);
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get private information details':
+            var employee_id = $('#details-id').text();
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('private-information-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#first_name').val(response.firstName);
+                        $('#middle_name').val(response.middleName);
+                        $('#nickname').val(response.nickname);
+                        $('#birthday').val(response.birthday);
+                        $('#birth_place').val(response.birthPlace);
+                        $('#last_name').val(response.lastName);
+                        $('#suffix').val(response.suffix);
+                        $('#height').val(response.height);
+                        $('#weight').val(response.weight);
+
+                        $('#gender_id').val(response.genderID).trigger('change');
+                        $('#civil_status_id').val(response.civilStatusID).trigger('change');
+                        $('#blood_type_id').val(response.bloodTypeID).trigger('change');
+                        $('#religion_id').val(response.religionID).trigger('change');
+
+                        $('#employee_full_name_summary').text(response.fullName);
+                        $('#nickname_summary').text(response.nickname);
+                        $('#civil_status_summary').text(response.civilStatusName);
+                        $('#place_of_birth_summary').text(response.birthPlace);
+                        $('#date_of_birth_summary').text(response.birthday);
+                        $('#blood_type_summary').text(response.bloodTypeName);
+                        $('#height_summary').text(response.height + ' cm');
+                        $('#weight_summary').text(response.weight + ' kg');
+                        $('#gender_summary').text(response.genderName);
+                        $('#religion_summary').text(response.religionName);
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get work information details':
+            var employee_id = $('#details-id').text();
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('work-information-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#home_work_distance').val(response.homeWorkDistance);
+
+                        $('#department_id').val(response.departmentID).trigger('change');
                         $('#manager_id').val(response.managerID).trigger('change');
-                        
-                        $('#department_name_summary').text(response.departmentName);
-                        $('#parent_department_name_summary').text(response.parentDepartmentName);
-                        $('#manager_name_summary').text(response.managerName);
+                        $('#company_id').val(response.companyID).trigger('change');
+                        $('#work_location_id').val(response.workLocationID).trigger('change');
+                        $('#work_schedule_id').val(response.workScheduleID).trigger('change');
+                        $('#job_position_id').val(response.jobPositionID).trigger('change');
+                        $('#time_off_approver_id').val(response.timeOffApproverID).trigger('change');
+
+                        $('#department_summary').text(response.departmentName);
+                        $('#job_position_summary').text(response.jobPositionName);
+                        $('#manager_summary').text(response.managerName);
+                        $('#company_summary').text(response.companyName);
+                        $('#work_location_summary').text(response.workLocationName);
+                        $('#home_work_distance_summary').text(response.homeWorkDistance + ' km');
+                        $('#work_schedule_summary').text(response.workScheduleName);
+                        $('#time_off_approver_summary').text(response.timeOffApproverName);
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get hr settings details':
+            var employee_id = $('#details-id').text();
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('hr-settings-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#pin_code').val(response.pinCode);
+                        $('#badge_id').val(response.badgeID);
+                        $('#onboard_date').val(response.onboardDate);
+
+                        $('#employment_type_id').val(response.employmentTypeID).trigger('change');
+
+                        $('#pin_code_summary').text(response.pinCode);
+                        $('#badge_id_summary').text(response.badgeID);
+                        $('#department_summary').text(response.employmentTypeName);
+                        $('#onboard_date_summary').text(response.onboardDate);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -274,22 +775,280 @@ function displayDetails(transaction){
 function generateDropdownOptions(type){
     switch (type) {
         case 'department options':
-            var department_id = $('#details-id').text();
-
+            
             $.ajax({
                 url: 'components/department/view/_department_generation.php',
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    type : type,
-                    department_id : department_id
+                    type : type
                 },
                 success: function(response) {
-                    $('#parent_department_id').select2({
-                        dropdownParent: $('#department-modal'),
+                    $('#department_id').select2({
+                        dropdownParent: $('#work-information-modal'),
                         data: response
                     }).on('change', function (e) {
-                        $(this).valid()
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'job position options':
+            
+            $.ajax({
+                url: 'components/job-position/view/_job_position_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#job_position_id').select2({
+                        dropdownParent: $('#work-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'company options':
+            
+            $.ajax({
+                url: 'components/company/view/_company_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#company_id').select2({
+                        dropdownParent: $('#work-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'work location options':
+            
+            $.ajax({
+                url: 'components/work-location/view/_work_location_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#work_location_id').select2({
+                        dropdownParent: $('#work-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'work schedule options':
+            
+            $.ajax({
+                url: 'components/work-schedule/view/_work_schedule_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#work_schedule_id').select2({
+                        dropdownParent: $('#work-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'gender options':
+            
+            $.ajax({
+                url: 'components/gender/view/_gender_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#gender_id').select2({
+                        dropdownParent: $('#private-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'civil status options':
+            
+            $.ajax({
+                url: 'components/civil-status/view/_civil_status_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#civil_status_id').select2({
+                        dropdownParent: $('#private-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'blood type options':
+            
+            $.ajax({
+                url: 'components/blood-type/view/_blood_type_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#blood_type_id').select2({
+                        dropdownParent: $('#private-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'religion options':
+            
+            $.ajax({
+                url: 'components/religion/view/_religion_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#religion_id').select2({
+                        dropdownParent: $('#private-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'employment type options':
+            
+            $.ajax({
+                url: 'components/employment-type/view/_employment_type_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#employment_type_id').select2({
+                        dropdownParent: $('#work-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'active user account options':
+            
+            $.ajax({
+                url: 'components/user-account/view/_user_account_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#time_off_approver_id').select2({
+                        dropdownParent: $('#work-information-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
                     });
                 },
                 error: function(xhr, status, error) {
