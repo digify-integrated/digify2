@@ -156,6 +156,7 @@ class EmployeeModel {
     # - $p_employment_type_name (string): The employment type name.
     # - $p_pin_code (string): The pin code.
     # - $p_onboard_date (date): The on-board date.
+    # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
@@ -168,6 +169,34 @@ class EmployeeModel {
         $stmt->bindValue(':p_employment_type_name', $p_employment_type_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_pin_code', $p_pin_code, PDO::PARAM_STR);
         $stmt->bindValue(':p_onboard_date', $p_onboard_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeWorkPermit
+    # Description: Updates the employee hr settings.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_visa_number (string): The visa number.
+    # - $p_work_permit_number (string): The work permit number.
+    # - $p_visa_expiration_date (date): The visa expiration date.
+    # - $p_work_permit_expiration_date (date): The work permit expiration date.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeWorkPermit($p_employee_id, $p_visa_number, $p_work_permit_number, $p_visa_expiration_date, $p_work_permit_expiration_date, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeWorkPermit(:p_employee_id, :p_visa_number, :p_work_permit_number, :p_visa_expiration_date, :p_work_permit_expiration_date, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_visa_number', $p_visa_number, PDO::PARAM_STR);
+        $stmt->bindValue(':p_work_permit_number', $p_work_permit_number, PDO::PARAM_STR);
+        $stmt->bindValue(':p_visa_expiration_date', $p_visa_expiration_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_work_permit_expiration_date', $p_work_permit_expiration_date, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }

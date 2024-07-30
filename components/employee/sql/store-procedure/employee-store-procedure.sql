@@ -100,6 +100,17 @@ BEGIN
     WHERE employee_id = p_employee_id;
 END //
 
+CREATE PROCEDURE updateEmployeeWorkPermit(IN p_employee_id INT, IN p_visa_number VARCHAR(50), IN p_work_permit_number VARCHAR(50), IN p_visa_expiration_date DATE, IN p_work_permit_expiration_date DATE, IN p_last_log_by INT)
+BEGIN
+    UPDATE employee
+    SET visa_number = p_visa_number,
+        work_permit_number = p_work_permit_number,
+        visa_expiration_date = p_visa_expiration_date,
+        work_permit_expiration_date = p_work_permit_expiration_date,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Delete Stored Procedure */

@@ -298,13 +298,13 @@ class SystemModel {
             'September', 'October', 'November', 'December'
         ];
     
-        $htmlOptions = '';
+        $monthOptions = '';
         foreach ($months as $index => $month) {
             $monthValue = $index + 1; 
-            $htmlOptions .= '<option value="' . htmlspecialchars($monthValue, ENT_QUOTES) . '">' . htmlspecialchars($month, ENT_QUOTES) . '</option>';
+            $monthOptions .= '<option value="' . htmlspecialchars($monthValue, ENT_QUOTES) . '">' . htmlspecialchars($month, ENT_QUOTES) . '</option>';
         }
     
-        return $htmlOptions;
+        return $monthOptions;
     }
     # -------------------------------------------------------------
     
@@ -323,12 +323,12 @@ class SystemModel {
             $maxYear = date('Y');
         }
     
-        $htmlOptions = '';
+        $yearOptions = '';
         for ($year = $maxYear; $year >= $minYear; $year--) {
-            $htmlOptions .= '<option value="' . htmlspecialchars($year, ENT_QUOTES) . '">' . htmlspecialchars($year, ENT_QUOTES) . '</option>';
+            $yearOptions .= '<option value="' . htmlspecialchars($year, ENT_QUOTES) . '">' . htmlspecialchars($year, ENT_QUOTES) . '</option>';
         }
     
-        return $htmlOptions;
+        return $yearOptions;
     }
     # -------------------------------------------------------------
 

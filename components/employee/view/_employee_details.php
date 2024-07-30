@@ -19,8 +19,8 @@
                         </div>
                     </div>
                     <div class="col-lg-4 order-last my-3 text-center text-lg-start">
-                        <h6 class="mb-0" id="employee_full_name_summary">Lawrence De Vera Agulto</h6>
-                        <p class="mb-0" id="employee_job_position_summary">SECURITY GUARD / HELPER</p>
+                        <h6 class="mb-0" id="employee_full_name_summary">--</h6>
+                        <p class="mb-0" id="employee_job_position_summary">--</p>
                     </div>
                     <div class="col-lg-5 order-last">
                         <ul class="list-unstyled d-flex align-items-center justify-content-center my-3 mx-4 gap-3">
@@ -1080,13 +1080,19 @@
                       <div class="col-sm-12 col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Start Month <span class="text-danger">*</span></label>
-                            <select id="start_experience_date_month" name="start_experience_date_month" class="select2 form-control"></select>
+                            <select id="start_experience_date_month" name="start_experience_date_month" class="select2 select2-month form-control">
+                                <option value="">--</option>
+                                <?php echo $systemModel->generateMonthOptions(); ?>
+                            </select>
                         </div>
                       </div>
                       <div class="col-sm-12 col-md-6">
                         <div class="mb-3">
                             <label class="form-label">Start Year <span class="text-danger">*</span></label>
-                            <select id="start_experience_date_year" name="start_experience_date_year" class="select2 form-control"></select>
+                            <select id="start_experience_date_year" name="start_experience_date_year" class="select2 select2-year form-control">
+                                <option value="">--</option>
+                                <?php echo $systemModel->generateYearOptions(date('Y', strtotime('-100 years')), date('Y')); ?>
+                            </select>
                         </div>
                       </div>
                     </div>
@@ -1094,13 +1100,19 @@
                       <div class="col-sm-12 col-md-6">
                         <div class="mb-3">
                             <label class="form-label">End Month</label>
-                            <select id="end_experience_date_month" name="end_experience_date_month" class="select2 form-control"></select>
+                            <select id="end_experience_date_month" name="end_experience_date_month" class="select2 select2-month form-control">
+                                <option value="">--</option>
+                                <?php echo $systemModel->generateMonthOptions(); ?>
+                            </select>
                         </div>
                       </div>
                       <div class="col-sm-12 col-md-6">
                         <div class="mb-3">
                             <label class="form-label">End Year</label>
-                            <select id="end_experience_date_year" name="end_experience_date_year" class="select2 form-control"></select>
+                            <select id="end_experience_date_year" name="end_experience_date_year" class="select2 select2-year form-control">
+                                <option value="">--</option>
+                                <?php echo $systemModel->generateYearOptions(date('Y', strtotime('-100 years')), date('Y')); ?>
+                            </select>
                         </div>
                       </div>
                     </div>
@@ -1108,7 +1120,7 @@
                         <div class="col-lg-12">
                             <div class="mb-0">
                                 <label for="job_description" class="form-label">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="job_description" name="job_description" maxlength="1000"></textarea>
+                                <textarea class="form-control" id="job_description" name="job_description" maxlength="5000"></textarea>
                             </div>
                         </div>
                     </div>
@@ -1332,7 +1344,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="work-permit-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="work-permit-form" class="btn btn-success" id="submit-work-permit-data">Save changes</button>
             </div>
         </div>
     </div>

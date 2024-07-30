@@ -13,10 +13,14 @@
         generateDropdownOptions('religion options');
         generateDropdownOptions('employment type options');
         generateDropdownOptions('active user account options');
+        generateDropdownOptions('months options');
+        generateDropdownOptions('year options');
         
         displayDetails('get about details');
         displayDetails('get private information details');
         displayDetails('get work information details');
+        displayDetails('get hr settings details');
+        displayDetails('get work permit details');
 
         if($('#about-form').length){
             aboutForm();
@@ -32,6 +36,10 @@
 
         if($('#hr-settings-form').length){
             hrSettingsForm();
+        }
+
+        if($('#work-permit-form').length){
+            workPermitForm();
         }
 
         $(document).on('click','#edit-about-details',function() {
@@ -547,6 +555,84 @@ function hrSettingsForm(){
     });
 }
 
+function workPermitForm(){
+    $('#work-permit-form').validate({
+        errorPlacement: function(error, element) {
+            var errorList = [];
+            $.each(this.errorMap, function(key, value) {
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
+            }.bind(this));
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'update employee work permit';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-work-permit-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        displayDetails('get work permit details');
+                        $('#work-permit-modal').modal('hide');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-work-permit-data');
+                    logNotesMain('employee', employee_id);
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
 function displayDetails(transaction){
     switch (transaction) {
         case 'get about details':
@@ -688,6 +774,7 @@ function displayDetails(transaction){
 
                         $('#department_summary').text(response.departmentName);
                         $('#job_position_summary').text(response.jobPositionName);
+                        $('#employee_job_position_summary').text(response.jobPositionName);
                         $('#manager_summary').text(response.managerName);
                         $('#company_summary').text(response.companyName);
                         $('#work_location_summary').text(response.workLocationName);
@@ -743,8 +830,58 @@ function displayDetails(transaction){
 
                         $('#pin_code_summary').text(response.pinCode);
                         $('#badge_id_summary').text(response.badgeID);
-                        $('#department_summary').text(response.employmentTypeName);
+                        $('#employment_type_summary').text(response.employmentTypeName);
                         $('#onboard_date_summary').text(response.onboardDate);
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get work permit details':
+            var employee_id = $('#details-id').text();
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('work-permit-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#visa_number').val(response.visaNumber);
+                        $('#visa_expiration_date').val(response.visaExpirationDate);
+                        $('#work_permit_number').val(response.workPermitNumber);
+                        $('#work_permit_expiration_date').val(response.workPermitExpirationDate);
+
+                        $('#visa_number_summary').text(response.visaNumber);
+                        $('#work_permit_number_summary').text(response.workPermitNumber);
+                        $('#visa_expiration_date_summary').text(response.visaExpirationDate);
+                        $('#work_permit_expiration_date_summary').text(response.workPermitExpirationDate);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -1019,7 +1156,7 @@ function generateDropdownOptions(type){
                 },
                 success: function(response) {
                     $('#employment_type_id').select2({
-                        dropdownParent: $('#work-information-modal'),
+                        dropdownParent: $('#hr-settings-modal'),
                         data: response
                     }).on('change', function (e) {
                         $(this).valid();

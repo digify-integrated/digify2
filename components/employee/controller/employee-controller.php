@@ -172,8 +172,11 @@ class EmployeeController {
                 case 'update employee work information':
                     $this->updateEmployeeWorkInformation();
                     break;
-                case 'update hr settings information':
+                case 'update employee hr settings':
                     $this->updateEmployeeHRSettings();
+                    break;
+                case 'update employee work permit':
+                    $this->updateEmployeeWorkPermit();
                     break;
                 case 'get about details':
                     $this->getAboutDetails();
@@ -186,6 +189,9 @@ class EmployeeController {
                     break;
                 case 'get hr settings details':
                     $this->getHRSettingsDetails();
+                    break;
+                case 'get work permit details':
+                    $this->getWorkPermitDetails();
                     break;
                 case 'delete employee':
                     $this->deleteEmployee();
@@ -652,6 +658,72 @@ class EmployeeController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeWorkPermit
+    # Description: 
+    # Updates the employee work permit if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeWorkPermit() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['visa_number']) && isset($_POST['visa_expiration_date']) && isset($_POST['work_permit_number']) && isset($_POST['work_permit_expiration_date'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $visaNumber = $_POST['visa_number'];
+            $workPermitNumber = $_POST['work_permit_number'];
+            $visaExpirationDate = $this->systemModel->checkDate('empty', $_POST['visa_expiration_date'], '', 'Y-m-d', '');
+            $workPermitExpirationDate = $this->systemModel->checkDate('empty', $_POST['work_permit_expiration_date'], '', 'Y-m-d', '');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Update HR Settings Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->employeeModel->updateEmployeeWorkPermit($employeeID, $visaNumber, $workPermitNumber, $visaExpirationDate, $workPermitExpirationDate, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Update HR Settings Success',
+                'message' => 'The employee has been updated successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -799,7 +871,7 @@ class EmployeeController {
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Get Employee Details Error',
+                    'title' => 'Get About Details Error',
                     'message' => 'The employee does not exist.',
                     'messageType' => 'error'
                 ];
@@ -859,7 +931,7 @@ class EmployeeController {
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Get Employee Details Error',
+                    'title' => 'Get Private Information Details Error',
                     'message' => 'The employee does not exist.',
                     'messageType' => 'error'
                 ];
@@ -936,7 +1008,7 @@ class EmployeeController {
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Get Employee Details Error',
+                    'title' => 'Get Work Information Details Error',
                     'message' => 'The employee does not exist.',
                     'messageType' => 'error'
                 ];
@@ -964,6 +1036,133 @@ class EmployeeController {
                 'homeWorkDistance' => $employeeDetails['home_work_distance'] ?? null,
                 'timeOffApproverID' => $employeeDetails['time_off_approver_id'] ?? null,
                 'timeOffApproverName' => $employeeDetails['time_off_approver_name'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getHRSettingsDetails
+    # Description: 
+    # Handles the retrieval of employee HR settings details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getHRSettingsDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get HR Settings Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeDetails = $this->employeeModel->getEmployee($employeeID);
+
+            $response = [
+                'success' => true,
+                'badgeID' => $employeeDetails['badge_id'] ?? null,
+                'employmentTypeID' => $employeeDetails['employment_type_id'] ?? null,
+                'employmentTypeName' => $employeeDetails['employment_type_name'] ?? null,
+                'pinCode' => $employeeDetails['pin_code'] ?? null,
+                'onboardDate' => $this->systemModel->checkDate('empty', $employeeDetails['onboard_date'], '', 'm/d/Y', '')
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getWorkPermitDetails
+    # Description: 
+    # Handles the retrieval of employee work permit details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getWorkPermitDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get HR Settings Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeDetails = $this->employeeModel->getEmployee($employeeID);
+
+            $response = [
+                'success' => true,
+                'visaNumber' => $employeeDetails['visa_number'] ?? null,
+                'workPermitNumber' => $employeeDetails['work_permit_number'] ?? null,
+                'visaExpirationDate' => $this->systemModel->checkDate('empty', $employeeDetails['visa_expiration_date'], '', 'm/d/Y', ''),
+                'workPermitExpirationDate' => $this->systemModel->checkDate('empty', $employeeDetails['work_permit_expiration_date'], '', 'm/d/Y', '')
             ];
 
             echo json_encode($response);

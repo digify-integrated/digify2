@@ -73,3 +73,33 @@ CREATE INDEX employee_index_departure_reason_id ON employee(departure_reason_id)
 CREATE INDEX employee_index_employment_status ON employee(employment_status);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Employee Experience Table */
+
+CREATE TABLE employee_experience (
+    employee_experience_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    employee_id INT UNSIGNED NOT NULL,
+    job_title VARCHAR(100) NOT NULL,
+    employment_type_id INT UNSIGNED,
+    employment_type_name VARCHAR(100),
+    company_name VARCHAR(200) NOT NULL,
+    location VARCHAR(200),
+    location_type_id INT UNSIGNED,
+    location_type_name VARCHAR(100),
+    start_month VARCHAR(20),
+    start_year VARCHAR(20),
+    end_month VARCHAR(20),
+    end_year VARCHAR(20),
+    job_description VARCHAR(5000),
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX employee_experience_index_employee_experience_id ON employee_experience(employee_experience_id);
+CREATE INDEX employee_experience_index_employee_employee_id ON employee_experience(employee_id);
+CREATE INDEX employee_experience_index_employee_employment_type_id ON employee_experience(employment_type_id);
+CREATE INDEX employee_experience_index_employee_location_type_id ON employee_experience(location_type_id);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */
