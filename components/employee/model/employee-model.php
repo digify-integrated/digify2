@@ -177,7 +177,7 @@ class EmployeeModel {
     # -------------------------------------------------------------
     #
     # Function: updateEmployeeWorkPermit
-    # Description: Updates the employee hr settings.
+    # Description: Updates the employee work permit.
     #
     # Parameters:
     # - $p_employee_id (int): The employee ID.
@@ -197,6 +197,52 @@ class EmployeeModel {
         $stmt->bindValue(':p_work_permit_number', $p_work_permit_number, PDO::PARAM_STR);
         $stmt->bindValue(':p_visa_expiration_date', $p_visa_expiration_date, PDO::PARAM_STR);
         $stmt->bindValue(':p_work_permit_expiration_date', $p_work_permit_expiration_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeExperience
+    # Description: Updates the employee experience.
+    #
+    # Parameters:
+    # - $p_employee_experience_id (int): The employee experience ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_job_title (string): The job title.
+    # - $p_employment_type_id (string): The employment type ID.
+    # - $p_employment_type_name (string): The employment type name.
+    # - $p_company_name (string): The company name.
+    # - $p_location (string): The location.
+    # - $p_employment_location_type_id (int): The employment location type ID.
+    # - $p_employment_location_type_name (string): The employment location type name.
+    # - $p_start_month (string): The start month.
+    # - $p_start_year (string): The start year.
+    # - $p_end_month (string): The end month.
+    # - $p_end_year (string): The end year.
+    # - $p_job_description (string): The job description.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeExperience($p_employee_experience_id, $p_employee_id, $p_job_title, $p_employment_type_id , $p_employment_type_name, $p_company_name, $p_location, $p_employment_location_type_id, $p_employment_location_type_name, $p_start_month, $p_start_year, $p_end_month, $p_end_year, $p_job_description, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeExperience(:p_employee_experience_id, :p_employee_id, :p_job_title, :p_employment_type_id , :p_employment_type_name, :p_company_name, :p_location, :p_employment_location_type_id, :p_employment_location_type_name, :p_start_month, :p_start_year, :p_end_month, :p_end_year, :p_job_description, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_experience_id', $p_employee_experience_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_job_title', $p_job_title, PDO::PARAM_STR);
+        $stmt->bindValue(':p_employment_type_id', $p_employment_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employment_type_name', $p_employment_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_company_name', $p_company_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_location', $p_location, PDO::PARAM_STR);
+        $stmt->bindValue(':p_employment_location_type_id', $p_employment_location_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employment_location_type_name', $p_employment_location_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_start_month', $p_start_month, PDO::PARAM_STR);
+        $stmt->bindValue(':p_start_year', $p_start_year, PDO::PARAM_STR);
+        $stmt->bindValue(':p_end_month', $p_end_month, PDO::PARAM_STR);
+        $stmt->bindValue(':p_end_year', $p_end_year, PDO::PARAM_STR);
+        $stmt->bindValue(':p_job_description', $p_job_description, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -336,6 +382,50 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: insertEmployeeExperience
+    # Description: Inserts the employee experience.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_job_title (string): The job title.
+    # - $p_employment_type_id (string): The employment type ID.
+    # - $p_employment_type_name (string): The employment type name.
+    # - $p_company_name (string): The company name.
+    # - $p_location (string): The location.
+    # - $p_employment_location_type_id (int): The employment location type ID.
+    # - $p_employment_location_type_name (string): The employment location type name.
+    # - $p_start_month (string): The start month.
+    # - $p_start_year (string): The start year.
+    # - $p_end_month (string): The end month.
+    # - $p_end_year (string): The end year.
+    # - $p_job_description (string): The job description.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertEmployeeExperience($p_employee_id, $p_job_title, $p_employment_type_id , $p_employment_type_name, $p_company_name, $p_location, $p_employment_location_type_id, $p_employment_location_type_name, $p_start_month, $p_start_year, $p_end_month, $p_end_year, $p_job_description, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeExperience(:p_employee_id, :p_job_title, :p_employment_type_id , :p_employment_type_name, :p_company_name, :p_location, :p_employment_location_type_id, :p_employment_location_type_name, :p_start_month, :p_start_year, :p_end_month, :p_end_year, :p_job_description, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_job_title', $p_job_title, PDO::PARAM_STR);
+        $stmt->bindValue(':p_employment_type_id', $p_employment_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employment_type_name', $p_employment_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_company_name', $p_company_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_location', $p_location, PDO::PARAM_STR);
+        $stmt->bindValue(':p_employment_location_type_id', $p_employment_location_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employment_location_type_name', $p_employment_location_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_start_month', $p_start_month, PDO::PARAM_STR);
+        $stmt->bindValue(':p_start_year', $p_start_year, PDO::PARAM_STR);
+        $stmt->bindValue(':p_end_month', $p_end_month, PDO::PARAM_STR);
+        $stmt->bindValue(':p_end_year', $p_end_year, PDO::PARAM_STR);
+        $stmt->bindValue(':p_job_description', $p_job_description, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Check exist methods
     # -------------------------------------------------------------
 
@@ -353,6 +443,25 @@ class EmployeeModel {
     public function checkEmployeeExist($p_employee_id) {
         $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeExist(:p_employee_id)');
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: checkEmployeeExperienceExist
+    # Description: Checks if a employee experience exists.
+    #
+    # Parameters:
+    # - $p_employee_experience_id (int): The employee experience ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkEmployeeExperienceExist($p_employee_experience_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeExperienceExist(:p_employee_experience_id)');
+        $stmt->bindValue(':p_employee_experience_id', $p_employee_experience_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -381,6 +490,24 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeExperience
+    # Description: Deletes the employee experience.
+    #
+    # Parameters:
+    # - $p_employee_experience_id (int): The employee experience ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeExperience($p_employee_experience_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeExperience(:p_employee_experience_id)');
+        $stmt->bindValue(':p_employee_experience_id', $p_employee_experience_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Get methods
     # -------------------------------------------------------------
 
@@ -399,6 +526,26 @@ class EmployeeModel {
     public function getEmployee($p_employee_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getEmployee(:p_employee_id)');
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeExperience
+    # Description: Retrieves the details of a employee experience.
+    #
+    # Parameters:
+    # - $p_employee_experience_id (int): The employee experience ID.
+    #
+    # Returns:
+    # - An array containing the employee experience details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeExperience($p_employee_experience_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeeExperience(:p_employee_experience_id)');
+        $stmt->bindValue(':p_employee_experience_id', $p_employee_experience_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

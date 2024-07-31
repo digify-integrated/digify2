@@ -25,7 +25,7 @@
 <div class="datatables">
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card mb-0">
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="company-table" class="table align-middle text-nowrap w-100 mb-4">

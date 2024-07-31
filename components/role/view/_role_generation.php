@@ -176,12 +176,16 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                         $deleteButton = '<button class="btn bg-danger-subtle text-danger delete-role-user-account" data-role-user-account-id="' . $roleUserAccountID . '">Delete</button>';
                     }
 
-                    $table .= '<div class="d-flex align-items-center justify-content-between pb-3">
-                                    <div>
-                                        <h5 class="fs-4 fw-semibold mb-0">'. $roleName .'</h5>
-                                        <small class="mb-0 mt-1">Date Assigned : '. $assignmentDate .'</small>
+                    $table .= '<div class="row">
+                                    <div class="col-lg-12 mb-3">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div>
+                                                <h5 class="fs-4 fw-semibold mb-0">'. $roleName .'</h5>
+                                                <small class="mb-0 mt-1">Date Assigned : '. $assignmentDate .'</small>
+                                            </div>
+                                            '. $deleteButton .'
+                                        </div>
                                     </div>
-                                    '. $deleteButton .'
                                 </div>';
                 }
 

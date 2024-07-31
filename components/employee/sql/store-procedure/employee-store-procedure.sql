@@ -9,6 +9,13 @@ BEGIN
     WHERE employee_id = p_employee_id;
 END //
 
+CREATE PROCEDURE checkEmployeeExperienceExist(IN p_employee_experience_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_experience
+    WHERE employee_experience_id = p_employee_experience_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
@@ -19,6 +26,12 @@ BEGIN
 	VALUES(p_full_name, p_first_name, p_middle_name, p_last_name, p_suffix, p_nickname, p_civil_status_id, p_civil_status_name, p_gender_id, p_gender_name, p_religion_id, p_religion_name, p_blood_type_id, p_blood_type_name, p_birthday, p_birth_place, p_height, p_weight, p_badge_id, p_company_id, p_company_name, p_employment_type_id, p_employment_type_name, p_department_id, p_department_name, p_job_position_id, p_job_position_name, p_work_location_id, p_work_location_name, p_manager_id, p_manager_name, p_work_schedule_id, p_work_schedule_name, p_pin_code, p_home_work_distance, p_visa_number, p_work_permit_number, p_visa_expiration_date, p_work_permit_expiration_date, p_onboard_date, p_time_off_approver_id, p_time_off_approver_name, p_last_log_by);
 	
     SET p_employee_id = LAST_INSERT_ID();
+END //
+
+CREATE PROCEDURE insertEmployeeExperience(IN p_employee_id INT, IN p_job_title VARCHAR(100), IN p_employment_type_id INT, IN p_employment_type_name VARCHAR(100), IN p_company_name VARCHAR(200), IN p_location VARCHAR(200), IN p_employment_location_type_id INT, IN p_employment_location_type_name VARCHAR(100), IN p_start_month VARCHAR(20), IN p_start_year VARCHAR(20), IN p_end_month VARCHAR(20), IN p_end_year VARCHAR(20), IN p_job_description VARCHAR(5000), IN p_last_log_by INT)
+BEGIN
+    INSERT INTO employee_experience (employee_id, job_title, employment_type_id, employment_type_name, company_name, location, employment_location_type_id, employment_location_type_name, start_month, start_year, end_month, end_year, job_description, last_log_by) 
+	VALUES(p_employee_id, p_job_title, p_employment_type_id, p_employment_type_name, p_company_name, p_location, p_employment_location_type_id, p_employment_location_type_name, p_start_month, p_start_year, p_end_month, p_end_year, p_job_description, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -111,6 +124,26 @@ BEGIN
     WHERE employee_id = p_employee_id;
 END //
 
+CREATE PROCEDURE updateEmployeeExperience(IN p_employee_experience_id INT, IN p_employee_id INT, IN p_job_title VARCHAR(100), IN p_employment_type_id INT, IN p_employment_type_name VARCHAR(100), IN p_company_name VARCHAR(200), IN p_location VARCHAR(200), IN p_employment_location_type_id INT, IN p_employment_location_type_name VARCHAR(100), IN p_start_month VARCHAR(20), IN p_start_year VARCHAR(20), IN p_end_month VARCHAR(20), IN p_end_year VARCHAR(20), IN p_job_description VARCHAR(5000), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee_experience
+    SET employee_id = p_employee_id,
+        job_title = p_job_title,
+        employment_type_id = p_employment_type_id,
+        employment_type_name = p_employment_type_name,
+        company_name = p_company_name,
+        location = p_location,
+        employment_location_type_id = p_employment_location_type_id,
+        employment_location_type_name = p_employment_location_type_name,
+        start_month = p_start_month,
+        start_year = p_start_year,
+        end_month = p_end_month,
+        end_year = p_end_year,
+        job_description = p_job_description,
+        last_log_by = p_last_log_by
+    WHERE employee_experience_id = p_employee_experience_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Delete Stored Procedure */
@@ -124,10 +157,15 @@ BEGIN
 
     START TRANSACTION;
 
-    DELETE FROM work_information WHERE employee_id = p_employee_id;
+    DELETE FROM employee_experience WHERE employee_id = p_employee_id;
     DELETE FROM employee WHERE employee_id = p_employee_id;
 
     COMMIT;
+END //
+
+CREATE PROCEDURE deleteEmployeeExperience(IN p_employee_experience_id INT)
+BEGIN
+   DELETE FROM employee_experience WHERE employee_experience_id = p_employee_experience_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -138,6 +176,12 @@ CREATE PROCEDURE getEmployee(IN p_employee_id INT)
 BEGIN
 	SELECT * FROM employee
 	WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE getEmployeeExperience(IN p_employee_experience_id INT)
+BEGIN
+	SELECT * FROM employee_experience
+	WHERE employee_experience_id = p_employee_experience_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -202,6 +246,12 @@ BEGIN
     END IF;
 
     DEALLOCATE PREPARE stmt;
+END //
+
+CREATE PROCEDURE generateEmployeeExpirience(IN p_employee_id INT)
+BEGIN
+	SELECT * FROM employee_experience
+	WHERE employee_id = p_employee_id;
 END //
 
 CREATE PROCEDURE generateEmployeeOptions(IN p_employee_id INT)

@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-12">
-        <div class="card">
+        <div class="card mb-0">
             <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0">Company Form</h5>
                 <div class="card-actions cursor-pointer ms-auto d-flex button-group">

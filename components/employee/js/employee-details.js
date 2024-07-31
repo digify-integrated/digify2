@@ -12,9 +12,8 @@
         generateDropdownOptions('blood type options');
         generateDropdownOptions('religion options');
         generateDropdownOptions('employment type options');
+        generateDropdownOptions('employment location type options');
         generateDropdownOptions('active user account options');
-        generateDropdownOptions('months options');
-        generateDropdownOptions('year options');
         
         displayDetails('get about details');
         displayDetails('get private information details');
@@ -42,12 +41,42 @@
             workPermitForm();
         }
 
+        if($('#experience-form').length){
+            experienceForm();
+        }
+
         $(document).on('click','#edit-about-details',function() {
             displayDetails('get about details');
         });
 
+        $(document).on('click','#edit-private-information-details',function() {
+            displayDetails('get private information details');
+        });
+
+        $(document).on('click','#edit-work-information-details',function() {
+            displayDetails('get work information details');
+        });
+
+        $(document).on('click','#edit-hr-settings-details',function() {
+            displayDetails('get hr settings details');
+        });
+
+        $(document).on('click','#edit-work-permit-details',function() {
+            displayDetails('get work permit details');
+        });
+
         $(document).on('click','#add-experience-details',function() {
             $('#experience-title').text('Add Experience');
+            resetModalForm('experience-form');
+        });
+
+        $(document).on('click','#edit-experience-details',function() {
+            const employee_experience_id = $(this).data('contactemployee-experience-id');
+            sessionStorage.setItem('employee_experience_id', employee_experience_id);
+
+            $('#experience-title').text('Edit Experience');
+
+            displayDetails('get employee experience details');
         });
 
         $(document).on('click','#add-education-details',function() {
@@ -140,6 +169,18 @@
                 }
             });
         });
+
+        if($('#expirience-container').length){
+            expirienceList();
+        }
+
+        if($('#log-notes-offcanvas').length){
+            $(document).on('click','.view-employee-experience-log-notes',function() {
+                const employee_experience_id = $(this).data('employee-experience-id');
+
+                logNotes('employee_experience', employee_experience_id);
+            });
+        }
 
         if($('#log-notes-main').length){
             const employee_id = $('#details-id').text();
@@ -633,6 +674,135 @@ function workPermitForm(){
     });
 }
 
+function experienceForm(){
+    $('#experience-form').validate({
+        rules: {
+            job_title: {
+                required: true
+            },
+            company_name: {
+                required: true
+            },
+            start_experience_date_month: {
+                required: true
+            },
+            start_experience_date_year: {
+                required: true
+            },
+            job_description: {
+                required: true
+            }
+        },
+        messages: {
+            job_title: {
+                required: 'Please enter the job title'
+            },
+            company_name: {
+                required: 'Please enter the company name'
+            },
+            start_experience_date_month: {
+                required: 'Please choose the start month'
+            },
+            start_experience_date_year: {
+                required: 'Please choose the start year'
+            },
+            job_description: {
+                required: 'Please enter the job description'
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorList = [];
+            $.each(this.errorMap, function(key, value) {
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
+            }.bind(this));
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'save employee experience';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-experience-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#experience-modal').modal('hide');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-experience-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function expirienceList(){
+    const employee_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'expirience list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/employee/view/_employee_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
+        beforeSend: function(){
+            document.getElementById('expirience-container').innerHTML = '<strong>Loading...</strong>';
+        },
+        success: function (result) {
+            document.getElementById('expirience-container').innerHTML = result[0].EXPIRIENCE_LIST;
+        }
+    });
+}
+
 function displayDetails(transaction){
     switch (transaction) {
         case 'get about details':
@@ -882,6 +1052,58 @@ function displayDetails(transaction){
                         $('#work_permit_number_summary').text(response.workPermitNumber);
                         $('#visa_expiration_date_summary').text(response.visaExpirationDate);
                         $('#work_permit_expiration_date_summary').text(response.workPermitExpirationDate);
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get employee experience details':
+            var employee_experience_id = sessionStorage.getItem('employee_experience_id');
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_experience_id : employee_experience_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('work-permit-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#job_title').val(response.jobTitle);
+                        $('#company_name').val(response.companyName);
+                        $('#location').val(response.location);
+                        $('#job_description').val(response.jobDescription);
+
+                        $('#experience_employment_type_id').val(response.employmentTypeID).trigger('change');
+                        $('#employment_location_type_id').val(response.employmentLocationTypeID).trigger('change');
+                        $('#start_experience_date_month').val(response.startMonth).trigger('change');
+                        $('#start_experience_date_year').val(response.startYear).trigger('change');
+                        $('#end_experience_date_month').val(response.endMonth).trigger('change');
+                        $('#end_experience_date_year').val(response.endYear).trigger('change');
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -1157,6 +1379,39 @@ function generateDropdownOptions(type){
                 success: function(response) {
                     $('#employment_type_id').select2({
                         dropdownParent: $('#hr-settings-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+
+                    $('#experience_employment_type_id').select2({
+                        dropdownParent: $('#experience-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'employment location type options':
+            
+            $.ajax({
+                url: 'components/employment-location-type/view/_employment_location_type_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#employment_location_type_id').select2({
+                        dropdownParent: $('#experience-modal'),
                         data: response
                     }).on('change', function (e) {
                         $(this).valid();

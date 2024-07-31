@@ -30,7 +30,7 @@
     $companyButton = '<a href="'. $companyPageLink .'" class="btn btn-info mb-4">Manage Company</a>';
   }
 ?>
-<div class="card">
+<div class="card mb-0">
   <div class="form-horizontal">
     <div class="form-body">
       <div class="card-body">
@@ -117,7 +117,7 @@
             <div class="col-lg-6">
               <h4 class="card-title mb-0">Password Recovery Link</h4>
               <p class="mb-3">The default URL used for resetting user account password</p>
-              <input class="form-control mb-3" type="text" id="password_recovery_link" name="password_recovery_link" maxlength="500" <?php echo $securitySettingUpdate; ?>>
+              <input class="form-control mb-0" type="text" id="password_recovery_link" name="password_recovery_link" maxlength="500" <?php echo $securitySettingUpdate; ?>>
             </div>
           </div>
         </form>

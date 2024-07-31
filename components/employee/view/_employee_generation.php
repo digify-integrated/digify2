@@ -22,58 +22,6 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
     switch ($type) {
         # -------------------------------------------------------------
         #
-        # Type: employee table
-        # Description:
-        # Generates the employee table.
-        #
-        # Parameters: None
-        #
-        # Returns: Array
-        #
-        # -------------------------------------------------------------
-        case 'employee table':
-            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeTable()');
-            $sql->execute();
-            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
-            $sql->closeCursor();
-
-            $employeeDeleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
-
-            foreach ($options as $row) {
-                $employeeID = $row['employee_id'];
-                $employeeName = $row['employee_name'];
-                $parentEmployeeName = $row['parent_employee_name'];
-                $managerName = $row['manager_name'];
-
-                $employeeIDEncrypted = $securityModel->encryptData($employeeID);
-
-                $deleteButton = '';
-                if($employeeDeleteAccess['total'] > 0){
-                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-employee" data-employee-id="' . $employeeID . '" title="Delete Employee">
-                                        <i class="ti ti-trash fs-5"></i>
-                                    </a>';
-                }
-
-                $response[] = [
-                    'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $employeeID .'">',
-                    'DEPARTMENT_NAME' => $employeeName,
-                    'MANAGER_NAME' => $managerName,
-                    'PARENT_DEPARTMENT_NAME' => $parentEmployeeName,
-                    'ACTION' => '<div class="action-btn">
-                                    <a href="'. $pageLink .'&id='. $employeeIDEncrypted .'" class="text-info" title="View Details">
-                                        <i class="ti ti-eye fs-5"></i>
-                                    </a>
-                                   '. $deleteButton .'
-                                </div>'
-                ];
-            }
-
-            echo json_encode($response);
-        break;
-        # -------------------------------------------------------------
-
-        # -------------------------------------------------------------
-        #
         # Type: employee cards
         # Description:
         # Generates the employee cards.
@@ -178,6 +126,98 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     'text' => 'Inactive'
                 ]
             ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: expirience list
+        # Description:
+        # Generates the expirience list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'expirience list':
+            $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeExpirience(:employeeID)');
+            $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $sql->closeCursor();
+
+            $list = '';
+
+            $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+
+            foreach ($options as $row) {
+                $employeeExperienceID = $row['employee_experience_id'];
+                $jobTitle = $row['job_title'];
+                $employmentTypeName = $row['employment_type_name'];
+                $companyName = $row['company_name'];
+                $location = $row['location'];
+                $employmentLocationTypeName = $row['employment_location_type_name'];
+                $startMonth = $row['start_month'];
+                $startYear = $row['start_year'];
+                $endMonth = $row['end_month'];
+                $endYear = $row['end_year'];
+                $jobDescription = $row['job_description'];
+
+                $startDateFormatted = date('F', mktime(0, 0, 0, $startMonth, 1));
+                $startDate = $startDateFormatted . ' ' . $startYear;                
+
+                $endDate = (!empty($endMonth) && !empty($endYear)) ? date('F', mktime(0, 0, 0, $endMonth, 1)) . ' ' . $endYear : 'Present';
+
+                if ($endDate === 'Present') {
+                    $endDate = date('F Y');
+                }
+
+                $lapsedTime = $systemModel->yearMonthElapsedComparisonString($startDate, $endDate);
+                
+                $employmentTypeName = !empty($employmentTypeName) ? ' · ' . $employmentTypeName : $employmentTypeName;
+                $employmentLocationTypeName = !empty($employmentLocationTypeName) ? ' · ' . $employmentLocationTypeName : $employmentLocationTypeName;
+
+                $updateButton = '';
+                if($employeeWriteAccess['total'] > 0){
+                    $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0" data-bs-toggle="modal" data-bs-target="#experience-modal" id="edit-experience-details" data-employee-experience-id="' . $employeeExperienceID . '">
+                                            <i class="ti ti-pencil"></i>
+                                        </a>';
+                }
+                
+                $list .= '<div class="row">
+                            <div class="col-md-12">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div>
+                                            <h5 class="fs-4 fw-semibold">'. $jobTitle .'</h5>
+                                            <p class="mb-0">'. $companyName . $employmentTypeName .'</p>
+                                            <p class="mb-0">'. $startDate .' - '. $endDate .' · '. $lapsedTime .'</p>
+                                            <p class="mb-2">'. $location . $employmentLocationTypeName .'</p>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        '. $updateButton .'
+                                        <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-experience-log-notes" data-employee-experience-id="' . $employeeExperienceID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
+                                            <i class="ti ti-file-text"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
+                                            <i class="ti ti-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <p class="text-dark text-justify">'. $jobDescription .'</p>
+                            </div>
+                        </div>';
+
+
+                $response[] = [
+                    'EXPIRIENCE_LIST' => $list
+                ];
+            }
 
             echo json_encode($response);
         break;

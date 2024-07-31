@@ -84,8 +84,8 @@ CREATE TABLE employee_experience (
     employment_type_name VARCHAR(100),
     company_name VARCHAR(200) NOT NULL,
     location VARCHAR(200),
-    location_type_id INT UNSIGNED,
-    location_type_name VARCHAR(100),
+    employment_location_type_id INT UNSIGNED,
+    employment_location_type_name VARCHAR(100),
     start_month VARCHAR(20),
     start_year VARCHAR(20),
     end_month VARCHAR(20),
@@ -100,6 +100,6 @@ CREATE TABLE employee_experience (
 CREATE INDEX employee_experience_index_employee_experience_id ON employee_experience(employee_experience_id);
 CREATE INDEX employee_experience_index_employee_employee_id ON employee_experience(employee_id);
 CREATE INDEX employee_experience_index_employee_employment_type_id ON employee_experience(employment_type_id);
-CREATE INDEX employee_experience_index_employee_location_type_id ON employee_experience(location_type_id);
+CREATE INDEX employee_experience_index_employee_lNocation_type_id ON employee_experience(employment_location_type_id);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

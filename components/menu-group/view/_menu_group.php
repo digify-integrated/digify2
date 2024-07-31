@@ -25,7 +25,7 @@
 <div  class="datatables">
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card mb-0">
                 <div class="card-body">
                     <input type="hidden" id="page-id" value="<?php echo $pageID; ?>">
                     <div class="table-responsive overflow-x-auto">

@@ -26,6 +26,7 @@ class EmployeeController {
     private $workScheduleModel;
     private $uploadSettingModel;
     private $userAccountModel;
+    private $employmentLocationTypeModel;
     private $authenticationModel;
     private $securityModel;
     private $systemModel;
@@ -50,6 +51,7 @@ class EmployeeController {
     # - @param WorkLocationModel $workLocationModel     The WorkLocationModel instance for work location operations.
     # - @param WorkScheduleModel $workScheduleModel     The WorkScheduleModel instance for work schedule operations.
     # - @param UserAccountModel $userAccountModel     The UserAccountModel instance for user account operations.
+    # - @param EmploymentLocationTypeModel $employmentLocationTypeModel     The EmploymentLocationTypeModel instance for employment location type operations.
     # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
@@ -58,7 +60,7 @@ class EmployeeController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
+    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, EmploymentLocationTypeModel $employmentLocationTypeModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
         $this->employeeModel = $employeeModel;
         $this->genderModel = $genderModel;
         $this->religionModel = $religionModel;
@@ -71,6 +73,7 @@ class EmployeeController {
         $this->workLocationModel = $workLocationModel;
         $this->workScheduleModel = $workScheduleModel;
         $this->userAccountModel = $userAccountModel;
+        $this->employmentLocationTypeModel = $employmentLocationTypeModel;
         $this->uploadSettingModel = $uploadSettingModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
@@ -178,6 +181,9 @@ class EmployeeController {
                 case 'update employee work permit':
                     $this->updateEmployeeWorkPermit();
                     break;
+                case 'save employee experience':
+                    $this->saveEmployeeExperience();
+                    break;
                 case 'get about details':
                     $this->getAboutDetails();
                     break;
@@ -192,6 +198,9 @@ class EmployeeController {
                     break;
                 case 'get work permit details':
                     $this->getWorkPermitDetails();
+                    break;
+                case 'get employee experience details':
+                    $this->getEmployeeExperienceDetails();
                     break;
                 case 'delete employee':
                     $this->deleteEmployee();
@@ -724,6 +733,92 @@ class EmployeeController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #   Save methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: saveEmployeeExperience
+    # Description: 
+    # Updates the employee work permit if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveEmployeeExperience() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_experience_id']) && isset($_POST['job_title']) && !empty($_POST['job_title']) && isset($_POST['experience_employment_type_id']) && isset($_POST['company_name']) && !empty($_POST['company_name']) && isset($_POST['location']) && isset($_POST['employment_location_type_id']) && isset($_POST['start_experience_date_month']) && !empty($_POST['start_experience_date_month']) && isset($_POST['start_experience_date_year']) && !empty($_POST['start_experience_date_year']) && isset($_POST['end_experience_date_month']) && isset($_POST['end_experience_date_year']) && isset($_POST['job_description']) && !empty($_POST['job_description'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeExperienceID = isset($_POST['employee_experience_id']) ? htmlspecialchars($_POST['employee_experience_id'], ENT_QUOTES, 'UTF-8') : null;
+            $jobTitle = $_POST['job_title'];
+            $employmentTypeID = htmlspecialchars($_POST['experience_employment_type_id'], ENT_QUOTES, 'UTF-8');
+            $companyName = $_POST['company_name'];
+            $location = $_POST['location'];
+            $employmentLocationTypeID = htmlspecialchars($_POST['employment_location_type_id'], ENT_QUOTES, 'UTF-8');
+            $startExperienceDateMonth = $_POST['start_experience_date_month'];
+            $startExperienceDateYear = $_POST['start_experience_date_year'];
+            $endExperienceDateMonth = $_POST['end_experience_date_month'];
+            $endExperienceDateYear = $_POST['end_experience_date_year'];
+            $jobDescription = $_POST['job_description'];
+
+            $employmentTypeDetails = $this->employmentTypeModel->getEmploymentType($employmentTypeID);
+            $employmentTypeName = $employmentTypeDetails['employment_type_name'] ?? '';
+
+            $employmentLocationTypeDetails = $this->employmentLocationTypeModel->getEmploymentLocationType($employmentLocationTypeID);
+            $employmentLocationTypeName = $employmentLocationTypeDetails['employment_location_type_name'] ?? '';
+        
+            $checkEmployeeExperienceExist = $this->employeeModel->checkEmployeeExperienceExist($employeeExperienceID);
+            $total = $checkEmployeeExperienceExist['total'] ?? 0;
+
+            if($total > 0){
+                $this->employeeModel->updateEmployeeExperience($employeeExperienceID, $employeeID, $jobTitle, $employmentTypeID, $employmentTypeName, $companyName, $location, $employmentLocationTypeID, $employmentLocationTypeName, $startExperienceDateMonth, $startExperienceDateYear, $endExperienceDateMonth, $endExperienceDateYear, $jobDescription, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Experience Success',
+                    'message' => 'The experience has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->employeeModel->insertEmployeeExperience($employeeID, $jobTitle, $employmentTypeID, $employmentTypeName, $companyName, $location, $employmentLocationTypeID, $employmentLocationTypeName, $startExperienceDateMonth, $startExperienceDateYear, $endExperienceDateMonth, $endExperienceDateYear, $jobDescription, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert Experience Success',
+                    'message' => 'The experience has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+           
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -1181,6 +1276,69 @@ class EmployeeController {
         }
     }
     # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeExperienceDetails
+    # Description: 
+    # Handles the retrieval of employee employee experience details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeExperienceDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get HR Settings Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeDetails = $this->employeeModel->getEmployee($employeeID);
+
+            $response = [
+                'success' => true,
+                'visaNumber' => $employeeDetails['visa_number'] ?? null,
+                'workPermitNumber' => $employeeDetails['work_permit_number'] ?? null,
+                'visaExpirationDate' => $this->systemModel->checkDate('empty', $employeeDetails['visa_expiration_date'], '', 'm/d/Y', ''),
+                'workPermitExpirationDate' => $this->systemModel->checkDate('empty', $employeeDetails['work_permit_expiration_date'], '', 'm/d/Y', '')
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
 }
 # -------------------------------------------------------------
 
@@ -1200,10 +1358,11 @@ require_once '../../job-position/model/job-position-model.php';
 require_once '../../work-location/model/work-location-model.php';
 require_once '../../work-schedule/model/work-schedule-model.php';
 require_once '../../user-account/model/user-account-model.php';
+require_once '../../employment-location-type/model/employment-location-type-model.php';
 require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
+$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new EmploymentLocationTypeModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
 $controller->handleRequest();
 
 ?>

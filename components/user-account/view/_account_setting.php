@@ -141,7 +141,7 @@
                 <h5 class="card-title mb-0">Security Settings</h5>
             </div>
             <div class="card-body p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-0">
                     <div class="d-flex align-items-center gap-3">
                         <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
                             <i class="ti ti-lock text-dark d-block fs-7" width="22" height="22"></i>

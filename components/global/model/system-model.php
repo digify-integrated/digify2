@@ -8,10 +8,10 @@ class SystemModel {
     # -------------------------------------------------------------
     #
     # Function: timeElapsedString
-    # Description: Retrieves the details of a user based on their email address.
+    # Description: Retrieves the time elapsed.
     #
     # Parameters:
-    # - $p_email (string): The email address of the user.
+    # - $dateTime (datetime): The date time to calculate the time elapsed.
     #
     # Returns:
     # - An array containing the user details.
@@ -49,6 +49,59 @@ class SystemModel {
         }
 
         return $elapsedTime;
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: yearMonthElapsedComparisonString
+    # Description: Retrieves the year month elapsed comparison.
+    #
+    # Parameters:
+    # - $startDateTime (datetime): The start date time to calculate the time elapsed.
+    # - $endDateTime (datetime): The end date time to calculate the time elapsed.
+    #
+    # Returns:
+    # - An array containing the user details.
+    #
+    # -------------------------------------------------------------
+    public function yearMonthElapsedComparisonString($startDateTime, $endDateTime) {
+        // Convert month and year strings to full date format with the first day of the month
+        $startDateTime = '01 ' . $startDateTime; // Add '01' as the day to make it a valid date
+        $endDateTime = '01 ' . $endDateTime; // Add '01' as the day to make it a valid date
+    
+        // Create DateTime objects from the formatted strings
+        $startDate = DateTime::createFromFormat('d F Y', $startDateTime);
+        $endDate = DateTime::createFromFormat('d F Y', $endDateTime);
+    
+        // Check if the DateTime objects were created successfully
+        if ($startDate && $endDate) {
+            $interval = $startDate->diff($endDate);
+    
+            $years = $interval->y;
+            $months = $interval->m;
+    
+            $elapsedTime = '';
+    
+            if ($years > 0) {
+                $elapsedTime .= $years . ' ' . ($years === 1 ? 'year' : 'years');
+            }
+    
+            if ($months > 0) {
+                if ($years > 0) {
+                    $elapsedTime .= ' and ';
+                }
+                $elapsedTime .= $months . ' ' . ($months === 1 ? 'month' : 'months');
+            }
+    
+            if ($elapsedTime === '') {
+                $elapsedTime = 'Just Now';
+            }
+    
+            return $elapsedTime;
+        } else {
+            return 'Error parsing dates';
+        }
     }
     # -------------------------------------------------------------
 

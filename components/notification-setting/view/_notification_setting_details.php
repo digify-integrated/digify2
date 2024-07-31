@@ -78,7 +78,7 @@
                         ?>
                     </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between mb-4">
+                <div class="d-flex align-items-center justify-content-between mb-0">
                     <div class="d-flex align-items-center gap-3">
                         <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
                             <i class="ti ti-device-mobile text-dark d-block fs-7" width="22" height="22"></i>
