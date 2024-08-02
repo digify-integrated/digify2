@@ -277,7 +277,7 @@
                 ?>
             </div>
             <hr class="m-0" />
-            <div class="card-body" id="expirience-container"></div>
+            <div class="card-body" id="experience-container"></div>
         </div>
 
         <div class="card">
@@ -290,34 +290,7 @@
                 ?>
             </div>
             <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <h5 class="fs-4 fw-semibold">AMA Computer College Cabanatuan</h5>
-                                    <p class="mb-0">Micromax Computer System · Full-time</p>
-                                    <p class="mb-2">Feb 2018 - Jul 2019 · 1 yr 6 mos</p>
-                                    <p class="mb-0 text-dark">Activities and societies: asdasd</p>
-                                </div>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <p class="text-dark text-justify">As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.</p>
-                    </div>
-                </div>
-            </div>
+            <div class="card-body" id="education-container"></div>
         </div>
 
         <div class="card">
@@ -1002,7 +975,7 @@
 </div>
 
 <div id="experience-modal" class="modal fade" tabindex="-1" aria-labelledby="experience-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-r">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title fw-8" id="experience-title"></h5>
@@ -1118,6 +1091,7 @@
             </div>
             <div class="modal-body">
                 <form id="education-form" method="post" action="#">
+                    <input type="hidden" id="employee_education_id" name="employee_education_id">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
@@ -1146,13 +1120,19 @@
                         <div class="col-sm-12 col-md-6">
                             <label class="form-label">Start Month <span class="text-danger">*</span></label>
                             <div class="mb-3">
-                                <select id="start_education_date_month" name="start_education_date_month" class="select2 form-control"></select>
+                                <select id="start_education_date_month" name="start_education_date_month" class="select2 select2-month form-control">
+                                    <option value="">--</option>
+                                    <?php echo $systemModel->generateMonthOptions(); ?>
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6">
                             <label class="form-label">Start Year <span class="text-danger">*</span></label>
                             <div class="mb-3">
-                                <select id="start_education_date_year" name="start_education_date_year" class="select2 form-control"></select>
+                                <select id="start_education_date_year" name="start_education_date_year" class="select2 select2-year form-control">
+                                    <option value="">--</option>
+                                    <?php echo $systemModel->generateYearOptions(date('Y', strtotime('-100 years')), date('Y')); ?>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -1160,13 +1140,19 @@
                         <div class="col-sm-12 col-md-6">
                             <label class="form-label">End Month</label>
                             <div class="mb-3">
-                                <select id="end_education_date_month" name="end_education_date_month" class="select2 form-control"></select>
+                                <select id="end_education_date_month" name="end_education_date_month" class="select2 select2-month form-control">
+                                    <option value="">--</option>
+                                    <?php echo $systemModel->generateMonthOptions(); ?>
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-12 col-md-6">
                             <label class="form-label">End Year</label>
                             <div class="mb-3">
-                                <select id="end_education_date_year" name="end_education_date_year" class="select2 form-control"></select>
+                                <select id="end_education_date_year" name="end_education_date_year" class="select2 select2-year form-control">
+                                    <option value="">--</option>
+                                    <?php echo $systemModel->generateYearOptions(date('Y', strtotime('-100 years')), date('Y')); ?>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -1190,7 +1176,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="education-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="education-form" class="btn btn-success" id="submit-education-data">Save changes</button>
             </div>
         </div>
     </div>
@@ -1335,13 +1321,15 @@
             <div class="modal-body">
                 <form id="address-form" method="post" action="#">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <label for="address_type_id" class="form-label">Address Type <span class="text-danger">*</span></label>
                             <div class="mb-3">
                                 <select id="address_type_id" name="address_type_id" class="select2 form-control"></select>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
                             <label for="city_id" class="form-label">City <span class="text-danger">*</span></label>
                             <div class="mb-3">
                                 <select id="city_id" name="city_id" class="select2 form-control"></select>

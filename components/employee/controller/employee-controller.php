@@ -184,6 +184,9 @@ class EmployeeController {
                 case 'save employee experience':
                     $this->saveEmployeeExperience();
                     break;
+                case 'save employee education':
+                    $this->saveEmployeeEducation();
+                    break;
                 case 'get about details':
                     $this->getAboutDetails();
                     break;
@@ -202,11 +205,20 @@ class EmployeeController {
                 case 'get employee experience details':
                     $this->getEmployeeExperienceDetails();
                     break;
+                case 'get employee education details':
+                    $this->getEmployeeEducationDetails();
+                    break;
                 case 'delete employee':
                     $this->deleteEmployee();
                     break;
                 case 'delete multiple employee':
                     $this->deleteMultipleEmployee();
+                    break;
+                case 'delete employee experience':
+                    $this->deleteEmployeeExperience();
+                    break;
+                case 'delete employee education':
+                    $this->deleteEmployeeEducation();
                     break;
                 default:
                     $response = [
@@ -740,7 +752,7 @@ class EmployeeController {
     #
     # Function: saveEmployeeExperience
     # Description: 
-    # Updates the employee work permit if it exists; otherwise, return an error message.
+    # Saves the employee experience if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -755,7 +767,7 @@ class EmployeeController {
         if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_experience_id']) && isset($_POST['job_title']) && !empty($_POST['job_title']) && isset($_POST['experience_employment_type_id']) && isset($_POST['company_name']) && !empty($_POST['company_name']) && isset($_POST['location']) && isset($_POST['employment_location_type_id']) && isset($_POST['start_experience_date_month']) && !empty($_POST['start_experience_date_month']) && isset($_POST['start_experience_date_year']) && !empty($_POST['start_experience_date_year']) && isset($_POST['end_experience_date_month']) && isset($_POST['end_experience_date_year']) && isset($_POST['job_description']) && !empty($_POST['job_description'])) {
             $userID = $_SESSION['user_account_id'];
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
-            $employeeExperienceID = isset($_POST['employee_experience_id']) ? htmlspecialchars($_POST['employee_experience_id'], ENT_QUOTES, 'UTF-8') : null;
+            $employeeExperienceID = htmlspecialchars($_POST['employee_experience_id'], ENT_QUOTES, 'UTF-8');
             $jobTitle = $_POST['job_title'];
             $employmentTypeID = htmlspecialchars($_POST['experience_employment_type_id'], ENT_QUOTES, 'UTF-8');
             $companyName = $_POST['company_name'];
@@ -796,6 +808,81 @@ class EmployeeController {
                     'success' => true,
                     'title' => 'Insert Experience Success',
                     'message' => 'The experience has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+           
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: saveEmployeeEducation
+    # Description: 
+    # Saves the employee education if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveEmployeeEducation() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_education_id']) && isset($_POST['school']) && !empty($_POST['school']) && isset($_POST['degree']) && isset($_POST['field_of_study']) && isset($_POST['start_education_date_month']) && !empty($_POST['start_education_date_month']) && isset($_POST['start_education_date_year']) && !empty($_POST['start_education_date_year']) && isset($_POST['end_education_date_month']) && isset($_POST['end_education_date_year']) && isset($_POST['activities_societies']) && isset($_POST['education_description'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeEducationID = htmlspecialchars($_POST['employee_education_id'], ENT_QUOTES, 'UTF-8');
+            $school = $_POST['school'];
+            $degree = $_POST['degree'];
+            $fieldOfStudy = $_POST['field_of_study'];
+            $startEducationDateMonth = $_POST['start_education_date_month'];
+            $startEducationDateYear = $_POST['start_education_date_year'];
+            $endEducationDateMonth = $_POST['end_education_date_month'];
+            $endEducationDateYear = $_POST['end_education_date_year'];
+            $activitiesSocieties = $_POST['activities_societies'];
+            $educationDescription = $_POST['education_description'];
+        
+            $checkEmployeeEducationExist = $this->employeeModel->checkEmployeeEducationExist($employeeEducationID);
+            $total = $checkEmployeeEducationExist['total'] ?? 0;
+
+            if($total > 0){
+                $this->employeeModel->updateEmployeeEducation($employeeEducationID, $employeeID, $school, $degree, $fieldOfStudy, $startEducationDateMonth, $startEducationDateYear, $endEducationDateMonth, $endEducationDateYear, $activitiesSocieties, $educationDescription, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Education Success',
+                    'message' => 'The education has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->employeeModel->insertEmployeeEducation($employeeID, $school, $degree, $fieldOfStudy, $startEducationDateMonth, $startEducationDateYear, $endEducationDateMonth, $endEducationDateYear, $activitiesSocieties, $educationDescription, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert Education Success',
+                    'message' => 'The education has been inserted successfully.',
                     'messageType' => 'success'
                 ];
                 
@@ -885,36 +972,140 @@ class EmployeeController {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteMultipleEmployee
+    # Function: deleteEmployeeExperience
     # Description: 
-    # Delete the selected employees if it exists; otherwise, skip it.
+    # Delete the employee experience if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function deleteMultipleEmployee() {
+    public function deleteEmployeeExperience() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
-            $employeeIDs = $_POST['employee_id'];
-    
-            foreach($employeeIDs as $employeeID){
-                $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
-                $total = $checkEmployeeExist['total'] ?? 0;
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeExperienceID = htmlspecialchars($_POST['employee_experience_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
 
-                if($total > 0){
-                    $this->employeeModel->deleteEmployee($employeeID);
-                }
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Employee Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
             }
+        
+            $checkEmployeeExperienceExist = $this->employeeModel->checkEmployeeExperienceExist($employeeExperienceID);
+            $total = $checkEmployeeExperienceExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Experience Error',
+                    'message' => 'The experience does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->employeeModel->deleteEmployeeExperience($employeeExperienceID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete Multiple Employees Success',
-                'message' => 'The selected employees have been deleted successfully.',
+                'title' => 'Delete Experience Success',
+                'message' => 'The experience has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeEducation
+    # Description: 
+    # Delete the employee education if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeEducation() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeEducationID = htmlspecialchars($_POST['employee_education_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Employee Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkEmployeeEducationExist = $this->employeeModel->checkEmployeeEducationExist($employeeEducationID);
+            $total = $checkEmployeeEducationExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Education Error',
+                    'message' => 'The education does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->employeeModel->deleteEmployeeEducation($employeeEducationID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete Education Success',
+                'message' => 'The education has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -1293,9 +1484,10 @@ class EmployeeController {
             return;
         }
     
-        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+        if (isset($_POST['employee_experience_id']) && !empty($_POST['employee_experience_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
             $userID = $_SESSION['user_account_id'];
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeExperienceID = htmlspecialchars($_POST['employee_experience_id'], ENT_QUOTES, 'UTF-8');
 
             $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
             $total = $checkEmployeeExist['total'] ?? 0;
@@ -1304,7 +1496,7 @@ class EmployeeController {
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Get HR Settings Details Error',
+                    'title' => 'Get Experience Details Error',
                     'message' => 'The employee does not exist.',
                     'messageType' => 'error'
                 ];
@@ -1313,14 +1505,89 @@ class EmployeeController {
                 exit;
             }
     
-            $employeeDetails = $this->employeeModel->getEmployee($employeeID);
+            $employeeExperienceDetails = $this->employeeModel->getEmployeeExperience($employeeExperienceID);
 
             $response = [
                 'success' => true,
-                'visaNumber' => $employeeDetails['visa_number'] ?? null,
-                'workPermitNumber' => $employeeDetails['work_permit_number'] ?? null,
-                'visaExpirationDate' => $this->systemModel->checkDate('empty', $employeeDetails['visa_expiration_date'], '', 'm/d/Y', ''),
-                'workPermitExpirationDate' => $this->systemModel->checkDate('empty', $employeeDetails['work_permit_expiration_date'], '', 'm/d/Y', '')
+                'jobTitle' => $employeeExperienceDetails['job_title'] ?? null,
+                'employmentTypeID' => $employeeExperienceDetails['employment_type_id'] ?? null,
+                'companyName' => $employeeExperienceDetails['company_name'] ?? null,
+                'location' => $employeeExperienceDetails['location'] ?? null,
+                'employmentLocationTypeID' => $employeeExperienceDetails['employment_location_type_id'] ?? null,
+                'startMonth' => $employeeExperienceDetails['start_month'] ?? null,
+                'startYear' => $employeeExperienceDetails['start_year'] ?? null,
+                'endMonth' => $employeeExperienceDetails['end_month'] ?? null,
+                'endYear' => $employeeExperienceDetails['end_year'] ?? null,
+                'jobDescription' => $employeeExperienceDetails['job_description'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeEducationDetails
+    # Description: 
+    # Handles the retrieval of employee employee education details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeEducationDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_education_id']) && !empty($_POST['employee_education_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeEducationID = htmlspecialchars($_POST['employee_education_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Education Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeEducationDetails = $this->employeeModel->getEmployeeEducation($employeeEducationID);
+
+            $response = [
+                'success' => true,
+                'school' => $employeeEducationDetails['school'] ?? null,
+                'degree' => $employeeEducationDetails['degree'] ?? null,
+                'fieldOfStudy' => $employeeEducationDetails['field_of_study'] ?? null,
+                'startMonth' => $employeeEducationDetails['start_month'] ?? null,
+                'startYear' => $employeeEducationDetails['start_year'] ?? null,
+                'endMonth' => $employeeEducationDetails['end_month'] ?? null,
+                'endYear' => $employeeEducationDetails['end_year'] ?? null,
+                'activitiesSocieties' => $employeeEducationDetails['activities_societies'] ?? null,
+                'educationDescription' => $employeeEducationDetails['education_description'] ?? null
             ];
 
             echo json_encode($response);

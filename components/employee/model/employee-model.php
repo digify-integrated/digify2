@@ -211,7 +211,7 @@ class EmployeeModel {
     # - $p_employee_experience_id (int): The employee experience ID.
     # - $p_employee_id (int): The employee ID.
     # - $p_job_title (string): The job title.
-    # - $p_employment_type_id (string): The employment type ID.
+    # - $p_employment_type_id (int): The employment type ID.
     # - $p_employment_type_name (string): The employment type name.
     # - $p_company_name (string): The company name.
     # - $p_location (string): The location.
@@ -243,6 +243,46 @@ class EmployeeModel {
         $stmt->bindValue(':p_end_month', $p_end_month, PDO::PARAM_STR);
         $stmt->bindValue(':p_end_year', $p_end_year, PDO::PARAM_STR);
         $stmt->bindValue(':p_job_description', $p_job_description, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeEducation
+    # Description: Updates the employee education.
+    #
+    # Parameters:
+    # - $p_employee_education_id (int): The employee education ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_school (string): The school.
+    # - $p_degree (string): The degree.
+    # - $p_field_of_study (string): The field of study.
+    # - $p_start_month (string): The start month.
+    # - $p_start_year (string): The start year.
+    # - $p_end_month (string): The end month.
+    # - $p_end_year (string): The end year.
+    # - $p_activities_societies (string): The activities and societies.
+    # - $p_education_description (string): The education description.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeEducation($p_employee_education_id, $p_employee_id, $p_school, $p_degree, $p_field_of_study, $p_start_month, $p_start_year, $p_end_month, $p_end_year, $p_activities_societies, $p_education_description, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeEducation(:p_employee_education_id, :p_employee_id, :p_school, :p_degree, :p_field_of_study, :p_start_month, :p_start_year, :p_end_month, :p_end_year, :p_activities_societies, :p_education_description, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_education_id', $p_employee_education_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_school', $p_school, PDO::PARAM_STR);
+        $stmt->bindValue(':p_degree', $p_degree, PDO::PARAM_STR);
+        $stmt->bindValue(':p_field_of_study', $p_field_of_study, PDO::PARAM_STR);
+        $stmt->bindValue(':p_start_month', $p_start_month, PDO::PARAM_STR);
+        $stmt->bindValue(':p_start_year', $p_start_year, PDO::PARAM_STR);
+        $stmt->bindValue(':p_end_month', $p_end_month, PDO::PARAM_STR);
+        $stmt->bindValue(':p_end_year', $p_end_year, PDO::PARAM_STR);
+        $stmt->bindValue(':p_activities_societies', $p_activities_societies, PDO::PARAM_STR);
+        $stmt->bindValue(':p_education_description', $p_education_description, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -426,6 +466,44 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: insertEmployeeEducation
+    # Description: Inserts the employee education.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_school (string): The school.
+    # - $p_degree (string): The degree.
+    # - $p_field_of_study (string): The field of study.
+    # - $p_start_month (string): The start month.
+    # - $p_start_year (string): The start year.
+    # - $p_end_month (string): The end month.
+    # - $p_end_year (string): The end year.
+    # - $p_activities_societies (string): The activities and societies.
+    # - $p_education_description (string): The education description.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertEmployeeEducation($p_employee_id, $p_school, $p_degree, $p_field_of_study, $p_start_month, $p_start_year, $p_end_month, $p_end_year, $p_activities_societies, $p_education_description, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeEducation(:p_employee_id, :p_school, :p_degree, :p_field_of_study, :p_start_month, :p_start_year, :p_end_month, :p_end_year, :p_activities_societies, :p_education_description, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_school', $p_school, PDO::PARAM_STR);
+        $stmt->bindValue(':p_degree', $p_degree, PDO::PARAM_STR);
+        $stmt->bindValue(':p_field_of_study', $p_field_of_study, PDO::PARAM_STR);
+        $stmt->bindValue(':p_start_month', $p_start_month, PDO::PARAM_STR);
+        $stmt->bindValue(':p_start_year', $p_start_year, PDO::PARAM_STR);
+        $stmt->bindValue(':p_end_month', $p_end_month, PDO::PARAM_STR);
+        $stmt->bindValue(':p_end_year', $p_end_year, PDO::PARAM_STR);
+        $stmt->bindValue(':p_activities_societies', $p_activities_societies, PDO::PARAM_STR);
+        $stmt->bindValue(':p_education_description', $p_education_description, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Check exist methods
     # -------------------------------------------------------------
 
@@ -462,6 +540,25 @@ class EmployeeModel {
     public function checkEmployeeExperienceExist($p_employee_experience_id) {
         $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeExperienceExist(:p_employee_experience_id)');
         $stmt->bindValue(':p_employee_experience_id', $p_employee_experience_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: checkEmployeeEducationExist
+    # Description: Checks if a employee education exists.
+    #
+    # Parameters:
+    # - $p_employee_education_id (int): The employee education ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkEmployeeEducationExist($p_employee_education_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeEducationExist(:p_employee_education_id)');
+        $stmt->bindValue(':p_employee_education_id', $p_employee_education_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -508,6 +605,24 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeEducation
+    # Description: Deletes the employee education.
+    #
+    # Parameters:
+    # - $p_employee_education_id (int): The employee education ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeEducation($p_employee_education_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeEducation(:p_employee_education_id)');
+        $stmt->bindValue(':p_employee_education_id', $p_employee_education_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Get methods
     # -------------------------------------------------------------
 
@@ -546,6 +661,26 @@ class EmployeeModel {
     public function getEmployeeExperience($p_employee_experience_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getEmployeeExperience(:p_employee_experience_id)');
         $stmt->bindValue(':p_employee_experience_id', $p_employee_experience_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeEducation
+    # Description: Retrieves the details of a employee education.
+    #
+    # Parameters:
+    # - $p_employee_education_id (int): The employee education ID.
+    #
+    # Returns:
+    # - An array containing the employee education details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeEducation($p_employee_education_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeeEducation(:p_employee_education_id)');
+        $stmt->bindValue(':p_employee_education_id', $p_employee_education_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

@@ -14,6 +14,8 @@
         generateDropdownOptions('employment type options');
         generateDropdownOptions('employment location type options');
         generateDropdownOptions('active user account options');
+        generateDropdownOptions('address type options');
+        generateDropdownOptions('city options');
         
         displayDetails('get about details');
         displayDetails('get private information details');
@@ -45,6 +47,10 @@
             experienceForm();
         }
 
+        if($('#education-form').length){
+            educationForm();
+        }
+
         $(document).on('click','#edit-about-details',function() {
             displayDetails('get about details');
         });
@@ -70,8 +76,8 @@
             resetModalForm('experience-form');
         });
 
-        $(document).on('click','#edit-experience-details',function() {
-            const employee_experience_id = $(this).data('contactemployee-experience-id');
+        $(document).on('click','.edit-experience-details',function() {
+            const employee_experience_id = $(this).data('employee-experience-id');
             sessionStorage.setItem('employee_experience_id', employee_experience_id);
 
             $('#experience-title').text('Edit Experience');
@@ -79,8 +85,139 @@
             displayDetails('get employee experience details');
         });
 
+        $(document).on('click','.delete-experience-details',function() {
+            const employee_id = $('#details-id').text();
+            const employee_experience_id = $(this).data('employee-experience-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'delete employee experience';
+    
+            Swal.fire({
+                title: 'Confirm Experience Deletion',
+                text: 'Are you sure you want to delete this experience?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            employee_experience_id : employee_experience_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                experienceList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
         $(document).on('click','#add-education-details',function() {
             $('#education-title').text('Add Education');
+        });
+
+        $(document).on('click','.edit-education-details',function() {
+            const employee_education_id = $(this).data('employee-education-id');
+            sessionStorage.setItem('employee_education_id', employee_education_id);
+
+            $('#education-title').text('Edit Education');
+
+            displayDetails('get employee education details');
+        });
+
+        $(document).on('click','.delete-education-details',function() {
+            const employee_id = $('#details-id').text();
+            const employee_education_id = $(this).data('employee-education-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'delete employee education';
+    
+            Swal.fire({
+                title: 'Confirm Education Deletion',
+                text: 'Are you sure you want to delete this education?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            employee_education_id : employee_education_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                educationList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
         });
 
         $(document).on('click','#add-address-details',function() {
@@ -117,7 +254,7 @@
             const transaction = 'delete employee';
     
             Swal.fire({
-                title: 'Confirm employee Deletion',
+                title: 'Confirm Employee Deletion',
                 text: 'Are you sure you want to delete this employee?',
                 icon: 'warning',
                 showCancelButton: !0,
@@ -170,8 +307,12 @@
             });
         });
 
-        if($('#expirience-container').length){
-            expirienceList();
+        if($('#experience-container').length){
+            experienceList();
+        }
+
+        if($('#education-container').length){
+            educationList();
         }
 
         if($('#log-notes-offcanvas').length){
@@ -179,6 +320,12 @@
                 const employee_experience_id = $(this).data('employee-experience-id');
 
                 logNotes('employee_experience', employee_experience_id);
+            });
+
+            $(document).on('click','.view-employee-education-log-notes',function() {
+                const employee_education_id = $(this).data('employee-education-id');
+
+                logNotes('employee_education', employee_education_id);
             });
         }
 
@@ -752,6 +899,8 @@ function experienceForm(){
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
                         $('#experience-modal').modal('hide');
+                        experienceList();
+                        resetModalForm('experience-form');
                     }
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -784,10 +933,110 @@ function experienceForm(){
     });
 }
 
-function expirienceList(){
+function educationForm(){
+    $('#education-form').validate({
+        rules: {
+            school: {
+                required: true
+            },
+            start_education_date_month: {
+                required: true
+            },
+            start_education_date_year: {
+                required: true
+            }
+        },
+        messages: {
+            school: {
+                required: 'Please enter the school'
+            },
+            start_education_date_month: {
+                required: 'Please choose the start month'
+            },
+            start_education_date_year: {
+                required: 'Please choose the start year'
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorList = [];
+            $.each(this.errorMap, function(key, value) {
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
+            }.bind(this));
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'save employee education';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-education-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#education-modal').modal('hide');
+                        educationList();
+                        resetModalForm('education-form');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-education-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function experienceList(){
     const employee_id = $('#details-id').text();
     const page_id = $('#page-id').val();
-    const type = 'expirience list';
+    const type = 'experience list';
 
     $.ajax({
         type: 'POST',
@@ -795,10 +1044,29 @@ function expirienceList(){
         dataType: 'json',
         data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
         beforeSend: function(){
-            document.getElementById('expirience-container').innerHTML = '<strong>Loading...</strong>';
+            document.getElementById('experience-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
         },
         success: function (result) {
-            document.getElementById('expirience-container').innerHTML = result[0].EXPIRIENCE_LIST;
+            document.getElementById('experience-container').innerHTML = result[0].EXPERIENCE_LIST;
+        }
+    });
+}
+
+function educationList(){
+    const employee_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'education list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/employee/view/_employee_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
+        beforeSend: function(){
+            document.getElementById('education-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        },
+        success: function (result) {
+            document.getElementById('education-container').innerHTML = result[0].EDUCATION_LIST;
         }
     });
 }
@@ -1077,6 +1345,7 @@ function displayDetails(transaction){
             });
             break;
         case 'get employee experience details':
+            var employee_id = $('#details-id').text();
             var employee_experience_id = sessionStorage.getItem('employee_experience_id');
             var page_link = document.getElementById('page-link').getAttribute('href');
             
@@ -1085,14 +1354,16 @@ function displayDetails(transaction){
                 method: 'POST',
                 dataType: 'json',
                 data: {
+                    employee_id : employee_id, 
                     employee_experience_id : employee_experience_id, 
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('work-permit-form');
+                    resetModalForm('experience-form');
                 },
                 success: function(response) {
                     if (response.success) {
+                        $('#employee_experience_id').val(employee_experience_id);
                         $('#job_title').val(response.jobTitle);
                         $('#company_name').val(response.companyName);
                         $('#location').val(response.location);
@@ -1104,6 +1375,58 @@ function displayDetails(transaction){
                         $('#start_experience_date_year').val(response.startYear).trigger('change');
                         $('#end_experience_date_month').val(response.endMonth).trigger('change');
                         $('#end_experience_date_year').val(response.endYear).trigger('change');
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get employee education details':
+            var employee_id = $('#details-id').text();
+            var employee_education_id = sessionStorage.getItem('employee_education_id');
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    employee_education_id : employee_education_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('education-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#employee_education_id').val(employee_education_id);
+                        $('#school').val(response.school);
+                        $('#degree').val(response.degree);
+                        $('#field_of_study').val(response.fieldOfStudy);
+                        $('#activities_societies').val(response.activitiesSocieties);
+                        $('#education_description').val(response.educationDescription);
+
+                        $('#start_education_date_month').val(response.startMonth).trigger('change');
+                        $('#start_education_date_year').val(response.startYear).trigger('change');
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -1441,6 +1764,58 @@ function generateDropdownOptions(type){
                         data: response
                     }).on('change', function (e) {
                         $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'address type options':
+            
+            $.ajax({
+                url: 'components/address-type/view/_address_type_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#address_type_id').select2({
+                        dropdownParent: $('#address-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'city options':
+            
+            $.ajax({
+                url: 'components/city/view/_city_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#city_id').select2({
+                        dropdownParent: $('#address-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
                     });
                 },
                 error: function(xhr, status, error) {

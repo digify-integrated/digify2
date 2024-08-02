@@ -98,8 +98,63 @@ CREATE TABLE employee_experience (
 );
 
 CREATE INDEX employee_experience_index_employee_experience_id ON employee_experience(employee_experience_id);
-CREATE INDEX employee_experience_index_employee_employee_id ON employee_experience(employee_id);
-CREATE INDEX employee_experience_index_employee_employment_type_id ON employee_experience(employment_type_id);
-CREATE INDEX employee_experience_index_employee_lNocation_type_id ON employee_experience(employment_location_type_id);
+CREATE INDEX employee_experience_index_employee_id ON employee_experience(employee_id);
+CREATE INDEX employee_experience_index_employment_type_id ON employee_experience(employment_type_id);
+CREATE INDEX employee_experience_index_location_type_id ON employee_experience(employment_location_type_id);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Employee Education Table */
+
+CREATE TABLE employee_education (
+    employee_education_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    employee_id INT UNSIGNED NOT NULL,
+    school VARCHAR(100) NOT NULL,
+    degree VARCHAR(100),
+    field_of_study VARCHAR(100),
+    start_month VARCHAR(20),
+    start_year VARCHAR(20),
+    end_month VARCHAR(20),
+    end_year VARCHAR(20),
+    activities_societies VARCHAR(5000),
+    education_description VARCHAR(5000),
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX employee_education_index_employee_education_id ON employee_education(employee_education_id);
+CREATE INDEX employee_education_index_employee_employee_id ON employee_education(employee_id);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Employee Address Table */
+
+CREATE TABLE employee_address (
+    employee_address_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    employee_id INT UNSIGNED NOT NULL,
+    address_type_id INT UNSIGNED NOT NULL,
+    address_type_name VARCHAR(100) NOT NULL,
+    address VARCHAR(1000),
+    city_id INT UNSIGNED NOT NULL,
+    city_name VARCHAR(100) NOT NULL,
+    state_id INT UNSIGNED NOT NULL,
+    state_name VARCHAR(100) NOT NULL,
+    country_id INT UNSIGNED NOT NULL,
+    country_name VARCHAR(100) NOT NULL,
+    default_address VARCHAR(5) NOT NULL DEFAULT 'No',
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX employee_address_index_employee_address_id ON employee_address(employee_address_id);
+CREATE INDEX employee_address_index_employee_id ON employee_address(employee_id);
+CREATE INDEX employee_address_index_address_type_id ON employee_address(address_type_id);
+CREATE INDEX employee_address_index_city_id ON employee_address(city_id);
+CREATE INDEX employee_address_index_state_id ON employee_address(state_id);
+CREATE INDEX employee_address_index_country_id ON employee_address(country_id);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

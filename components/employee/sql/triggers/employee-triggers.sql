@@ -305,39 +305,39 @@ BEGIN
     END IF;
 
     IF NEW.employment_type_name <> OLD.employment_type_name THEN
-        SET audit_log = CONCAT(audit_log, "Employment Type Name:", OLD.employment_type_name, " -> ", NEW.employment_type_name, "<br/>");
+        SET audit_log = CONCAT(audit_log, "Employment Type Name: ", OLD.employment_type_name, " -> ", NEW.employment_type_name, "<br/>");
     END IF;
 
     IF NEW.company_name <> OLD.company_name THEN
-        SET audit_log = CONCAT(audit_log, "Company Name:", OLD.company_name, " -> ", NEW.company_name, "<br/>");
+        SET audit_log = CONCAT(audit_log, "Company Name: ", OLD.company_name, " -> ", NEW.company_name, "<br/>");
     END IF;
 
     IF NEW.location <> OLD.location THEN
-        SET audit_log = CONCAT(audit_log, "Location:", OLD.location, " -> ", NEW.location, "<br/>");
+        SET audit_log = CONCAT(audit_log, "Location: ", OLD.location, " -> ", NEW.location, "<br/>");
     END IF;
 
     IF NEW.employment_location_type_name <> OLD.employment_location_type_name THEN
-        SET audit_log = CONCAT(audit_log, "Employment Location Type Name:", OLD.employment_location_type_name, " -> ", NEW.employment_location_type_name, "<br/>");
+        SET audit_log = CONCAT(audit_log, "Employment Location Type Name: ", OLD.employment_location_type_name, " -> ", NEW.employment_location_type_name, "<br/>");
     END IF;
 
     IF NEW.start_month <> OLD.start_month THEN
-        SET audit_log = CONCAT(audit_log, "Start Month:", OLD.start_month, " -> ", NEW.start_month, "<br/>");
+        SET audit_log = CONCAT(audit_log, "Start Month: ", OLD.start_month, " -> ", NEW.start_month, "<br/>");
     END IF;
 
     IF NEW.start_year <> OLD.start_year THEN
-        SET audit_log = CONCAT(audit_log, "Start Year:", OLD.start_year, " -> ", NEW.start_year, "<br/>");
+        SET audit_log = CONCAT(audit_log, "Start Year: ", OLD.start_year, " -> ", NEW.start_year, "<br/>");
     END IF;
 
     IF NEW.end_month <> OLD.end_month THEN
-        SET audit_log = CONCAT(audit_log, "End Month:", OLD.end_month, " -> ", NEW.end_month, "<br/>");
+        SET audit_log = CONCAT(audit_log, "End Month: ", OLD.end_month, " -> ", NEW.end_month, "<br/>");
     END IF;
 
     IF NEW.end_year <> OLD.end_year THEN
-        SET audit_log = CONCAT(audit_log, "End Year:", OLD.end_year, " -> ", NEW.end_year, "<br/>");
+        SET audit_log = CONCAT(audit_log, "End Year: ", OLD.end_year, " -> ", NEW.end_year, "<br/>");
     END IF;
 
     IF NEW.job_description <> OLD.job_description THEN
-        SET audit_log = CONCAT(audit_log, "Job Description:", OLD.job_description, " -> ", NEW.job_description, "<br/>");
+        SET audit_log = CONCAT(audit_log, "Job Description: ", OLD.job_description, " -> ", NEW.job_description, "<br/>");
     END IF;
 
     IF LENGTH(audit_log) > 0 THEN
@@ -394,4 +394,168 @@ BEGIN
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
     VALUES ('employee_experience', NEW.employee_experience_id, audit_log, NEW.last_log_by, NOW());
+END //
+
+CREATE TRIGGER employee_education_trigger_update
+AFTER UPDATE ON employee_education
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.school <> OLD.school THEN
+        SET audit_log = CONCAT(audit_log, "School: ", OLD.school, " -> ", NEW.school, "<br/>");
+    END IF;
+
+    IF NEW.degree <> OLD.degree THEN
+        SET audit_log = CONCAT(audit_log, "Degree: ", OLD.degree, " -> ", NEW.degree, "<br/>");
+    END IF;
+
+    IF NEW.field_of_study <> OLD.field_of_study THEN
+        SET audit_log = CONCAT(audit_log, "Field of Study: ", OLD.field_of_study, " -> ", NEW.field_of_study, "<br/>");
+    END IF;
+
+    IF NEW.start_month <> OLD.start_month THEN
+        SET audit_log = CONCAT(audit_log, "Start Month: ", OLD.start_month, " -> ", NEW.start_month, "<br/>");
+    END IF;
+
+    IF NEW.start_year <> OLD.start_year THEN
+        SET audit_log = CONCAT(audit_log, "Start Year: ", OLD.start_year, " -> ", NEW.start_year, "<br/>");
+    END IF;
+
+    IF NEW.end_month <> OLD.end_month THEN
+        SET audit_log = CONCAT(audit_log, "End Month: ", OLD.end_month, " -> ", NEW.end_month, "<br/>");
+    END IF;
+
+    IF NEW.end_year <> OLD.end_year THEN
+        SET audit_log = CONCAT(audit_log, "End Year: ", OLD.end_year, " -> ", NEW.end_year, "<br/>");
+    END IF;
+
+    IF NEW.activities_societies <> OLD.activities_societies THEN
+        SET audit_log = CONCAT(audit_log, "Activities and Societies: ", OLD.activities_societies, " -> ", NEW.activities_societies, "<br/>");
+    END IF;
+
+    IF NEW.education_description <> OLD.education_description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.education_description, " -> ", NEW.education_description, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_education', NEW.employee_education_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END //
+
+CREATE TRIGGER employee_education_trigger_insert
+AFTER INSERT ON employee_education
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee education created. <br/>';
+
+    IF NEW.school <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>School: ", NEW.school);
+    END IF;
+
+    IF NEW.degree <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Degree: ", NEW.degree);
+    END IF;
+
+    IF NEW.field_of_study <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Field of Study: ", NEW.field_of_study);
+    END IF;
+
+    IF NEW.start_month <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Start Month: ", NEW.start_month);
+    END IF;
+
+    IF NEW.start_year <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Start Year: ", NEW.start_year);
+    END IF;
+
+    IF NEW.end_month <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>End Month: ", NEW.end_month);
+    END IF;
+
+    IF NEW.end_year <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>End Year: ", NEW.end_year);
+    END IF;
+
+    IF NEW.activities_societies <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Activities and Societies: ", NEW.activities_societies);
+    END IF;
+
+    IF NEW.education_description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.education_description);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_education', NEW.employee_education_id, audit_log, NEW.last_log_by, NOW());
+END //
+
+CREATE TRIGGER employee_address_trigger_update
+AFTER UPDATE ON employee_address
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.address_type_name <> OLD.address_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Address Type Name: ", OLD.address_type_name, " -> ", NEW.address_type_name, "<br/>");
+    END IF;
+
+    IF NEW.address <> OLD.address THEN
+        SET audit_log = CONCAT(audit_log, "Address: ", OLD.address, " -> ", NEW.address, "<br/>");
+    END IF;
+
+    IF NEW.city_name <> OLD.city_name THEN
+        SET audit_log = CONCAT(audit_log, "City Name: ", OLD.city_name, " -> ", NEW.city_name, "<br/>");
+    END IF;
+
+    IF NEW.state_name <> OLD.state_name THEN
+        SET audit_log = CONCAT(audit_log, "State Name: ", OLD.state_name, " -> ", NEW.state_name, "<br/>");
+    END IF;
+
+    IF NEW.country_name <> OLD.country_name THEN
+        SET audit_log = CONCAT(audit_log, "Country Name: ", OLD.country_name, " -> ", NEW.country_name, "<br/>");
+    END IF;
+
+    IF NEW.default_address <> OLD.default_address THEN
+        SET audit_log = CONCAT(audit_log, "Default Address: ", OLD.default_address, " -> ", NEW.default_address, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_address', NEW.employee_address_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END //
+
+CREATE TRIGGER employee_address_trigger_insert
+AFTER INSERT ON employee_address
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee address created. <br/>';
+
+    IF NEW.address_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Address Type Name: ", NEW.address_type_name);
+    END IF;
+
+    IF NEW.address <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Address: ", NEW.address);
+    END IF;
+
+    IF NEW.city_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>City Name: ", NEW.city_name);
+    END IF;
+
+    IF NEW.state_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>State Name: ", NEW.state_name);
+    END IF;
+
+    IF NEW.country_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Country Name: ", NEW.country_name);
+    END IF;
+
+    IF NEW.default_address <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Default Address: ", NEW.default_address);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_address', NEW.employee_address_id, audit_log, NEW.last_log_by, NOW());
 END //

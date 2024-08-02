@@ -16,6 +16,13 @@ BEGIN
     WHERE employee_experience_id = p_employee_experience_id;
 END //
 
+CREATE PROCEDURE checkEmployeeEducationExist(IN p_employee_education_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_education
+    WHERE employee_education_id = p_employee_education_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
@@ -32,6 +39,12 @@ CREATE PROCEDURE insertEmployeeExperience(IN p_employee_id INT, IN p_job_title V
 BEGIN
     INSERT INTO employee_experience (employee_id, job_title, employment_type_id, employment_type_name, company_name, location, employment_location_type_id, employment_location_type_name, start_month, start_year, end_month, end_year, job_description, last_log_by) 
 	VALUES(p_employee_id, p_job_title, p_employment_type_id, p_employment_type_name, p_company_name, p_location, p_employment_location_type_id, p_employment_location_type_name, p_start_month, p_start_year, p_end_month, p_end_year, p_job_description, p_last_log_by);
+END //
+
+CREATE PROCEDURE insertEmployeeEducation(IN p_employee_id INT, IN p_school VARCHAR(100), IN p_degree VARCHAR(100), IN p_field_of_study VARCHAR(100), IN p_start_month VARCHAR(20), IN p_start_year VARCHAR(20), IN p_end_month VARCHAR(20), IN p_end_year VARCHAR(20), IN p_activities_societies VARCHAR(5000), IN p_education_description VARCHAR(5000), IN p_last_log_by INT)
+BEGIN
+    INSERT INTO employee_education (employee_id, school, degree, field_of_study, start_month, start_year, end_month, end_year, activities_societies, education_description, last_log_by) 
+	VALUES(p_employee_id, p_school, p_degree, p_field_of_study, p_start_month, p_start_year, p_end_month, p_end_year, p_activities_societies, p_education_description, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -144,6 +157,23 @@ BEGIN
     WHERE employee_experience_id = p_employee_experience_id;
 END //
 
+CREATE PROCEDURE updateEmployeeEducation(IN p_employee_education_id INT, IN p_employee_id INT, IN p_school VARCHAR(100), IN p_degree VARCHAR(100), IN p_field_of_study VARCHAR(100), IN p_start_month VARCHAR(20), IN p_start_year VARCHAR(20), IN p_end_month VARCHAR(20), IN p_end_year VARCHAR(20), IN p_activities_societies VARCHAR(5000), IN p_education_description VARCHAR(5000), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee_education
+    SET employee_id = p_employee_id,
+        school = p_school,
+        degree = p_degree,
+        field_of_study = p_field_of_study,
+        start_month = p_start_month,
+        start_year = p_start_year,
+        end_month = p_end_month,
+        end_year = p_end_year,
+        activities_societies = p_activities_societies,
+        education_description = p_education_description,
+        last_log_by = p_last_log_by
+    WHERE employee_education_id = p_employee_education_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Delete Stored Procedure */
@@ -158,6 +188,7 @@ BEGIN
     START TRANSACTION;
 
     DELETE FROM employee_experience WHERE employee_id = p_employee_id;
+    DELETE FROM employee_education WHERE employee_id = p_employee_id;
     DELETE FROM employee WHERE employee_id = p_employee_id;
 
     COMMIT;
@@ -166,6 +197,11 @@ END //
 CREATE PROCEDURE deleteEmployeeExperience(IN p_employee_experience_id INT)
 BEGIN
    DELETE FROM employee_experience WHERE employee_experience_id = p_employee_experience_id;
+END //
+
+CREATE PROCEDURE deleteEmployeeEducation(IN p_employee_education_id INT)
+BEGIN
+   DELETE FROM employee_education WHERE employee_education_id = p_employee_education_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -182,6 +218,12 @@ CREATE PROCEDURE getEmployeeExperience(IN p_employee_experience_id INT)
 BEGIN
 	SELECT * FROM employee_experience
 	WHERE employee_experience_id = p_employee_experience_id;
+END //
+
+CREATE PROCEDURE getEmployeeEducation(IN p_employee_education_id INT)
+BEGIN
+	SELECT * FROM employee_education
+	WHERE employee_education_id = p_employee_education_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -248,9 +290,15 @@ BEGIN
     DEALLOCATE PREPARE stmt;
 END //
 
-CREATE PROCEDURE generateEmployeeExpirience(IN p_employee_id INT)
+CREATE PROCEDURE generateEmployeeExperience(IN p_employee_id INT)
 BEGIN
 	SELECT * FROM employee_experience
+	WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE generateEmployeeEducation(IN p_employee_id INT)
+BEGIN
+	SELECT * FROM employee_education
 	WHERE employee_id = p_employee_id;
 END //
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 29, 2024 at 11:33 AM
+-- Generation Time: Aug 02, 2024 at 11:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -207,11 +207,32 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmailSettingExist` (IN `p_emai
     WHERE email_setting_id = p_email_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkEmployeeEducationExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeEducationExist` (IN `p_employee_education_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_education
+    WHERE employee_education_id = p_employee_education_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkEmployeeExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeExist` (IN `p_employee_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM employee
     WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkEmployeeExperienceExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeExperienceExist` (IN `p_employee_experience_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_experience
+    WHERE employee_experience_id = p_employee_experience_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkEmploymentLocationTypeExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmploymentLocationTypeExist` (IN `p_employment_location_type_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM employment_location_type
+    WHERE employment_location_type_id = p_employment_location_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkEmploymentTypeExist`$$
@@ -547,6 +568,21 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteEmailSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmailSetting` (IN `p_email_setting_id` INT)   BEGIN
    DELETE FROM email_setting WHERE email_setting_id = p_email_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteEmployeeEducation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmployeeEducation` (IN `p_employee_education_id` INT)   BEGIN
+   DELETE FROM employee_education WHERE employee_education_id = p_employee_education_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteEmployeeExperience`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmployeeExperience` (IN `p_employee_experience_id` INT)   BEGIN
+   DELETE FROM employee_experience WHERE employee_experience_id = p_employee_experience_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteEmploymentLocationType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmploymentLocationType` (IN `p_employment_location_type_id` INT)   BEGIN
+    DELETE FROM employment_location_type WHERE employment_location_type_id = p_employment_location_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteEmploymentType`$$
@@ -1096,6 +1132,32 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeCard` (IN `p_search
     END IF;
 
     DEALLOCATE PREPARE stmt;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmployeeEducation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeEducation` (IN `p_employee_id` INT)   BEGIN
+	SELECT * FROM employee_education
+	WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmployeeExperience`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeExperience` (IN `p_employee_id` INT)   BEGIN
+	SELECT * FROM employee_experience
+	WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmploymentLocationTypeOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmploymentLocationTypeOptions` ()   BEGIN
+	SELECT employment_location_type_id, employment_location_type_name 
+    FROM employment_location_type 
+    ORDER BY employment_location_type_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmploymentLocationTypeTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmploymentLocationTypeTable` ()   BEGIN
+	SELECT employment_location_type_id, employment_location_type_name 
+    FROM employment_location_type 
+    ORDER BY employment_location_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateEmploymentTypeOptions`$$
@@ -1733,6 +1795,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployee` (IN `p_employee_id` IN
 	WHERE employee_id = p_employee_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getEmployeeEducation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployeeEducation` (IN `p_employee_education_id` INT)   BEGIN
+	SELECT * FROM employee_education
+	WHERE employee_education_id = p_employee_education_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getEmployeeExperience`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployeeExperience` (IN `p_employee_experience_id` INT)   BEGIN
+	SELECT * FROM employee_experience
+	WHERE employee_experience_id = p_employee_experience_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getEmploymentLocationType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmploymentLocationType` (IN `p_employment_location_type_id` INT)   BEGIN
+	SELECT * FROM employment_location_type
+	WHERE employment_location_type_id = p_employment_location_type_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getEmploymentType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmploymentType` (IN `p_employment_type_id` INT)   BEGIN
 	SELECT * FROM employment_type
@@ -2045,6 +2125,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployee` (IN `p_full_name` V
 	VALUES(p_full_name, p_first_name, p_middle_name, p_last_name, p_suffix, p_nickname, p_civil_status_id, p_civil_status_name, p_gender_id, p_gender_name, p_religion_id, p_religion_name, p_blood_type_id, p_blood_type_name, p_birthday, p_birth_place, p_height, p_weight, p_badge_id, p_company_id, p_company_name, p_employment_type_id, p_employment_type_name, p_department_id, p_department_name, p_job_position_id, p_job_position_name, p_work_location_id, p_work_location_name, p_manager_id, p_manager_name, p_work_schedule_id, p_work_schedule_name, p_pin_code, p_home_work_distance, p_visa_number, p_work_permit_number, p_visa_expiration_date, p_work_permit_expiration_date, p_onboard_date, p_time_off_approver_id, p_time_off_approver_name, p_last_log_by);
 	
     SET p_employee_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertEmployeeEducation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeEducation` (IN `p_employee_id` INT, IN `p_school` VARCHAR(100), IN `p_degree` VARCHAR(100), IN `p_field_of_study` VARCHAR(100), IN `p_start_month` VARCHAR(20), IN `p_start_year` VARCHAR(20), IN `p_end_month` VARCHAR(20), IN `p_end_year` VARCHAR(20), IN `p_activities_societies` VARCHAR(5000), IN `p_education_description` VARCHAR(5000), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO employee_education (employee_id, school, degree, field_of_study, start_month, start_year, end_month, end_year, activities_societies, education_description, last_log_by) 
+	VALUES(p_employee_id, p_school, p_degree, p_field_of_study, p_start_month, p_start_year, p_end_month, p_end_year, p_activities_societies, p_education_description, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertEmployeeExperience`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeExperience` (IN `p_employee_id` INT, IN `p_job_title` VARCHAR(100), IN `p_employment_type_id` INT, IN `p_employment_type_name` VARCHAR(100), IN `p_company_name` VARCHAR(200), IN `p_location` VARCHAR(200), IN `p_employment_location_type_id` INT, IN `p_employment_location_type_name` VARCHAR(100), IN `p_start_month` VARCHAR(20), IN `p_start_year` VARCHAR(20), IN `p_end_month` VARCHAR(20), IN `p_end_year` VARCHAR(20), IN `p_job_description` VARCHAR(5000), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO employee_experience (employee_id, job_title, employment_type_id, employment_type_name, company_name, location, employment_location_type_id, employment_location_type_name, start_month, start_year, end_month, end_year, job_description, last_log_by) 
+	VALUES(p_employee_id, p_job_title, p_employment_type_id, p_employment_type_name, p_company_name, p_location, p_employment_location_type_id, p_employment_location_type_name, p_start_month, p_start_year, p_end_month, p_end_year, p_job_description, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertEmploymentLocationType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmploymentLocationType` (IN `p_employment_location_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_employment_location_type_id` INT)   BEGIN
+    INSERT INTO employment_location_type (employment_location_type_name, last_log_by) 
+	VALUES(p_employment_location_type_name, p_last_log_by);
+	
+    SET p_employment_location_type_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertEmploymentType`$$
@@ -2709,6 +2809,43 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeAbout` (IN `p_employe
     WHERE employee_id = p_employee_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateEmployeeEducation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeEducation` (IN `p_employee_education_id` INT, IN `p_employee_id` INT, IN `p_school` VARCHAR(100), IN `p_degree` VARCHAR(100), IN `p_field_of_study` VARCHAR(100), IN `p_start_month` VARCHAR(20), IN `p_start_year` VARCHAR(20), IN `p_end_month` VARCHAR(20), IN `p_end_year` VARCHAR(20), IN `p_activities_societies` VARCHAR(5000), IN `p_education_description` VARCHAR(5000), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee_education
+    SET employee_id = p_employee_id,
+        school = p_school,
+        degree = p_degree,
+        field_of_study = p_field_of_study,
+        start_month = p_start_month,
+        start_year = p_start_year,
+        end_month = p_end_month,
+        end_year = p_end_year,
+        activities_societies = p_activities_societies,
+        education_description = p_education_description,
+        last_log_by = p_last_log_by
+    WHERE employee_education_id = p_employee_education_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateEmployeeExperience`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeExperience` (IN `p_employee_experience_id` INT, IN `p_employee_id` INT, IN `p_job_title` VARCHAR(100), IN `p_employment_type_id` INT, IN `p_employment_type_name` VARCHAR(100), IN `p_company_name` VARCHAR(200), IN `p_location` VARCHAR(200), IN `p_employment_location_type_id` INT, IN `p_employment_location_type_name` VARCHAR(100), IN `p_start_month` VARCHAR(20), IN `p_start_year` VARCHAR(20), IN `p_end_month` VARCHAR(20), IN `p_end_year` VARCHAR(20), IN `p_job_description` VARCHAR(5000), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee_experience
+    SET employee_id = p_employee_id,
+        job_title = p_job_title,
+        employment_type_id = p_employment_type_id,
+        employment_type_name = p_employment_type_name,
+        company_name = p_company_name,
+        location = p_location,
+        employment_location_type_id = p_employment_location_type_id,
+        employment_location_type_name = p_employment_location_type_name,
+        start_month = p_start_month,
+        start_year = p_start_year,
+        end_month = p_end_month,
+        end_year = p_end_year,
+        job_description = p_job_description,
+        last_log_by = p_last_log_by
+    WHERE employee_experience_id = p_employee_experience_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateEmployeeHRSettings`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeHRSettings` (IN `p_employee_id` INT, IN `p_badge_id` VARCHAR(200), IN `p_employment_type_id` INT, IN `p_employment_type_name` VARCHAR(100), IN `p_pin_code` VARCHAR(500), IN `p_onboard_date` DATE, IN `p_last_log_by` INT)   BEGIN
     UPDATE employee
@@ -2774,6 +2911,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeWorkInformation` (IN 
         time_off_approver_name = p_time_off_approver_name,
         last_log_by = p_last_log_by
     WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateEmployeeWorkPermit`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeWorkPermit` (IN `p_employee_id` INT, IN `p_visa_number` VARCHAR(50), IN `p_work_permit_number` VARCHAR(50), IN `p_visa_expiration_date` DATE, IN `p_work_permit_expiration_date` DATE, IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee
+    SET visa_number = p_visa_number,
+        work_permit_number = p_work_permit_number,
+        visa_expiration_date = p_visa_expiration_date,
+        work_permit_expiration_date = p_work_permit_expiration_date,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateEmploymentLocationType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmploymentLocationType` (IN `p_employment_location_type_id` INT, IN `p_employment_location_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employment_location_type
+    SET employment_location_type_name = p_employment_location_type_name,
+        last_log_by = p_last_log_by
+    WHERE employment_location_type_id = p_employment_location_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateEmploymentType`$$
@@ -6820,7 +6976,55 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3124, 'employee', 2, 'Birth Place: Place of b=Birth -> Place of Birth<br/>', 2, '2024-07-29 14:09:40', '2024-07-29 14:09:40'),
 (3125, 'employee', 2, 'Full Name: Lennard De Vera Agulto, Suffix -> Lennard De Vera Agultos, Suffix<br/>Last Name: Agulto -> Agultos<br/>Civil Status Name: Divorced -> Married<br/>Gender Name: Female -> Male<br/>Date of Birth: 2024-07-28 -> 2024-07-30<br/>Height: 20 -> 21<br/>Weight: 20 -> 21<br/>', 2, '2024-07-29 14:18:36', '2024-07-29 14:18:36'),
 (3126, 'employee', 2, 'Blood Type Name: A+ -> A-<br/>', 2, '2024-07-29 14:18:51', '2024-07-29 14:18:51'),
-(3127, 'employee', 2, 'Home Work Distance: 20 -> 25<br/>', 2, '2024-07-29 15:13:14', '2024-07-29 15:13:14');
+(3127, 'employee', 2, 'Home Work Distance: 20 -> 25<br/>', 2, '2024-07-29 15:13:14', '2024-07-29 15:13:14'),
+(3128, 'user_account', 2, 'Last Connection Date: 2024-07-29 09:27:57 -> 2024-07-30 08:39:07<br/>', 2, '2024-07-30 08:39:07', '2024-07-30 08:39:07'),
+(3129, 'employee', 2, 'Badge ID: Badge ID -> Badge IDs<br/>Employment Type Name: Apprentice -> Casual<br/>PIN Code: Pin Code -> Pin Codes<br/>On-Board Date: 2024-07-31 -> 2024-08-01<br/>', 2, '2024-07-30 08:54:27', '2024-07-30 08:54:27'),
+(3130, 'employee', 2, 'Visa Number: Visa No -> Visa Nos<br/>Work Permit Number: Work Permit No -> Work Permit Nos<br/>Visa Expiration Date: 2024-07-29 -> 2024-07-31<br/>Work Permit Expiration Date: 2024-07-30 -> 2024-07-31<br/>', 2, '2024-07-30 09:21:54', '2024-07-30 09:21:54'),
+(3131, 'user_account', 2, 'Last Connection Date: 2024-07-30 08:39:07 -> 2024-07-31 08:42:23<br/>', 2, '2024-07-31 08:42:23', '2024-07-31 08:42:23'),
+(3132, 'menu_item', 49, 'Menu Item created. <br/><br/>Menu Item Name: Employment Location Type<br/>Menu Item URL: employment-location-type.php<br/>Menu Item Icon: ti ti-map-2<br/>Menu Group Name: Employee Configurations<br/>App Module: Employees<br/>Order Sequence: 5', 2, '2024-07-31 09:01:33', '2024-07-31 09:01:33'),
+(3133, 'role_permission', 50, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Employment Location Type<br/>Date Assigned: 2024-07-31 09:01:37', 2, '2024-07-31 09:01:37', '2024-07-31 09:01:37'),
+(3134, 'role_permission', 50, 'Read Access: 0 -> 1<br/>', 2, '2024-07-31 09:01:38', '2024-07-31 09:01:38'),
+(3135, 'role_permission', 50, 'Create Access: 0 -> 1<br/>', 2, '2024-07-31 09:01:39', '2024-07-31 09:01:39'),
+(3136, 'role_permission', 50, 'Write Access: 0 -> 1<br/>', 2, '2024-07-31 09:01:39', '2024-07-31 09:01:39'),
+(3137, 'role_permission', 50, 'Delete Access: 0 -> 1<br/>', 2, '2024-07-31 09:01:40', '2024-07-31 09:01:40'),
+(3138, 'employment_location_type', 1, 'Employment location type created. <br/><br/>Employment Location Type Name: test', 2, '2024-07-31 09:29:00', '2024-07-31 09:29:00'),
+(3139, 'employment_location_type', 1, 'Employment Location Type Name: test -> test2<br/>', 2, '2024-07-31 09:29:07', '2024-07-31 09:29:07'),
+(3140, 'employment_location_type', 2, 'Employment location type created. <br/><br/>Employment Location Type Name: test', 2, '2024-07-31 09:29:11', '2024-07-31 09:29:11'),
+(3141, 'employment_location_type', 3, 'Employment location type created. <br/><br/>Employment Location Type Name: test3', 2, '2024-07-31 09:29:15', '2024-07-31 09:29:15'),
+(3142, 'employment_location_type', 1, 'Employment location type created. <br/><br/>Employment Location Type Name: On-site', 2, '2024-07-31 09:30:18', '2024-07-31 09:30:18'),
+(3143, 'employment_location_type', 2, 'Employment location type created. <br/><br/>Employment Location Type Name: Hybrid', 2, '2024-07-31 09:30:30', '2024-07-31 09:30:30'),
+(3144, 'employment_location_type', 3, 'Employment location type created. <br/><br/>Employment Location Type Name: Remote', 2, '2024-07-31 09:30:39', '2024-07-31 09:30:39'),
+(3145, 'departure_reason', 1, 'Departure reason created. <br/><br/>Departure Reason Name: Resignation', 2, '2024-07-31 10:20:23', '2024-07-31 10:20:23'),
+(3146, 'departure_reason', 2, 'Departure reason created. <br/><br/>Departure Reason Name: Retirement', 2, '2024-07-31 10:20:31', '2024-07-31 10:20:31'),
+(3147, 'departure_reason', 3, 'Departure reason created. <br/><br/>Departure Reason Name: Termination for Cause', 2, '2024-07-31 10:20:38', '2024-07-31 10:20:38'),
+(3148, 'departure_reason', 4, 'Departure reason created. <br/><br/>Departure Reason Name: Layoff', 2, '2024-07-31 10:20:43', '2024-07-31 10:20:43'),
+(3149, 'departure_reason', 5, 'Departure reason created. <br/><br/>Departure Reason Name: End of Contract', 2, '2024-07-31 10:20:51', '2024-07-31 10:20:51'),
+(3150, 'departure_reason', 6, 'Departure reason created. <br/><br/>Departure Reason Name: Personal Reasons', 2, '2024-07-31 10:20:57', '2024-07-31 10:20:57'),
+(3151, 'departure_reason', 7, 'Departure reason created. <br/><br/>Departure Reason Name: Relocation', 2, '2024-07-31 10:21:04', '2024-07-31 10:21:04'),
+(3152, 'departure_reason', 8, 'Departure reason created. <br/><br/>Departure Reason Name: Career Change', 2, '2024-07-31 10:21:10', '2024-07-31 10:21:10'),
+(3153, 'departure_reason', 9, 'Departure reason created. <br/><br/>Departure Reason Name: Health Issues', 2, '2024-07-31 10:21:16', '2024-07-31 10:21:16'),
+(3154, 'departure_reason', 10, 'Departure reason created. <br/><br/>Departure Reason Name: Family Reasons', 2, '2024-07-31 10:21:22', '2024-07-31 10:21:22'),
+(3155, 'departure_reason', 11, 'Departure reason created. <br/><br/>Departure Reason Name: Better Opportunity', 2, '2024-07-31 10:21:26', '2024-07-31 10:21:26'),
+(3156, 'departure_reason', 12, 'Departure reason created. <br/><br/>Departure Reason Name: Education Pursuit', 2, '2024-07-31 10:21:31', '2024-07-31 10:21:31'),
+(3157, 'departure_reason', 13, 'Departure reason created. <br/><br/>Departure Reason Name: Company Restructuring', 2, '2024-07-31 10:21:36', '2024-07-31 10:21:36'),
+(3158, 'departure_reason', 14, 'Departure reason created. <br/><br/>Departure Reason Name: Voluntary Severance', 2, '2024-07-31 10:21:41', '2024-07-31 10:21:41'),
+(3159, 'departure_reason', 15, 'Departure reason created. <br/><br/>Departure Reason Name: Death', 2, '2024-07-31 10:21:45', '2024-07-31 10:21:45'),
+(3160, 'employee_experience', 1, 'Employee experience created. <br/><br/>Job Title: Junior Software Developer<br/>Employment Type Name: Probationary<br/>Company Name: Micromax Computer System<br/>Location: 704 Anolid, Mangaldan, Pangasinan<br/>Employment Location Type Name: On-site<br/>Start Month: 2<br/>Start Year: 2018<br/>End Month: 7<br/>End Year: 2019<br/>Job Description: As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.', 2, '2024-07-31 15:41:11', '2024-07-31 15:41:11'),
+(3161, 'user_account', 2, 'Last Connection Date: 2024-07-31 08:42:23 -> 2024-08-02 10:19:17<br/>', 2, '2024-08-02 10:19:17', '2024-08-02 10:19:17'),
+(3162, 'employee_experience', 2, 'Employee experience created. <br/><br/>Job Title: Junior Software Developer<br/>Employment Type Name: Probationary<br/>Company Name: Micromax Computer System<br/>Location: 704 Anolid, Mangaldan, Pangasinan<br/>Employment Location Type Name: On-site<br/>Start Month: 2<br/>Start Year: 2018<br/>End Month: 7<br/>End Year: 2019<br/>Job Description: As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.', 2, '2024-08-02 11:22:18', '2024-08-02 11:22:18'),
+(3163, 'employee_experience', 3, 'Employee experience created. <br/><br/>Job Title: Junior Software Developer<br/>Employment Type Name: Probationary<br/>Company Name: Micromax Computer Systems<br/>Location: 704 Anolid, Mangaldan, Pangasinan<br/>Employment Location Type Name: On-site<br/>Start Month: 2<br/>Start Year: 2018<br/>End Month: 7<br/>End Year: 2019<br/>Job Description: As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.', 2, '2024-08-02 11:22:23', '2024-08-02 11:22:23'),
+(3164, 'employee_experience', 4, 'Employee experience created. <br/><br/>Job Title: Junior Software Developer<br/>Employment Type Name: Probationary<br/>Company Name: Micromax Computer Systems<br/>Location: 704 Anolid, Mangaldan, Pangasinan<br/>Employment Location Type Name: On-site<br/>Start Month: 2<br/>Start Year: 2018<br/>End Month: 7<br/>End Year: 2019<br/>Job Description: As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.', 2, '2024-08-02 11:22:28', '2024-08-02 11:22:28'),
+(3165, 'employee_experience', 5, 'Employee experience created. <br/><br/>Job Title: Junior Software Developer<br/>Employment Type Name: Probationary<br/>Company Name: Micromax Computer Systems<br/>Location: 704 Anolid, Mangaldan, Pangasinan<br/>Employment Location Type Name: On-site<br/>Start Month: 2<br/>Start Year: 2018<br/>End Month: 7<br/>End Year: 2019<br/>Job Description: As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.', 2, '2024-08-02 11:22:36', '2024-08-02 11:22:36'),
+(3166, 'employee_experience', 6, 'Employee experience created. <br/><br/>Job Title: Junior Software Developer<br/>Employment Type Name: Probationary<br/>Company Name: Micromax Computer Systems<br/>Location: 704 Anolid, Mangaldan, Pangasinan<br/>Employment Location Type Name: On-site<br/>Start Month: 2<br/>Start Year: 2018<br/>End Month: 7<br/>End Year: 2019<br/>Job Description: As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.', 2, '2024-08-02 11:23:34', '2024-08-02 11:23:34'),
+(3167, 'employee_experience', 7, 'Employee experience created. <br/><br/>Job Title: Junior Software Developer<br/>Employment Type Name: Probationary<br/>Company Name: Micromax Computer Systems<br/>Location: 704 Anolid, Mangaldan, Pangasinan<br/>Employment Location Type Name: On-site<br/>Start Month: 2<br/>Start Year: 2018<br/>End Month: 7<br/>End Year: 2019<br/>Job Description: As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.', 2, '2024-08-02 11:23:39', '2024-08-02 11:23:39'),
+(3168, 'employee_experience', 8, 'Employee experience created. <br/><br/>Job Title: Junior Software Developer<br/>Employment Type Name: Probationary<br/>Company Name: Micromax Computer System<br/>Location: 704 Anolid, Mangaldan, Pangasinans<br/>Employment Location Type Name: On-site<br/>Start Month: 2<br/>Start Year: 2018<br/>End Month: 7<br/>End Year: 2019<br/>Job Description: As a software developer, my primary responsibility is to participate in the development and maintenance of software applications. I collaborate with senior software developers to design and enhance software solutions and write clean and efficient code using programming languages such as PHP, JavaScript, and others. I have experience in debugging and troubleshooting software issues and conducting code reviews to ensure code quality and consistency. Additionally, I am responsible for testing software applications to ensure they meet quality standards and contribute to the development of software documentation.', 2, '2024-08-02 11:23:43', '2024-08-02 11:23:43'),
+(3169, 'employee_experience', 1, 'Company Name:Micromax Computer System -> Micromax Computer Systems<br/>', 2, '2024-08-02 11:24:56', '2024-08-02 11:24:56'),
+(3170, 'employee_experience', 1, 'Company Name:Micromax Computer Systems -> Micromax Computer System<br/>', 2, '2024-08-02 11:25:00', '2024-08-02 11:25:00'),
+(3171, 'employee_experience', 1, 'Employment Type Name: Probationary -> Part-time<br/>', 2, '2024-08-02 11:26:17', '2024-08-02 11:26:17'),
+(3172, 'employee_experience', 1, 'End Month: 7 -> 12<br/>', 2, '2024-08-02 11:26:42', '2024-08-02 11:26:42'),
+(3173, 'employee_experience', 1, 'End Year: 2019 -> 2024<br/>', 2, '2024-08-02 11:26:53', '2024-08-02 11:26:53'),
+(3174, 'employee_experience', 9, 'Employee experience created. <br/><br/>Job Title: asd<br/>Employment Type Name: Apprentice<br/>Company Name: asd<br/>Location: asd<br/>Employment Location Type Name: Hybrid<br/>Start Month: 11<br/>Start Year: 2007<br/>Job Description: ad', 2, '2024-08-02 11:57:47', '2024-08-02 11:57:47'),
+(3175, 'employee_education', 1, 'Employee education created. <br/><br/>School: AMA Computer College<br/>Degree: Bachelor of Science in Information Technology<br/>Field of Study: Web Development<br/>Start Month: 2<br/>Start Year: 2024<br/>Activities and Societies: test<br/>Description: test', 2, '2024-08-02 16:00:52', '2024-08-02 16:00:52');
 
 -- --------------------------------------------------------
 
@@ -9542,6 +9746,27 @@ CREATE TABLE `departure_reason` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `departure_reason`
+--
+
+INSERT INTO `departure_reason` (`departure_reason_id`, `departure_reason_name`, `created_date`, `last_log_by`) VALUES
+(1, 'Resignation', '2024-07-31 10:20:23', 2),
+(2, 'Retirement', '2024-07-31 10:20:31', 2),
+(3, 'Termination for Cause', '2024-07-31 10:20:38', 2),
+(4, 'Layoff', '2024-07-31 10:20:43', 2),
+(5, 'End of Contract', '2024-07-31 10:20:51', 2),
+(6, 'Personal Reasons', '2024-07-31 10:20:57', 2),
+(7, 'Relocation', '2024-07-31 10:21:04', 2),
+(8, 'Career Change', '2024-07-31 10:21:10', 2),
+(9, 'Health Issues', '2024-07-31 10:21:16', 2),
+(10, 'Family Reasons', '2024-07-31 10:21:22', 2),
+(11, 'Better Opportunity', '2024-07-31 10:21:26', 2),
+(12, 'Education Pursuit', '2024-07-31 10:21:31', 2),
+(13, 'Company Restructuring', '2024-07-31 10:21:36', 2),
+(14, 'Voluntary Severance', '2024-07-31 10:21:41', 2),
+(15, 'Death', '2024-07-31 10:21:45', 2);
+
+--
 -- Triggers `departure_reason`
 --
 DROP TRIGGER IF EXISTS `departure_reason_trigger_insert`;
@@ -9842,7 +10067,7 @@ CREATE TABLE `employee` (
 
 INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `badge_id`, `company_id`, `company_name`, `employment_type_id`, `employment_type_name`, `department_id`, `department_name`, `job_position_id`, `job_position_name`, `work_location_id`, `work_location_name`, `manager_id`, `manager_name`, `work_schedule_id`, `work_schedule_name`, `employment_status`, `pin_code`, `home_work_distance`, `visa_number`, `work_permit_number`, `visa_expiration_date`, `work_permit_expiration_date`, `work_permit`, `onboard_date`, `offboard_date`, `time_off_approver_id`, `time_off_approver_name`, `departure_reason_id`, `departure_reason_name`, `detailed_departure_reason`, `created_date`, `last_log_by`) VALUES
 (1, NULL, NULL, 'Lawrence De Vera Agulto, Suffix', 'Lawrence', 'De Vera', 'Agulto', 'Suffix', NULL, 'nickname', 2, 'Engaged', 2, 'Female', 1, 'Aglipayan Church', 1, 'A+', '2024-07-28', 'place of birth', 1, 2, 'badge id', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'pincode', 20, 'visa no', 'work permit no', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:03:54', 2),
-(2, NULL, NULL, 'Lennard De Vera Agultos, Suffix', 'Lennard', 'De Vera', 'Agultos', 'Suffix', 'No about found.', 'Nickname', 4, 'Married', 1, 'Male', 1, 'Aglipayan Church', 2, 'A-', '2024-07-30', 'Place of Birth', 21, 21, 'Badge ID', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Code', 25, 'Visa No', 'Work Permit No', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:40:04', 2);
+(2, NULL, NULL, 'Lennard De Vera Agultos, Suffix', 'Lennard', 'De Vera', 'Agultos', 'Suffix', 'No about found.', 'Nickname', 4, 'Married', 1, 'Male', 1, 'Aglipayan Church', 2, 'A-', '2024-07-30', 'Place of Birth', 21, 21, 'Badge IDs', 1, 'Christian General Motors Inc.', 8, 'Casual', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Codes', 25, 'Visa Nos', 'Work Permit Nos', '2024-07-31', '2024-07-31', NULL, '2024-08-01', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:40:04', 2);
 
 --
 -- Triggers `employee`
@@ -10137,6 +10362,340 @@ CREATE TRIGGER `employee_trigger_update` AFTER UPDATE ON `employee` FOR EACH ROW
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('employee', NEW.employee_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_address`
+--
+
+DROP TABLE IF EXISTS `employee_address`;
+CREATE TABLE `employee_address` (
+  `employee_address_id` int(10) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `address_type_id` int(10) UNSIGNED NOT NULL,
+  `address_type_name` varchar(100) NOT NULL,
+  `address` varchar(1000) DEFAULT NULL,
+  `city_id` int(10) UNSIGNED NOT NULL,
+  `city_name` varchar(100) NOT NULL,
+  `state_id` int(10) UNSIGNED NOT NULL,
+  `state_name` varchar(100) NOT NULL,
+  `country_id` int(10) UNSIGNED NOT NULL,
+  `country_name` varchar(100) NOT NULL,
+  `default_address` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_education`
+--
+
+DROP TABLE IF EXISTS `employee_education`;
+CREATE TABLE `employee_education` (
+  `employee_education_id` int(10) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `school` varchar(100) NOT NULL,
+  `degree` varchar(100) DEFAULT NULL,
+  `field_of_study` varchar(100) DEFAULT NULL,
+  `start_month` varchar(20) DEFAULT NULL,
+  `start_year` varchar(20) DEFAULT NULL,
+  `end_month` varchar(20) DEFAULT NULL,
+  `end_year` varchar(20) DEFAULT NULL,
+  `activities_societies` varchar(5000) DEFAULT NULL,
+  `education_description` varchar(5000) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `employee_education`
+--
+DROP TRIGGER IF EXISTS `employee_education_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `employee_education_trigger_insert` AFTER INSERT ON `employee_education` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee education created. <br/>';
+
+    IF NEW.school <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>School: ", NEW.school);
+    END IF;
+
+    IF NEW.degree <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Degree: ", NEW.degree);
+    END IF;
+
+    IF NEW.field_of_study <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Field of Study: ", NEW.field_of_study);
+    END IF;
+
+    IF NEW.start_month <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Start Month: ", NEW.start_month);
+    END IF;
+
+    IF NEW.start_year <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Start Year: ", NEW.start_year);
+    END IF;
+
+    IF NEW.end_month <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>End Month: ", NEW.end_month);
+    END IF;
+
+    IF NEW.end_year <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>End Year: ", NEW.end_year);
+    END IF;
+
+    IF NEW.activities_societies <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Activities and Societies: ", NEW.activities_societies);
+    END IF;
+
+    IF NEW.education_description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.education_description);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_education', NEW.employee_education_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `employee_education_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `employee_education_trigger_update` AFTER UPDATE ON `employee_education` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.school <> OLD.school THEN
+        SET audit_log = CONCAT(audit_log, "School: ", OLD.school, " -> ", NEW.school, "<br/>");
+    END IF;
+
+    IF NEW.degree <> OLD.degree THEN
+        SET audit_log = CONCAT(audit_log, "Degree: ", OLD.degree, " -> ", NEW.degree, "<br/>");
+    END IF;
+
+    IF NEW.field_of_study <> OLD.field_of_study THEN
+        SET audit_log = CONCAT(audit_log, "Field of Study: ", OLD.field_of_study, " -> ", NEW.field_of_study, "<br/>");
+    END IF;
+
+    IF NEW.start_month <> OLD.start_month THEN
+        SET audit_log = CONCAT(audit_log, "Start Month: ", OLD.start_month, " -> ", NEW.start_month, "<br/>");
+    END IF;
+
+    IF NEW.start_year <> OLD.start_year THEN
+        SET audit_log = CONCAT(audit_log, "Start Year: ", OLD.start_year, " -> ", NEW.start_year, "<br/>");
+    END IF;
+
+    IF NEW.end_month <> OLD.end_month THEN
+        SET audit_log = CONCAT(audit_log, "End Month: ", OLD.end_month, " -> ", NEW.end_month, "<br/>");
+    END IF;
+
+    IF NEW.end_year <> OLD.end_year THEN
+        SET audit_log = CONCAT(audit_log, "End Year: ", OLD.end_year, " -> ", NEW.end_year, "<br/>");
+    END IF;
+
+    IF NEW.activities_societies <> OLD.activities_societies THEN
+        SET audit_log = CONCAT(audit_log, "Activities and Societies: ", OLD.activities_societies, " -> ", NEW.activities_societies, "<br/>");
+    END IF;
+
+    IF NEW.education_description <> OLD.education_description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.education_description, " -> ", NEW.education_description, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_education', NEW.employee_education_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_experience`
+--
+
+DROP TABLE IF EXISTS `employee_experience`;
+CREATE TABLE `employee_experience` (
+  `employee_experience_id` int(10) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `job_title` varchar(100) NOT NULL,
+  `employment_type_id` int(10) UNSIGNED DEFAULT NULL,
+  `employment_type_name` varchar(100) DEFAULT NULL,
+  `company_name` varchar(200) NOT NULL,
+  `location` varchar(200) DEFAULT NULL,
+  `employment_location_type_id` int(10) UNSIGNED DEFAULT NULL,
+  `employment_location_type_name` varchar(100) DEFAULT NULL,
+  `start_month` varchar(20) DEFAULT NULL,
+  `start_year` varchar(20) DEFAULT NULL,
+  `end_month` varchar(20) DEFAULT NULL,
+  `end_year` varchar(20) DEFAULT NULL,
+  `job_description` varchar(5000) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `employee_experience`
+--
+DROP TRIGGER IF EXISTS `employee_experience_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `employee_experience_trigger_insert` AFTER INSERT ON `employee_experience` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee experience created. <br/>';
+
+    IF NEW.job_title <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Job Title: ", NEW.job_title);
+    END IF;
+
+    IF NEW.employment_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Employment Type Name: ", NEW.employment_type_name);
+    END IF;
+
+    IF NEW.company_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Company Name: ", NEW.company_name);
+    END IF;
+
+    IF NEW.location <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Location: ", NEW.location);
+    END IF;
+
+    IF NEW.employment_location_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Employment Location Type Name: ", NEW.employment_location_type_name);
+    END IF;
+
+    IF NEW.start_month <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Start Month: ", NEW.start_month);
+    END IF;
+
+    IF NEW.start_year <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Start Year: ", NEW.start_year);
+    END IF;
+
+    IF NEW.end_month <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>End Month: ", NEW.end_month);
+    END IF;
+
+    IF NEW.end_year <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>End Year: ", NEW.end_year);
+    END IF;
+
+    IF NEW.job_description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Job Description: ", NEW.job_description);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_experience', NEW.employee_experience_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `employee_experience_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `employee_experience_trigger_update` AFTER UPDATE ON `employee_experience` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.job_title <> OLD.job_title THEN
+        SET audit_log = CONCAT(audit_log, "Job Title: ", OLD.job_title, " -> ", NEW.job_title, "<br/>");
+    END IF;
+
+    IF NEW.employment_type_name <> OLD.employment_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Employment Type Name: ", OLD.employment_type_name, " -> ", NEW.employment_type_name, "<br/>");
+    END IF;
+
+    IF NEW.company_name <> OLD.company_name THEN
+        SET audit_log = CONCAT(audit_log, "Company Name: ", OLD.company_name, " -> ", NEW.company_name, "<br/>");
+    END IF;
+
+    IF NEW.location <> OLD.location THEN
+        SET audit_log = CONCAT(audit_log, "Location: ", OLD.location, " -> ", NEW.location, "<br/>");
+    END IF;
+
+    IF NEW.employment_location_type_name <> OLD.employment_location_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Employment Location Type Name: ", OLD.employment_location_type_name, " -> ", NEW.employment_location_type_name, "<br/>");
+    END IF;
+
+    IF NEW.start_month <> OLD.start_month THEN
+        SET audit_log = CONCAT(audit_log, "Start Month: ", OLD.start_month, " -> ", NEW.start_month, "<br/>");
+    END IF;
+
+    IF NEW.start_year <> OLD.start_year THEN
+        SET audit_log = CONCAT(audit_log, "Start Year: ", OLD.start_year, " -> ", NEW.start_year, "<br/>");
+    END IF;
+
+    IF NEW.end_month <> OLD.end_month THEN
+        SET audit_log = CONCAT(audit_log, "End Month: ", OLD.end_month, " -> ", NEW.end_month, "<br/>");
+    END IF;
+
+    IF NEW.end_year <> OLD.end_year THEN
+        SET audit_log = CONCAT(audit_log, "End Year: ", OLD.end_year, " -> ", NEW.end_year, "<br/>");
+    END IF;
+
+    IF NEW.job_description <> OLD.job_description THEN
+        SET audit_log = CONCAT(audit_log, "Job Description: ", OLD.job_description, " -> ", NEW.job_description, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_experience', NEW.employee_experience_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employment_location_type`
+--
+
+DROP TABLE IF EXISTS `employment_location_type`;
+CREATE TABLE `employment_location_type` (
+  `employment_location_type_id` int(10) UNSIGNED NOT NULL,
+  `employment_location_type_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employment_location_type`
+--
+
+INSERT INTO `employment_location_type` (`employment_location_type_id`, `employment_location_type_name`, `created_date`, `last_log_by`) VALUES
+(1, 'On-site', '2024-07-31 09:30:18', 2),
+(2, 'Hybrid', '2024-07-31 09:30:30', 2),
+(3, 'Remote', '2024-07-31 09:30:39', 2);
+
+--
+-- Triggers `employment_location_type`
+--
+DROP TRIGGER IF EXISTS `employment_location_type_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `employment_location_type_trigger_insert` AFTER INSERT ON `employment_location_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employment location type created. <br/>';
+
+    IF NEW.employment_location_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Employment Location Type Name: ", NEW.employment_location_type_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employment_location_type', NEW.employment_location_type_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `employment_location_type_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `employment_location_type_trigger_update` AFTER UPDATE ON `employment_location_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.employment_location_type_name <> OLD.employment_location_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Employment Location Type Name: ", OLD.employment_location_type_name, " -> ", NEW.employment_location_type_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employment_location_type', NEW.employment_location_type_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -11091,7 +11650,8 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (45, 'User Identity', '', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 0, NULL, 21, '2024-07-09 08:54:59', 2),
 (46, 'Contact Information', '', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-09 08:59:29', 2),
 (47, 'Language Settings', '', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', NULL, NULL, 12, '2024-07-09 09:02:08', 2),
-(48, 'Banking Configuration', '', ' ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-09 09:04:13', 2);
+(48, 'Banking Configuration', '', ' ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-09 09:04:13', 2),
+(49, 'Employment Location Type', 'employment-location-type.php', 'ti ti-map-2', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 5, '2024-07-31 09:01:33', 2);
 
 --
 -- Triggers `menu_item`
@@ -11728,7 +12288,8 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (46, 1, 'Administrator', 45, 'User Identity', 1, 0, 0, 0, '2024-07-09 08:55:04', '2024-07-09 08:55:04', 2),
 (47, 1, 'Administrator', 46, 'Contact Information', 1, 0, 0, 0, '2024-07-09 08:59:33', '2024-07-09 08:59:33', 2),
 (48, 1, 'Administrator', 47, 'Language Settings', 1, 0, 0, 0, '2024-07-09 09:02:12', '2024-07-09 09:02:12', 2),
-(49, 1, 'Administrator', 48, 'Banking Configuration', 1, 0, 0, 0, '2024-07-09 09:04:17', '2024-07-09 09:04:17', 2);
+(49, 1, 'Administrator', 48, 'Banking Configuration', 1, 0, 0, 0, '2024-07-09 09:04:17', '2024-07-09 09:04:17', 2),
+(50, 1, 'Administrator', 49, 'Employment Location Type', 1, 1, 1, 1, '2024-07-31 09:01:37', '2024-07-31 09:01:37', 2);
 
 --
 -- Triggers `role_permission`
@@ -12359,7 +12920,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'dark', 'Cyan_Theme', 1, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -12552,7 +13113,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-07-29 09:27:57', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '9Jbc%2BdLCOoxQbik56g7yXjvE7ZdtueF3qEGsEJRjDF4%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-02 10:19:17', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'sxF1tdauY5J5BVQu1MZ%2FUP%2FP%2F%2Fb%2B7yHCm%2BjVLZyb40k%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -13127,6 +13688,42 @@ ALTER TABLE `employee`
   ADD KEY `employee_index_employment_status` (`employment_status`);
 
 --
+-- Indexes for table `employee_address`
+--
+ALTER TABLE `employee_address`
+  ADD PRIMARY KEY (`employee_address_id`),
+  ADD KEY `employee_id` (`employee_id`),
+  ADD KEY `last_log_by` (`last_log_by`);
+
+--
+-- Indexes for table `employee_education`
+--
+ALTER TABLE `employee_education`
+  ADD PRIMARY KEY (`employee_education_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `employee_education_index_employee_education_id` (`employee_education_id`),
+  ADD KEY `employee_education_index_employee_employee_id` (`employee_id`);
+
+--
+-- Indexes for table `employee_experience`
+--
+ALTER TABLE `employee_experience`
+  ADD PRIMARY KEY (`employee_experience_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `employee_experience_index_employee_experience_id` (`employee_experience_id`),
+  ADD KEY `employee_experience_index_employee_employee_id` (`employee_id`),
+  ADD KEY `employee_experience_index_employee_employment_type_id` (`employment_type_id`),
+  ADD KEY `employee_experience_index_employee_lNocation_type_id` (`employment_location_type_id`);
+
+--
+-- Indexes for table `employment_location_type`
+--
+ALTER TABLE `employment_location_type`
+  ADD PRIMARY KEY (`employment_location_type_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `employment_location_type_index_employment_location_type_id` (`employment_location_type_id`);
+
+--
 -- Indexes for table `employment_type`
 --
 ALTER TABLE `employment_type`
@@ -13451,7 +14048,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3128;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3176;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -13517,7 +14114,7 @@ ALTER TABLE `department`
 -- AUTO_INCREMENT for table `departure_reason`
 --
 ALTER TABLE `departure_reason`
-  MODIFY `departure_reason_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `departure_reason_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `educational_stage`
@@ -13536,6 +14133,30 @@ ALTER TABLE `email_setting`
 --
 ALTER TABLE `employee`
   MODIFY `employee_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `employee_address`
+--
+ALTER TABLE `employee_address`
+  MODIFY `employee_address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `employee_education`
+--
+ALTER TABLE `employee_education`
+  MODIFY `employee_education_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `employee_experience`
+--
+ALTER TABLE `employee_experience`
+  MODIFY `employee_experience_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `employment_location_type`
+--
+ALTER TABLE `employment_location_type`
+  MODIFY `employment_location_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `employment_type`
@@ -13607,7 +14228,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -13661,7 +14282,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -13854,6 +14475,33 @@ ALTER TABLE `email_setting`
 --
 ALTER TABLE `employee`
   ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `employee_address`
+--
+ALTER TABLE `employee_address`
+  ADD CONSTRAINT `employee_address_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
+  ADD CONSTRAINT `employee_address_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `employee_education`
+--
+ALTER TABLE `employee_education`
+  ADD CONSTRAINT `employee_education_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
+  ADD CONSTRAINT `employee_education_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `employee_experience`
+--
+ALTER TABLE `employee_experience`
+  ADD CONSTRAINT `employee_experience_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
+  ADD CONSTRAINT `employee_experience_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `employment_location_type`
+--
+ALTER TABLE `employment_location_type`
+  ADD CONSTRAINT `employment_location_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `employment_type`
