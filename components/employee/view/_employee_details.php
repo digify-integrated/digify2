@@ -307,13 +307,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <p class="mb-1 fs-2">Home Address</p>
-                                    <h6 class="fw-semibold mb-2 fs-3">1 Rsr appartment Bantug bulalo Cabanatuan City, City of Cabanatuan, Nueva Ecija, Philippines</h6>
-                                    <span class="badge bg-info">Alternate</span>
-                                </div>
-                            </div>
+                            
                             <div class="d-flex">
                                 <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
                                     <i class="ti ti-pencil"></i>

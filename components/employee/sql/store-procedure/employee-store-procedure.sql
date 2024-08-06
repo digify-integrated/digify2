@@ -23,6 +23,13 @@ BEGIN
     WHERE employee_education_id = p_employee_education_id;
 END //
 
+CREATE PROCEDURE checkEmployeeEducationExist(IN p_employee_address_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_address
+    WHERE employee_address_id = p_employee_address_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
@@ -45,6 +52,24 @@ CREATE PROCEDURE insertEmployeeEducation(IN p_employee_id INT, IN p_school VARCH
 BEGIN
     INSERT INTO employee_education (employee_id, school, degree, field_of_study, start_month, start_year, end_month, end_year, activities_societies, education_description, last_log_by) 
 	VALUES(p_employee_id, p_school, p_degree, p_field_of_study, p_start_month, p_start_year, p_end_month, p_end_year, p_activities_societies, p_education_description, p_last_log_by);
+END //
+
+CREATE PROCEDURE insertEmployeeAddress(IN p_employee_id INT, IN p_address_type_id INT, IN p_address_type_name VARCHAR(100), IN p_address VARCHAR(1000), IN p_city_id INT, IN p_city_name VARCHAR(100), IN p_state_id INT, IN p_state_name VARCHAR(100), IN p_country_id INT, IN p_country_name VARCHAR(100), IN p_last_log_by INT)
+BEGIN
+    DECLARE existing_address_count INT;
+
+    SELECT COUNT(*) INTO existing_address_count
+    FROM employee_address
+    WHERE employee_id = p_employee_id;
+
+    IF existing_address_count = 0 THEN
+        SET p_default_address = 'Primary';
+    ELSE
+        SET p_default_address = 'Alternate';
+    END IF;
+
+    INSERT INTO employee_address (employee_id, address_type_id, address_type_name, address, city_id, city_name, state_id, state_name, country_id, country_name, default_address, last_log_by) 
+	VALUES(p_employee_id, p_address_type_id, p_address_type_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -174,6 +199,23 @@ BEGIN
     WHERE employee_education_id = p_employee_education_id;
 END //
 
+CREATE PROCEDURE updateEmployeeAddress(IN p_employee_address_id INT, IN p_employee_id INT, IN p_address_type_id INT, IN p_address_type_name VARCHAR(100), IN p_address VARCHAR(1000), IN p_city_id INT, IN p_city_name VARCHAR(100), IN p_state_id INT, IN p_state_name VARCHAR(100), IN p_country_id INT, IN p_country_name VARCHAR(100), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee_address
+    SET employee_id = p_employee_id,
+        p_address_type_id = p_address_type_id,
+        p_address_type_name = p_address_type_name,
+        p_address = p_address,
+        p_city_id = p_city_id,
+        p_city_name = p_city_name,
+        p_state_id = p_state_id,
+        p_state_name = p_state_name,
+        p_country_id = p_country_id,
+        p_country_name = p_country_name,
+        last_log_by = p_last_log_by
+    WHERE employee_address_id = p_employee_address_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Delete Stored Procedure */
@@ -189,6 +231,7 @@ BEGIN
 
     DELETE FROM employee_experience WHERE employee_id = p_employee_id;
     DELETE FROM employee_education WHERE employee_id = p_employee_id;
+    DELETE FROM employee_address WHERE employee_id = p_employee_id;
     DELETE FROM employee WHERE employee_id = p_employee_id;
 
     COMMIT;
@@ -202,6 +245,27 @@ END //
 CREATE PROCEDURE deleteEmployeeEducation(IN p_employee_education_id INT)
 BEGIN
    DELETE FROM employee_education WHERE employee_education_id = p_employee_education_id;
+END //
+
+CREATE PROCEDURE deleteEmployeeAddress(IN p_employee_address_id INT, IN p_employee_id INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    DELETE FROM employee_address
+    WHERE employee_address_id = p_employee_address_id;
+
+    UPDATE employee_address
+    SET default_address = 'Primary'
+    WHERE employee_id = p_employee_id
+    AND default_address = 'Alternate'
+    AND (SELECT default_address FROM employee_address WHERE employee_address_id = p_employee_address_id) = 'Primary'
+    ORDER BY employee_address_id
+    LIMIT 1;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -224,6 +288,12 @@ CREATE PROCEDURE getEmployeeEducation(IN p_employee_education_id INT)
 BEGIN
 	SELECT * FROM employee_education
 	WHERE employee_education_id = p_employee_education_id;
+END //
+
+CREATE PROCEDURE getEmployeeAddress(IN p_employee_address_id INT)
+BEGIN
+	SELECT * FROM employee_address
+	WHERE employee_address_id = p_employee_address_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -299,6 +369,12 @@ END //
 CREATE PROCEDURE generateEmployeeEducation(IN p_employee_id INT)
 BEGIN
 	SELECT * FROM employee_education
+	WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE generateEmployeeAddress(IN p_employee_id INT)
+BEGIN
+	SELECT * FROM employee_address
 	WHERE employee_id = p_employee_id;
 END //
 

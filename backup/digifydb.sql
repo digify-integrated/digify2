@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 02, 2024 at 11:25 AM
+-- Generation Time: Aug 06, 2024 at 11:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -7024,7 +7024,8 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3172, 'employee_experience', 1, 'End Month: 7 -> 12<br/>', 2, '2024-08-02 11:26:42', '2024-08-02 11:26:42'),
 (3173, 'employee_experience', 1, 'End Year: 2019 -> 2024<br/>', 2, '2024-08-02 11:26:53', '2024-08-02 11:26:53'),
 (3174, 'employee_experience', 9, 'Employee experience created. <br/><br/>Job Title: asd<br/>Employment Type Name: Apprentice<br/>Company Name: asd<br/>Location: asd<br/>Employment Location Type Name: Hybrid<br/>Start Month: 11<br/>Start Year: 2007<br/>Job Description: ad', 2, '2024-08-02 11:57:47', '2024-08-02 11:57:47'),
-(3175, 'employee_education', 1, 'Employee education created. <br/><br/>School: AMA Computer College<br/>Degree: Bachelor of Science in Information Technology<br/>Field of Study: Web Development<br/>Start Month: 2<br/>Start Year: 2024<br/>Activities and Societies: test<br/>Description: test', 2, '2024-08-02 16:00:52', '2024-08-02 16:00:52');
+(3175, 'employee_education', 1, 'Employee education created. <br/><br/>School: AMA Computer College<br/>Degree: Bachelor of Science in Information Technology<br/>Field of Study: Web Development<br/>Start Month: 2<br/>Start Year: 2024<br/>Activities and Societies: test<br/>Description: test', 2, '2024-08-02 16:00:52', '2024-08-02 16:00:52'),
+(3176, 'user_account', 2, 'Last Connection Date: 2024-08-02 10:19:17 -> 2024-08-06 13:36:08<br/>', 2, '2024-08-06 13:36:08', '2024-08-06 13:36:08');
 
 -- --------------------------------------------------------
 
@@ -10386,7 +10387,7 @@ CREATE TABLE `employee_address` (
   `state_name` varchar(100) NOT NULL,
   `country_id` int(10) UNSIGNED NOT NULL,
   `country_name` varchar(100) NOT NULL,
-  `default_address` varchar(5) NOT NULL DEFAULT 'No',
+  `default_address` varchar(10) NOT NULL DEFAULT 'Alternate',
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -12920,7 +12921,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'dark', 'Cyan_Theme', 1, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'dark', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -13113,7 +13114,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-02 10:19:17', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'sxF1tdauY5J5BVQu1MZ%2FUP%2FP%2F%2Fb%2B7yHCm%2BjVLZyb40k%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-06 13:36:08', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'GJNajZ7Mbt%2FxYj4lrxhL3Sks2GPWmxPX4%2BWnvPJrdSw%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -13692,8 +13693,14 @@ ALTER TABLE `employee`
 --
 ALTER TABLE `employee_address`
   ADD PRIMARY KEY (`employee_address_id`),
-  ADD KEY `employee_id` (`employee_id`),
-  ADD KEY `last_log_by` (`last_log_by`);
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `employee_address_index_default_address` (`default_address`),
+  ADD KEY `employee_address_index_employee_address_id` (`employee_address_id`),
+  ADD KEY `employee_address_index_employee_id` (`employee_id`),
+  ADD KEY `employee_address_index_address_type_id` (`address_type_id`),
+  ADD KEY `employee_address_index_city_id` (`city_id`),
+  ADD KEY `employee_address_index_state_id` (`state_id`),
+  ADD KEY `employee_address_index_country_id` (`country_id`);
 
 --
 -- Indexes for table `employee_education`
@@ -14048,7 +14055,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3176;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3177;
 
 --
 -- AUTO_INCREMENT for table `bank`

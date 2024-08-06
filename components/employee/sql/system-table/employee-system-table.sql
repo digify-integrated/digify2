@@ -143,7 +143,7 @@ CREATE TABLE employee_address (
     state_name VARCHAR(100) NOT NULL,
     country_id INT UNSIGNED NOT NULL,
     country_name VARCHAR(100) NOT NULL,
-    default_address VARCHAR(5) NOT NULL DEFAULT 'No',
+    default_address VARCHAR(10) NOT NULL DEFAULT 'Primary',
     created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
     FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
@@ -156,5 +156,6 @@ CREATE INDEX employee_address_index_address_type_id ON employee_address(address_
 CREATE INDEX employee_address_index_city_id ON employee_address(city_id);
 CREATE INDEX employee_address_index_state_id ON employee_address(state_id);
 CREATE INDEX employee_address_index_country_id ON employee_address(country_id);
+CREATE INDEX employee_address_index_default_address ON employee_address(default_address);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

@@ -290,6 +290,46 @@ class EmployeeModel {
 
     # -------------------------------------------------------------
     #
+    # Function: updateEmployeeAddress
+    # Description: Updates the employee address.
+    #
+    # Parameters:
+    # - $p_employee_address_id (int): The employee address ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_address_type_id (int): The address type ID.
+    # - $p_address_type_name (string): The address type name.
+    # - $p_address (string): The address.
+    # - $p_city_id (int): The city ID.
+    # - $p_city_name (string): The city name.
+    # - $p_state_id (int): The state ID.
+    # - $p_state_name (string): The state name.
+    # - $p_country_id (int): The country ID.
+    # - $p_country_name (string): The country name.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeAddress($p_employee_address_id, $p_employee_id, $p_address_type_id, $p_address_type_name, $p_address, $p_city_id, $p_city_name, $p_state_id, $p_state_name, $p_country_id, $p_country_name, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeAddress(:p_employee_address_id, :p_employee_id, :p_address_type_id, :address_type_name, :p_address, :p_city_id, :p_city_name, :p_state_id, :p_state_name, :p_country_id, :p_country_name, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_address_id', $p_employee_address_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_address_type_id', $p_address_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_address_type_name', $p_address_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_address', $p_address, PDO::PARAM_STR);
+        $stmt->bindValue(':p_city_id', $p_city_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_city_name', $p_city_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_state_id', $p_state_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_state_name', $p_state_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_country_id', $p_country_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_country_name', $p_country_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: updateEmployeeImage
     # Description: Updates the employee image.
     #
@@ -504,6 +544,44 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: insertEmployeeAddress
+    # Description: Updates the employee address.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_address_type_id (int): The address type ID.
+    # - $p_address_type_name (string): The address type name.
+    # - $p_address (string): The address.
+    # - $p_city_id (int): The city ID.
+    # - $p_city_name (string): The city name.
+    # - $p_state_id (int): The state ID.
+    # - $p_state_name (string): The state name.
+    # - $p_country_id (int): The country ID.
+    # - $p_country_name (string): The country name.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertEmployeeAddress($p_employee_id, $p_address_type_id, $p_address_type_name, $p_address, $p_city_id, $p_city_name, $p_state_id, $p_state_name, $p_country_id, $p_country_name, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeAddress(:p_employee_id, :p_address_type_id, :address_type_name, :p_address, :p_city_id, :p_city_name, :p_state_id, :p_state_name, :p_country_id, :p_country_name, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_address_type_id', $p_address_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_address_type_name', $p_address_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_address', $p_address, PDO::PARAM_STR);
+        $stmt->bindValue(':p_city_id', $p_city_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_city_name', $p_city_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_state_id', $p_state_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_state_name', $p_state_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_country_id', $p_country_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_country_name', $p_country_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Check exist methods
     # -------------------------------------------------------------
 
@@ -559,6 +637,25 @@ class EmployeeModel {
     public function checkEmployeeEducationExist($p_employee_education_id) {
         $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeEducationExist(:p_employee_education_id)');
         $stmt->bindValue(':p_employee_education_id', $p_employee_education_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: checkEmployeeAddressExist
+    # Description: Checks if a employee address exists.
+    #
+    # Parameters:
+    # - $p_employee_address_id (int): The employee address ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkEmployeeAddressExist($p_employee_address_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeAddressExist(:p_employee_address_id)');
+        $stmt->bindValue(':p_employee_address_id', $p_employee_address_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -623,6 +720,26 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeAddress
+    # Description: Deletes the employee address.
+    #
+    # Parameters:
+    # - $p_employee_address_id (int): The employee address ID.
+    # - $p_employee_id (int): The employee ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeEducation($p_employee_address_id, $p_employee_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeEducation(:p_employee_address_id, :p_employee_id)');
+        $stmt->bindValue(':p_employee_address_id', $p_employee_address_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Get methods
     # -------------------------------------------------------------
 
@@ -681,6 +798,26 @@ class EmployeeModel {
     public function getEmployeeEducation($p_employee_education_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getEmployeeEducation(:p_employee_education_id)');
         $stmt->bindValue(':p_employee_education_id', $p_employee_education_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeAddress
+    # Description: Retrieves the details of a employee address.
+    #
+    # Parameters:
+    # - $p_employee_address_id (int): The employee address ID.
+    #
+    # Returns:
+    # - An array containing the employee address details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeAddress($p_employee_address_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeeAddress(:p_employee_address_id)');
+        $stmt->bindValue(':p_employee_address_id', $p_employee_address_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

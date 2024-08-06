@@ -338,6 +338,89 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
         # -------------------------------------------------------------
         #
+        # Type: address list
+        # Description:
+        # Generates the address list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'address list':
+            $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeAddress(:employeeID)');
+            $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($options); 
+            $sql->closeCursor();
+
+            $list = '';
+
+            if($count > 0){
+                $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+
+                foreach ($options as $row) {
+                    $employeeAddressID = $row['employee_address_id'];
+                    $addressTypeName = $row['address_type_name'];
+                    $address = $row['address'];
+                    $cityName = $row['city_name'];
+                    $stateName = $row['state_name'];
+                    $countryName = $row['country_name'];
+                    $defaultAddress = $row['default_address'];
+    
+                    $updateButton = '';
+                    $deleteButton = '';
+                    if($employeeWriteAccess['total'] > 0){
+                        $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 edit-address-details" data-bs-toggle="modal" data-bs-target="#address-modal" data-employee-address-id="' . $employeeAddressID . '">
+                                                <i class="ti ti-pencil"></i>
+                                            </a>';
+                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-address-details" data-employee-address-id="' . $employeeAddressID . '">
+                                                <i class="ti ti-trash"></i>
+                                            </a>';
+                    }
+                    
+                    $list .= '<div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div>
+                                                <p class="mb-1 fs-2">Home Address</p>
+                                                <h6 class="fw-semibold mb-2 fs-3">1 Rsr appartment Bantug bulalo Cabanatuan City, City of Cabanatuan, Nueva Ecija, Philippines</h6>
+                                                <span class="badge bg-info">Alternate</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-2">
+                                            '. $updateButton .'
+                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-address-log-notes" data-employee-address-id="' . $employeeEducationID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
+                                                <i class="ti ti-file-text"></i>
+                                            </a>
+                                            '. $deleteButton .'
+                                        </div>
+                                    </div>
+                                    '. $educationDescription .'
+                                </div>
+                            </div>';
+                }
+            }
+            else{
+                $list = '<div class="alert bg-light-subtle mb-0" role="alert">
+                    No education found.
+                  </div>';
+            }
+            
+
+            $response[] = [
+                'EDUCATION_LIST' => $list
+            ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
         # Type: employee options
         # Description:
         # Generates the employee options.
