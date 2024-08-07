@@ -27,6 +27,10 @@ class EmployeeController {
     private $uploadSettingModel;
     private $userAccountModel;
     private $employmentLocationTypeModel;
+    private $addressTypeModel;
+    private $cityModel;
+    private $stateModel;
+    private $countryModel;
     private $authenticationModel;
     private $securityModel;
     private $systemModel;
@@ -52,6 +56,10 @@ class EmployeeController {
     # - @param WorkScheduleModel $workScheduleModel     The WorkScheduleModel instance for work schedule operations.
     # - @param UserAccountModel $userAccountModel     The UserAccountModel instance for user account operations.
     # - @param EmploymentLocationTypeModel $employmentLocationTypeModel     The EmploymentLocationTypeModel instance for employment location type operations.
+    # - @param AddressTypeModel $addressTypeModel     The addressTypeModel instance for address type related operations.
+    # - @param CityModel $cityModel     The cityModel instance for city related operations.
+    # - @param StateModel $stateModel     The stateModel instance for state related operations.
+    # - @param CountryModel $countryModel     The countryModel instance for country related operations.
     # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
@@ -60,7 +68,7 @@ class EmployeeController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, EmploymentLocationTypeModel $employmentLocationTypeModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
+    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, EmploymentLocationTypeModel $employmentLocationTypeModel, AddressTypeModel $addressTypeModel, CityModel $cityModel, StateModel $stateModel, CountryModel $countryModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
         $this->employeeModel = $employeeModel;
         $this->genderModel = $genderModel;
         $this->religionModel = $religionModel;
@@ -74,6 +82,10 @@ class EmployeeController {
         $this->workScheduleModel = $workScheduleModel;
         $this->userAccountModel = $userAccountModel;
         $this->employmentLocationTypeModel = $employmentLocationTypeModel;
+        $this->addressTypeModel = $addressTypeModel;
+        $this->cityModel = $cityModel;
+        $this->stateModel = $stateModel;
+        $this->countryModel = $countryModel;
         $this->uploadSettingModel = $uploadSettingModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
@@ -187,6 +199,9 @@ class EmployeeController {
                 case 'save employee education':
                     $this->saveEmployeeEducation();
                     break;
+                case 'save employee address':
+                    $this->saveEmployeeAddress();
+                    break;
                 case 'get about details':
                     $this->getAboutDetails();
                     break;
@@ -208,6 +223,9 @@ class EmployeeController {
                 case 'get employee education details':
                     $this->getEmployeeEducationDetails();
                     break;
+                case 'get employee address details':
+                    $this->getEmployeeAddressDetails();
+                    break;
                 case 'delete employee':
                     $this->deleteEmployee();
                     break;
@@ -219,6 +237,9 @@ class EmployeeController {
                     break;
                 case 'delete employee education':
                     $this->deleteEmployeeEducation();
+                    break;
+                case 'delete employee address':
+                    $this->deleteEmployeeAddress();
                     break;
                 default:
                     $response = [
@@ -906,6 +927,89 @@ class EmployeeController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: saveEmployeeAddress
+    # Description: 
+    # Saves the employee address if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveEmployeeAddress() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_address_id']) && isset($_POST['address_type_id']) && !empty($_POST['address_type_id']) && isset($_POST['city_id']) && !empty($_POST['city_id']) && isset($_POST['address']) && !empty($_POST['address']) ) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeAddressID = htmlspecialchars($_POST['employee_address_id'], ENT_QUOTES, 'UTF-8');
+            $addressTypeID = htmlspecialchars($_POST['address_type_id'], ENT_QUOTES, 'UTF-8');
+            $cityID = htmlspecialchars($_POST['city_id'], ENT_QUOTES, 'UTF-8');
+            $address = $_POST['address'];
+
+            $addressTypeDetails = $this->addressTypeModel->getAddressType($addressTypeID);
+            $addressTypeName = $addressTypeDetails['address_type_name'];
+
+            $cityDetails = $this->cityModel->getCity($cityID);
+            $cityName = $cityDetails['city_name'] ?? null;
+            $stateID = $cityDetails['state_id'] ?? null;
+            $countryID = $cityDetails['country_id'] ?? null;
+
+            $stateDetails = $this->stateModel->getState($stateID);
+            $stateName = $stateDetails['state_name'] ?? null;
+
+            $countryDetails = $this->countryModel->getCountry($countryID);
+            $countryName = $countryDetails['country_name'] ?? null;
+        
+            $checkEmployeeAddressExist = $this->employeeModel->checkEmployeeAddressExist($employeeAddressID);
+            $total = $checkEmployeeAddressExist['total'] ?? 0;
+
+            if($total > 0){
+                $this->employeeModel->updateEmployeeAddress($employeeAddressID, $employeeID, $addressTypeID, $addressTypeName, $address, $cityID, $cityName, $stateID, $stateName, $countryID, $countryName, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Address Success',
+                    'message' => 'The address has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->employeeModel->insertEmployeeAddress($employeeID, $addressTypeID, $addressTypeName, $address, $cityID, $cityName, $stateID, $stateName, $countryID, $countryName, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert Address Success',
+                    'message' => 'The address has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+           
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -1106,6 +1210,84 @@ class EmployeeController {
                 'success' => true,
                 'title' => 'Delete Education Success',
                 'message' => 'The education has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeAddress
+    # Description: 
+    # Delete the employee address if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeAddress() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeAddressID = htmlspecialchars($_POST['employee_address_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Employee Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkEmployeeAddressExist = $this->employeeModel->checkEmployeeAddressExist($employeeAddressID);
+            $total = $checkEmployeeAddressExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Address Error',
+                    'message' => 'The address does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->employeeModel->deleteEmployeeAddress($employeeAddressID, $employeeID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete Address Success',
+                'message' => 'The address has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -1472,7 +1654,7 @@ class EmployeeController {
     #
     # Function: getEmployeeExperienceDetails
     # Description: 
-    # Handles the retrieval of employee employee experience details.
+    # Handles the retrieval of employee experience details.
     #
     # Parameters: None
     #
@@ -1542,7 +1724,7 @@ class EmployeeController {
     #
     # Function: getEmployeeEducationDetails
     # Description: 
-    # Handles the retrieval of employee employee education details.
+    # Handles the retrieval of employee education details.
     #
     # Parameters: None
     #
@@ -1606,6 +1788,70 @@ class EmployeeController {
         }
     }
     # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeAddressDetails
+    # Description: 
+    # Handles the retrieval of employee address details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeAddressDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_address_id']) && !empty($_POST['employee_address_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeAddressID = htmlspecialchars($_POST['employee_address_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Address Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeAddressDetails = $this->employeeModel->getEmployeeAddress($employeeAddressID);
+
+            $response = [
+                'success' => true,
+                'address' => $employeeAddressDetails['address'] ?? null,
+                'addressTypeID' => $employeeAddressDetails['address_type_id'] ?? null,
+                'address' => $employeeAddressDetails['address'] ?? null,
+                'cityID' => $employeeAddressDetails['city_id'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Transaction Error',
+                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
 }
 # -------------------------------------------------------------
 
@@ -1626,10 +1872,14 @@ require_once '../../work-location/model/work-location-model.php';
 require_once '../../work-schedule/model/work-schedule-model.php';
 require_once '../../user-account/model/user-account-model.php';
 require_once '../../employment-location-type/model/employment-location-type-model.php';
+require_once '../../address-type/model/address-type-model.php';
+require_once '../../city/model/city-model.php';
+require_once '../../state/model/state-model.php';
+require_once '../../country/model/country-model.php';
 require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new EmploymentLocationTypeModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
+$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new EmploymentLocationTypeModel(new DatabaseModel), new AddressTypeModel(new DatabaseModel), new CityModel(new DatabaseModel), new StateModel(new DatabaseModel), new CountryModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
 $controller->handleRequest();
 
 ?>

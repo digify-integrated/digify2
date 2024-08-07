@@ -559,3 +559,49 @@ BEGIN
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
     VALUES ('employee_address', NEW.employee_address_id, audit_log, NEW.last_log_by, NOW());
 END //
+
+CREATE TRIGGER employee_bank_account_trigger_update
+AFTER UPDATE ON employee_bank_account
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.bank_name <> OLD.bank_name THEN
+        SET audit_log = CONCAT(audit_log, "Bank Name: ", OLD.bank_name, " -> ", NEW.bank_name, "<br/>");
+    END IF;
+
+    IF NEW.bank_account_type_name <> OLD.bank_account_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Bank Account Type Name: ", OLD.bank_account_type_name, " -> ", NEW.bank_account_type_name, "<br/>");
+    END IF;
+
+    IF NEW.account_number <> OLD.account_number THEN
+        SET audit_log = CONCAT(audit_log, "Account Number: ", OLD.account_number, " -> ", NEW.account_number, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_bank_account', NEW.employee_bank_account_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END //
+
+CREATE TRIGGER employee_bank_account_trigger_insert
+AFTER INSERT ON employee_bank_account
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee bank created. <br/>';
+
+    IF NEW.bank_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Bank Name: ", NEW.bank_name);
+    END IF;
+
+    IF NEW.bank_account_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Bank Account Type Name: ", NEW.bank_account_type_name);
+    END IF;
+
+    IF NEW.account_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Account Number: ", NEW.account_number);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_bank_account', NEW.employee_bank_account_id, audit_log, NEW.last_log_by, NOW());
+END //

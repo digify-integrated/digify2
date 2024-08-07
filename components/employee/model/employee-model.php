@@ -311,7 +311,7 @@ class EmployeeModel {
     #
     # -------------------------------------------------------------
     public function updateEmployeeAddress($p_employee_address_id, $p_employee_id, $p_address_type_id, $p_address_type_name, $p_address, $p_city_id, $p_city_name, $p_state_id, $p_state_name, $p_country_id, $p_country_name, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeAddress(:p_employee_address_id, :p_employee_id, :p_address_type_id, :address_type_name, :p_address, :p_city_id, :p_city_name, :p_state_id, :p_state_name, :p_country_id, :p_country_name, :p_last_log_by)');
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeAddress(:p_employee_address_id, :p_employee_id, :p_address_type_id, :p_address_type_name, :p_address, :p_city_id, :p_city_name, :p_state_id, :p_state_name, :p_country_id, :p_country_name, :p_last_log_by)');
         $stmt->bindValue(':p_employee_address_id', $p_employee_address_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_address_type_id', $p_address_type_id, PDO::PARAM_INT);
@@ -323,6 +323,38 @@ class EmployeeModel {
         $stmt->bindValue(':p_state_name', $p_state_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_country_id', $p_country_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_country_name', $p_country_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeBankAccount
+    # Description: Updates the employee bank account.
+    #
+    # Parameters:
+    # - $p_employee_bank_account_id (int): The employee bank account ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_bank_id (int): The bank ID.
+    # - $p_bank_name (string): The bank name.
+    # - $p_bank_account_type_id (int): The bank account type ID.
+    # - $p_bank_account_type_name (string): The bank account type name.
+    # - $p_account_number (string): The account number.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeBankAccount($p_employee_bank_account_id, $p_employee_id, $p_bank_id, $p_bank_name, $p_bank_account_type_id, $p_bank_account_type_name, $p_account_number, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeBankAccount(:p_employee_bank_account_id, :p_employee_id, :p_bank_id, :p_bank_name, :p_bank_account_type_id, :p_bank_account_type_name, :p_account_number, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_bank_account_id', $p_employee_bank_account_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_id', $p_bank_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_name', $p_bank_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_bank_account_type_id', $p_bank_account_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_account_type_name', $p_bank_account_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_account_number', $p_account_number, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -565,7 +597,7 @@ class EmployeeModel {
     #
     # -------------------------------------------------------------
     public function insertEmployeeAddress($p_employee_id, $p_address_type_id, $p_address_type_name, $p_address, $p_city_id, $p_city_name, $p_state_id, $p_state_name, $p_country_id, $p_country_name, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeAddress(:p_employee_id, :p_address_type_id, :address_type_name, :p_address, :p_city_id, :p_city_name, :p_state_id, :p_state_name, :p_country_id, :p_country_name, :p_last_log_by)');
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeAddress(:p_employee_id, :p_address_type_id, :p_address_type_name, :p_address, :p_city_id, :p_city_name, :p_state_id, :p_state_name, :p_country_id, :p_country_name, :p_last_log_by)');
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_address_type_id', $p_address_type_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_address_type_name', $p_address_type_name, PDO::PARAM_STR);
@@ -576,6 +608,36 @@ class EmployeeModel {
         $stmt->bindValue(':p_state_name', $p_state_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_country_id', $p_country_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_country_name', $p_country_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+    
+    # -------------------------------------------------------------
+    #
+    # Function: insertEmployeeBankAccount
+    # Description: Inserts the employee bank account.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_bank_id (int): The bank ID.
+    # - $p_bank_name (string): The bank name.
+    # - $p_bank_account_type_id (int): The bank account type ID.
+    # - $p_bank_account_type_name (string): The bank account type name.
+    # - $p_account_number (string): The account number.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeBankAccount($p_employee_id, $p_bank_id, $p_bank_name, $p_bank_account_type_id, $p_bank_account_type_name, $p_account_number, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeBankAccount(:p_employee_id, :p_bank_id, :p_bank_name, :p_bank_account_type_id, :p_bank_account_type_name, :p_account_number, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_id', $p_bank_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_name', $p_bank_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_bank_account_type_id', $p_bank_account_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_account_type_name', $p_bank_account_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_account_number', $p_account_number, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -662,6 +724,25 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: checkEmployeeBankAccountExist
+    # Description: Checks if a employee bank account exists.
+    #
+    # Parameters:
+    # - $p_employee_bank_account_id (int): The employee bank account ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkEmployeeBankAccountExist($p_employee_bank_account_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeBankAccountExist(:p_employee_bank_account_id)');
+        $stmt->bindValue(':p_employee_bank_account_id', $p_employee_bank_account_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -731,10 +812,28 @@ class EmployeeModel {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function deleteEmployeeEducation($p_employee_address_id, $p_employee_id) {
-        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeEducation(:p_employee_address_id, :p_employee_id)');
+    public function deleteEmployeeAddress($p_employee_address_id, $p_employee_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeAddress(:p_employee_address_id, :p_employee_id)');
         $stmt->bindValue(':p_employee_address_id', $p_employee_address_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeBankAccount
+    # Description: Deletes the employee bank account.
+    #
+    # Parameters:
+    # - $p_employee_bank_account_id (int): The employee bank account ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeBankAccount($p_employee_bank_account_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeBankAccount(:p_employee_bank_account_id)');
+        $stmt->bindValue(':p_employee_bank_account_id', $p_employee_bank_account_id, PDO::PARAM_INT);
         $stmt->execute();
     }
     # -------------------------------------------------------------
@@ -818,6 +917,26 @@ class EmployeeModel {
     public function getEmployeeAddress($p_employee_address_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getEmployeeAddress(:p_employee_address_id)');
         $stmt->bindValue(':p_employee_address_id', $p_employee_address_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeBankAccount
+    # Description: Retrieves the details of a employee bank account.
+    #
+    # Parameters:
+    # - $p_employee_bank_account_id (int): The employee bank account ID.
+    #
+    # Returns:
+    # - An array containing the employee bank account details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeBankAccount($p_employee_bank_account_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeeBankAccount(:p_employee_bank_account_id)');
+        $stmt->bindValue(':p_employee_bank_account_id', $p_employee_bank_account_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

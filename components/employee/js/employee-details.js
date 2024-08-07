@@ -16,6 +16,8 @@
         generateDropdownOptions('active user account options');
         generateDropdownOptions('address type options');
         generateDropdownOptions('city options');
+        generateDropdownOptions('bank options');
+        generateDropdownOptions('bank account type options');
         
         displayDetails('get about details');
         displayDetails('get private information details');
@@ -49,6 +51,14 @@
 
         if($('#education-form').length){
             educationForm();
+        }
+
+        if($('#address-form').length){
+            addressForm();
+        }
+
+        if($('#bank-account-form').length){
+            bankAccountForm();
         }
 
         $(document).on('click','#edit-about-details',function() {
@@ -148,6 +158,7 @@
 
         $(document).on('click','#add-education-details',function() {
             $('#education-title').text('Add Education');
+            resetModalForm('education-form');
         });
 
         $(document).on('click','.edit-education-details',function() {
@@ -222,6 +233,152 @@
 
         $(document).on('click','#add-address-details',function() {
             $('#address-title').text('Add Address');
+            resetModalForm('address-form');
+        });
+
+        $(document).on('click','.edit-address-details',function() {
+            const employee_address_id = $(this).data('employee-address-id');
+            sessionStorage.setItem('employee_address_id', employee_address_id);
+
+            $('#address-title').text('Edit Address');
+
+            displayDetails('get employee address details');
+        });
+
+        $(document).on('click','.delete-address-details',function() {
+            const employee_id = $('#details-id').text();
+            const employee_address_id = $(this).data('employee-address-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'delete employee address';
+    
+            Swal.fire({
+                title: 'Confirm Address Deletion',
+                text: 'Are you sure you want to delete this address?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            employee_address_id : employee_address_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                addressList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
+        $(document).on('click','#add-bank-account-details',function() {
+            $('#bank-account-title').text('Add Bank Account');
+            resetModalForm('bank-account-form');
+        });
+
+        $(document).on('click','.edit-bank-account-details',function() {
+            const employee_bank_account_id = $(this).data('employee-bank-account-id');
+            sessionStorage.setItem('employee_bank_account_id', employee_bank_account_id);
+
+            $('#bank-account-title').text('Edit Bank Account');
+
+            displayDetails('get employee bank account details');
+        });
+
+        $(document).on('click','.delete-bank-account-details',function() {
+            const employee_id = $('#details-id').text();
+            const employee_bank_account_id = $(this).data('employee-bank-account-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'delete employee bank account';
+    
+            Swal.fire({
+                title: 'Confirm Bank Account Deletion',
+                text: 'Are you sure you want to delete this bank account?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            employee_bank_account_id : employee_bank_account_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                addressList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
         });
 
         $(document).on('click','#add-contact-information-details',function() {
@@ -230,10 +387,6 @@
 
         $(document).on('click','#add-id-records-details',function() {
             $('#id-records-title').text('Add ID Records');
-        });
-
-        $(document).on('click','#add-bank-account-details',function() {
-            $('#bank-account-title').text('Add Bank Account');
         });
 
         $(document).on('click','#add-licenses-details',function() {
@@ -315,6 +468,14 @@
             educationList();
         }
 
+        if($('#address-container').length){
+            addressList();
+        }
+
+        if($('#bank-account-container').length){
+            bankAccountList();
+        }
+
         if($('#log-notes-offcanvas').length){
             $(document).on('click','.view-employee-experience-log-notes',function() {
                 const employee_experience_id = $(this).data('employee-experience-id');
@@ -326,6 +487,18 @@
                 const employee_education_id = $(this).data('employee-education-id');
 
                 logNotes('employee_education', employee_education_id);
+            });
+
+            $(document).on('click','.view-employee-address-log-notes',function() {
+                const employee_address_id = $(this).data('employee-address-id');
+
+                logNotes('employee_address', employee_address_id);
+            });
+
+            $(document).on('click','.view-employee-bank-account-log-notes',function() {
+                const employee_bank_account_id = $(this).data('employee-bank-account-id');
+
+                logNotes('employee_bank_account', employee_bank_account_id);
             });
         }
 
@@ -1033,6 +1206,206 @@ function educationForm(){
     });
 }
 
+function addressForm(){
+    $('#address-form').validate({
+        rules: {
+            address_type_id: {
+                required: true
+            },
+            city_id: {
+                required: true
+            },
+            address: {
+                required: true
+            }
+        },
+        messages: {
+            address_type_id: {
+                required: 'Please choose the address type'
+            },
+            city_id: {
+                required: 'Please choose the city'
+            },
+            address: {
+                required: 'Please enter the address'
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorList = [];
+            $.each(this.errorMap, function(key, value) {
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
+            }.bind(this));
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'save employee address';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-address-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#address-modal').modal('hide');
+                        addressList();
+                        resetModalForm('address-form');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-address-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function bankAccountForm(){
+    $('#bank-account-form').validate({
+        rules: {
+            bank_id: {
+                required: true
+            },
+            bank_account_type_id: {
+                required: true
+            },
+            account_number: {
+                required: true
+            }
+        },
+        messages: {
+            bank_id: {
+                required: 'Please choose the bank'
+            },
+            bank_account_type_id: {
+                required: 'Please choose the bank account type'
+            },
+            account_number: {
+                required: 'Please enter the account number'
+            }
+        },
+        errorPlacement: function(error, element) {
+            var errorList = [];
+            $.each(this.errorMap, function(key, value) {
+                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
+            }.bind(this));
+            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'save employee bank account';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-bank-account-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#bank-account-modal').modal('hide');
+                        bankAccountList();
+                        resetModalForm('bank-account-form');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-bank-account-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
 function experienceList(){
     const employee_id = $('#details-id').text();
     const page_id = $('#page-id').val();
@@ -1067,6 +1440,44 @@ function educationList(){
         },
         success: function (result) {
             document.getElementById('education-container').innerHTML = result[0].EDUCATION_LIST;
+        }
+    });
+}
+
+function addressList(){
+    const employee_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'address list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/employee/view/_employee_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
+        beforeSend: function(){
+            document.getElementById('address-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        },
+        success: function (result) {
+            document.getElementById('address-container').innerHTML = result[0].ADDRESS_LIST;
+        }
+    });
+}
+
+function bankAccountList(){
+    const employee_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'bank account list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/employee/view/_employee_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
+        beforeSend: function(){
+            document.getElementById('bank-account-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        },
+        success: function (result) {
+            document.getElementById('bank-account-container').innerHTML = result[0].BANK_ACCOUNT_LIST;
         }
     });
 }
@@ -1427,6 +1838,102 @@ function displayDetails(transaction){
 
                         $('#start_education_date_month').val(response.startMonth).trigger('change');
                         $('#start_education_date_year').val(response.startYear).trigger('change');
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get employee address details':
+            var employee_id = $('#details-id').text();
+            var employee_address_id = sessionStorage.getItem('employee_address_id');
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    employee_address_id : employee_address_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('address-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#employee_address_id').val(employee_address_id);
+                        $('#address').val(response.address);
+
+                        $('#address_type_id').val(response.addressTypeID).trigger('change');
+                        $('#city_id').val(response.cityID).trigger('change');
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get employee bank account details':
+            var employee_id = $('#details-id').text();
+            var employee_bank_account_id = sessionStorage.getItem('employee_bank_account_id');
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    employee_bank_account_id : employee_bank_account_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('bank-account-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#employee_bank_account_id').val(employee_bank_account_id);
+                        $('#account_number').val(response.accountNumber);
+
+                        $('#bank_id').val(response.bankID).trigger('change');
+                        $('#bank_account_type_id').val(response.bankAccountTypeID).trigger('change');
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -1813,6 +2320,58 @@ function generateDropdownOptions(type){
                 success: function(response) {
                     $('#city_id').select2({
                         dropdownParent: $('#address-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'bank options':
+            
+            $.ajax({
+                url: 'components/bank/view/_bank_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#bank_id').select2({
+                        dropdownParent: $('#bank-account-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'bank account type options':
+            
+            $.ajax({
+                url: 'components/bank-account-type/view/_bank_account_type_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#bank_account_type_id').select2({
+                        dropdownParent: $('#bank-account-modal'),
                         data: response
                     }).on('change', function (e) {
                         $(this).valid()

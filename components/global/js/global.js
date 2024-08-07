@@ -238,6 +238,10 @@ function handleSystemError(xhr, status, error) {
 
 function resetModalForm(form_id) {
     var form = document.getElementById(form_id);
+
+    $(form).find('.select2').each(function() {
+        $(this).val('').trigger('change.select2');
+    });
   
     form.querySelectorAll('.is-invalid').forEach(function(element) {
         element.classList.remove('is-invalid');

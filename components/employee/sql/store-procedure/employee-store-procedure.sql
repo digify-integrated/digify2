@@ -23,11 +23,18 @@ BEGIN
     WHERE employee_education_id = p_employee_education_id;
 END //
 
-CREATE PROCEDURE checkEmployeeEducationExist(IN p_employee_address_id INT)
+CREATE PROCEDURE checkEmployeeAddressExist(IN p_employee_address_id INT)
 BEGIN
 	SELECT COUNT(*) AS total
     FROM employee_address
     WHERE employee_address_id = p_employee_address_id;
+END //
+
+CREATE PROCEDURE checkEmployeeBankAccountExist(IN p_employee_bank_account_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_bank_account
+    WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -57,10 +64,11 @@ END //
 CREATE PROCEDURE insertEmployeeAddress(IN p_employee_id INT, IN p_address_type_id INT, IN p_address_type_name VARCHAR(100), IN p_address VARCHAR(1000), IN p_city_id INT, IN p_city_name VARCHAR(100), IN p_state_id INT, IN p_state_name VARCHAR(100), IN p_country_id INT, IN p_country_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
     DECLARE existing_address_count INT;
+    DECLARE p_default_address VARCHAR(10);
 
     SELECT COUNT(*) INTO existing_address_count
     FROM employee_address
-    WHERE employee_id = p_employee_id;
+    WHERE employee_id = p_employee_id AND default_address = 'Primary';
 
     IF existing_address_count = 0 THEN
         SET p_default_address = 'Primary';
@@ -69,7 +77,13 @@ BEGIN
     END IF;
 
     INSERT INTO employee_address (employee_id, address_type_id, address_type_name, address, city_id, city_name, state_id, state_name, country_id, country_name, default_address, last_log_by) 
-	VALUES(p_employee_id, p_address_type_id, p_address_type_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_last_log_by);
+	VALUES(p_employee_id, p_address_type_id, p_address_type_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_default_address, p_last_log_by);
+END //
+
+CREATE PROCEDURE insertEmployeeBankAccount(IN p_employee_id INT, IN p_bank_id INT, IN p_bank_name VARCHAR(100), IN p_bank_account_type_id INT, IN p_bank_account_type_name VARCHAR(100), IN p_account_number VARCHAR(100), IN p_last_log_by INT)
+BEGIN
+    INSERT INTO employee_bank_account (employee_id, bank_id, bank_name, bank_account_type_id,bank_account_type_name, account_number, last_log_by) 
+	VALUES(p_employee_id, p_bank_id, p_bank_name, p_bank_account_type_id, p_bank_account_type_name, p_account_number, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -203,17 +217,29 @@ CREATE PROCEDURE updateEmployeeAddress(IN p_employee_address_id INT, IN p_employ
 BEGIN
     UPDATE employee_address
     SET employee_id = p_employee_id,
-        p_address_type_id = p_address_type_id,
-        p_address_type_name = p_address_type_name,
-        p_address = p_address,
-        p_city_id = p_city_id,
-        p_city_name = p_city_name,
-        p_state_id = p_state_id,
-        p_state_name = p_state_name,
-        p_country_id = p_country_id,
-        p_country_name = p_country_name,
+        address_type_id = p_address_type_id,
+        address_type_name = p_address_type_name,
+        address = p_address,
+        city_id = p_city_id,
+        city_name = p_city_name,
+        state_id = p_state_id,
+        state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
         last_log_by = p_last_log_by
     WHERE employee_address_id = p_employee_address_id;
+END //
+
+CREATE PROCEDURE updateEmployeeBankAccount(IN p_employee_bank_account_id INT, p_employee_id INT, IN p_bank_id INT, IN p_bank_name VARCHAR(100), IN p_bank_account_type_id INT, IN p_bank_account_type_name VARCHAR(100), IN p_account_number VARCHAR(100), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee_bank_account
+    SET employee_id = p_employee_id,
+        bank_id = p_bank_id,
+        bank_name = p_bank_name,
+        bank_account_type_id = p_bank_account_type_id,
+        bank_account_type_name = p_bank_account_type_name,
+        account_number = p_account_number
+    WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -232,6 +258,7 @@ BEGIN
     DELETE FROM employee_experience WHERE employee_id = p_employee_id;
     DELETE FROM employee_education WHERE employee_id = p_employee_id;
     DELETE FROM employee_address WHERE employee_id = p_employee_id;
+    DELETE FROM employee_address WHERE employee_id = p_employee_id;
     DELETE FROM employee WHERE employee_id = p_employee_id;
 
     COMMIT;
@@ -249,6 +276,7 @@ END //
 
 CREATE PROCEDURE deleteEmployeeAddress(IN p_employee_address_id INT, IN p_employee_id INT)
 BEGIN
+    DECLARE existing_address_count INT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -257,15 +285,24 @@ BEGIN
     DELETE FROM employee_address
     WHERE employee_address_id = p_employee_address_id;
 
-    UPDATE employee_address
-    SET default_address = 'Primary'
-    WHERE employee_id = p_employee_id
-    AND default_address = 'Alternate'
-    AND (SELECT default_address FROM employee_address WHERE employee_address_id = p_employee_address_id) = 'Primary'
-    ORDER BY employee_address_id
-    LIMIT 1;
+    SELECT COUNT(*) INTO existing_address_count
+    FROM employee_address
+    WHERE employee_id = p_employee_id AND default_address = 'Primary';
+
+    IF existing_address_count = 0 THEN
+        UPDATE employee_address
+        SET default_address = 'Primary'
+        WHERE employee_id = p_employee_id
+        AND default_address = 'Alternate'
+        LIMIT 1;
+    END IF;   
 
     COMMIT;
+END //
+
+CREATE PROCEDURE deleteEmployeeBankAccount(IN p_employee_bank_account_id INT)
+BEGIN
+   DELETE FROM employee_bank_account WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -294,6 +331,12 @@ CREATE PROCEDURE getEmployeeAddress(IN p_employee_address_id INT)
 BEGIN
 	SELECT * FROM employee_address
 	WHERE employee_address_id = p_employee_address_id;
+END //
+
+CREATE PROCEDURE getEmployeeBankAccount(IN p_employee_bank_account_id INT)
+BEGIN
+	SELECT * FROM employee_bank_account
+	WHERE p_employee_bank_account_id = p_employee_bank_account_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -375,6 +418,12 @@ END //
 CREATE PROCEDURE generateEmployeeAddress(IN p_employee_id INT)
 BEGIN
 	SELECT * FROM employee_address
+	WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE generateEmployeeBankAccount(IN p_employee_id INT)
+BEGIN
+	SELECT * FROM employee_bank_account
 	WHERE employee_id = p_employee_id;
 END //
 

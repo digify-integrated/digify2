@@ -111,17 +111,15 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     $fileAs = $userDetails['file_as'];
                     $profilePicture = $systemModel->checkImage($userDetails['profile_picture'] ?? null, 'profile');
                     
-                    $logNote .= ' <div class="d-flex flex-row comment-row border-bottom p-3 gap-3">
-                                    <div>
-                                        <span class=""><img src="'. $profilePicture .'" class="rounded-circle" alt="user" width="50" height="50" /></span>
+                    $logNote .= '<div class="p-4 rounded-4 text-bg-light mb-3">
+                                    <div class="d-flex align-items-center gap-6 flex-wrap">
+                                        <img src="'. $profilePicture .'" alt="user" class="rounded-circle" width="33" height="33">
+                                        <h6 class="mb-0">'. $fileAs .'</h6>
+                                        <span class="fs-2">
+                                            <span class="p-1 text-bg-muted rounded-circle d-inline-block me-2"></span> '. $timeElapsed .'
+                                        </span>
                                     </div>
-                                    <div class="comment-text w-100">
-                                        <h6 class="font-weight-medium">'. $fileAs .'</h6>
-                                        <div class="comment-footer mb-3">
-                                            <span class="text-muted ms-auto fw-normal fs-2 d-block mt-2">'. $timeElapsed .'</span>
-                                        </div>
-                                        <p class="mb-1 fs-2 text-muted">'. $log .'</p>
-                                    </div>
+                                    <p class="mt-3 mb-0">'. $log .'</p>
                                 </div>';
                 }
 

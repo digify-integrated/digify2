@@ -303,26 +303,7 @@
                 ?>
             </div>
             <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            
-                            <div class="d-flex">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="card-body" id="address-container"></div>
         </div>
 
         <div class="card">
@@ -330,37 +311,12 @@
                 <h5 class="card-title mb-0">Bank Account</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-modal" id="add-bank-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-account-modal" id="add-bank-details"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
             <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <p class="mb-1 fs-2">Checking Account</p>
-                                    <h6 class="fw-semibold mb-2">RCBC (Rizal Commercial Banking Corporation)</h6>
-                                    <p class="mb-1 fs-2">test</p>
-                                </div>
-                            </div>
-                            <div class="d-flex">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="card-body" id="bank-account-container"></div>
         </div>
     </div>
 
@@ -1314,6 +1270,7 @@
             </div>
             <div class="modal-body">
                 <form id="address-form" method="post" action="#">
+                    <input type="hidden" id="employee_address_id" name="employee_address_id">
                     <div class="row">
                         <div class="col-lg-12">
                             <label for="address_type_id" class="form-label">Address Type <span class="text-danger">*</span></label>
@@ -1342,7 +1299,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="address-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="address-form" class="btn btn-success" id="submit-address-data">Save changes</button>
             </div>
         </div>
     </div>
@@ -1472,15 +1429,16 @@
     </div>
 </div>
 
-<div id="bank-modal" class="modal fade" tabindex="-1" aria-labelledby="bank-modal" aria-hidden="true">
+<div id="bank-account-modal" class="modal fade" tabindex="-1" aria-labelledby="bank-account-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8" id="bank-title"></h5>
+                <h5 class="modal-title fw-8" id="bank-account-title"></h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="bank-form" method="post" action="#">
+                <form id="bank-account-form" method="post" action="#">
+                    <input type="hidden" id="employee_bank_account_id" name="employee_bank_account_id">
                     <div class="row">
                         <div class="col-lg-12">
                             <label for="bank_id" class="form-label">Bank <span class="text-danger">*</span></label>
@@ -1491,9 +1449,9 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <label for="bank_account_id" class="form-label">Bank Account Type <span class="text-danger">*</span></label>
+                            <label for="bank_account_type_id" class="form-label">Bank Account Type <span class="text-danger">*</span></label>
                             <div class="mb-3">
-                                <select id="bank_account_id" name="bank_account_id" class="select2 form-control"></select>
+                                <select id="bank_account_type_id" name="bank_account_type_id" class="select2 form-control"></select>
                             </div>
                         </div>
                     </div>
@@ -1509,7 +1467,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="bank-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="bank-account-form" class="btn btn-success" id="submit-bank-account-data">Save changes</button>
             </div>
         </div>
     </div>

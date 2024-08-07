@@ -159,3 +159,26 @@ CREATE INDEX employee_address_index_country_id ON employee_address(country_id);
 CREATE INDEX employee_address_index_default_address ON employee_address(default_address);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Employee Bank Account Table */
+
+CREATE TABLE employee_bank_account (
+    employee_bank_account_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    employee_id INT UNSIGNED NOT NULL,
+    bank_id INT UNSIGNED NOT NULL,
+    bank_name VARCHAR(100) NOT NULL,
+    bank_account_type_id INT UNSIGNED NOT NULL,
+    bank_account_type_name VARCHAR(100) NOT NULL,
+    account_number VARCHAR(100) NOT NULL,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX employee_bank_account_index_employee_bank_account_id ON employee_bank_account(employee_bank_account_id);
+CREATE INDEX employee_bank_account_index_employee_id ON employee_bank_account(employee_id);
+CREATE INDEX employee_bank_account_index_bank_id ON employee_bank_account(bank_id);
+CREATE INDEX employee_bank_account_index_bank_account_type_id ON employee_bank_account(bank_account_type_id);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */

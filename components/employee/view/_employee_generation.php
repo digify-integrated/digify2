@@ -369,6 +369,11 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     $stateName = $row['state_name'];
                     $countryName = $row['country_name'];
                     $defaultAddress = $row['default_address'];
+
+                    $fullAddress = implode(', ', [$address, $cityName, $stateName, $countryName]);
+
+                    $badgeClass = $defaultAddress == 'Primary' ? 'bg-success' : 'bg-info';
+                    $getDefaultAddress = '<span class="badge ' . $badgeClass . '">' . $defaultAddress . '</span>';
     
                     $updateButton = '';
                     $deleteButton = '';
@@ -386,33 +391,111 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
                                             <div>
-                                                <p class="mb-1 fs-2">Home Address</p>
-                                                <h6 class="fw-semibold mb-2 fs-3">1 Rsr appartment Bantug bulalo Cabanatuan City, City of Cabanatuan, Nueva Ecija, Philippines</h6>
-                                                <span class="badge bg-info">Alternate</span>
+                                                <p class="mb-1 fs-2">'. $addressTypeName .'</p>
+                                                <h6 class="fw-semibold mb-2 fs-3">'. $fullAddress .'</h6>
+                                                '. $getDefaultAddress .'
                                             </div>
                                         </div>
                                         <div class="d-flex mb-2">
                                             '. $updateButton .'
-                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-address-log-notes" data-employee-address-id="' . $employeeEducationID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
+                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-address-log-notes" data-employee-address-id="' . $employeeAddressID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
                                                 <i class="ti ti-file-text"></i>
                                             </a>
                                             '. $deleteButton .'
                                         </div>
                                     </div>
-                                    '. $educationDescription .'
                                 </div>
                             </div>';
                 }
             }
             else{
                 $list = '<div class="alert bg-light-subtle mb-0" role="alert">
-                    No education found.
+                    No address found.
                   </div>';
             }
             
 
             $response[] = [
-                'EDUCATION_LIST' => $list
+                'ADDRESS_LIST' => $list
+            ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: bank account list
+        # Description:
+        # Generates the bank account list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'bank account list':
+            $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeBankAccount(:employeeID)');
+            $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($options); 
+            $sql->closeCursor();
+
+            $list = '';
+
+            if($count > 0){
+                $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+
+                foreach ($options as $row) {
+                    $employeeBankAccountID = $row['employee_bank_account_id'];
+                    $bankName = $row['bank_name'];
+                    $bankAccountTypeName = $row['bank_account_type_name'];
+                    $accountNumber = $row['account_number'];
+    
+                    $updateButton = '';
+                    $deleteButton = '';
+                    if($employeeWriteAccess['total'] > 0){
+                        $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 edit-bank-account-details" data-bs-toggle="modal" data-bs-target="#bank-account-modal" data-employee-bank-account-id="' . $employeeBankAccountID . '">
+                                                <i class="ti ti-pencil"></i>
+                                            </a>';
+                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-bank-details" data-employee-bank-account-id="' . $employeeBankAccountID . '">
+                                                <i class="ti ti-trash"></i>
+                                            </a>';
+                    }
+                    
+                    $list .= '<div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div>
+                                                <p class="mb-1 fs-2">'. $bankAccountTypeName .'</p>
+                                                <h6 class="fw-semibold mb-2">'. $bankName .'</h6>
+                                                <p class="mb-1 fs-2">'. $accountNumber .'</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-2">
+                                            '. $updateButton .'
+                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-bank-account-log-notes" data-employee-bank-account-id="' . $employeeBankAccountID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
+                                                <i class="ti ti-file-text"></i>
+                                            </a>
+                                            '. $deleteButton .'
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+                }
+            }
+            else{
+                $list = '<div class="alert bg-light-subtle mb-0" role="alert">
+                    No bank account found.
+                  </div>';
+            }
+            
+
+            $response[] = [
+                'ADDRESS_LIST' => $list
             ];
 
             echo json_encode($response);
