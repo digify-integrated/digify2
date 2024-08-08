@@ -352,7 +352,7 @@
                         success: function (response) {
                             if (response.success) {
                                 showNotification(response.title, response.message, response.messageType);
-                                addressList();
+                                bankAccountList();
                             }
                             else {
                                 if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -531,15 +531,11 @@ function aboutForm(){
         },
         messages: {
             about: {
-                required: 'Please enter the about'
+                required: 'Enter the about'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -634,30 +630,26 @@ function privateInformationForm(){
         },
         messages: {
             first_name: {
-                required: 'Please enter the first name'
+                required: 'Enter the first name'
             },
             last_name: {
-                required: 'Please enter the last name'
+                required: 'Enter the last name'
             },
             gender_id: {
-                required: 'Please choose the gender'
+                required: 'Choose the gender'
             },
             civil_status_id: {
-                required: 'Please choose the civil status'
+                required: 'Choose the civil status'
             },
             birthday: {
-                required: 'Please enter the birthday'
+                required: 'Enter the birthday'
             },
             birth_place: {
-                required: 'Please enter the birth place'
+                required: 'Enter the birth place'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -743,21 +735,17 @@ function workInformationForm(){
         },
         messages: {
             department_id: {
-                required: 'Please choose the department'
+                required: 'Choose the department'
             },
             company_id: {
-                required: 'Please choose the company'
+                required: 'Choose the company'
             },
             job_position_id: {
-                required: 'Please choose the job position'
+                required: 'Choose the job position'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -837,15 +825,11 @@ function hrSettingsForm(){
         },
         messages: {
             onboard_date: {
-                required: 'Please enter the on-board date'
+                required: 'Enter the on-board date'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -919,11 +903,7 @@ function hrSettingsForm(){
 function workPermitForm(){
     $('#work-permit-form').validate({
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -1015,27 +995,23 @@ function experienceForm(){
         },
         messages: {
             job_title: {
-                required: 'Please enter the job title'
+                required: 'Enter the job title'
             },
             company_name: {
-                required: 'Please enter the company name'
+                required: 'Enter the company name'
             },
             start_experience_date_month: {
-                required: 'Please choose the start month'
+                required: 'Choose the start month'
             },
             start_experience_date_year: {
-                required: 'Please choose the start year'
+                required: 'Choose the start year'
             },
             job_description: {
-                required: 'Please enter the job description'
+                required: 'Enter the job description'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -1121,21 +1097,17 @@ function educationForm(){
         },
         messages: {
             school: {
-                required: 'Please enter the school'
+                required: 'Enter the school'
             },
             start_education_date_month: {
-                required: 'Please choose the start month'
+                required: 'Choose the start month'
             },
             start_education_date_year: {
-                required: 'Please choose the start year'
+                required: 'Choose the start year'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -1221,21 +1193,17 @@ function addressForm(){
         },
         messages: {
             address_type_id: {
-                required: 'Please choose the address type'
+                required: 'Choose the address type'
             },
             city_id: {
-                required: 'Please choose the city'
+                required: 'Choose the city'
             },
             address: {
-                required: 'Please enter the address'
+                required: 'Enter the address'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -1309,13 +1277,13 @@ function addressForm(){
 function bankAccountForm(){
     $('#bank-account-form').validate({
         rules: {
+            account_number: {
+                required: true
+            },
             bank_id: {
                 required: true
             },
             bank_account_type_id: {
-                required: true
-            },
-            account_number: {
                 required: true
             }
         },
@@ -1331,11 +1299,7 @@ function bankAccountForm(){
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);

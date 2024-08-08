@@ -84,8 +84,8 @@ class AuthenticationController {
                 default:
                     $response = [
                         'success' => false,
-                        'title' => 'Authentication Error',
-                        'message' => 'Invalid transaction.',
+                        'title' => 'Error: Transaction Failed',
+                        'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
                         'messageType' => 'error'
                     ];
                     

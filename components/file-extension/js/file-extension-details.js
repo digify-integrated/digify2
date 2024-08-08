@@ -107,21 +107,17 @@ function fileExtensionForm(){
         },
         messages: {
             file_extension_name: {
-                required: 'Display Name'
+                required: 'Enter the display name'
             },
             file_extension: {
-                required: 'File Extension'
+                required: 'Enter the file extension'
             },
             file_type: {
-                required: 'File Type'
+                required: 'Choose the file type'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);

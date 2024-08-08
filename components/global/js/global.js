@@ -250,7 +250,7 @@ function resetModalForm(form_id) {
     form.reset();
 }
 
-function showNotification(notificationTitle, notificationMessage, notificationType, timeOut = 5000) {
+function showNotification(notificationTitle, notificationMessage, notificationType, timeOut = 2000) {
     const validNotificationTypes = ['success', 'info', 'warning', 'error'];
     const isDuplicate = isDuplicateNotification(notificationMessage);
 
@@ -404,15 +404,11 @@ function internalNotesForm(databaseTable, referenceID){
         },
         messages: {
             internal_note: {
-                required: 'Internal Notes'
+                required: 'Enter the internal notes'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);

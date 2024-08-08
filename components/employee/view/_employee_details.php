@@ -311,7 +311,7 @@
                 <h5 class="card-title mb-0">Bank Account</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-account-modal" id="add-bank-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-account-modal" id="add-bank-account-details"></i></a>
                                                         </div>' : '';
                 ?>
             </div>

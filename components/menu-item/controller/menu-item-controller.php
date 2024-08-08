@@ -141,8 +141,8 @@ class MenuItemController {
                 default:
                     $response = [
                         'success' => false,
-                        'title' => 'Transaction Error',
-                        'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                        'title' => 'Error: Transaction Failed',
+                        'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
                         'messageType' => 'error'
                     ];
                     
@@ -206,8 +206,8 @@ class MenuItemController {
         else{
             $response = [
                 'success' => false,
-                'title' => 'Transaction Error',
-                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -286,8 +286,8 @@ class MenuItemController {
         else{
             $response = [
                 'success' => false,
-                'title' => 'Transaction Error',
-                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -351,8 +351,8 @@ class MenuItemController {
         else{
             $response = [
                 'success' => false,
-                'title' => 'Transaction Error',
-                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -403,8 +403,8 @@ class MenuItemController {
         else{
             $response = [
                 'success' => false,
-                'title' => 'Transaction Error',
-                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -474,8 +474,8 @@ class MenuItemController {
         else{
             $response = [
                 'success' => false,
-                'title' => 'Transaction Error',
-                'message' => 'Something went wrong. Please try again later. If the issue persists, please contact support for assistance.',
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             

@@ -41,33 +41,29 @@ function securitySettingsForm(){
         },
         messages: {
             max_failed_login: {
-                required: 'Max Failed Login Attempt'
+                required: 'Enter the max failed login attempt'
             },
             max_failed_otp_attempt: {
-                required: 'Max Failed OTP Validation Attempt'
+                required: 'Enter the max failed OTP validation attempt'
             },
             password_expiry_duration: {
-                required: 'Password Validity Period'
+                required: 'Enter the password validity period'
             },
             otp_duration: {
-                required: 'One-time Password Validity Period'
+                required: 'Enter the one-time password validity period'
             },
             reset_password_token_duration: {
-                required: 'Password Reset Token Validity Period'
+                required: 'Enter the password reset token validity period'
             },
             session_inactivity_limit: {
-                required: 'Session Inactivity Limit'
+                required: 'Enter the session inactivity limit'
             },
             password_recovery_link: {
-                required: 'Password Recovery Link'
+                required: 'Enter the password recovery link'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);

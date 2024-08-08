@@ -630,8 +630,8 @@ class EmployeeModel {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateEmployeeBankAccount($p_employee_id, $p_bank_id, $p_bank_name, $p_bank_account_type_id, $p_bank_account_type_name, $p_account_number, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeBankAccount(:p_employee_id, :p_bank_id, :p_bank_name, :p_bank_account_type_id, :p_bank_account_type_name, :p_account_number, :p_last_log_by)');
+    public function insertEmployeeBankAccount($p_employee_id, $p_bank_id, $p_bank_name, $p_bank_account_type_id, $p_bank_account_type_name, $p_account_number, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeBankAccount(:p_employee_id, :p_bank_id, :p_bank_name, :p_bank_account_type_id, :p_bank_account_type_name, :p_account_number, :p_last_log_by)');
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_bank_id', $p_bank_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_bank_name', $p_bank_name, PDO::PARAM_STR);

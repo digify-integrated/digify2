@@ -38,36 +38,32 @@ function emailSettingForm(){
         },
         messages: {
             email_setting_name: {
-                required: 'Display Name'
+                required: 'Enter the display name'
             },
             mail_host: {
-                required: 'Host'
+                required: 'Enter the host'
             },
             port: {
-                required: 'Port'
+                required: 'Enter the port'
             },
             mail_username: {
-                required: 'Mail User Name'
+                required: 'Enter the mail username'
             },
             mail_password: {
-                required: 'Mail Password'
+                required: 'Enter the mail password'
             },
             mail_from_name: {
-                required: 'Mail From Name'
+                required: 'Enter the mail from name'
             },
             mail_from_email: {
-                required: 'Mail From Email'
+                required: 'Enter the mail from email'
             },
             email_setting_description: {
-                required: 'Description'
+                required: 'Enter the description'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);

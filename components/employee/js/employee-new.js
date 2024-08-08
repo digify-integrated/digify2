@@ -56,42 +56,38 @@ function employeeForm(){
         },
         messages: {
             first_name: {
-                required: 'First Name'
+                required: 'Enter the first name'
             },
             last_name: {
-                required: 'Last Name'
+                required: 'Enter the last name'
             },
             company_id: {
-                required: 'Company'
+                required: 'Choose the company'
             },
             department_id: {
-                required: 'Department'
+                required: 'Choose the department'
             },
             job_position_id: {
-                required: 'Job Position'
+                required: 'Choose the job position'
             },
             gender_id: {
-                required: 'Gender'
+                required: 'Choose the gender'
             },
             civil_status_id: {
-                required: 'Civil Status'
+                required: 'Choose the civil status'
             },
             birthday: {
-                required: 'Date of Birth'
+                required: 'Enter the date of birth'
             },
             birth_place: {
-                required: 'Birth Place'
+                required: 'Enter the birth place'
             },
             onboard_date: {
-                required: 'On-board Date'
+                required: 'Enter the on-board date'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);

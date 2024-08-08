@@ -115,24 +115,20 @@ function appModuleForm(){
         },
         messages: {
             app_module_name: {
-                required: 'Display Name'
+                required: 'Enter the display name'
             },
             app_module_description: {
-                required: 'Description'
+                required: 'Enter the description'
             },
             menu_item_id: {
-                required: 'Default Page'
+                required: 'Select the default page'
             },
             order_sequence: {
-                required: 'Order Sequence'
+                required: 'Enter the order sequence'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);
@@ -212,15 +208,11 @@ function updateAppLogoForm(){
         },
         messages: {
             app_logo: {
-                required: 'Please choose the app logo'
+                required: 'Choose the app logo'
             }
         },
         errorPlacement: function(error, element) {
-            var errorList = [];
-            $.each(this.errorMap, function(key, value) {
-                errorList.push('<li style="list-style: disc; margin-left: 30px;">' + value + '</li>');
-            }.bind(this));
-            showNotification('Invalid fields:', '<ul style="margin-bottom: 0px;">' + errorList.join('') + '</ul>', 'error', 1500);
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
         },
         highlight: function(element) {
             var inputElement = $(element);

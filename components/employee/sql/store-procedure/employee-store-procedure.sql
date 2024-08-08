@@ -37,6 +37,13 @@ BEGIN
     WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
+CREATE PROCEDURE checkEmployeeContactInformationExist(IN p_employee_contact_information_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_contact_information
+    WHERE employee_contact_information_id = p_employee_contact_information_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
@@ -84,6 +91,25 @@ CREATE PROCEDURE insertEmployeeBankAccount(IN p_employee_id INT, IN p_bank_id IN
 BEGIN
     INSERT INTO employee_bank_account (employee_id, bank_id, bank_name, bank_account_type_id,bank_account_type_name, account_number, last_log_by) 
 	VALUES(p_employee_id, p_bank_id, p_bank_name, p_bank_account_type_id, p_bank_account_type_name, p_account_number, p_last_log_by);
+END //
+
+CREATE PROCEDURE insertEmployeeContactInformation(IN p_employee_id INT, IN p_contact_information_type_id INT, IN p_contact_information_type_name VARCHAR(100), IN p_phone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(500), IN p_last_log_by INT)
+BEGIN
+    DECLARE existing_contact_information_count INT;
+    DECLARE p_default_contact_information VARCHAR(10);
+
+    SELECT COUNT(*) INTO existing_contact_information_count
+    FROM employee_contact_information
+    WHERE employee_id = p_employee_id AND default_contact_information = 'Primary';
+
+    IF existing_contact_information_count = 0 THEN
+        SET p_default_contact_information = 'Primary';
+    ELSE
+        SET p_default_contact_information = 'Alternate';
+    END IF;
+
+    INSERT INTO employee_contact_information (employee_id, contact_information_type_id, contact_information_type_name, phone, mobile, email, default_contact_information, last_log_by) 
+	VALUES(p_employee_id, p_contact_information_type_id, p_contact_information_type_name, p_phone, p_mobile, p_email, p_default_contact_information, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -230,7 +256,7 @@ BEGIN
     WHERE employee_address_id = p_employee_address_id;
 END //
 
-CREATE PROCEDURE updateEmployeeBankAccount(IN p_employee_bank_account_id INT, p_employee_id INT, IN p_bank_id INT, IN p_bank_name VARCHAR(100), IN p_bank_account_type_id INT, IN p_bank_account_type_name VARCHAR(100), IN p_account_number VARCHAR(100), IN p_last_log_by INT)
+CREATE PROCEDURE updateEmployeeBankAccount(IN p_employee_bank_account_id INT, IN p_employee_id INT, IN p_bank_id INT, IN p_bank_name VARCHAR(100), IN p_bank_account_type_id INT, IN p_bank_account_type_name VARCHAR(100), IN p_account_number VARCHAR(100), IN p_last_log_by INT)
 BEGIN
     UPDATE employee_bank_account
     SET employee_id = p_employee_id,
@@ -240,6 +266,18 @@ BEGIN
         bank_account_type_name = p_bank_account_type_name,
         account_number = p_account_number
     WHERE employee_bank_account_id = p_employee_bank_account_id;
+END //
+
+CREATE PROCEDURE updateEmployeeContactInformation(IN p_employee_contact_information_id INT, IN p_employee_id INT, IN p_contact_information_type_id INT, IN p_contact_information_type_name VARCHAR(100), IN p_phone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(500), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee_contact_information
+    SET employee_id = p_employee_id,
+        contact_information_type_id = p_contact_information_type_id,
+        contact_information_type_name = p_contact_information_type_name,
+        phone = p_phone,
+        mobile = p_mobile,
+        email = p_email
+    WHERE employee_contact_information_id = p_employee_contact_information_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -258,7 +296,8 @@ BEGIN
     DELETE FROM employee_experience WHERE employee_id = p_employee_id;
     DELETE FROM employee_education WHERE employee_id = p_employee_id;
     DELETE FROM employee_address WHERE employee_id = p_employee_id;
-    DELETE FROM employee_address WHERE employee_id = p_employee_id;
+    DELETE FROM employee_bank_account WHERE employee_id = p_employee_id;
+    DELETE FROM employee_contact_information WHERE employee_id = p_employee_id;
     DELETE FROM employee WHERE employee_id = p_employee_id;
 
     COMMIT;
@@ -305,6 +344,32 @@ BEGIN
    DELETE FROM employee_bank_account WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
+CREATE PROCEDURE deleteEmployeeContactInformation(IN p_employee_contact_information_id INT, IN p_employee_id INT)
+BEGIN
+    DECLARE existing_contact_information_count INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    DELETE FROM employee_contact_information
+    WHERE employee_contact_information_id = p_employee_contact_information_id;
+
+    SELECT COUNT(*) INTO existing_contact_information_count
+    FROM employee_contact_information
+    WHERE employee_id = p_employee_id AND default_contact_information = 'Primary';
+
+    IF existing_contact_information_count = 0 THEN
+        UPDATE employee_contact_information
+        SET default_contact_information = 'Primary'
+        WHERE employee_id = p_employee_id
+        AND default_contact_information = 'Alternate'
+        LIMIT 1;
+    END IF;   
+
+    COMMIT;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Get Stored Procedure */
@@ -336,7 +401,13 @@ END //
 CREATE PROCEDURE getEmployeeBankAccount(IN p_employee_bank_account_id INT)
 BEGIN
 	SELECT * FROM employee_bank_account
-	WHERE p_employee_bank_account_id = p_employee_bank_account_id;
+	WHERE employee_bank_account_id = p_employee_bank_account_id;
+END //
+
+CREATE PROCEDURE getEmployeeContactInformation(IN p_employee_contact_information_id INT)
+BEGIN
+	SELECT * FROM employee_contact_information
+	WHERE employee_contact_information_id = p_employee_contact_information_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -424,6 +495,12 @@ END //
 CREATE PROCEDURE generateEmployeeBankAccount(IN p_employee_id INT)
 BEGIN
 	SELECT * FROM employee_bank_account
+	WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE generateEmployeeContactInformation(IN p_employee_id INT)
+BEGIN
+	SELECT * FROM employee_contact_information
 	WHERE employee_id = p_employee_id;
 END //
 

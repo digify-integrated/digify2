@@ -460,7 +460,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                         $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 edit-bank-account-details" data-bs-toggle="modal" data-bs-target="#bank-account-modal" data-employee-bank-account-id="' . $employeeBankAccountID . '">
                                                 <i class="ti ti-pencil"></i>
                                             </a>';
-                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-bank-details" data-employee-bank-account-id="' . $employeeBankAccountID . '">
+                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-bank-account-details" data-employee-bank-account-id="' . $employeeBankAccountID . '">
                                                 <i class="ti ti-trash"></i>
                                             </a>';
                     }
@@ -495,7 +495,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
             
 
             $response[] = [
-                'ADDRESS_LIST' => $list
+                'BANK_ACCOUNT_LIST' => $list
             ];
 
             echo json_encode($response);
