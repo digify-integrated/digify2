@@ -362,6 +362,38 @@ class EmployeeModel {
 
     # -------------------------------------------------------------
     #
+    # Function: updateEmployeeContactInformation
+    # Description: Updates the employee contact information.
+    #
+    # Parameters:
+    # - $p_employee_contact_information_id (int): The employee contact information ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_contact_information_type_id (int): The contact information type ID.
+    # - $p_contact_information_type_name (string): The contact information type name.
+    # - $p_telephone (string): The telephone.
+    # - $p_mobile (string): The mobile.
+    # - $p_email (string): The email.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeContactInformation($p_employee_contact_information_id, $p_employee_id, $p_contact_information_type_id, $p_contact_information_type_name, $p_telephone, $p_mobile, $p_email, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeContactInformation(:p_employee_contact_information_id, :p_employee_id, :p_contact_information_type_id, :p_contact_information_type_name, :p_telephone, :p_mobile, :p_email, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_contact_information_id', $p_employee_contact_information_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_contact_information_type_id', $p_contact_information_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_contact_information_type_name', $p_contact_information_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_telephone', $p_telephone, PDO::PARAM_STR);
+        $stmt->bindValue(':p_mobile', $p_mobile, PDO::PARAM_STR);
+        $stmt->bindValue(':p_email', $p_email, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: updateEmployeeImage
     # Description: Updates the employee image.
     #
@@ -644,6 +676,36 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: insertEmployeeContactInformation
+    # Description: Updates the employee contact information.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_contact_information_type_id (int): The contact information type ID.
+    # - $p_contact_information_type_name (string): The contact information type name.
+    # - $p_telephone (string): The telephone.
+    # - $p_mobile (string): The mobile.
+    # - $p_email (string): The email.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertEmployeeContactInformation($p_employee_id, $p_contact_information_type_id, $p_contact_information_type_name, $p_telephone, $p_mobile, $p_email, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeContactInformation(:p_employee_id, :p_contact_information_type_id, :p_contact_information_type_name, :p_telephone, :p_mobile, :p_email, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_contact_information_type_id', $p_contact_information_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_contact_information_type_name', $p_contact_information_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_telephone', $p_telephone, PDO::PARAM_STR);
+        $stmt->bindValue(':p_mobile', $p_mobile, PDO::PARAM_STR);
+        $stmt->bindValue(':p_email', $p_email, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Check exist methods
     # -------------------------------------------------------------
 
@@ -743,6 +805,25 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: checkEmployeeContactInformationExist
+    # Description: Checks if a employee contact information exists.
+    #
+    # Parameters:
+    # - $p_employee_contact_information_id (int): The employee contact information ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkEmployeeContactInformationExist($p_employee_contact_information_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeContactInformationExist(:p_employee_contact_information_id)');
+        $stmt->bindValue(':p_employee_contact_information_id', $p_employee_contact_information_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -834,6 +915,26 @@ class EmployeeModel {
     public function deleteEmployeeBankAccount($p_employee_bank_account_id) {
         $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeBankAccount(:p_employee_bank_account_id)');
         $stmt->bindValue(':p_employee_bank_account_id', $p_employee_bank_account_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeContactInformation
+    # Description: Deletes the employee contact information.
+    #
+    # Parameters:
+    # - $p_employee_contact_information_id (int): The employee contact information ID.
+    # - $p_employee_id (int): The employee ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeContactInformation($p_employee_contact_information_id, $p_employee_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeContactInformation(:p_employee_contact_information_id, :p_employee_id)');
+        $stmt->bindValue(':p_employee_contact_information_id', $p_employee_contact_information_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
         $stmt->execute();
     }
     # -------------------------------------------------------------
@@ -937,6 +1038,26 @@ class EmployeeModel {
     public function getEmployeeBankAccount($p_employee_bank_account_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getEmployeeBankAccount(:p_employee_bank_account_id)');
         $stmt->bindValue(':p_employee_bank_account_id', $p_employee_bank_account_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeContactInformation
+    # Description: Retrieves the details of a employee contact information.
+    #
+    # Parameters:
+    # - $p_employee_contact_information_id (int): The employee contact information ID.
+    #
+    # Returns:
+    # - An array containing the employee contact information details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeContactInformation($p_employee_contact_information_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeeContactInformation(:p_employee_contact_information_id)');
+        $stmt->bindValue(':p_employee_contact_information_id', $p_employee_contact_information_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

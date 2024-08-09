@@ -33,6 +33,7 @@ class EmployeeController {
     private $countryModel;
     private $bankModel;
     private $bankAccountTypeModel;
+    private $contactInformationTypeModel;
     private $authenticationModel;
     private $securityModel;
     private $systemModel;
@@ -64,6 +65,7 @@ class EmployeeController {
     # - @param CountryModel $countryModel     The countryModel instance for country related operations.
     # - @param BankModel $bankModel     The bankModel instance for bank related operations.
     # - @param BankAccountTypeModel $bankAccountTypeModel     The bankAccountTypeModel instance for bank account type related operations.
+    # - @param ContactInformationTypeModel $contactInformationTypeModel     The contactInformationTypeModel instance for contact information type related operations.
     # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
@@ -72,7 +74,7 @@ class EmployeeController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, EmploymentLocationTypeModel $employmentLocationTypeModel, AddressTypeModel $addressTypeModel, CityModel $cityModel, StateModel $stateModel, CountryModel $countryModel, BankModel $bankModel, BankAccountTypeModel $bankAccountTypeModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
+    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, EmploymentLocationTypeModel $employmentLocationTypeModel, AddressTypeModel $addressTypeModel, CityModel $cityModel, StateModel $stateModel, CountryModel $countryModel, BankModel $bankModel, BankAccountTypeModel $bankAccountTypeModel, ContactInformationTypeModel $contactInformationTypeModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
         $this->employeeModel = $employeeModel;
         $this->genderModel = $genderModel;
         $this->religionModel = $religionModel;
@@ -92,6 +94,7 @@ class EmployeeController {
         $this->countryModel = $countryModel;
         $this->bankModel = $bankModel;
         $this->bankAccountTypeModel = $bankAccountTypeModel;
+        $this->contactInformationTypeModel = $contactInformationTypeModel;
         $this->uploadSettingModel = $uploadSettingModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
@@ -211,6 +214,9 @@ class EmployeeController {
                 case 'save employee bank account':
                     $this->saveEmployeeBankAccount();
                     break;
+                case 'save employee contact information':
+                    $this->saveEmployeeContactInformation();
+                    break;
                 case 'get about details':
                     $this->getAboutDetails();
                     break;
@@ -238,6 +244,9 @@ class EmployeeController {
                 case 'get employee bank account details':
                     $this->getEmployeeBankAccountDetails();
                     break;
+                case 'get employee contact information details':
+                    $this->getEmployeeContactInformationDetails();
+                    break;
                 case 'delete employee':
                     $this->deleteEmployee();
                     break;
@@ -255,6 +264,9 @@ class EmployeeController {
                     break;
                 case 'delete employee bank account':
                     $this->deleteEmployeeBankAccount();
+                    break;
+                case 'delete employee contact information':
+                    $this->deleteEmployeeContactInformation();
                     break;
                 default:
                     $response = [
@@ -1098,6 +1110,79 @@ class EmployeeController {
         }
     }
     # -------------------------------------------------------------
+    
+    # -------------------------------------------------------------
+    #
+    # Function: saveEmployeeContactInformation
+    # Description: 
+    # Saves the employee contact information if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveEmployeeContactInformation() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_contact_information_id']) && isset($_POST['contact_information_type_id']) && !empty($_POST['contact_information_type_id']) && isset($_POST['contact_information_telephone']) && isset($_POST['contact_information_mobile']) && isset($_POST['contact_information_email'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeContactInformationID = htmlspecialchars($_POST['employee_contact_information_id'], ENT_QUOTES, 'UTF-8');
+            $contactInformationTypeID = htmlspecialchars($_POST['contact_information_type_id'], ENT_QUOTES, 'UTF-8');
+            $telephone = $_POST['contact_information_telephone'];
+            $mobile = $_POST['contact_information_mobile'];
+            $email = $_POST['contact_information_email'];
+
+            $contactInformationTypeDetails = $this->contactInformationTypeModel->getContactInformationType($contactInformationTypeID);
+            $contactInformationTypeName = $contactInformationTypeDetails['contact_information_type_name'] ?? null;
+        
+            $checkEmployeeContactInformationExist = $this->employeeModel->checkEmployeeContactInformationExist($employeeContactInformationID);
+            $total = $checkEmployeeContactInformationExist['total'] ?? 0;
+
+            if($total > 0){
+                $this->employeeModel->updateEmployeeContactInformation($employeeContactInformationID, $employeeID, $contactInformationTypeID, $contactInformationTypeName, $telephone, $mobile, $email, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Contact Information Success',
+                    'message' => 'The contact information has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->employeeModel->insertEmployeeContactInformation($employeeID, $contactInformationTypeID, $contactInformationTypeName, $telephone, $mobile, $email, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert Contact Information Success',
+                    'message' => 'The contact information has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+           
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
 
     # -------------------------------------------------------------
     #   Delete methods
@@ -1456,6 +1541,84 @@ class EmployeeController {
                 'success' => true,
                 'title' => 'Delete Bank Account Success',
                 'message' => 'The bank account has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeContactInformation
+    # Description: 
+    # Delete the employee contact information if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeContactInformation() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeContactInformationID = htmlspecialchars($_POST['employee_contact_information_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Contact Information Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkEmployeeContactInformationExist = $this->employeeModel->checkEmployeeContactInformationExist($employeeContactInformationID);
+            $total = $checkEmployeeContactInformationExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Contact Information Error',
+                    'message' => 'The contact information does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->employeeModel->deleteEmployeeContactInformation($employeeContactInformationID, $employeeID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete Contact Information Success',
+                'message' => 'The contact information has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -2083,6 +2246,70 @@ class EmployeeController {
         }
     }
     # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeContactInformationDetails
+    # Description: 
+    # Handles the retrieval of employee contact information details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeContactInformationDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_contact_information_id']) && !empty($_POST['employee_contact_information_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeContactInformationID = htmlspecialchars($_POST['employee_contact_information_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Contact Information Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeContactInformationDetails = $this->employeeModel->getEmployeeContactInformation($employeeContactInformationID);
+
+            $response = [
+                'success' => true,
+                'contactInformationTypeID' => $employeeContactInformationDetails['contact_information_type_id'] ?? null,
+                'telephone' => $employeeContactInformationDetails['telephone'] ?? null,
+                'mobile' => $employeeContactInformationDetails['mobile'] ?? null,
+                'email' => $employeeContactInformationDetails['email'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
 }
 # -------------------------------------------------------------
 
@@ -2109,10 +2336,11 @@ require_once '../../state/model/state-model.php';
 require_once '../../country/model/country-model.php';
 require_once '../../bank/model/bank-model.php';
 require_once '../../bank-account-type/model/bank-account-type-model.php';
+require_once '../../contact-information-type/model/contact-information-type-model.php';
 require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new EmploymentLocationTypeModel(new DatabaseModel), new AddressTypeModel(new DatabaseModel), new CityModel(new DatabaseModel), new StateModel(new DatabaseModel), new CountryModel(new DatabaseModel), new BankModel(new DatabaseModel), new BankAccountTypeModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
+$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new EmploymentLocationTypeModel(new DatabaseModel), new AddressTypeModel(new DatabaseModel), new CityModel(new DatabaseModel), new StateModel(new DatabaseModel), new CountryModel(new DatabaseModel), new BankModel(new DatabaseModel), new BankAccountTypeModel(new DatabaseModel), new ContactInformationTypeModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
 $controller->handleRequest();
 
 ?>

@@ -447,45 +447,7 @@
                 ?>
             </div>
             <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <h6 class="fw-semibold mb-1">Personal</h6>
-                                    <ul class="list-unstyled mb-0">
-                                        <li class="d-flex align-items-center gap-2 py-2">
-                                            <i class="ti ti-mail text-dark fs-4"></i>
-                                            <span class="text-dark">l.agulto@gmail.com</span>
-                                        </li>
-                                        <li class="d-flex align-items-center gap-2 py-2">
-                                            <i class="ti ti-device-mobile text-dark fs-4"></i>
-                                            <span class="text-dark">0951654987</span>
-                                        </li>
-                                        <li class="d-flex align-items-center gap-2 py-2">
-                                            <i class="ti ti-phone text-dark fs-4"></i>
-                                            <span class="text-dark">0654987</span>
-                                        </li>
-                                    </ul>
-                                    <span class="badge bg-info">Alternate</span>
-                                </div>
-                            </div>
-                            <div class="d-flex">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="card-body" id="contact-information-container"></div>
         </div>
 
         <div class="card">
@@ -1133,7 +1095,7 @@
 </div>
 
 <div id="hr-settings-modal" class="modal fade" tabindex="-1" aria-labelledby="hr-settings-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title fw-8">Edit HR Settings</h5>
@@ -1142,48 +1104,42 @@
             <div class="modal-body">
                 <form id="hr-settings-form" method="post" action="#">
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="pin_code" class="form-label">PIN Code <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="PIN used to Check In/Out in the Kiosk Mode of the Attendance application and to change the cashier in the Point of Sale application."></span></label>
-                                        <input type="text" class="form-control maxlength" id="pin_code" name="pin_code" maxlength="500" autocomplete="off">
-                                    </div>
-                                </div>
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="pin_code" class="form-label">PIN Code <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="PIN used to Check In/Out in the Kiosk Mode of the Attendance application and to change the cashier in the Point of Sale application."></span></label>
+                                <input type="text" class="form-control maxlength" id="pin_code" name="pin_code" maxlength="500" autocomplete="off">
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="badge_id" class="form-label">Badge ID <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="ID used for employee identification."></span></label>
-                                        <input type="text" class="form-control maxlength" id="badge_id" name="badge_id" maxlength="200" autocomplete="off">
-                                    </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="badge_id" class="form-label">Badge ID <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="ID used for employee identification."></span></label>
+                                <input type="text" class="form-control maxlength" id="badge_id" name="badge_id" maxlength="200" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="employment_type_id" class="form-label">Employment Type</label>
+                            <div class="mb-3">
+                                <select id="employment_type_id" name="employment_type_id" class="select2 form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="onboard_date" class="form-label">On-Board Date <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control regular-datepicker" id="onboard_date" name="onboard_date" autocomplete="off"/>
+                                    <span class="input-group-text">
+                                        <i class="ti ti-calendar fs-5"></i>
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <label for="employment_type_id" class="form-label">Employment Type</label>
-                                    <div class="mb-3">
-                                        <select id="employment_type_id" name="employment_type_id" class="select2 form-control"></select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="onboard_date" class="form-label">On-Board Date <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control regular-datepicker" id="onboard_date" name="onboard_date" autocomplete="off"/>
-                                            <span class="input-group-text">
-                                                <i class="ti ti-calendar fs-5"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                 
+                    </div>             
                 </form>
             </div>
             <div class="modal-footer border-top">
@@ -1195,58 +1151,52 @@
 </div>
 
 <div id="work-permit-modal" class="modal fade" tabindex="-1" aria-labelledby="work-permit-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8">Edit Private Information</h5>
+                <h5 class="modal-title fw-8">Edit Work Permit</h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="work-permit-form" method="post" action="#">
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="visa_number" class="form-label">Visa No.</label>
-                                        <input type="text" class="form-control maxlength" id="visa_number" name="visa_number" maxlength="50" autocomplete="off">
-                                    </div>
-                                </div>
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="visa_number" class="form-label">Visa No.</label>
+                                <input type="text" class="form-control maxlength" id="visa_number" name="visa_number" maxlength="50" autocomplete="off">
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="visa_expiration_date" class="form-label">Visa Expiration Date</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control regular-datepicker" id="visa_expiration_date" name="visa_expiration_date" autocomplete="off"/>
-                                            <span class="input-group-text">
-                                                <i class="ti ti-calendar fs-5"></i>
-                                            </span>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="visa_expiration_date" class="form-label">Visa Expiration Date</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control regular-datepicker" id="visa_expiration_date" name="visa_expiration_date" autocomplete="off"/>
+                                    <span class="input-group-text">
+                                        <i class="ti ti-calendar fs-5"></i>
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="work_permit_number" class="form-label">Work Permit No.</label>
-                                        <input type="text" class="form-control maxlength" id="work_permit_number" name="work_permit_number" maxlength="50" autocomplete="off">
-                                    </div>
-                                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="work_permit_number" class="form-label">Work Permit No.</label>
+                                <input type="text" class="form-control maxlength" id="work_permit_number" name="work_permit_number" maxlength="50" autocomplete="off">
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="work_permit_expiration_date" class="form-label">Work Permit Expiration Date</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control regular-datepicker" id="work_permit_expiration_date" name="work_permit_expiration_date" autocomplete="off"/>
-                                            <span class="input-group-text">
-                                                <i class="ti ti-calendar fs-5"></i>
-                                            </span>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="work_permit_expiration_date" class="form-label">Work Permit Expiration Date</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control regular-datepicker" id="work_permit_expiration_date" name="work_permit_expiration_date" autocomplete="off"/>
+                                    <span class="input-group-text">
+                                        <i class="ti ti-calendar fs-5"></i>
+                                     </span>
                                 </div>
                             </div>
                         </div>
@@ -1314,6 +1264,7 @@
             </div>
             <div class="modal-body">
                 <form id="contact-information-form" method="post" action="#">
+                    <input type="hidden" id="employee_contact_information_id" name="employee_contact_information_id">
                     <div class="row">
                         <div class="col-lg-12">
                             <label for="contact_information_type_id" class="form-label">Contact Information Type <span class="text-danger">*</span></label>
@@ -1348,7 +1299,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="contact-information-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="contact-information-form" class="btn btn-success" id="submit-contact-information-data">Save changes</button>
             </div>
         </div>
     </div>

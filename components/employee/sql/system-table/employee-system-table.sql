@@ -190,9 +190,9 @@ CREATE TABLE employee_contact_information (
     employee_id INT UNSIGNED NOT NULL,
     contact_information_type_id INT UNSIGNED NOT NULL,
     contact_information_type_name VARCHAR(100) NOT NULL,
-    phone VARCHAR(50),
+    telephone VARCHAR(50),
     mobile VARCHAR(50),
-    email VARCHAR(500),
+    email VARCHAR(200),
     default_contact_information VARCHAR(10) NOT NULL DEFAULT 'Primary',
     created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
@@ -204,5 +204,29 @@ CREATE INDEX employee_contact_information_index_contact_information_id ON employ
 CREATE INDEX employee_contact_information_index_employee_id ON employee_contact_information(employee_id);
 CREATE INDEX employee_contact_information_index_contact_information_type_id ON employee_contact_information(contact_information_type_id);
 CREATE INDEX employee_contact_information_index_default_contact_information ON employee_contact_information(default_contact_information);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Employee ID Record Table */
+
+CREATE TABLE employee_id_record (
+    id_record_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    employee_id INT UNSIGNED NOT NULL,
+    id_type_id INT UNSIGNED NOT NULL,
+    id_type_name VARCHAR(100) NOT NULL,
+    id_number VARCHAR(100) NOT NULL,
+    issue_date DATE NOT NULL,
+    id_expiration_date DATE,
+    issuing_authority VARCHAR(100),
+    id_image VARCHAR(500),
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX employee_id_record_index_id_record_id ON employee_id_record(employee_id_record_id);
+CREATE INDEX employee_id_record_index_employee_id ON employee_id_record(employee_id);
+CREATE INDEX employee_id_record_index_id_type_id ON employee_id_record(id_type_id);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

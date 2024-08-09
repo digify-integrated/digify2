@@ -18,6 +18,7 @@
         generateDropdownOptions('city options');
         generateDropdownOptions('bank options');
         generateDropdownOptions('bank account type options');
+        generateDropdownOptions('contact information type options');
         
         displayDetails('get about details');
         displayDetails('get private information details');
@@ -59,6 +60,10 @@
 
         if($('#bank-account-form').length){
             bankAccountForm();
+        }
+
+        if($('#contact-information-form').length){
+            contactInformationForm();
         }
 
         $(document).on('click','#edit-about-details',function() {
@@ -383,6 +388,77 @@
 
         $(document).on('click','#add-contact-information-details',function() {
             $('#contact-information-title').text('Add Contact Information');
+            resetModalForm('contact-information-form');
+        });
+
+        $(document).on('click','.edit-contact-information-details',function() {
+            const employee_contact_information_id = $(this).data('employee-contact-information-id');
+            sessionStorage.setItem('employee_contact_information_id', employee_contact_information_id);
+
+            $('#contact-information-title').text('Edit Contact Information');
+
+            displayDetails('get employee contact information details');
+        });
+
+        $(document).on('click','.delete-contact-information-details',function() {
+            const employee_id = $('#details-id').text();
+            const employee_contact_information_id = $(this).data('employee-contact-information-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'delete employee contact information';
+    
+            Swal.fire({
+                title: 'Confirm Contact Information Deletion',
+                text: 'Are you sure you want to delete this contact information?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            employee_contact_information_id : employee_contact_information_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                contactInformationList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
         });
 
         $(document).on('click','#add-id-records-details',function() {
@@ -476,6 +552,10 @@
             bankAccountList();
         }
 
+        if($('#contact-information-container').length){
+            contactInformationList();
+        }
+
         if($('#log-notes-offcanvas').length){
             $(document).on('click','.view-employee-experience-log-notes',function() {
                 const employee_experience_id = $(this).data('employee-experience-id');
@@ -499,6 +579,12 @@
                 const employee_bank_account_id = $(this).data('employee-bank-account-id');
 
                 logNotes('employee_bank_account', employee_bank_account_id);
+            });
+
+            $(document).on('click','.view-employee-contact-information-log-notes',function() {
+                const employee_contact_information_id = $(this).data('employee-contact-information-id');
+
+                logNotes('employee_contact_information', employee_contact_information_id);
             });
         }
 
@@ -1289,13 +1375,13 @@ function bankAccountForm(){
         },
         messages: {
             bank_id: {
-                required: 'Please choose the bank'
+                required: 'Choose the bank'
             },
             bank_account_type_id: {
-                required: 'Please choose the bank account type'
+                required: 'Choose the bank account type'
             },
             account_number: {
-                required: 'Please enter the account number'
+                required: 'Enter the account number'
             }
         },
         errorPlacement: function(error, element) {
@@ -1362,6 +1448,114 @@ function bankAccountForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-bank-account-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function contactInformationForm(){
+    $('#contact-information-form').validate({
+        rules: {
+            contact_information_type_id: {
+                required: true
+            },
+            contact_information_telephone: {
+                required: function(element) {
+                    return !($("#contact_information_mobile").val() && $("#contact_information_email").val());
+                }
+              },
+              contact_information_mobile: {
+                required: function(element) {
+                    return !($("#contact_information_telephone").val() && $("#contact_information_email").val());
+                }
+              },
+              contact_information_email: {
+                required: function(element) {
+                    return !($("#contact_information_telephone").val() && $("#contact_information_mobile").val());
+                }
+            }
+        },
+        messages: {
+            contact_information_type_id: {
+                required: 'Choose the contact information type'
+            },
+            contact_information_telephone: {
+                required: "Enter at least one of the following: telephone, mobile, or email"
+            },
+            contact_information_mobile: {
+                required: "Enter at least one of the following: telephone, mobile, or email"
+            },
+            contact_information_email: {
+                required: "Enter at least one of the following: telephone, mobile, or email"
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'save employee contact information';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-contact-information-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#contact-information-modal').modal('hide');
+                        contactInformationList();
+                        resetModalForm('contact-information-form');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-contact-information-data');
                 }
             });
         
@@ -1442,6 +1636,25 @@ function bankAccountList(){
         },
         success: function (result) {
             document.getElementById('bank-account-container').innerHTML = result[0].BANK_ACCOUNT_LIST;
+        }
+    });
+}
+
+function contactInformationList(){
+    const employee_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'contact information list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/employee/view/_employee_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
+        beforeSend: function(){
+            document.getElementById('contact-information-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        },
+        success: function (result) {
+            document.getElementById('contact-information-container').innerHTML = result[0].CONTACT_INFORMATION_LIST;
         }
     });
 }
@@ -1922,6 +2135,55 @@ function displayDetails(transaction){
                 }
             });
             break;
+        case 'get employee contact information details':
+            var employee_id = $('#details-id').text();
+            var employee_contact_information_id = sessionStorage.getItem('employee_contact_information_id');
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    employee_contact_information_id : employee_contact_information_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('bank-account-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#employee_contact_information_id').val(employee_contact_information_id);
+                        $('#contact_information_telephone').val(response.telephone);
+                        $('#contact_information_mobile').val(response.mobile);
+                        $('#contact_information_email').val(response.email);
+
+                        $('#contact_information_type_id').val(response.contactInformationTypeID).trigger('change');
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
     }
 }
 
@@ -2336,6 +2598,32 @@ function generateDropdownOptions(type){
                 success: function(response) {
                     $('#bank_account_type_id').select2({
                         dropdownParent: $('#bank-account-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'contact information type options':
+            
+            $.ajax({
+                url: 'components/contact-information-type/view/_contact_information_type_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#contact_information_type_id').select2({
+                        dropdownParent: $('#contact-information-modal'),
                         data: response
                     }).on('change', function (e) {
                         $(this).valid()

@@ -93,7 +93,7 @@ BEGIN
 	VALUES(p_employee_id, p_bank_id, p_bank_name, p_bank_account_type_id, p_bank_account_type_name, p_account_number, p_last_log_by);
 END //
 
-CREATE PROCEDURE insertEmployeeContactInformation(IN p_employee_id INT, IN p_contact_information_type_id INT, IN p_contact_information_type_name VARCHAR(100), IN p_phone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(500), IN p_last_log_by INT)
+CREATE PROCEDURE insertEmployeeContactInformation(IN p_employee_id INT, IN p_contact_information_type_id INT, IN p_contact_information_type_name VARCHAR(100), IN p_telephone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(200), IN p_last_log_by INT)
 BEGIN
     DECLARE existing_contact_information_count INT;
     DECLARE p_default_contact_information VARCHAR(10);
@@ -108,8 +108,8 @@ BEGIN
         SET p_default_contact_information = 'Alternate';
     END IF;
 
-    INSERT INTO employee_contact_information (employee_id, contact_information_type_id, contact_information_type_name, phone, mobile, email, default_contact_information, last_log_by) 
-	VALUES(p_employee_id, p_contact_information_type_id, p_contact_information_type_name, p_phone, p_mobile, p_email, p_default_contact_information, p_last_log_by);
+    INSERT INTO employee_contact_information (employee_id, contact_information_type_id, contact_information_type_name, telephone, mobile, email, default_contact_information, last_log_by) 
+	VALUES(p_employee_id, p_contact_information_type_id, p_contact_information_type_name, p_telephone, p_mobile, p_email, p_default_contact_information, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -268,13 +268,13 @@ BEGIN
     WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
-CREATE PROCEDURE updateEmployeeContactInformation(IN p_employee_contact_information_id INT, IN p_employee_id INT, IN p_contact_information_type_id INT, IN p_contact_information_type_name VARCHAR(100), IN p_phone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(500), IN p_last_log_by INT)
+CREATE PROCEDURE updateEmployeeContactInformation(IN p_employee_contact_information_id INT, IN p_employee_id INT, IN p_contact_information_type_id INT, IN p_contact_information_type_name VARCHAR(100), IN p_telephone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(200), IN p_last_log_by INT)
 BEGIN
     UPDATE employee_contact_information
     SET employee_id = p_employee_id,
         contact_information_type_id = p_contact_information_type_id,
         contact_information_type_name = p_contact_information_type_name,
-        phone = p_phone,
+        telephone = p_telephone,
         mobile = p_mobile,
         email = p_email
     WHERE employee_contact_information_id = p_employee_contact_information_id;
@@ -365,7 +365,7 @@ BEGIN
         WHERE employee_id = p_employee_id
         AND default_contact_information = 'Alternate'
         LIMIT 1;
-    END IF;   
+    END IF;
 
     COMMIT;
 END //

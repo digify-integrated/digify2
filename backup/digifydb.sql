@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 08, 2024 at 11:33 AM
+-- Generation Time: Aug 09, 2024 at 10:48 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -2268,7 +2268,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeBankAccount` (IN `p_e
 END$$
 
 DROP PROCEDURE IF EXISTS `insertEmployeeContactInformation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeContactInformation` (IN `p_employee_id` INT, IN `p_contact_information_type_id` INT, IN `p_contact_information_type_name` VARCHAR(100), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeContactInformation` (IN `p_employee_id` INT, IN `p_contact_information_type_id` INT, IN `p_contact_information_type_name` VARCHAR(100), IN `p_telephone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
     DECLARE existing_contact_information_count INT;
     DECLARE p_default_contact_information VARCHAR(10);
 
@@ -2282,8 +2282,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeContactInformation` (
         SET p_default_contact_information = 'Alternate';
     END IF;
 
-    INSERT INTO employee_contact_information (employee_id, contact_information_type_id, contact_information_type_name, phone, mobile, email, default_contact_information, last_log_by) 
-	VALUES(p_employee_id, p_contact_information_type_id, p_contact_information_type_name, p_phone, p_mobile, p_email, p_default_contact_information, p_last_log_by);
+    INSERT INTO employee_contact_information (employee_id, contact_information_type_id, contact_information_type_name, telephone, mobile, email, default_contact_information, last_log_by) 
+	VALUES(p_employee_id, p_contact_information_type_id, p_contact_information_type_name, p_telephone, p_mobile, p_email, p_default_contact_information, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertEmployeeEducation`$$
@@ -2998,12 +2998,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeBankAccount` (IN `p_e
 END$$
 
 DROP PROCEDURE IF EXISTS `updateEmployeeContactInformation`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeContactInformation` (IN `p_employee_contact_information_id` INT, IN `p_employee_id` INT, IN `p_contact_information_type_id` INT, IN `p_contact_information_type_name` VARCHAR(100), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeContactInformation` (IN `p_employee_contact_information_id` INT, IN `p_employee_id` INT, IN `p_contact_information_type_id` INT, IN `p_contact_information_type_name` VARCHAR(100), IN `p_telephone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
     UPDATE employee_contact_information
     SET employee_id = p_employee_id,
         contact_information_type_id = p_contact_information_type_id,
         contact_information_type_name = p_contact_information_type_name,
-        phone = p_phone,
+        telephone = p_telephone,
         mobile = p_mobile,
         email = p_email
     WHERE employee_contact_information_id = p_employee_contact_information_id;
@@ -7258,7 +7258,15 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3206, 'employee_bank_account', 3, 'Employee bank created. <br/><br/>Bank Name: China Banking Corporation (Chinabank)<br/>Bank Account Type Name: Checking Account<br/>Account Number: asd', 2, '2024-08-08 15:00:41', '2024-08-08 15:00:41'),
 (3207, 'employee_bank_account', 4, 'Employee bank created. <br/><br/>Bank Name: Banco de Oro (BDO)<br/>Bank Account Type Name: Checking Account<br/>Account Number: 15687526', 2, '2024-08-08 16:33:53', '2024-08-08 16:33:53'),
 (3208, 'employee_bank_account', 4, 'Bank Name: Banco de Oro (BDO) -> RCBC (Rizal Commercial Banking Corporation)<br/>', 2, '2024-08-08 16:34:07', '2024-08-08 16:34:07'),
-(3209, 'employee_bank_account', 4, 'Bank Account Type Name: Checking Account -> Savings Account<br/>', 2, '2024-08-08 16:42:12', '2024-08-08 16:42:12');
+(3209, 'employee_bank_account', 4, 'Bank Account Type Name: Checking Account -> Savings Account<br/>', 2, '2024-08-08 16:42:12', '2024-08-08 16:42:12'),
+(3210, 'user_account', 2, 'Last Connection Date: 2024-08-08 11:18:08 -> 2024-08-09 11:56:30<br/>', 2, '2024-08-09 11:56:30', '2024-08-09 11:56:30'),
+(3211, 'employee_contact_information', 1, 'Employee contact information created. <br/><br/>Contact Information Type Name: Personal<br/>Telephone: asd<br/>Mobile: as<br/>Email: asd@gmail.com<br/>Default Contact Information: Primary', 2, '2024-08-09 15:32:45', '2024-08-09 15:32:45'),
+(3212, 'employee_contact_information', 1, 'Contact Information Type Name: Personal -> Work<br/>', 2, '2024-08-09 15:40:36', '2024-08-09 15:40:36'),
+(3213, 'employee_contact_information', 2, 'Employee contact information created. <br/><br/>Contact Information Type Name: Personal<br/>Telephone: asd<br/>Mobile: asd<br/>Default Contact Information: Alternate', 2, '2024-08-09 15:42:22', '2024-08-09 15:42:22'),
+(3214, 'employee_address', 14, 'Employee address created. <br/><br/>Address Type Name: Billing Address<br/>Address: asd<br/>City Name: Aborlan<br/>State Name: Palawan<br/>Country Name: Philippines<br/>Default Address: Primary', 2, '2024-08-09 15:47:03', '2024-08-09 15:47:03'),
+(3215, 'employee_contact_information', 2, 'Default Contact Information: Alternate -> Primary<br/>', 2, '2024-08-09 15:48:20', '2024-08-09 15:48:20'),
+(3216, 'employee_contact_information', 2, 'Email:  -> asdasdasd@gmail.com<br/>', 2, '2024-08-09 15:54:33', '2024-08-09 15:54:33'),
+(3217, 'employee_contact_information', 3, 'Employee contact information created. <br/><br/>Contact Information Type Name: Work<br/>Telephone: asasd<br/>Mobile: asdas<br/>Email: dasdasd@gmail.com<br/>Default Contact Information: Alternate', 2, '2024-08-09 16:11:46', '2024-08-09 16:11:46');
 
 -- --------------------------------------------------------
 
@@ -10626,6 +10634,13 @@ CREATE TABLE `employee_address` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `employee_address`
+--
+
+INSERT INTO `employee_address` (`employee_address_id`, `employee_id`, `address_type_id`, `address_type_name`, `address`, `city_id`, `city_name`, `state_id`, `state_name`, `country_id`, `country_name`, `default_address`, `created_date`, `last_log_by`) VALUES
+(14, 2, 2, 'Billing Address', 'asd', 523, 'Aborlan', 26, 'Palawan', 174, 'Philippines', 'Primary', '2024-08-09 15:47:03', 2);
+
+--
 -- Triggers `employee_address`
 --
 DROP TRIGGER IF EXISTS `employee_address_trigger_insert`;
@@ -10780,13 +10795,21 @@ CREATE TABLE `employee_contact_information` (
   `employee_id` int(10) UNSIGNED NOT NULL,
   `contact_information_type_id` int(10) UNSIGNED NOT NULL,
   `contact_information_type_name` varchar(100) NOT NULL,
-  `phone` varchar(50) DEFAULT NULL,
+  `telephone` varchar(50) DEFAULT NULL,
   `mobile` varchar(50) DEFAULT NULL,
-  `email` varchar(500) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
   `default_contact_information` varchar(10) NOT NULL DEFAULT 'Primary',
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employee_contact_information`
+--
+
+INSERT INTO `employee_contact_information` (`employee_contact_information_id`, `employee_id`, `contact_information_type_id`, `contact_information_type_name`, `telephone`, `mobile`, `email`, `default_contact_information`, `created_date`, `last_log_by`) VALUES
+(2, 2, 1, 'Personal', 'asd', 'asd', 'asdasdasd@gmail.com', 'Primary', '2024-08-09 15:42:22', 2),
+(3, 2, 2, 'Work', 'asasd', 'asdas', 'dasdasd@gmail.com', 'Alternate', '2024-08-09 16:11:46', 2);
 
 --
 -- Triggers `employee_contact_information`
@@ -10800,8 +10823,8 @@ CREATE TRIGGER `employee_contact_information_trigger_insert` AFTER INSERT ON `em
         SET audit_log = CONCAT(audit_log, "<br/>Contact Information Type Name: ", NEW.contact_information_type_name);
     END IF;
 
-    IF NEW.phone <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Phone: ", NEW.phone);
+    IF NEW.telephone <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Telephone: ", NEW.telephone);
     END IF;
 
     IF NEW.mobile <> '' THEN
@@ -10830,8 +10853,8 @@ CREATE TRIGGER `employee_contact_information_trigger_update` AFTER UPDATE ON `em
         SET audit_log = CONCAT(audit_log, "Contact Information Type Name: ", OLD.contact_information_type_name, " -> ", NEW.contact_information_type_name, "<br/>");
     END IF;
 
-    IF NEW.phone <> OLD.phone THEN
-        SET audit_log = CONCAT(audit_log, "Phone: ", OLD.phone, " -> ", NEW.phone, "<br/>");
+    IF NEW.telephone <> OLD.telephone THEN
+        SET audit_log = CONCAT(audit_log, "Telephone: ", OLD.telephone, " -> ", NEW.telephone, "<br/>");
     END IF;
 
     IF NEW.mobile <> OLD.mobile THEN
@@ -13576,7 +13599,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-08 11:18:08', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'ky1hwuwHpTIUZ5HRbzvjRSzstYFPtAQ%2Fh5nrtsXmSfw%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-09 11:56:30', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '70gkSLJth0NAww84gVoaOYFm6APx7S%2FeJTEGqlkvufc%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -14539,7 +14562,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3210;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3218;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -14629,7 +14652,7 @@ ALTER TABLE `employee`
 -- AUTO_INCREMENT for table `employee_address`
 --
 ALTER TABLE `employee_address`
-  MODIFY `employee_address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `employee_address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `employee_bank_account`
@@ -14641,7 +14664,7 @@ ALTER TABLE `employee_bank_account`
 -- AUTO_INCREMENT for table `employee_contact_information`
 --
 ALTER TABLE `employee_contact_information`
-  MODIFY `employee_contact_information_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `employee_contact_information_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `employee_education`

@@ -504,6 +504,130 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
         # -------------------------------------------------------------
         #
+        # Type: contact information list
+        # Description:
+        # Generates the contact information list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'contact information list':
+            $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeContactInformation(:employeeID)');
+            $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($options); 
+            $sql->closeCursor();
+
+            $list = '';
+
+            if($count > 0){
+                $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+
+                foreach ($options as $row) {
+                    $employeeContactInformationID = $row['employee_contact_information_id'];
+                    $contactInformationTypeName = $row['contact_information_type_name'];
+                    $telephone = $row['telephone'];
+                    $mobile = $row['mobile'];
+                    $email = $row['email'];
+                    $defaultContactInformation = $row['default_contact_information'];
+
+                    $badgeClass = $defaultContactInformation == 'Primary' ? 'bg-success' : 'bg-info';
+                    $getDefaultContactInformation = '<span class="badge ' . $badgeClass . '">' . $defaultContactInformation . '</span>';
+
+                    $mobile = !empty($mobile) ? 
+                            '<div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
+                                        <i class="ti ti-device-mobile text-dark d-block fs-7" width="22" height="22"></i>
+                                    </div>
+                                <div>
+                                <p class="mb-0">Mobile</p>
+                                <h5 class="fs-4 fw-semibold">'. $mobile .'</h5>
+                            </div>
+                        </div>
+                    </div>' : '';
+
+                    $telephone = !empty($telephone) ? 
+                            '<div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
+                                        <i class="ti ti-phone text-dark d-block fs-7" width="22" height="22"></i>
+                                    </div>
+                                <div>
+                                <p class="mb-0">Telephone</p>
+                                <h5 class="fs-4 fw-semibold">'. $telephone .'</h5>
+                            </div>
+                        </div>
+                    </div>' : '';
+
+                    $email = !empty($email) ? 
+                            '<div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
+                                        <i class="ti ti-mail text-dark d-block fs-7" width="22" height="22"></i>
+                                    </div>
+                                <div>
+                                <p class="mb-0">Email</p>
+                                <h5 class="fs-4 fw-semibold">'. $email .'</h5>
+                            </div>
+                        </div>
+                    </div>' : '';
+    
+                    $updateButton = '';
+                    $deleteButton = '';
+                    if($employeeWriteAccess['total'] > 0){
+                        $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 edit-contact-information-details" data-bs-toggle="modal" data-bs-target="#contact-information-modal" data-employee-contact-information-id="' . $employeeContactInformationID . '">
+                                                <i class="ti ti-pencil"></i>
+                                            </a>';
+                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-contact-information-details" data-employee-contact-information-id="' . $employeeContactInformationID . '">
+                                                <i class="ti ti-trash"></i>
+                                            </a>';
+                    }
+                    
+                    $list .= '<div class="row">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div>
+                                                <h6 class="fw-semibold mb-2">'. $contactInformationTypeName .'     '. $getDefaultContactInformation .'</h6>
+                                                '. $email .'
+                                                '. $mobile .'
+                                                '. $telephone .'
+                                            </div>
+                                        </div>
+                                        <div class="d-flex mb-2">
+                                            '. $updateButton .'
+                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-contact-information-log-notes" data-employee-contact-information-id="' . $employeeContactInformationID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
+                                                <i class="ti ti-file-text"></i>
+                                            </a>
+                                            '. $deleteButton .'
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>';
+                }
+            }
+            else{
+                $list = '<div class="alert bg-light-subtle mb-0" role="alert">
+                    No contact information found.
+                  </div>';
+            }
+            
+
+            $response[] = [
+                'CONTACT_INFORMATION_LIST' => $list
+            ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
         # Type: employee options
         # Description:
         # Generates the employee options.

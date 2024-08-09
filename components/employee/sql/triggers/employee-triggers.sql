@@ -616,8 +616,8 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "Contact Information Type Name: ", OLD.contact_information_type_name, " -> ", NEW.contact_information_type_name, "<br/>");
     END IF;
 
-    IF NEW.phone <> OLD.phone THEN
-        SET audit_log = CONCAT(audit_log, "Phone: ", OLD.phone, " -> ", NEW.phone, "<br/>");
+    IF NEW.telephone <> OLD.telephone THEN
+        SET audit_log = CONCAT(audit_log, "Telephone: ", OLD.telephone, " -> ", NEW.telephone, "<br/>");
     END IF;
 
     IF NEW.mobile <> OLD.mobile THEN
@@ -648,8 +648,8 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "<br/>Contact Information Type Name: ", NEW.contact_information_type_name);
     END IF;
 
-    IF NEW.phone <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Phone: ", NEW.phone);
+    IF NEW.telephone <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Telephone: ", NEW.telephone);
     END IF;
 
     IF NEW.mobile <> '' THEN
@@ -666,4 +666,42 @@ BEGIN
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
     VALUES ('employee_contact_information', NEW.employee_contact_information_id, audit_log, NEW.last_log_by, NOW());
+END //
+
+CREATE TRIGGER employee_id_record_trigger_update
+AFTER UPDATE ON employee_id_record
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.id_type_name <> OLD.id_type_name THEN
+        SET audit_log = CONCAT(audit_log, "ID Type Name: ", OLD.id_type_name, " -> ", NEW.id_type_name, "<br/>");
+    END IF;
+
+    IF NEW.id_number <> OLD.id_number THEN
+        SET audit_log = CONCAT(audit_log, "ID Number: ", OLD.id_number, " -> ", NEW.id_number, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_id_record', NEW.employee_id_record_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END //
+
+CREATE TRIGGER employee_id_record_trigger_insert
+AFTER INSERT ON employee_id_record
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee ID record created. <br/>';
+
+    IF NEW.id_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>ID Type Name: ", NEW.id_type_name);
+    END IF;
+
+    IF NEW.id_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>ID Number: ", NEW.id_number);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_id_record', NEW.employee_id_record_id, audit_log, NEW.last_log_by, NOW());
 END //
