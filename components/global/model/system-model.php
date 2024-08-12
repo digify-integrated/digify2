@@ -385,5 +385,26 @@ class SystemModel {
     }
     # -------------------------------------------------------------
 
+    # -------------------------------------------------------------
+    #   Display methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: displaySummary
+    # Description: Gets the formatted bytes
+    #
+    # Parameters:
+    # - $summaryText (string): The type of default image.
+    #
+    # Returns:
+    # - A the default
+    #
+    # -------------------------------------------------------------
+    public function displaySummary($summaryText) {
+        return !empty($summaryText) ? $summaryText : '--';
+    }
+    # -------------------------------------------------------------
+
 }
 ?>

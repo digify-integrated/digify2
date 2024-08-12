@@ -787,7 +787,7 @@ class AuthenticationController {
     # -------------------------------------------------------------
     private function handlePasswordExpiration($userAccountID, $encryptedUserID) {
         $securitySettingDetails = $this->securitySettingModel->getSecuritySetting(3);
-        $defaultForgotPasswordLink = $securitySettingDetails['value'];
+        $defaultForgotPasswordLink = $securitySettingDetails['value'] ?? null;
 
         $resetPasswordTokenDurationDetails = $this->securitySettingModel->getSecuritySetting(6);
         $resetPasswordTokenDuration = $resetPasswordTokenDurationDetails['value'] ?? RESET_PASSWORD_TOKEN_DURATION;
@@ -1070,7 +1070,7 @@ class AuthenticationController {
         $mailFromEmail = $emailSetting['mail_from_email'];
 
         $securitySettingDetails = $this->securitySettingModel->getSecuritySetting(3);
-        $defaultForgotPasswordLink = $securitySettingDetails['value'];
+        $defaultForgotPasswordLink = $securitySettingDetails['value'] ?? null;
 
         $notificationSettingDetails = $this->notificationSettingModel->getEmailNotificationTemplate(2);
         $emailSubject = $notificationSettingDetails['email_notification_subject'] ?? null;

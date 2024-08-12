@@ -156,6 +156,9 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
             if($count > 0){
                 $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
 
+                $i = 0;
+                $totalIterations = count($options);
+
                 foreach ($options as $row) {
                     $employeeExperienceID = $row['employee_experience_id'];
                     $jobTitle = $row['job_title'];
@@ -183,15 +186,13 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     $updateButton = '';
                     $deleteButton = '';
                     if($employeeWriteAccess['total'] > 0){
-                        $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 edit-experience-details" data-bs-toggle="modal" data-bs-target="#experience-modal" data-employee-experience-id="' . $employeeExperienceID . '">
-                                                <i class="ti ti-pencil"></i>
-                                            </a>';
-                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-experience-details" data-employee-experience-id="' . $employeeExperienceID . '">
-                                                <i class="ti ti-trash"></i>
-                                            </a>';
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-experience-details" data-bs-toggle="modal" data-bs-target="#experience-modal" data-employee-experience-id="' . $employeeExperienceID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-experience-details" data-employee-experience-id="' . $employeeExperienceID . '">Delete</button>';
                     }
                     
-                    $list .= '<div class="row">
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
                                 <div class="col-md-12">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
@@ -202,23 +203,23 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                                 <p class="mb-2">'. $location . $employmentLocationTypeName .'</p>
                                             </div>
                                         </div>
-                                        <div class="d-flex mb-2">
-                                            '. $updateButton .'
-                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-experience-log-notes" data-employee-experience-id="' . $employeeExperienceID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
-                                                <i class="ti ti-file-text"></i>
-                                            </a>
-                                            '. $deleteButton .'
-                                        </div>
                                     </div>
                                     <p class="text-dark text-justify">'. $jobDescription .'</p>
+                                    <div class="d-flex gap-2">
+                                        '. $updateButton .'
+                                        <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-employee-experience-log-notes" data-employee-experience-id="' . $employeeExperienceID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
+                                        Log Notes
+                                        </button>
+                                        '. $deleteButton .'
+                                    </div>
                                 </div>
                             </div>';
+            
+                    $i++;
                 }
             }
             else{
-                $list = '<div class="alert bg-light-subtle mb-0" role="alert">
-                    No experience found.
-                  </div>';
+                $list = 'No experience found.';
             }
             
 
@@ -254,6 +255,9 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
             if($count > 0){
                 $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+                
+                $i = 0;
+                $totalIterations = count($options);
 
                 foreach ($options as $row) {
                     $employeeEducationID = $row['employee_education_id'];
@@ -289,15 +293,13 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     $updateButton = '';
                     $deleteButton = '';
                     if($employeeWriteAccess['total'] > 0){
-                        $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 edit-education-details" data-bs-toggle="modal" data-bs-target="#education-modal" data-employee-education-id="' . $employeeEducationID . '">
-                                                <i class="ti ti-pencil"></i>
-                                            </a>';
-                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-education-details" data-employee-education-id="' . $employeeEducationID . '">
-                                                <i class="ti ti-trash"></i>
-                                            </a>';
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-education-details" data-bs-toggle="modal" data-bs-target="#education-modal" data-employee-education-id="' . $employeeEducationID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-education-details" data-employee-education-id="' . $employeeEducationID . '">Delete</button>';
                     }
                     
-                    $list .= '<div class="row">
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
                                 <div class="col-md-12">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
@@ -308,23 +310,23 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                                 '. $activitiesSocieties .'
                                             </div>
                                         </div>
-                                        <div class="d-flex mb-2">
-                                            '. $updateButton .'
-                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-education-log-notes" data-employee-education-id="' . $employeeEducationID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
-                                                <i class="ti ti-file-text"></i>
-                                            </a>
-                                            '. $deleteButton .'
-                                        </div>
                                     </div>
                                     '. $educationDescription .'
+                                    <div class="d-flex gap-2 mt-3">
+                                        '. $updateButton .'
+                                        <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-employee-education-log-notes" data-employee-education-id="' . $employeeEducationID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
+                                        Log Notes
+                                        </button>
+                                        '. $deleteButton .'
+                                    </div>
                                 </div>
                             </div>';
+                    
+                    $i++;
                 }
             }
             else{
-                $list = '<div class="alert bg-light-subtle mb-0" role="alert">
-                    No education found.
-                  </div>';
+                $list = 'No education found.';
             }
             
 
@@ -360,7 +362,10 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
             if($count > 0){
                 $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
-
+            
+                $i = 0;
+                $totalIterations = count($options);
+            
                 foreach ($options as $row) {
                     $employeeAddressID = $row['employee_address_id'];
                     $addressTypeName = $row['address_type_name'];
@@ -369,49 +374,65 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     $stateName = $row['state_name'];
                     $countryName = $row['country_name'];
                     $defaultAddress = $row['default_address'];
-
+                    $telephone = $row['telephone'];
+                    $mobile = $row['mobile'];
+                    $email = $row['email'];
+                   
                     $fullAddress = implode(', ', [$address, $cityName, $stateName, $countryName]);
-
+            
                     $badgeClass = $defaultAddress == 'Primary' ? 'bg-success' : 'bg-info';
                     $getDefaultAddress = '<span class="badge ' . $badgeClass . '">' . $defaultAddress . '</span>';
-    
+                
                     $updateButton = '';
                     $deleteButton = '';
+                    $setDefaultButton = '';
                     if($employeeWriteAccess['total'] > 0){
-                        $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 edit-address-details" data-bs-toggle="modal" data-bs-target="#address-modal" data-employee-address-id="' . $employeeAddressID . '">
-                                                <i class="ti ti-pencil"></i>
-                                            </a>';
-                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-address-details" data-employee-address-id="' . $employeeAddressID . '">
-                                                <i class="ti ti-trash"></i>
-                                            </a>';
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-address-details" data-bs-toggle="modal" data-bs-target="#address-modal" data-employee-address-id="' . $employeeAddressID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-address-details" data-employee-address-id="' . $employeeAddressID . '">Delete</button>';
+
+                        if($defaultAddress != 'Primary'){
+                            $setDefaultButton = '<button type="button" class="btn btn-sm btn-outline-success mb-0 set-address-as-default" data-employee-address-id="' . $employeeAddressID . '">
+                            Set As Default
+                            </button>';
+                        }
                     }
+
+                    $telephone = !empty($telephone) ? $telephone . '<br/>' : $telephone ?? '';
+                    $mobile = !empty($mobile) ? $mobile . '<br/>' : $mobile ?? '';
+                    $email = !empty($email) ? $email . '<br/>' : $email ?? '';
                     
-                    $list .= '<div class="row">
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
                                 <div class="col-md-12">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
-                                            <div>
-                                                <p class="mb-1 fs-2">'. $addressTypeName .'</p>
-                                                <h6 class="fw-semibold mb-2 fs-3">'. $fullAddress .'</h6>
-                                                '. $getDefaultAddress .'
-                                            </div>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            '. $updateButton .'
-                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-address-log-notes" data-employee-address-id="' . $employeeAddressID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
-                                                <i class="ti ti-file-text"></i>
-                                            </a>
-                                            '. $deleteButton .'
+                                            <h6 class="fw-semibold mb-1">'. $addressTypeName .'</h6>
+                                            '. $getDefaultAddress .'
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-12 mb-2">
+                                    '. $fullAddress .'<br/>
+                                    '. $telephone .'
+                                    '. $mobile .'
+                                    '. $email .'
+                                </div>
+                                <div class="d-flex gap-2">
+                                    '. $updateButton .'
+                                    '. $setDefaultButton .'                                   
+                                    <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-employee-address-log-notes" data-employee-address-id="' . $employeeAddressID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
+                                    Log Notes
+                                    </button>
+                                    '. $deleteButton .'
+                                </div>
                             </div>';
+            
+                    $i++;
                 }
             }
             else{
-                $list = '<div class="alert bg-light-subtle mb-0" role="alert">
-                    No address found.
-                  </div>';
+                $list = 'No address found.';
             }
             
 
@@ -447,6 +468,9 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
             if($count > 0){
                 $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+            
+                $i = 0;
+                $totalIterations = count($options);
 
                 foreach ($options as $row) {
                     $employeeBankAccountID = $row['employee_bank_account_id'];
@@ -465,7 +489,16 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                             </a>';
                     }
                     
-                    $list .= '<div class="row">
+                    $updateButton = '';
+                    $deleteButton = '';
+                    if($employeeWriteAccess['total'] > 0){
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-bank-account-details" data-bs-toggle="modal" data-bs-target="#bank-account-modal" data-employee-bank-account-id="' . $employeeBankAccountID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-bank-account-details" data-employee-bank-account-id="' . $employeeBankAccountID . '">Delete</button>';
+                    }
+                    
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
                                 <div class="col-md-12">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
@@ -475,151 +508,27 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                                 <p class="mb-1 fs-2">'. $accountNumber .'</p>
                                             </div>
                                         </div>
-                                        <div class="d-flex mb-2">
-                                            '. $updateButton .'
-                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-bank-account-log-notes" data-employee-bank-account-id="' . $employeeBankAccountID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
-                                                <i class="ti ti-file-text"></i>
-                                            </a>
-                                            '. $deleteButton .'
-                                        </div>
                                     </div>
                                 </div>
+                                <div class="d-flex gap-2 mt-2">
+                                    '. $updateButton .'                                 
+                                    <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-employee-bank-account-log-notes" data-employee-bank-account-id="' . $employeeBankAccountID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
+                                    Log Notes
+                                    </button>
+                                    '. $deleteButton .'
+                                </div>
                             </div>';
+
+                    $i++;
                 }
             }
             else{
-                $list = '<div class="alert bg-light-subtle mb-0" role="alert">
-                    No bank account found.
-                  </div>';
+                $list = 'No bank account found.';
             }
             
 
             $response[] = [
                 'BANK_ACCOUNT_LIST' => $list
-            ];
-
-            echo json_encode($response);
-        break;
-        # -------------------------------------------------------------
-
-        # -------------------------------------------------------------
-        #
-        # Type: contact information list
-        # Description:
-        # Generates the contact information list.
-        #
-        # Parameters: None
-        #
-        # Returns: Array
-        #
-        # -------------------------------------------------------------
-        case 'contact information list':
-            $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
-            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeContactInformation(:employeeID)');
-            $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
-            $sql->execute();
-            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
-            $count = count($options); 
-            $sql->closeCursor();
-
-            $list = '';
-
-            if($count > 0){
-                $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
-
-                foreach ($options as $row) {
-                    $employeeContactInformationID = $row['employee_contact_information_id'];
-                    $contactInformationTypeName = $row['contact_information_type_name'];
-                    $telephone = $row['telephone'];
-                    $mobile = $row['mobile'];
-                    $email = $row['email'];
-                    $defaultContactInformation = $row['default_contact_information'];
-
-                    $badgeClass = $defaultContactInformation == 'Primary' ? 'bg-success' : 'bg-info';
-                    $getDefaultContactInformation = '<span class="badge ' . $badgeClass . '">' . $defaultContactInformation . '</span>';
-
-                    $mobile = !empty($mobile) ? 
-                            '<div class="d-flex align-items-center justify-content-between mb-2">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
-                                        <i class="ti ti-device-mobile text-dark d-block fs-7" width="22" height="22"></i>
-                                    </div>
-                                <div>
-                                <p class="mb-0">Mobile</p>
-                                <h5 class="fs-4 fw-semibold">'. $mobile .'</h5>
-                            </div>
-                        </div>
-                    </div>' : '';
-
-                    $telephone = !empty($telephone) ? 
-                            '<div class="d-flex align-items-center justify-content-between mb-2">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
-                                        <i class="ti ti-phone text-dark d-block fs-7" width="22" height="22"></i>
-                                    </div>
-                                <div>
-                                <p class="mb-0">Telephone</p>
-                                <h5 class="fs-4 fw-semibold">'. $telephone .'</h5>
-                            </div>
-                        </div>
-                    </div>' : '';
-
-                    $email = !empty($email) ? 
-                            '<div class="d-flex align-items-center justify-content-between mb-2">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div class="text-bg-light rounded-1 p-6 d-flex align-items-center justify-content-center">
-                                        <i class="ti ti-mail text-dark d-block fs-7" width="22" height="22"></i>
-                                    </div>
-                                <div>
-                                <p class="mb-0">Email</p>
-                                <h5 class="fs-4 fw-semibold">'. $email .'</h5>
-                            </div>
-                        </div>
-                    </div>' : '';
-    
-                    $updateButton = '';
-                    $deleteButton = '';
-                    if($employeeWriteAccess['total'] > 0){
-                        $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 edit-contact-information-details" data-bs-toggle="modal" data-bs-target="#contact-information-modal" data-employee-contact-information-id="' . $employeeContactInformationID . '">
-                                                <i class="ti ti-pencil"></i>
-                                            </a>';
-                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-contact-information-details" data-employee-contact-information-id="' . $employeeContactInformationID . '">
-                                                <i class="ti ti-trash"></i>
-                                            </a>';
-                    }
-                    
-                    $list .= '<div class="row">
-                                <div class="col-md-12">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div>
-                                                <h6 class="fw-semibold mb-2">'. $contactInformationTypeName .'     '. $getDefaultContactInformation .'</h6>
-                                                '. $email .'
-                                                '. $mobile .'
-                                                '. $telephone .'
-                                            </div>
-                                        </div>
-                                        <div class="d-flex mb-2">
-                                            '. $updateButton .'
-                                            <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 view-employee-contact-information-log-notes" data-employee-contact-information-id="' . $employeeContactInformationID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
-                                                <i class="ti ti-file-text"></i>
-                                            </a>
-                                            '. $deleteButton .'
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>';
-                }
-            }
-            else{
-                $list = '<div class="alert bg-light-subtle mb-0" role="alert">
-                    No contact information found.
-                  </div>';
-            }
-            
-
-            $response[] = [
-                'CONTACT_INFORMATION_LIST' => $list
             ];
 
             echo json_encode($response);

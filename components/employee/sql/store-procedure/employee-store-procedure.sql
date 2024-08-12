@@ -37,11 +37,11 @@ BEGIN
     WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
-CREATE PROCEDURE checkEmployeeContactInformationExist(IN p_employee_contact_information_id INT)
+CREATE PROCEDURE checkEmployeeIDRecordExist(IN p_employee_id_record_id INT)
 BEGIN
 	SELECT COUNT(*) AS total
-    FROM employee_contact_information
-    WHERE employee_contact_information_id = p_employee_contact_information_id;
+    FROM employee_id_record
+    WHERE employee_id_record_id = p_employee_id_record_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -68,7 +68,7 @@ BEGIN
 	VALUES(p_employee_id, p_school, p_degree, p_field_of_study, p_start_month, p_start_year, p_end_month, p_end_year, p_activities_societies, p_education_description, p_last_log_by);
 END //
 
-CREATE PROCEDURE insertEmployeeAddress(IN p_employee_id INT, IN p_address_type_id INT, IN p_address_type_name VARCHAR(100), IN p_address VARCHAR(1000), IN p_city_id INT, IN p_city_name VARCHAR(100), IN p_state_id INT, IN p_state_name VARCHAR(100), IN p_country_id INT, IN p_country_name VARCHAR(100), IN p_last_log_by INT)
+CREATE PROCEDURE insertEmployeeAddress(IN p_employee_id INT, IN p_address_type_id INT, IN p_address_type_name VARCHAR(100), IN p_address VARCHAR(1000), IN p_city_id INT, IN p_city_name VARCHAR(100), IN p_state_id INT, IN p_state_name VARCHAR(100), IN p_country_id INT, IN p_country_name VARCHAR(100), IN p_telephone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(200), IN p_last_log_by INT)
 BEGIN
     DECLARE existing_address_count INT;
     DECLARE p_default_address VARCHAR(10);
@@ -83,8 +83,8 @@ BEGIN
         SET p_default_address = 'Alternate';
     END IF;
 
-    INSERT INTO employee_address (employee_id, address_type_id, address_type_name, address, city_id, city_name, state_id, state_name, country_id, country_name, default_address, last_log_by) 
-	VALUES(p_employee_id, p_address_type_id, p_address_type_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_default_address, p_last_log_by);
+    INSERT INTO employee_address (employee_id, address_type_id, address_type_name, address, city_id, city_name, state_id, state_name, country_id, country_name, default_address, telephone, mobile, email, last_log_by) 
+	VALUES(p_employee_id, p_address_type_id, p_address_type_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_default_address, p_telephone, p_mobile, p_email, p_last_log_by);
 END //
 
 CREATE PROCEDURE insertEmployeeBankAccount(IN p_employee_id INT, IN p_bank_id INT, IN p_bank_name VARCHAR(100), IN p_bank_account_type_id INT, IN p_bank_account_type_name VARCHAR(100), IN p_account_number VARCHAR(100), IN p_last_log_by INT)
@@ -93,23 +93,10 @@ BEGIN
 	VALUES(p_employee_id, p_bank_id, p_bank_name, p_bank_account_type_id, p_bank_account_type_name, p_account_number, p_last_log_by);
 END //
 
-CREATE PROCEDURE insertEmployeeContactInformation(IN p_employee_id INT, IN p_contact_information_type_id INT, IN p_contact_information_type_name VARCHAR(100), IN p_telephone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(200), IN p_last_log_by INT)
+CREATE PROCEDURE insertEmployeeIDRecord(IN p_employee_id INT, IN p_id_type_id INT, IN p_id_type_name VARCHAR(100), IN p_id_number VARCHAR(100), IN p_issue_date DATE, IN p_id_expiration_date DATE, IN p_issuing_authority VARCHAR(100), IN p_last_log_by INT)
 BEGIN
-    DECLARE existing_contact_information_count INT;
-    DECLARE p_default_contact_information VARCHAR(10);
-
-    SELECT COUNT(*) INTO existing_contact_information_count
-    FROM employee_contact_information
-    WHERE employee_id = p_employee_id AND default_contact_information = 'Primary';
-
-    IF existing_contact_information_count = 0 THEN
-        SET p_default_contact_information = 'Primary';
-    ELSE
-        SET p_default_contact_information = 'Alternate';
-    END IF;
-
-    INSERT INTO employee_contact_information (employee_id, contact_information_type_id, contact_information_type_name, telephone, mobile, email, default_contact_information, last_log_by) 
-	VALUES(p_employee_id, p_contact_information_type_id, p_contact_information_type_name, p_telephone, p_mobile, p_email, p_default_contact_information, p_last_log_by);
+    INSERT INTO employee_id_record (employee_id, id_type_id, id_type_name, id_number, issue_date, id_expiration_date, issuing_authority, last_log_by) 
+	VALUES(p_employee_id, p_id_type_id, p_id_type_name, p_id_number, p_issue_date, p_id_expiration_date, p_issuing_authority, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -239,7 +226,7 @@ BEGIN
     WHERE employee_education_id = p_employee_education_id;
 END //
 
-CREATE PROCEDURE updateEmployeeAddress(IN p_employee_address_id INT, IN p_employee_id INT, IN p_address_type_id INT, IN p_address_type_name VARCHAR(100), IN p_address VARCHAR(1000), IN p_city_id INT, IN p_city_name VARCHAR(100), IN p_state_id INT, IN p_state_name VARCHAR(100), IN p_country_id INT, IN p_country_name VARCHAR(100), IN p_last_log_by INT)
+CREATE PROCEDURE updateEmployeeAddress(IN p_employee_address_id INT, IN p_employee_id INT, IN p_address_type_id INT, IN p_address_type_name VARCHAR(100), IN p_address VARCHAR(1000), IN p_city_id INT, IN p_city_name VARCHAR(100), IN p_state_id INT, IN p_state_name VARCHAR(100), IN p_country_id INT, IN p_country_name VARCHAR(100), IN p_telephone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(200), IN p_last_log_by INT)
 BEGIN
     UPDATE employee_address
     SET employee_id = p_employee_id,
@@ -252,8 +239,33 @@ BEGIN
         state_name = p_state_name,
         country_id = p_country_id,
         country_name = p_country_name,
+        telephone = p_telephone,
+        mobile = p_mobile,
+        p_email = p_email,
         last_log_by = p_last_log_by
     WHERE employee_address_id = p_employee_address_id;
+END //
+
+CREATE PROCEDURE updateEmployeeAddressDefault(IN p_employee_address_id INT, IN p_employee_id INT, IN p_last_log_by INT)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee_address
+    SET default_address = 'Alternate',
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id AND default_address = 'Primary';
+
+    UPDATE employee_address
+    SET default_address = 'Primary',
+        last_log_by = p_last_log_by
+    WHERE employee_address_id = p_employee_address_id AND employee_id = p_employee_id;
+
+    COMMIT;
 END //
 
 CREATE PROCEDURE updateEmployeeBankAccount(IN p_employee_bank_account_id INT, IN p_employee_id INT, IN p_bank_id INT, IN p_bank_name VARCHAR(100), IN p_bank_account_type_id INT, IN p_bank_account_type_name VARCHAR(100), IN p_account_number VARCHAR(100), IN p_last_log_by INT)
@@ -264,20 +276,23 @@ BEGIN
         bank_name = p_bank_name,
         bank_account_type_id = p_bank_account_type_id,
         bank_account_type_name = p_bank_account_type_name,
-        account_number = p_account_number
+        account_number = p_account_number,
+        last_log_by = p_last_log_by
     WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
-CREATE PROCEDURE updateEmployeeContactInformation(IN p_employee_contact_information_id INT, IN p_employee_id INT, IN p_contact_information_type_id INT, IN p_contact_information_type_name VARCHAR(100), IN p_telephone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(200), IN p_last_log_by INT)
+CREATE PROCEDURE updateEmployeeIDRecord(IN p_employee_id_record_id INT, IN p_employee_id INT, IN p_id_type_id INT, IN p_id_type_name VARCHAR(100), IN p_id_number VARCHAR(100), IN p_issue_date DATE, IN p_id_expiration_date DATE, IN p_issuing_authority VARCHAR(100), IN p_last_log_by INT)
 BEGIN
-    UPDATE employee_contact_information
+    UPDATE employee_id_record
     SET employee_id = p_employee_id,
-        contact_information_type_id = p_contact_information_type_id,
-        contact_information_type_name = p_contact_information_type_name,
-        telephone = p_telephone,
-        mobile = p_mobile,
-        email = p_email
-    WHERE employee_contact_information_id = p_employee_contact_information_id;
+        id_type_id = p_id_type_id,
+        id_type_name = p_id_type_name,
+        id_number = p_id_number,
+        issue_date = p_issue_date,
+        id_expiration_date = p_id_expiration_date,
+        issuing_authority = p_issuing_authority,
+        last_log_by = p_last_log_by
+    WHERE employee_id_record_id = p_employee_id_record_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -297,7 +312,7 @@ BEGIN
     DELETE FROM employee_education WHERE employee_id = p_employee_id;
     DELETE FROM employee_address WHERE employee_id = p_employee_id;
     DELETE FROM employee_bank_account WHERE employee_id = p_employee_id;
-    DELETE FROM employee_contact_information WHERE employee_id = p_employee_id;
+    DELETE FROM employee_id_record WHERE employee_id = p_employee_id;
     DELETE FROM employee WHERE employee_id = p_employee_id;
 
     COMMIT;
@@ -344,30 +359,9 @@ BEGIN
    DELETE FROM employee_bank_account WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
-CREATE PROCEDURE deleteEmployeeContactInformation(IN p_employee_contact_information_id INT, IN p_employee_id INT)
+CREATE PROCEDURE deleteEmployeeIDRecord(IN p_employee_id_record_id INT)
 BEGIN
-    DECLARE existing_contact_information_count INT;
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    DELETE FROM employee_contact_information
-    WHERE employee_contact_information_id = p_employee_contact_information_id;
-
-    SELECT COUNT(*) INTO existing_contact_information_count
-    FROM employee_contact_information
-    WHERE employee_id = p_employee_id AND default_contact_information = 'Primary';
-
-    IF existing_contact_information_count = 0 THEN
-        UPDATE employee_contact_information
-        SET default_contact_information = 'Primary'
-        WHERE employee_id = p_employee_id
-        AND default_contact_information = 'Alternate'
-        LIMIT 1;
-    END IF;
-
-    COMMIT;
+   DELETE FROM employee_id_record WHERE employee_id_record_id = p_employee_id_record_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -404,10 +398,10 @@ BEGIN
 	WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
-CREATE PROCEDURE getEmployeeContactInformation(IN p_employee_contact_information_id INT)
+CREATE PROCEDURE getEmployeeIDRecord(IN p_employee_id_record_id INT)
 BEGIN
-	SELECT * FROM employee_contact_information
-	WHERE employee_contact_information_id = p_employee_contact_information_id;
+	SELECT * FROM employee_id_record
+	WHERE employee_id_record_id = p_employee_id_record_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -489,7 +483,8 @@ END //
 CREATE PROCEDURE generateEmployeeAddress(IN p_employee_id INT)
 BEGIN
 	SELECT * FROM employee_address
-	WHERE employee_id = p_employee_id;
+	WHERE employee_id = p_employee_id
+    ORDER BY default_address DESC;
 END //
 
 CREATE PROCEDURE generateEmployeeBankAccount(IN p_employee_id INT)
@@ -498,9 +493,9 @@ BEGIN
 	WHERE employee_id = p_employee_id;
 END //
 
-CREATE PROCEDURE generateEmployeeContactInformation(IN p_employee_id INT)
+CREATE PROCEDURE generateEmployeeIDRecord(IN p_employee_id INT)
 BEGIN
-	SELECT * FROM employee_contact_information
+	SELECT * FROM employee_id_record
 	WHERE employee_id = p_employee_id;
 END //
 

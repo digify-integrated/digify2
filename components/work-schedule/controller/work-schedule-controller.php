@@ -337,7 +337,7 @@ class WorkScheduleController {
                 exit;
             } 
         
-            $checkWorkHoursExist = $this->workScheduleModel->checkWorkHoursExist($workScheduleID);
+            $checkWorkHoursExist = $this->workScheduleModel->checkWorkHoursExist($workHoursID);
             $total = $checkWorkHoursExist['total'] ?? 0;
 
             if($total > 0){

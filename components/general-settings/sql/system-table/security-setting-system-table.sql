@@ -11,12 +11,12 @@ CREATE TABLE security_setting(
 
 CREATE INDEX security_setting_index_security_setting_id ON security_setting(security_setting_id);
 
-INSERT INTO security_setting (security_setting_name, security_setting_description, value, last_log_by) VALUES ('Max Failed Login Attempt', 5, '1');
-INSERT INTO security_setting (security_setting_name, security_setting_description, value, last_log_by) VALUES ('Max Failed OTP Attempt', 5, '1');
-INSERT INTO security_setting (security_setting_name, security_setting_description, value, last_log_by) VALUES ('Default Forgot Password Link', 'http://localhost/modernize/password-reset.php?id=', '1');
-INSERT INTO security_setting (security_setting_name, security_setting_description, value, last_log_by) VALUES ('Password Expiry Duration', 180, '1');
-INSERT INTO security_setting (security_setting_name, security_setting_description, value, last_log_by) VALUES ('Session Timeout Duration', 240, '1');
-INSERT INTO security_setting (security_setting_name, security_setting_description, value, last_log_by) VALUES ('OTP Duration', 5, '1');
-INSERT INTO security_setting (security_setting_name, security_setting_description, value, last_log_by) VALUES ('Reset Password Token Duration', 10, '1');
+INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('Max Failed Login Attempt', 5, '1');
+INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('Max Failed OTP Attempt', 5, '1');
+INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('Default Forgot Password Link', 'http://localhost/modernize/password-reset.php?id=', '1');
+INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('Password Expiry Duration', 180, '1');
+INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('Session Timeout Duration', 240, '1');
+INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('OTP Duration', 5, '1');
+INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('Reset Password Token Duration', 10, '1');
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

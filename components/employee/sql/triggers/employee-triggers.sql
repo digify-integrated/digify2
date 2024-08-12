@@ -516,6 +516,18 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "Country Name: ", OLD.country_name, " -> ", NEW.country_name, "<br/>");
     END IF;
 
+    IF NEW.telephone <> OLD.telephone THEN
+        SET audit_log = CONCAT(audit_log, "Telephone: ", OLD.telephone, " -> ", NEW.telephone, "<br/>");
+    END IF;
+
+    IF NEW.mobile <> OLD.mobile THEN
+        SET audit_log = CONCAT(audit_log, "Mobile: ", OLD.mobile, " -> ", NEW.mobile, "<br/>");
+    END IF;
+
+    IF NEW.email <> OLD.email THEN
+        SET audit_log = CONCAT(audit_log, "Email: ", OLD.email, " -> ", NEW.email, "<br/>");
+    END IF;
+
     IF NEW.default_address <> OLD.default_address THEN
         SET audit_log = CONCAT(audit_log, "Default Address: ", OLD.default_address, " -> ", NEW.default_address, "<br/>");
     END IF;
@@ -550,6 +562,18 @@ BEGIN
 
     IF NEW.country_name <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Country Name: ", NEW.country_name);
+    END IF;
+
+    IF NEW.telephone <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Telephone: ", NEW.telephone);
+    END IF;
+
+    IF NEW.mobile <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Mobile: ", NEW.mobile);
+    END IF;
+
+    IF NEW.email <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Email: ", NEW.email);
     END IF;
 
     IF NEW.default_address <> '' THEN
@@ -606,68 +630,6 @@ BEGIN
     VALUES ('employee_bank_account', NEW.employee_bank_account_id, audit_log, NEW.last_log_by, NOW());
 END //
 
-CREATE TRIGGER employee_contact_information_trigger_update
-AFTER UPDATE ON employee_contact_information
-FOR EACH ROW
-BEGIN
-    DECLARE audit_log TEXT DEFAULT '';
-
-    IF NEW.contact_information_type_name <> OLD.contact_information_type_name THEN
-        SET audit_log = CONCAT(audit_log, "Contact Information Type Name: ", OLD.contact_information_type_name, " -> ", NEW.contact_information_type_name, "<br/>");
-    END IF;
-
-    IF NEW.telephone <> OLD.telephone THEN
-        SET audit_log = CONCAT(audit_log, "Telephone: ", OLD.telephone, " -> ", NEW.telephone, "<br/>");
-    END IF;
-
-    IF NEW.mobile <> OLD.mobile THEN
-        SET audit_log = CONCAT(audit_log, "Mobile: ", OLD.mobile, " -> ", NEW.mobile, "<br/>");
-    END IF;
-
-    IF NEW.email <> OLD.email THEN
-        SET audit_log = CONCAT(audit_log, "Email: ", OLD.email, " -> ", NEW.email, "<br/>");
-    END IF;
-
-    IF NEW.default_contact_information <> OLD.default_contact_information THEN
-        SET audit_log = CONCAT(audit_log, "Default Contact Information: ", OLD.default_contact_information, " -> ", NEW.default_contact_information, "<br/>");
-    END IF;
-
-    IF LENGTH(audit_log) > 0 THEN
-        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('employee_contact_information', NEW.employee_contact_information_id, audit_log, NEW.last_log_by, NOW());
-    END IF;
-END //
-
-CREATE TRIGGER employee_contact_information_trigger_insert
-AFTER INSERT ON employee_contact_information
-FOR EACH ROW
-BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Employee contact information created. <br/>';
-
-    IF NEW.contact_information_type_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Contact Information Type Name: ", NEW.contact_information_type_name);
-    END IF;
-
-    IF NEW.telephone <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Telephone: ", NEW.telephone);
-    END IF;
-
-    IF NEW.mobile <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Mobile: ", NEW.mobile);
-    END IF;
-
-    IF NEW.email <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Email: ", NEW.email);
-    END IF;
-
-    IF NEW.default_contact_information <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Default Contact Information: ", NEW.default_contact_information);
-    END IF;
-
-    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('employee_contact_information', NEW.employee_contact_information_id, audit_log, NEW.last_log_by, NOW());
-END //
-
 CREATE TRIGGER employee_id_record_trigger_update
 AFTER UPDATE ON employee_id_record
 FOR EACH ROW
@@ -680,6 +642,18 @@ BEGIN
 
     IF NEW.id_number <> OLD.id_number THEN
         SET audit_log = CONCAT(audit_log, "ID Number: ", OLD.id_number, " -> ", NEW.id_number, "<br/>");
+    END IF;
+
+    IF NEW.issue_date <> OLD.issue_date THEN
+        SET audit_log = CONCAT(audit_log, "Issue Date: ", OLD.issue_date, " -> ", NEW.issue_date, "<br/>");
+    END IF;
+
+    IF NEW.id_expiration_date <> OLD.id_expiration_date THEN
+        SET audit_log = CONCAT(audit_log, "ID Expiration Date: ", OLD.id_expiration_date, " -> ", NEW.id_expiration_date, "<br/>");
+    END IF;
+
+    IF NEW.issuing_authority <> OLD.issuing_authority THEN
+        SET audit_log = CONCAT(audit_log, "Issuing Authority: ", OLD.issuing_authority, " -> ", NEW.issuing_authority, "<br/>");
     END IF;
 
     IF LENGTH(audit_log) > 0 THEN
@@ -700,6 +674,18 @@ BEGIN
 
     IF NEW.id_number <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>ID Number: ", NEW.id_number);
+    END IF;
+
+    IF NEW.issue_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Issue Date: ", NEW.issue_date);
+    END IF;
+
+    IF NEW.id_expiration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>ID Expiration Date: ", NEW.id_expiration_date);
+    END IF;
+
+    IF NEW.issuing_authority <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Issuing Authority: ", NEW.issuing_authority);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
