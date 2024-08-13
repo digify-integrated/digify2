@@ -19,6 +19,9 @@
         generateDropdownOptions('bank options');
         generateDropdownOptions('bank account type options');
         generateDropdownOptions('id type options');
+        generateDropdownOptions('relation options');
+        generateDropdownOptions('language options');
+        generateDropdownOptions('language proficiency options');
         
         displayDetails('get about details');
         displayDetails('get private information details');
@@ -68,6 +71,14 @@
 
         if($('#license-form').length){
             licenseForm();
+        }
+
+        if($('#emergency-contact-form').length){
+            emergencyContactForm();
+        }
+
+        if($('#language-form').length){
+            languageForm();
         }
 
         $(document).on('click','#edit-about-details',function() {
@@ -654,10 +665,152 @@
 
         $(document).on('click','#add-emergency-contact-details',function() {
             $('#emergency-contact-title').text('Add Emergency Contact');
+            resetModalForm('emergency-contact-form');
+        });
+
+        $(document).on('click','.edit-emergency-contact-details',function() {
+            const employee_emergency_contact_id = $(this).data('employee-emergency-contact-id');
+            sessionStorage.setItem('employee_emergency_contact_id', employee_emergency_contact_id);
+
+            $('#emergency-contact-title').text('Edit Emergency Contact');
+
+            displayDetails('get employee emergency contact details');
+        });
+
+        $(document).on('click','.delete-emergency-contact-details',function() {
+            const employee_id = $('#details-id').text();
+            const employee_emergency_contact_id = $(this).data('employee-emergency-contact-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'delete employee emergency contact';
+    
+            Swal.fire({
+                title: 'Confirm Emergency Contact Deletion',
+                text: 'Are you sure you want to delete this emergency contact?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            employee_emergency_contact_id : employee_emergency_contact_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                emergencyContactList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
         });
 
         $(document).on('click','#add-language-details',function() {
             $('#language-title').text('Add Language');
+            resetModalForm('language-form');
+        });
+
+        $(document).on('click','.edit-language-details',function() {
+            const employee_language_id = $(this).data('employee-language-id');
+            sessionStorage.setItem('employee_language_id', employee_language_id);
+
+            $('#language-title').text('Edit Language');
+
+            displayDetails('get employee language details');
+        });
+
+        $(document).on('click','.delete-language-details',function() {
+            const employee_id = $('#details-id').text();
+            const employee_language_id = $(this).data('employee-language-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'delete employee language';
+    
+            Swal.fire({
+                title: 'Confirm Language Deletion',
+                text: 'Are you sure you want to delete this language?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            employee_language_id : employee_language_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                languageList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
         });
 
         $(document).on('click','#delete-employee',function() {
@@ -719,6 +872,49 @@
             });
         });
 
+        $(document).on('change','#employee_image',function() {
+            const transaction = 'update employee image';
+            const employee_id = $('#details-id').text();
+            var formData = new FormData();
+            formData.append('employee_image', $(this)[0].files[0]);
+            formData.append('transaction', transaction);
+            formData.append('employee_id', employee_id);
+
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                dataType: 'json',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+        });
+
         if($('#experience-container').length){
             experienceList();
         }
@@ -741,6 +937,14 @@
 
         if($('#license-container').length){
             licenseList();
+        }
+
+        if($('#emergency-contact-container').length){
+            emergencyContactList();
+        }
+
+        if($('#language-container').length){
+            languageList();
         }
 
         if($('#log-notes-offcanvas').length){
@@ -777,7 +981,19 @@
             $(document).on('click','.view-employee-license-log-notes',function() {
                 const employee_license_id = $(this).data('employee-license-id');
 
-                logNotes('employee_license_id', employee_license_id);
+                logNotes('employee_license', employee_license_id);
+            });
+
+            $(document).on('click','.view-employee-emergency-contact-log-notes',function() {
+                const employee_emergency_contact_id = $(this).data('employee-emergency-contact-id');
+
+                logNotes('employee_emergency_contact', employee_emergency_contact_id);
+            });
+
+            $(document).on('click','.view-employee-language-log-notes',function() {
+                const employee_language_id = $(this).data('employee-language-id');
+
+                logNotes('employee_language', employee_language_id);
             });
         }
 
@@ -1853,6 +2069,192 @@ function licenseForm(){
     });
 }
 
+function emergencyContactForm(){
+    $('#emergency-contact-form').validate({
+        rules: {
+            emergency_contact_name: {
+                required: true
+            },
+            emergency_contact_relation_id: {
+                required: true
+            },
+            emergency_contact_mobile: {
+                required: true
+            }
+        },
+        messages: {
+            emergency_contact_name: {
+                required: 'Enter the emergency contact name'
+            },
+            emergency_contact_relation_id: {
+                required: 'Choose the relation'
+            },
+            emergency_contact_mobile: {
+                required: 'Enter the mobile'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'save employee emergency contact';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-emergency-contact-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#emergency-contact-modal').modal('hide');
+                        emergencyContactList();
+                        resetModalForm('emergency-contact-form');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-emergency-contact-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function languageForm(){
+    $('#language-form').validate({
+        rules: {
+            language_id: {
+                required: true
+            },
+            language_proficiency_id: {
+                required: true
+            }
+        },
+        messages: {
+            language_id: {
+                required: 'Choose the language'
+            },
+            language_proficiency_id: {
+                required: 'Choose the language proficiency'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'save employee language';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-language-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#language-modal').modal('hide');
+                        languageList();
+                        resetModalForm('language-form');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-language-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
 function experienceList(){
     const employee_id = $('#details-id').text();
     const page_id = $('#page-id').val();
@@ -1944,6 +2346,63 @@ function idRecordList(){
         },
         success: function (result) {
             document.getElementById('id-record-container').innerHTML = result[0].ID_RECORD_LIST;
+        }
+    });
+}
+
+function licenseList(){
+    const employee_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'license list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/employee/view/_employee_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
+        beforeSend: function(){
+            document.getElementById('license-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        },
+        success: function (result) {
+            document.getElementById('license-container').innerHTML = result[0].LICENSE_LIST;
+        }
+    });
+}
+
+function emergencyContactList(){
+    const employee_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'emergency contact list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/employee/view/_employee_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
+        beforeSend: function(){
+            document.getElementById('emergency-contact-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        },
+        success: function (result) {
+            document.getElementById('emergency-contact-container').innerHTML = result[0].EMERGENCY_CONTACT_LIST;
+        }
+    });
+}
+
+function languageList(){
+    const employee_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'language list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/employee/view/_employee_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
+        beforeSend: function(){
+            document.getElementById('language-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        },
+        success: function (result) {
+            document.getElementById('language-container').innerHTML = result[0].LANGUAGE_LIST;
         }
     });
 }
@@ -2262,6 +2721,12 @@ function displayDetails(transaction){
                             setNotification(response.title, response.message, response.messageType);
                             window.location = page_link;
                         }
+                        else if (response.detailsNotExist) {
+                            showNotification(response.title, response.message, response.messageType);
+                            $('#experience-modal').modal('hide');
+                            experienceList();
+                            resetModalForm('experiency-form');
+                        }
                         else {
                             showNotification(response.title, response.message, response.messageType);
                         }
@@ -2316,6 +2781,12 @@ function displayDetails(transaction){
                             setNotification(response.title, response.message, response.messageType);
                             window.location = page_link;
                         }
+                        else if (response.detailsNotExist) {
+                            showNotification(response.title, response.message, response.messageType);
+                            $('#education-modal').modal('hide');
+                            educationList();
+                            resetModalForm('education-form');
+                        }
                         else {
                             showNotification(response.title, response.message, response.messageType);
                         }
@@ -2367,6 +2838,12 @@ function displayDetails(transaction){
                             setNotification(response.title, response.message, response.messageType);
                             window.location = page_link;
                         }
+                        else if (response.detailsNotExist) {
+                            showNotification(response.title, response.message, response.messageType);
+                            $('#address-modal').modal('hide');
+                            addressList();
+                            resetModalForm('address-form');
+                        }
                         else {
                             showNotification(response.title, response.message, response.messageType);
                         }
@@ -2414,6 +2891,12 @@ function displayDetails(transaction){
                         else if (response.notExist) {
                             setNotification(response.title, response.message, response.messageType);
                             window.location = page_link;
+                        }
+                        else if (response.detailsNotExist) {
+                            showNotification(response.title, response.message, response.messageType);
+                            $('#bank-account-modal').modal('hide');
+                            bankAccountList();
+                            resetModalForm('bank-account-form');
                         }
                         else {
                             showNotification(response.title, response.message, response.messageType);
@@ -2465,6 +2948,12 @@ function displayDetails(transaction){
                             setNotification(response.title, response.message, response.messageType);
                             window.location = page_link;
                         }
+                        else if (response.detailsNotExist) {
+                            showNotification(response.title, response.message, response.messageType);
+                            $('#id-record-modal').modal('hide');
+                            idRecordList();
+                            resetModalForm('id-record-form');
+                        }
                         else {
                             showNotification(response.title, response.message, response.messageType);
                         }
@@ -2501,7 +2990,7 @@ function displayDetails(transaction){
                         $('#employee_license_id').val(employee_license_id);
                         $('#licensed_profession').val(response.licensedProfession);
                         $('#licensing_body').val(response.licensingBody);
-                        $('#licensed_number').val(response.licensedNumber);
+                        $('#license_number').val(response.licenseNumber);
                         $('#license_issue_date').val(response.issueDate);
                         $('#license_expiration_date').val(response.expirationDate);
                     } 
@@ -2513,6 +3002,121 @@ function displayDetails(transaction){
                         else if (response.notExist) {
                             setNotification(response.title, response.message, response.messageType);
                             window.location = page_link;
+                        }
+                        else if (response.detailsNotExist) {
+                            showNotification(response.title, response.message, response.messageType);
+                            $('#license-modal').modal('hide');
+                            licenseList();
+                            resetModalForm('license-form');
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get employee emergency contact details':
+            var employee_id = $('#details-id').text();
+            var employee_emergency_contact_id = sessionStorage.getItem('employee_emergency_contact_id');
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    employee_emergency_contact_id : employee_emergency_contact_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('id-record-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#employee_emergency_contact_id').val(employee_emergency_contact_id);
+                        $('#emergency_contact_name').val(response.emergencyContactName);
+                        $('#emergency_contact_telephone').val(response.telephone);
+                        $('#emergency_contact_mobile').val(response.mobile);
+                        $('#emergency_contact_email').val(response.email);
+
+                        $('#emergency_contact_relation_id').val(response.relationID).trigger('change');
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else if (response.detailsNotExist) {
+                            showNotification(response.title, response.message, response.messageType);
+                            $('#emergency-contact-modal').modal('hide');
+                            emergencyContactList();
+                            resetModalForm('emergency-contact-form');
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get employee language details':
+            var employee_id = $('#details-id').text();
+            var employee_language_id = sessionStorage.getItem('employee_language_id');
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    employee_language_id : employee_language_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('id-record-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#employee_language_id').val(employee_language_id);
+                        
+                        $('#language_id').val(response.languageID).trigger('change');
+                        $('#language_proficiency_id').val(response.languageProficiencyID).trigger('change');
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else if (response.detailsNotExist) {
+                            showNotification(response.title, response.message, response.messageType);
+                            $('#language-modal').modal('hide');
+                            languageList();
+                            resetModalForm('language-form');
                         }
                         else {
                             showNotification(response.title, response.message, response.messageType);
@@ -2968,6 +3572,110 @@ function generateDropdownOptions(type){
                 success: function(response) {
                     $('#id_type_id').select2({
                         dropdownParent: $('#id-record-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'relation options':
+            
+            $.ajax({
+                url: 'components/relation/view/_relation_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#emergency_contact_relation_id').select2({
+                        dropdownParent: $('#emergency-contact-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'language options':
+            
+            $.ajax({
+                url: 'components/language/view/_language_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#language_id').select2({
+                        dropdownParent: $('#language-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'language proficiency options':
+            
+            $.ajax({
+                url: 'components/language-proficiency/view/_language_proficiency_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#language_proficiency_id').select2({
+                        dropdownParent: $('#language-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid()
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'departure reason options':
+            
+            $.ajax({
+                url: 'components/departure-reason/view/_departure_reason_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#departure_reason_id').select2({
+                        dropdownParent: $('#archive-employee-modal'),
                         data: response
                     }).on('change', function (e) {
                         $(this).valid()

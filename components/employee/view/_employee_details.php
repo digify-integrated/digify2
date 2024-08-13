@@ -11,7 +11,7 @@
                                     <div class="border border-4 border-white d-flex align-items-center justify-content-center rounded-circle overflow-hidden round-100">
                                         <label for="employee_image" class="cursor-pointer bg-light">
                                             <img src="./assets/images/default/upload-placeholder.png" alt="employee-image" id="employee-image" class="img-fluid" width="100" height="100">
-                                            <input type="file" class="form-control d-none" id="employee_image" name="employee_image" onchange="previewImage(this, 'employee-image')">
+                                            <input type="file" class="form-control d-none" id="employee_image" name="employee_image">
                                         </label>
                                     </div>
                                 </div>
@@ -305,45 +305,7 @@
                 ?>
             </div>
             <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <h6 class="fw-semibold mb-1">Lawrence De Vera Agulto</h6>
-                                    <p class="mb-2 fs-2">Brother-In-Law</p>
-                                    <ul class="list-unstyled mb-0">
-                                        <li class="d-flex align-items-center gap-2 py-2">
-                                            <i class="ti ti-mail text-dark fs-4"></i>
-                                            <span class="text-dark">l.agulto@gmail.com</span>
-                                        </li>
-                                        <li class="d-flex align-items-center gap-2 py-2">
-                                            <i class="ti ti-device-mobile text-dark fs-4"></i>
-                                            <span class="text-dark">0951654987</span>
-                                        </li>
-                                        <li class="d-flex align-items-center gap-2 py-2">
-                                            <i class="ti ti-phone text-dark fs-4"></i>
-                                            <span class="text-dark">0654987</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="d-flex">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="card-body" id="emergency-contact-container"></div>
         </div>
 
         <div class="card">
@@ -369,31 +331,7 @@
                 ?>
             </div>
             <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <h5 class="fs-4 fw-semibold">English </h5>
-                                    <p class="mb-0">Conversational</p>
-                                </div>
-                            </div>
-                            <div class="d-flex">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="card-body" id="language-container"></div>
         </div>
     </div>
 </div>
@@ -1195,9 +1133,9 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <label class="form-label" for="licensed_number">Licensed Number <span class="text-danger">*</span> <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Enter the license number and include all characters listed on the license. If the permit does not have a license number, just enter N/A."></span></label>
+                            <label class="form-label" for="license_number">Licensed Number <span class="text-danger">*</span> <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Enter the license number and include all characters listed on the license. If the permit does not have a license number, just enter N/A."></span></label>
                             <div class="mb-3">
-                                <input type="text" class="form-control maxlength" id="licensed_number" name="licensed_number" maxlength="200" autocomplete="off">
+                                <input type="text" class="form-control maxlength" id="license_number" name="license_number" maxlength="200" autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -1244,6 +1182,7 @@
             </div>
             <div class="modal-body">
                 <form id="emergency-contact-form" method="post" action="#">
+                    <input type="hidden" id="employee_emergency_contact_id" name="employee_emergency_contact_id">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
@@ -1268,7 +1207,7 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <label class="form-label" for="emergency_contact_mobile">Mobile</label>
+                            <label class="form-label" for="emergency_contact_mobile">Mobile <span class="text-danger">*</span></label>
                             <div class="mb-3">
                                 <input type="text" class="form-control maxlength" id="emergency_contact_mobile" name="emergency_contact_mobile" maxlength="20" autocomplete="off">
                             </div>
@@ -1286,7 +1225,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="emergency-contact-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="emergency-contact-form" class="btn btn-success" id="submit-emergency-contact-data">Save changes</button>
             </div>
         </div>
     </div>
@@ -1301,6 +1240,7 @@
             </div>
             <div class="modal-body">
                 <form id="language-form" method="post" action="#">
+                    <input type="hidden" id="employee_language_id" name="employee_language_id">
                     <div class="row">
                         <div class="col-lg-12">
                             <label for="language_id" class="form-label">Language <span class="text-danger">*</span></label>
@@ -1321,7 +1261,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="language-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="language-form" class="btn btn-success" id="submit-language-data">Save changes</button>
             </div>
         </div>
     </div>

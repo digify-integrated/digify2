@@ -34,6 +34,10 @@ class EmployeeController {
     private $bankModel;
     private $bankAccountTypeModel;
     private $idTypeModel;
+    private $relationModel;
+    private $languageModel;
+    private $languageProficiencyModel;
+    private $departureReasonModel;
     private $authenticationModel;
     private $securityModel;
     private $systemModel;
@@ -66,6 +70,10 @@ class EmployeeController {
     # - @param BankModel $bankModel     The bankModel instance for bank related operations.
     # - @param BankAccountTypeModel $bankAccountTypeModel     The bankAccountTypeModel instance for bank account type related operations.
     # - @param IDTypeModel $idTypeModel     The idTypeModel instance for ID type related operations.
+    # - @param RelationModel $relationModel     The relationModel instance for relation related operations.
+    # - @param LanguageModel $languageModel     The languageModel instance for language related operations.
+    # - @param LanguageProficiencyModel $languageProficiencyModel     The languageProficiencyModel instance for language proficiency related operations.
+    # - @param DepartureReasonModel $departureReasonModel     The departureReasonModel instance for departure reason related operations.
     # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
@@ -74,7 +82,7 @@ class EmployeeController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, EmploymentLocationTypeModel $employmentLocationTypeModel, AddressTypeModel $addressTypeModel, CityModel $cityModel, StateModel $stateModel, CountryModel $countryModel, BankModel $bankModel, BankAccountTypeModel $bankAccountTypeModel, IDTypeModel $idTypeModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
+    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, EmploymentLocationTypeModel $employmentLocationTypeModel, AddressTypeModel $addressTypeModel, CityModel $cityModel, StateModel $stateModel, CountryModel $countryModel, BankModel $bankModel, BankAccountTypeModel $bankAccountTypeModel, IDTypeModel $idTypeModel, RelationModel $relationModel, LanguageModel $languageModel, LanguageProficiencyModel $languageProficiencyModel, DepartureReasonModel $departureReasonModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
         $this->employeeModel = $employeeModel;
         $this->genderModel = $genderModel;
         $this->religionModel = $religionModel;
@@ -95,6 +103,10 @@ class EmployeeController {
         $this->bankModel = $bankModel;
         $this->bankAccountTypeModel = $bankAccountTypeModel;
         $this->idTypeModel = $idTypeModel;
+        $this->relationModel = $relationModel;
+        $this->languageModel = $languageModel;
+        $this->languageProficiencyModel = $languageProficiencyModel;
+        $this->departureReasonModel = $departureReasonModel;
         $this->uploadSettingModel = $uploadSettingModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
@@ -205,6 +217,9 @@ class EmployeeController {
                 case 'set employee address as default':
                     $this->updateEmployeeAddressDefault();
                     break;
+                case 'update employee image':
+                    $this->updateEmployeeImage();
+                    break;
                 case 'update employee id record image':
                     $this->updateEmployeeIDRecordImage();
                     break;
@@ -225,6 +240,12 @@ class EmployeeController {
                     break;
                 case 'save employee license':
                     $this->saveEmployeeLicense();
+                    break;
+                case 'save employee emergency contact':
+                    $this->saveEmployeeEmergencyContact();
+                    break;
+                case 'save employee language':
+                    $this->saveEmployeeLanguage();
                     break;
                 case 'get about details':
                     $this->getAboutDetails();
@@ -259,6 +280,12 @@ class EmployeeController {
                 case 'get employee license details':
                     $this->getEmployeeLicenseDetails();
                     break;
+                case 'get employee emergency contact details':
+                    $this->getEmployeeEmergencyContactDetails();
+                    break;
+                case 'get employee language details':
+                    $this->getEmployeeLanguageDetails();
+                    break;
                 case 'delete employee':
                     $this->deleteEmployee();
                     break;
@@ -282,6 +309,12 @@ class EmployeeController {
                     break;
                 case 'delete employee license':
                     $this->deleteEmployeeLicense();
+                    break;
+                case 'delete employee emergency contact':
+                    $this->deleteEmployeeEmergencyContact();
+                    break;
+                case 'delete employee language':
+                    $this->deleteEmployeeLanguage();
                     break;
                 default:
                     $response = [
@@ -890,7 +923,7 @@ class EmployeeController {
     #
     # Function: updateEmployeeIDRecordImage
     # Description: 
-    # Saves the employee ID record if it exists; otherwise, return an error message.
+    # Saves the employee ID record image if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -1046,6 +1079,186 @@ class EmployeeController {
                     'success' => false,
                     'title' => 'Upload ID Record Image Error',
                     'message' => 'The ID record does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeImage
+    # Description: 
+    # Saves the employee image if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeImage() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+           
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total > 0){
+                $employeeImageFileName = $_FILES['employee_image']['name'];
+                $employeeImageFileSize = $_FILES['employee_image']['size'];
+                $employeeImageFileError = $_FILES['employee_image']['error'];
+                $employeeImageTempName = $_FILES['employee_image']['tmp_name'];
+                $employeeImageFileExtension = explode('.', $employeeImageFileName);
+                $employeeImageActualFileExtension = strtolower(end($employeeImageFileExtension));
+    
+                $uploadSetting = $this->uploadSettingModel->getUploadSetting(3);
+                $maxFileSize = $uploadSetting['max_file_size'];
+    
+                $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(3);
+                $allowedFileExtensions = [];
+    
+                foreach ($uploadSettingFileExtension as $row) {
+                    $allowedFileExtensions[] = $row['file_extension'];
+                }
+    
+                if (!in_array($employeeImageActualFileExtension, $allowedFileExtensions)) {
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload Employee Image Error',
+                        'message' => 'The file uploaded is not supported.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if(empty($employeeImageTempName)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload Employee Image Error',
+                        'message' => 'Please choose the employee image.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($employeeImageFileError){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload Employee Image Error',
+                        'message' => 'An error occurred while uploading the file.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($employeeImageFileSize > ($maxFileSize * 1024)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload Employee Image Error',
+                        'message' => 'The employee image exceeds the maximum allowed size of ' . number_format($maxFileSize) . ' kb.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $fileName = $this->securityModel->generateFileName();
+                $fileNew = $fileName . '.' . $employeeImageActualFileExtension;
+                
+                define('PROJECT_BASE_DIR', dirname(__DIR__));
+                define('ID_RECORD_DIR', 'profile/');
+    
+                $directory = PROJECT_BASE_DIR . '/image/' .  $employeeID . '/'. ID_RECORD_DIR. '/';
+                $fileDestination = $directory. $fileNew;
+                $filePath = './components/employee/image/'. $employeeID . '/profile/' . $fileNew;
+    
+                $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
+    
+                if(!$directoryChecker){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload Employee Image Error',
+                        'message' => $directoryChecker,
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $employeeDetails = $this->employeeModel->getEmployee($employeeID);
+                $employeeImagePath = !empty($employeeDetails['employee_image']) ? str_replace('./components/', '../../', $employeeDetails['employee_image']) : null;
+    
+                if(file_exists($employeeImagePath)){
+                    if (!unlink($employeeImagePath)) {
+                        $response = [
+                            'success' => false,
+                            'title' => 'Upload Employee Image Error',
+                            'message' => 'The employee image cannot be deleted due to an error.',
+                            'messageType' => 'error'
+                        ];
+                        
+                        echo json_encode($response);
+                        exit;
+                    }
+                }
+    
+                if(!move_uploaded_file($employeeImageTempName, $fileDestination)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload Employee Image Error',
+                        'message' => 'The employee image cannot be uploaded due to an error.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+
+                $this->employeeModel->updateEmployeeImage($employeeID, $filePath, $userID);
+
+                $response = [
+                    'success' => true,
+                    'title' => 'Upload Employee Image Success',
+                    'message' => 'The employee image has been uploaded successfully.',
+                    'messageType' => 'success'
+                ];
+    
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $response = [
+                    'success' => false,
+                    'title' => 'Upload Employee Image Error',
+                    'message' => 'The employee does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -1478,13 +1691,13 @@ class EmployeeController {
             return;
         }
         
-        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_id_record_id']) && isset($_POST['licensed_profession']) && !empty($_POST['licensed_profession']) && isset($_POST['licensing_body']) && !empty($_POST['licensing_body']) && isset($_POST['licensed_number']) && !empty($_POST['licensed_number']) && isset($_POST['license_issue_date']) && !empty($_POST['license_issue_date']) && isset($_POST['license_expiration_date'])) {
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_license_id']) && isset($_POST['licensed_profession']) && !empty($_POST['licensed_profession']) && isset($_POST['licensing_body']) && !empty($_POST['licensing_body']) && isset($_POST['license_number']) && !empty($_POST['license_number']) && isset($_POST['license_issue_date']) && !empty($_POST['license_issue_date']) && isset($_POST['license_expiration_date'])) {
             $userID = $_SESSION['user_account_id'];
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
-            $employeeLicenseID = htmlspecialchars($_POST['employee_id_record_id'], ENT_QUOTES, 'UTF-8');
+            $employeeLicenseID = htmlspecialchars($_POST['employee_license_id'], ENT_QUOTES, 'UTF-8');
             $licensedProfession = $_POST['licensed_profession'];
             $licensingBody = $_POST['licensing_body'];
-            $licensedNumber = $_POST['licensed_number'];
+            $licenseNumber = $_POST['license_number'];
             $issueDate = $this->systemModel->checkDate('empty', $_POST['license_issue_date'], '', 'Y-m-d', '');
             $expirationDate = $this->systemModel->checkDate('empty', $_POST['license_expiration_date'], '', 'Y-m-d', '');
         
@@ -1492,7 +1705,7 @@ class EmployeeController {
             $total = $checkEmployeeLicenseExist['total'] ?? 0;
 
             if($total > 0){
-                $this->employeeModel->updateEmployeeLicense($employeeLicenseID, $employeeID, $licensedProfession, $licensingBody, $licensedNumber, $issueDate, $expirationDate, $userID);
+                $this->employeeModel->updateEmployeeLicense($employeeLicenseID, $employeeID, $licensedProfession, $licensingBody, $licenseNumber, $issueDate, $expirationDate, $userID);
                 
                 $response = [
                     'success' => true,
@@ -1505,12 +1718,158 @@ class EmployeeController {
                 exit;
             }
             else{
-                $this->employeeModel->insertEmployeeLicense($employeeID, $licensedProfession, $licensingBody, $licensedNumber, $issueDate, $expirationDate, $userID);
+                $this->employeeModel->insertEmployeeLicense($employeeID, $licensedProfession, $licensingBody, $licenseNumber, $issueDate, $expirationDate, $userID);
                 
                 $response = [
                     'success' => true,
                     'title' => 'Insert License Success',
                     'message' => 'The license has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: saveEmployeeEmergencyContact
+    # Description: 
+    # Saves the employee emergency contact if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveEmployeeEmergencyContact() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_emergency_contact_id']) && isset($_POST['emergency_contact_name']) && !empty($_POST['emergency_contact_name']) && isset($_POST['emergency_contact_relation_id']) && !empty($_POST['emergency_contact_relation_id']) && isset($_POST['emergency_contact_telephone']) && isset($_POST['emergency_contact_mobile']) && !empty($_POST['emergency_contact_mobile']) && isset($_POST['emergency_contact_email'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeEmergencyContactID = htmlspecialchars($_POST['employee_emergency_contact_id'], ENT_QUOTES, 'UTF-8');
+            $relationID = htmlspecialchars($_POST['emergency_contact_relation_id'], ENT_QUOTES, 'UTF-8');
+            $emergencyContactName = $_POST['emergency_contact_name'];
+            $telephone = $_POST['emergency_contact_telephone'];
+            $mobile = $_POST['emergency_contact_mobile'];
+            $email = $_POST['emergency_contact_email'];
+        
+            $checkEmployeeEmergencyContactExist = $this->employeeModel->checkEmployeeEmergencyContactExist($employeeEmergencyContactID);
+            $total = $checkEmployeeEmergencyContactExist['total'] ?? 0;
+
+            $relationDetails = $this->relationModel->getRelation($relationID);
+            $relationName = $relationDetails['relation_name'] ?? null;
+
+            if($total > 0){
+                $this->employeeModel->updateEmployeeEmergencyContact($employeeEmergencyContactID, $employeeID, $emergencyContactName, $relationID, $relationName, $telephone, $mobile, $email, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Emergency Contact Success',
+                    'message' => 'The emergency contact has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->employeeModel->insertEmployeeEmergencyContact($employeeID, $emergencyContactName, $relationID, $relationName, $telephone, $mobile, $email, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert Emergency Contact Success',
+                    'message' => 'The emergency contact has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: saveEmployeeLanguage
+    # Description: 
+    # Saves the employee language if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveEmployeeLanguage() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_language_id']) && isset($_POST['language_id']) && !empty($_POST['language_id']) && isset($_POST['language_proficiency_id']) && !empty($_POST['language_proficiency_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeLanguageID = htmlspecialchars($_POST['employee_language_id'], ENT_QUOTES, 'UTF-8');
+            $languageID = htmlspecialchars($_POST['language_id'], ENT_QUOTES, 'UTF-8');
+            $languageProficiencyID = htmlspecialchars($_POST['language_proficiency_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeLanguageExist = $this->employeeModel->checkEmployeeLanguageExist($employeeLanguageID);
+            $total = $checkEmployeeLanguageExist['total'] ?? 0;
+
+            $languageDetails = $this->languageModel->getLanguage($languageID);
+            $languageName = $languageDetails['language_name'] ?? null;
+
+            $languageProficiencyDetails = $this->languageProficiencyModel->getLanguageProficiency($languageProficiencyID);
+            $languageProficiencyName = $languageProficiencyDetails['language_proficiency_name'] ?? null;
+
+            if($total > 0){
+                $this->employeeModel->updateEmployeeLanguage($employeeLanguageID, $employeeID, $languageID, $languageName, $languageProficiencyID, $languageProficiencyName, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Language Success',
+                    'message' => 'The language has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->employeeModel->insertEmployeeLanguage($employeeID, $languageID, $languageName, $languageProficiencyID, $languageProficiencyName, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert Language Success',
+                    'message' => 'The language has been inserted successfully.',
                     'messageType' => 'success'
                 ];
                 
@@ -1613,7 +1972,7 @@ class EmployeeController {
             return;
         }
 
-        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_experience_id']) && !empty($_POST['employee_experience_id'])) {
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
             $employeeExperienceID = htmlspecialchars($_POST['employee_experience_id'], ENT_QUOTES, 'UTF-8');
         
@@ -1691,7 +2050,7 @@ class EmployeeController {
             return;
         }
 
-        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_education_id']) && !empty($_POST['employee_education_id'])) {
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
             $employeeEducationID = htmlspecialchars($_POST['employee_education_id'], ENT_QUOTES, 'UTF-8');
         
@@ -1769,7 +2128,7 @@ class EmployeeController {
             return;
         }
 
-        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_address_id']) && !empty($_POST['employee_address_id'])) {
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
             $employeeAddressID = htmlspecialchars($_POST['employee_address_id'], ENT_QUOTES, 'UTF-8');
         
@@ -1847,7 +2206,7 @@ class EmployeeController {
             return;
         }
 
-        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_bank_account_id']) && !empty($_POST['employee_bank_account_id'])) {
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
             $employeeBankAccountID = htmlspecialchars($_POST['employee_bank_account_id'], ENT_QUOTES, 'UTF-8');
         
@@ -1925,7 +2284,7 @@ class EmployeeController {
             return;
         }
 
-        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_id_record_id']) && !empty($_POST['employee_id_record_id'])) {
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
             $employeeIDRecordID = htmlspecialchars($_POST['employee_id_record_id'], ENT_QUOTES, 'UTF-8');
 
@@ -2020,9 +2379,9 @@ class EmployeeController {
             return;
         }
 
-        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_license_id']) && !empty($_POST['employee_license_id'])) {
             $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
-            $employeeLicenseID = htmlspecialchars($_POST['employee_bank_account_id'], ENT_QUOTES, 'UTF-8');
+            $employeeLicenseID = htmlspecialchars($_POST['employee_license_id'], ENT_QUOTES, 'UTF-8');
         
             $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
             $total = $checkEmployeeExist['total'] ?? 0;
@@ -2062,6 +2421,162 @@ class EmployeeController {
                 'success' => true,
                 'title' => 'Delete License Success',
                 'message' => 'The license has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeEmergencyContact
+    # Description: 
+    # Delete the employee emergency contact if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeEmergencyContact() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_emergency_contact_id']) && !empty($_POST['employee_emergency_contact_id'])) {
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeEmergencyContactID = htmlspecialchars($_POST['employee_emergency_contact_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Emergency Contact Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkEmployeeEmergencyContactExist = $this->employeeModel->checkEmployeeEmergencyContactExist($employeeEmergencyContactID);
+            $total = $checkEmployeeEmergencyContactExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Emergency Contact Error',
+                    'message' => 'The emergency contact does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->employeeModel->deleteEmployeeEmergencyContact($employeeEmergencyContactID, $employeeID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete Emergency Contact Success',
+                'message' => 'The emergency contact has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeLanguage
+    # Description: 
+    # Delete the employee language if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeLanguage() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_language_id']) && !empty($_POST['employee_language_id'])) {
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeLanguageID = htmlspecialchars($_POST['employee_language_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Language Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkEmployeeLanguageExist = $this->employeeModel->checkEmployeeLanguageExist($employeeLanguageID);
+            $total = $checkEmployeeLanguageExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Language Error',
+                    'message' => 'The language does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->employeeModel->deleteEmployeeLanguage($employeeLanguageID, $employeeID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete Language Success',
+                'message' => 'The language has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -2464,6 +2979,22 @@ class EmployeeController {
                 echo json_encode($response);
                 exit;
             }
+
+            $checkEmployeeExperienceExist = $this->employeeModel->checkEmployeeExperienceExist($employeeExperienceID);
+            $total = $checkEmployeeExperienceExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'detailsNotExist' => true,
+                    'title' => 'Get Experience Details Error',
+                    'message' => 'The experience does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
     
             $employeeExperienceDetails = $this->employeeModel->getEmployeeExperience($employeeExperienceID);
 
@@ -2528,6 +3059,22 @@ class EmployeeController {
                     'notExist' => true,
                     'title' => 'Get Education Details Error',
                     'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $checkEmployeeEducationExist = $this->employeeModel->checkEmployeeEducationExist($employeeEducationID);
+            $total = $checkEmployeeEducationExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'detailsNotExist' => true,
+                    'title' => 'Get Education Details Error',
+                    'message' => 'The education does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -2603,6 +3150,22 @@ class EmployeeController {
                 echo json_encode($response);
                 exit;
             }
+
+            $checkEmployeeAddressExist = $this->employeeModel->checkEmployeeAddressExist($employeeAddressID);
+            $total = $checkEmployeeAddressExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'detailsNotExist' => true,
+                    'title' => 'Get Address Details Error',
+                    'message' => 'The address does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
     
             $employeeAddressDetails = $this->employeeModel->getEmployeeAddress($employeeAddressID);
 
@@ -2664,6 +3227,22 @@ class EmployeeController {
                     'notExist' => true,
                     'title' => 'Get Bank Account Details Error',
                     'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $checkEmployeeBankAccountExist = $this->employeeModel->checkEmployeeBankAccountExist($employeeBankAccountID);
+            $total = $checkEmployeeBankAccountExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'detailsNotExist' => true,
+                    'title' => 'Get Bank Account Details Error',
+                    'message' => 'The bank account does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -2740,7 +3319,7 @@ class EmployeeController {
             if($total === 0){
                 $response = [
                     'success' => false,
-                    'notExist' => true,
+                    'detailsNotExist' => true,
                     'title' => 'Get ID Record Details Error',
                     'message' => 'The ID record does not exist.',
                     'messageType' => 'error'
@@ -2821,7 +3400,7 @@ class EmployeeController {
             if($total === 0){
                 $response = [
                     'success' => false,
-                    'notExist' => true,
+                    'detailsNotExist' => true,
                     'title' => 'Get License Details Error',
                     'message' => 'The license does not exist.',
                     'messageType' => 'error'
@@ -2840,6 +3419,165 @@ class EmployeeController {
                 'licenseNumber' => $employeeLicenseDetails['license_number'] ?? null,
                 'issueDate' => $this->systemModel->checkDate('empty', $employeeLicenseDetails['issue_date'], '', 'm/d/Y', ''),
                 'expirationDate' => $this->systemModel->checkDate('empty', $employeeLicenseDetails['expiration_date'], '', 'm/d/Y', '')
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeEmergencyContactDetails
+    # Description: 
+    # Handles the retrieval of employee emergency contact details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeEmergencyContactDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_emergency_contact_id']) && !empty($_POST['employee_emergency_contact_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeEmergencyContactID = htmlspecialchars($_POST['employee_emergency_contact_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Emergency Contact Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $checkEmployeeEmergencyContactExist = $this->employeeModel->checkEmployeeEmergencyContactExist($employeeEmergencyContactID);
+            $total = $checkEmployeeEmergencyContactExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'detailsNotExist' => true,
+                    'title' => 'Get Emergency Contact Details Error',
+                    'message' => 'The emergency contact does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeEmergencyContactDetails = $this->employeeModel->getEmployeeEmergencyContact($employeeEmergencyContactID);
+
+            $response = [
+                'success' => true,
+                'emergencyContactName' => $employeeEmergencyContactDetails['emergency_contact_name'] ?? null,
+                'relationID' => $employeeEmergencyContactDetails['relation_id'] ?? null,
+                'telephone' => $employeeEmergencyContactDetails['telephone'] ?? null,
+                'mobile' => $employeeEmergencyContactDetails['mobile'] ?? null,
+                'email' => $employeeEmergencyContactDetails['email'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeLanguageDetails
+    # Description: 
+    # Handles the retrieval of employee language details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeLanguageDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_language_id']) && !empty($_POST['employee_language_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeLanguageID = htmlspecialchars($_POST['employee_language_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Language Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $checkEmployeeLanguageExist = $this->employeeModel->checkEmployeeLanguageExist($employeeLanguageID);
+            $total = $checkEmployeeLanguageExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'detailsNotExist' => true,
+                    'title' => 'Get Language Details Error',
+                    'message' => 'The language does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeLanguageDetails = $this->employeeModel->getEmployeeLanguage($employeeLanguageID);
+
+            $response = [
+                'success' => true,
+                'languageID' => $employeeLanguageDetails['language_id'] ?? null,
+                'languageProficiencyID' => $employeeLanguageDetails['language_proficiency_id'] ?? null
             ];
 
             echo json_encode($response);
@@ -2885,10 +3623,14 @@ require_once '../../country/model/country-model.php';
 require_once '../../bank/model/bank-model.php';
 require_once '../../bank-account-type/model/bank-account-type-model.php';
 require_once '../../id-type/model/id-type-model.php';
+require_once '../../relation/model/relation-model.php';
+require_once '../../language/model/language-model.php';
+require_once '../../language-proficiency/model/language-proficiency-model.php';
+require_once '../../departure-reason/model/departure-reason-model.php';
 require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new EmploymentLocationTypeModel(new DatabaseModel), new AddressTypeModel(new DatabaseModel), new CityModel(new DatabaseModel), new StateModel(new DatabaseModel), new CountryModel(new DatabaseModel), new BankModel(new DatabaseModel), new BankAccountTypeModel(new DatabaseModel), new IDTypeModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
+$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new EmploymentLocationTypeModel(new DatabaseModel), new AddressTypeModel(new DatabaseModel), new CityModel(new DatabaseModel), new StateModel(new DatabaseModel), new CountryModel(new DatabaseModel), new BankModel(new DatabaseModel), new BankAccountTypeModel(new DatabaseModel), new IDTypeModel(new DatabaseModel), new RelationModel(new DatabaseModel), new LanguageModel(new DatabaseModel), new LanguageProficiencyModel(new DatabaseModel), new DepartureReasonModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
 $controller->handleRequest();
 
 ?>

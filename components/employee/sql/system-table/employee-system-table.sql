@@ -230,3 +230,48 @@ CREATE INDEX employee_license_index_license_id ON employee_license(employee_lice
 CREATE INDEX employee_license_index_employee_id ON employee_license(employee_id);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Employee Emergency Contact Table */
+
+CREATE TABLE employee_emergency_contact (
+    employee_emergency_contact_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    employee_id INT UNSIGNED NOT NULL,    
+    emergency_contact_name VARCHAR(500) NOT NULL,
+    relation_id INT NOT NULL,
+    relation_name VARCHAR(100) NOT NULL,
+    telephone VARCHAR(50),
+    mobile VARCHAR(50),
+    email VARCHAR(200),
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX employee_emergency_contact_index_emergency_contact_id ON employee_emergency_contact(employee_emergency_contact_id);
+CREATE INDEX employee_emergency_contact_index_employee_id ON employee_emergency_contact(employee_id);
+CREATE INDEX employee_emergency_contact_index_relation_id ON employee_emergency_contact(relation_id);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Employee Language Table */
+
+CREATE TABLE employee_language (
+    employee_language_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    employee_id INT UNSIGNED NOT NULL,
+    language_id INT NOT NULL,
+    language_name VARCHAR(100) NOT NULL,
+    language_proficiency_id INT NOT NULL,
+    language_proficiency_name VARCHAR(100) NOT NULL,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX employee_language_index_employee_language_id ON employee_language(employee_language_id);
+CREATE INDEX employee_language_index_employee_id ON employee_language(employee_id);
+CREATE INDEX employee_language_index_language_id ON employee_language(language_id);
+CREATE INDEX employee_language_index_language_proficiency_id ON employee_language(language_proficiency_id);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */

@@ -570,7 +570,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
             
                     $list .= '<div class="row ' . $mbClass . '">
                                 <div class="col-md-12">
-                                    <label for="id_image" class="cursor-pointer bg-light mb-3">
+                                    <label for="id_image" class="cursor-pointer bg-light w-100 mb-3">
                                         <img src="'. $idImage .'" alt="id-record-img" class="card-img w-100 object-fit-cover cursor-pointer edit-id-record-image-details" data-employee-id-record-id="' . $employeeIDRecordID . '" height="100">
                                     </label>
                                     <div class="d-flex align-items-center justify-content-between">
@@ -678,12 +678,178 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 }
             }
             else{
-                $list = 'No ID record found.';
+                $list = 'No license found.';
             }
             
 
             $response[] = [
-                'ID_RECORD_LIST' => $list
+                'LICENSE_LIST' => $list
+            ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: emergency contact list
+        # Description:
+        # Generates the emergency contact list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'emergency contact list':
+            $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeEmergencyContact(:employeeID)');
+            $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($options); 
+            $sql->closeCursor();
+
+            $list = '';
+
+            if($count > 0){
+                $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+            
+                $i = 0;
+                $totalIterations = count($options);
+            
+                foreach ($options as $row) {
+                    $employeeEmergencyContactID = $row['employee_emergency_contact_id'];
+                    $emergencyContactName = $row['emergency_contact_name'];
+                    $relationName = $row['relation_name'];
+                    $telephone = $row['telephone'];
+                    $mobile = $row['mobile'];
+                    $email = $row['email'];
+
+                    $updateButton = '';
+                    $deleteButton = '';
+                    $setDefaultButton = '';
+                    if($employeeWriteAccess['total'] > 0){
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-emergency-contact-details" data-bs-toggle="modal" data-bs-target="#emergency-contact-modal" data-employee-emergency-contact-id="' . $employeeEmergencyContactID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-emergency-contact-details" data-employee-emergency-contact-id="' . $employeeEmergencyContactID . '">Delete</button>';
+                    }
+
+                    $telephone = !empty($telephone) ? $telephone . '<br/>' : $telephone ?? '';
+                    $mobile = !empty($mobile) ? $mobile . '<br/>' : $mobile ?? '';
+                    $email = !empty($email) ? $email . '<br/>' : $email ?? '';
+                    
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <h6 class="fw-semibold mb-1">'. $emergencyContactName .'</h6>
+                                            <p class="mb-2 fs-2">'. $relationName .'</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mt-2 mb-2">
+                                    '. $telephone .'
+                                    '. $mobile .'
+                                    '. $email .'
+                                </div>
+                                <div class="d-flex gap-2">
+                                    '. $updateButton .'                                
+                                    <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-employee-emergency-contact-log-notes" data-employee-emergency-contact-id="' . $employeeEmergencyContactID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
+                                    Log Notes
+                                    </button>
+                                    '. $deleteButton .'
+                                </div>
+                            </div>';
+            
+                    $i++;
+                }
+            }
+            else{
+                $list = 'No emergency contact found.';
+            }
+            
+
+            $response[] = [
+                'EMERGENCY_CONTACT_LIST' => $list
+            ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: language list
+        # Description:
+        # Generates the language list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'language list':
+            $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeLanguage(:employeeID)');
+            $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($options); 
+            $sql->closeCursor();
+
+            $list = '';
+
+            if($count > 0){
+                $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+            
+                $i = 0;
+                $totalIterations = count($options);
+            
+                foreach ($options as $row) {
+                    $employeeLanguageID = $row['employee_language_id'];
+                    $languageName = $row['language_name'];
+                    $languageProficiencyName = $row['language_proficiency_name'];
+
+                    $updateButton = '';
+                    $deleteButton = '';
+                    $setDefaultButton = '';
+                    if($employeeWriteAccess['total'] > 0){
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-language-details" data-bs-toggle="modal" data-bs-target="#language-modal" data-employee-language-id="' . $employeeLanguageID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-language-details" data-employee-language-id="' . $employeeLanguageID . '">Delete</button>';
+                    }
+
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <h6 class="fw-semibold mb-1">'. $languageName .'</h6>
+                                            <p class="mb-2 fs-2">'. $languageProficiencyName .'</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    '. $updateButton .'                                
+                                    <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-employee-language-log-notes" data-employee-language-id="' . $employeeLanguageID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
+                                    Log Notes
+                                    </button>
+                                    '. $deleteButton .'
+                                </div>
+                            </div>';
+            
+                    $i++;
+                }
+            }
+            else{
+                $list = 'No language found.';
+            }
+            
+
+            $response[] = [
+                'LANGUAGE_LIST' => $list
             ];
 
             echo json_encode($response);

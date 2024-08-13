@@ -753,3 +753,103 @@ BEGIN
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
     VALUES ('employee_license', NEW.employee_license_id, audit_log, NEW.last_log_by, NOW());
 END //
+
+CREATE TRIGGER employee_emergency_contact_trigger_update
+AFTER UPDATE ON employee_emergency_contact
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.emergency_contact_name <> OLD.emergency_contact_name THEN
+        SET audit_log = CONCAT(audit_log, "Emergency Contact Name: ", OLD.emergency_contact_name, " -> ", NEW.emergency_contact_name, "<br/>");
+    END IF;
+
+    IF NEW.relation_name <> OLD.relation_name THEN
+        SET audit_log = CONCAT(audit_log, "Relation Name: ", OLD.relation_name, " -> ", NEW.relation_name, "<br/>");
+    END IF;
+
+    IF NEW.telephone <> OLD.telephone THEN
+        SET audit_log = CONCAT(audit_log, "Telephone: ", OLD.telephone, " -> ", NEW.telephone, "<br/>");
+    END IF;
+
+    IF NEW.mobile <> OLD.mobile THEN
+        SET audit_log = CONCAT(audit_log, "Mobile: ", OLD.mobile, " -> ", NEW.mobile, "<br/>");
+    END IF;
+
+    IF NEW.email <> OLD.email THEN
+        SET audit_log = CONCAT(audit_log, "Email: ", OLD.email, " -> ", NEW.email, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_emergency_contact', NEW.employee_emergency_contact_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END //
+
+CREATE TRIGGER employee_emergency_contact_trigger_insert
+AFTER INSERT ON employee_emergency_contact
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee emergency contact created. <br/>';
+
+    IF NEW.emergency_contact_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Emergency Contact Name: ", NEW.emergency_contact_name);
+    END IF;
+
+    IF NEW.relation_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Relation Name: ", NEW.relation_name);
+    END IF;
+
+    IF NEW.telephone <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Telephone: ", NEW.telephone);
+    END IF;
+
+    IF NEW.mobile <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Mobile: ", NEW.mobile);
+    END IF;
+
+    IF NEW.email <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Email : ", NEW.email);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_emergency_contact', NEW.employee_emergency_contact_id, audit_log, NEW.last_log_by, NOW());
+END //
+
+CREATE TRIGGER employee_language_trigger_update
+AFTER UPDATE ON employee_language
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.language_name <> OLD.language_name THEN
+        SET audit_log = CONCAT(audit_log, "Language Name: ", OLD.language_name, " -> ", NEW.language_name, "<br/>");
+    END IF;
+
+    IF NEW.language_proficiency_name <> OLD.language_proficiency_name THEN
+        SET audit_log = CONCAT(audit_log, "Language Proficiency Name: ", OLD.language_proficiency_name, " -> ", NEW.language_proficiency_name, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_language', NEW.employee_language_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END //
+
+CREATE TRIGGER employee_language_trigger_insert
+AFTER INSERT ON employee_language
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee language created. <br/>';
+
+    IF NEW.language_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Language Name: ", NEW.language_name);
+    END IF;
+
+    IF NEW.language_proficiency_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Language Proficiency Name: ", NEW.language_proficiency_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_language', NEW.employee_language_id, audit_log, NEW.last_log_by, NOW());
+END //

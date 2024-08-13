@@ -51,6 +51,20 @@ BEGIN
     WHERE employee_license_id = p_employee_license_id;
 END //
 
+CREATE PROCEDURE checkEmployeeEmergencyContactExist(IN p_employee_emergency_contact_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_emergency_contact
+    WHERE employee_emergency_contact_id = p_employee_emergency_contact_id;
+END //
+
+CREATE PROCEDURE checkEmployeeLanguageExist(IN p_employee_language_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_language
+    WHERE employee_language_id = p_employee_language_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
@@ -110,6 +124,18 @@ CREATE PROCEDURE insertEmployeeLicense(IN p_employee_id INT, IN p_licensed_profe
 BEGIN
     INSERT INTO employee_license (employee_id, licensed_profession, licensing_body, license_number, issue_date, expiration_date, last_log_by) 
 	VALUES(p_employee_id, p_licensed_profession, p_licensing_body, p_license_number, p_issue_date, p_expiration_date, p_last_log_by);
+END //
+
+CREATE PROCEDURE insertEmployeeEmergencyContact(IN p_employee_id INT, IN p_emergency_contact_name VARCHAR(500), IN p_relation_id INT, IN p_relation_name VARCHAR(100), IN p_telephone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(200), IN p_last_log_by INT)
+BEGIN
+    INSERT INTO employee_emergency_contact (employee_id, emergency_contact_name, relation_id, relation_name, telephone, mobile, email, last_log_by) 
+	VALUES(p_employee_id, p_emergency_contact_name, p_relation_id, p_relation_name, p_telephone, p_mobile, p_email, p_last_log_by);
+END //
+
+CREATE PROCEDURE insertEmployeeLanguage(IN p_employee_id INT, IN p_language_id INT, IN p_language_name VARCHAR(100), IN p_language_proficiency_id INT, IN p_language_proficiency_name VARCHAR(100), IN p_last_log_by INT)
+BEGIN
+    INSERT INTO employee_language (employee_id, language_id, language_name, language_proficiency_id, language_proficiency_name, last_log_by) 
+	VALUES(p_employee_id, p_language_id, p_language_name, p_language_proficiency_id, p_language_proficiency_name, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -318,7 +344,7 @@ END //
 
 CREATE PROCEDURE updateEmployeeLicense(IN p_employee_license_id INT, IN p_employee_id INT, IN p_licensed_profession VARCHAR(200), IN p_licensing_body VARCHAR(200), IN p_license_number VARCHAR(200), IN p_issue_date DATE, IN p_expiration_date DATE, IN p_last_log_by INT)
 BEGIN
-    UPDATE employee_id_record
+    UPDATE employee_license
     SET employee_id = p_employee_id,
         licensed_profession = p_licensed_profession,
         licensing_body = p_licensing_body,
@@ -327,6 +353,32 @@ BEGIN
         expiration_date = p_expiration_date,
         last_log_by = p_last_log_by
     WHERE employee_license_id = p_employee_license_id;
+END //
+
+CREATE PROCEDURE updateEmployeeEmergencyContact(IN p_employee_emergency_contact_id INT, IN p_employee_id INT, IN p_emergency_contact_name VARCHAR(500), IN p_relation_id INT, IN p_relation_name VARCHAR(100), IN p_telephone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(200), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee_emergency_contact
+    SET employee_id = p_employee_id,
+        emergency_contact_name = p_emergency_contact_name,
+        relation_id = p_relation_id,
+        relation_name = p_relation_name,
+        telephone = p_telephone,
+        mobile = p_mobile,
+        email = p_email,
+        last_log_by = p_last_log_by
+    WHERE employee_emergency_contact_id = p_employee_emergency_contact_id;
+END //
+
+CREATE PROCEDURE updateEmployeeLanguage(IN p_employee_language_id INT, IN p_employee_id INT, IN p_language_id INT, IN p_language_name VARCHAR(100), IN p_language_proficiency_id INT, IN p_language_proficiency_name VARCHAR(100), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee_language
+    SET employee_id = p_employee_id,
+        language_id = p_language_id,
+        language_name = p_language_name,
+        language_proficiency_id = p_language_proficiency_id,
+        language_proficiency_name = p_language_proficiency_name,
+        last_log_by = p_last_log_by
+    WHERE employee_language_id = p_employee_language_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -348,6 +400,8 @@ BEGIN
     DELETE FROM employee_bank_account WHERE employee_id = p_employee_id;
     DELETE FROM employee_id_record WHERE employee_id = p_employee_id;
     DELETE FROM employee_license WHERE employee_id = p_employee_id;
+    DELETE FROM employee_emergency_contact WHERE employee_id = p_employee_id;
+    DELETE FROM employee_language WHERE employee_id = p_employee_id;
     DELETE FROM employee WHERE employee_id = p_employee_id;
 
     COMMIT;
@@ -404,6 +458,16 @@ BEGIN
    DELETE FROM employee_license WHERE employee_license_id = p_employee_license_id;
 END //
 
+CREATE PROCEDURE deleteEmployeeEmergencyContact(IN p_employee_emergency_contact_id INT)
+BEGIN
+   DELETE FROM employee_emergency_contact WHERE employee_emergency_contact_id = p_employee_emergency_contact_id;
+END //
+
+CREATE PROCEDURE deleteEmployeeLanguage(IN p_employee_language_id INT)
+BEGIN
+   DELETE FROM employee_language WHERE employee_language_id = p_employee_language_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Get Stored Procedure */
@@ -448,6 +512,18 @@ CREATE PROCEDURE getEmployeeLicense(IN p_employee_license_id INT)
 BEGIN
 	SELECT * FROM employee_license
 	WHERE employee_license_id = p_employee_license_id;
+END //
+
+CREATE PROCEDURE getEmployeeEmergencyContact(IN p_employee_emergency_contact_id INT)
+BEGIN
+	SELECT * FROM employee_emergency_contact
+	WHERE employee_emergency_contact_id = p_employee_emergency_contact_id;
+END //
+
+CREATE PROCEDURE getEmployeeLanguage(IN p_employee_language_id INT)
+BEGIN
+	SELECT * FROM employee_language
+	WHERE employee_language_id = p_employee_language_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -548,6 +624,18 @@ END //
 CREATE PROCEDURE generateEmployeeLicense(IN p_employee_id INT)
 BEGIN
 	SELECT * FROM employee_license
+	WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE generateEmployeeEmergencyContact(IN p_employee_id INT)
+BEGIN
+	SELECT * FROM employee_emergency_contact
+	WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE generateEmployeeLanguage(IN p_employee_id INT)
+BEGIN
+	SELECT * FROM employee_language
 	WHERE employee_id = p_employee_id;
 END //
 

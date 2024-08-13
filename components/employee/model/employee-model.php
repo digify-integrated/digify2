@@ -428,7 +428,7 @@ class EmployeeModel {
     # Description: Updates the employee license.
     #
     # Parameters:
-    # - $p_employee_id_record_id (int): The employee ID record ID.
+    # - $p_employee_license_id (int): The employee license ID.
     # - $p_employee_id (int): The employee ID.
     # - $p_licensed_profession (string): The licensed profession.
     # - $p_licensing_body (string): The licensing body.
@@ -440,15 +440,79 @@ class EmployeeModel {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateEmployeeLicense($p_employee_id_record_id, $p_employee_id, $p_licensed_profession, $p_licensing_body, $p_license_number, $p_issue_date, $p_expiration_date, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeLicense(:p_employee_id_record_id, :p_employee_id, :p_licensed_profession, :p_licensing_body, :p_license_number, :p_issue_date, :p_expiration_date, :p_last_log_by)');
-        $stmt->bindValue(':p_employee_id_record_id', $p_employee_id_record_id, PDO::PARAM_INT);
+    public function updateEmployeeLicense($p_employee_license_id, $p_employee_id, $p_licensed_profession, $p_licensing_body, $p_license_number, $p_issue_date, $p_expiration_date, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeLicense(:p_employee_license_id, :p_employee_id, :p_licensed_profession, :p_licensing_body, :p_license_number, :p_issue_date, :p_expiration_date, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_license_id', $p_employee_license_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_licensed_profession', $p_licensed_profession, PDO::PARAM_STR);
         $stmt->bindValue(':p_licensing_body', $p_licensing_body, PDO::PARAM_STR);
         $stmt->bindValue(':p_license_number', $p_license_number, PDO::PARAM_STR);
         $stmt->bindValue(':p_issue_date', $p_issue_date, PDO::PARAM_STR);
         $stmt->bindValue(':p_expiration_date', $p_expiration_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeEmergencyContact
+    # Description: Updates the employee emergency contact.
+    #
+    # Parameters:
+    # - $p_employee_emergency_contact_id (int): The employee emergency contact ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_emergency_contact_name (string): The emergency contact name.
+    # - $p_relation_id (int): The relation ID.
+    # - $p_relation_name (string): The relation name.
+    # - $p_telephone (string): The telephone.
+    # - $p_mobile (string): The mobile.
+    # - $p_email (string): The email.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeEmergencyContact($p_employee_emergency_contact_id, $p_employee_id, $p_emergency_contact_name, $p_relation_id, $p_relation_name, $p_telephone, $p_mobile, $p_email, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeEmergencyContact(:p_employee_emergency_contact_id, :p_employee_id, :p_emergency_contact_name, :p_relation_id, :p_relation_name, :p_telephone, :p_mobile, :p_email, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_emergency_contact_id', $p_employee_emergency_contact_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_emergency_contact_name', $p_emergency_contact_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_relation_id', $p_relation_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_relation_name', $p_relation_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_telephone', $p_telephone, PDO::PARAM_STR);
+        $stmt->bindValue(':p_mobile', $p_mobile, PDO::PARAM_STR);
+        $stmt->bindValue(':p_email', $p_email, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeLanguage
+    # Description: Updates the employee language.
+    #
+    # Parameters:
+    # - $p_employee_language_id (int): The employee language ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_language_id (int): The language ID.
+    # - $p_language_name (string): The language name.
+    # - $p_language_proficiency_id (int): The language proficiency ID.
+    # - $p_language_proficiency_name (string): The language proficiency name.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeLanguage($p_employee_language_id, $p_employee_id, $p_language_id, $p_language_name, $p_language_proficiency_id, $p_language_proficiency_name, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeLanguage(:p_employee_language_id, :p_employee_id, :p_language_id, :p_language_name, :p_language_proficiency_id, :p_language_proficiency_name, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_language_id', $p_employee_language_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_language_id', $p_language_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_language_name', $p_language_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_language_proficiency_id', $p_language_proficiency_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_language_proficiency_name', $p_language_proficiency_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -825,6 +889,66 @@ class EmployeeModel {
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
+    # -------------------------------------------------------------    
+
+    # -------------------------------------------------------------
+    #
+    # Function: insertEmployeeEmergencyContact
+    # Description: Inserts the employee license.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_emergency_contact_name (string): The emergency contact name.
+    # - $p_relation_id (int): The relation ID.
+    # - $p_relation_name (string): The relation name.
+    # - $p_telephone (string): The telephone.
+    # - $p_mobile (string): The mobile.
+    # - $p_email (string): The email.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertEmployeeEmergencyContact($p_employee_id, $p_emergency_contact_name, $p_relation_id, $p_relation_name, $p_telephone, $p_mobile, $p_email, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeEmergencyContact(:p_employee_id, :p_emergency_contact_name, :p_relation_id, :p_relation_name, :p_telephone, :p_mobile, :p_email, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_emergency_contact_name', $p_emergency_contact_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_relation_id', $p_relation_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_relation_name', $p_relation_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_telephone', $p_telephone, PDO::PARAM_STR);
+        $stmt->bindValue(':p_mobile', $p_mobile, PDO::PARAM_STR);
+        $stmt->bindValue(':p_email', $p_email, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: insertEmployeeLanguage
+    # Description: Inserts the employee language.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_language_id (int): The language ID.
+    # - $p_language_name (string): The language name.
+    # - $p_language_proficiency_id (int): The language proficiency ID.
+    # - $p_language_proficiency_name (string): The language proficiency name.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertEmployeeLanguage($p_employee_id, $p_language_id, $p_language_name, $p_language_proficiency_id, $p_language_proficiency_name, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeLanguage(:p_employee_id, :p_language_id, :p_language_name, :p_language_proficiency_id, :p_language_proficiency_name, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_language_id', $p_language_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_language_name', $p_language_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_language_proficiency_id', $p_language_proficiency_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_language_proficiency_name', $p_language_proficiency_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
@@ -965,6 +1089,44 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: checkEmployeeEmergencyContactExist
+    # Description: Checks if a employee emergency contact exists.
+    #
+    # Parameters:
+    # - $p_employee_emergency_contact_id (int): The employee emergency contact ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkEmployeeEmergencyContactExist($p_employee_emergency_contact_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeEmergencyContactExist(:p_employee_emergency_contact_id)');
+        $stmt->bindValue(':p_employee_emergency_contact_id', $p_employee_emergency_contact_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: checkEmployeeLanguageExist
+    # Description: Checks if a employee language exists.
+    #
+    # Parameters:
+    # - $p_employee_language_id (int): The employee language ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkEmployeeLanguageExist($p_employee_language_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeLanguageExist(:p_employee_language_id)');
+        $stmt->bindValue(':p_employee_language_id', $p_employee_language_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -1092,6 +1254,42 @@ class EmployeeModel {
     public function deleteEmployeeLicense($p_employee_license_id) {
         $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeLicense(:p_employee_license_id)');
         $stmt->bindValue(':p_employee_license_id', $p_employee_license_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeEmergencyContact
+    # Description: Deletes the employee emergency contact.
+    #
+    # Parameters:
+    # - $p_employee_emergency_contact_id (int): The employee emergency ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeEmergencyContact($p_employee_emergency_contact_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeEmergencyContact(:p_employee_emergency_contact_id)');
+        $stmt->bindValue(':p_employee_emergency_contact_id', $p_employee_emergency_contact_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeLanguage
+    # Description: Deletes the employee language.
+    #
+    # Parameters:
+    # - $p_employee_language_id (int): The employee language ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeLanguage($p_employee_language_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeLanguage(:p_employee_language_id)');
+        $stmt->bindValue(':p_employee_language_id', $p_employee_language_id, PDO::PARAM_INT);
         $stmt->execute();
     }
     # -------------------------------------------------------------
@@ -1229,12 +1427,52 @@ class EmployeeModel {
     # - $p_employee_license_id (int): The employee license ID.
     #
     # Returns:
-    # - An array containing the employee ID record details.
+    # - An array containing the employee license details.
     #
     # -------------------------------------------------------------
     public function getEmployeeLicense($p_employee_license_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getEmployeeLicense(:p_employee_license_id)');
         $stmt->bindValue(':p_employee_license_id', $p_employee_license_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeEmergencyContact
+    # Description: Retrieves the details of a employee emergency contact.
+    #
+    # Parameters:
+    # - $p_employee_emergency_contact_id (int): The employee emergency contact ID.
+    #
+    # Returns:
+    # - An array containing the employee emergency contact details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeEmergencyContact($p_employee_emergency_contact_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeeEmergencyContact(:p_employee_emergency_contact_id)');
+        $stmt->bindValue(':p_employee_emergency_contact_id', $p_employee_emergency_contact_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeLanguage
+    # Description: Retrieves the details of a employee language.
+    #
+    # Parameters:
+    # - $p_employee_language_id (int): The employee language ID.
+    #
+    # Returns:
+    # - An array containing the employee language details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeLanguage($p_employee_language_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeeLanguage(:p_employee_language_id)');
+        $stmt->bindValue(':p_employee_language_id', $p_employee_language_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

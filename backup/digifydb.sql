@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 13, 2024 at 11:32 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 13, 2024 at 04:27 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -221,6 +221,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeEducationExist` (IN `p
     WHERE employee_education_id = p_employee_education_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkEmployeeEmergencyContactExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeEmergencyContactExist` (IN `p_employee_emergency_contact_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_emergency_contact
+    WHERE employee_emergency_contact_id = p_employee_emergency_contact_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkEmployeeExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeExist` (IN `p_employee_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -240,6 +247,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeIDRecordExist` (IN `p_
 	SELECT COUNT(*) AS total
     FROM employee_id_record
     WHERE employee_id_record_id = p_employee_id_record_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkEmployeeLanguageExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeLanguageExist` (IN `p_employee_language_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_language
+    WHERE employee_language_id = p_employee_language_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkEmployeeLicenseExist`$$
@@ -623,6 +637,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmployeeEducation` (IN `p_emp
    DELETE FROM employee_education WHERE employee_education_id = p_employee_education_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteEmployeeEmergencyContact`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmployeeEmergencyContact` (IN `p_employee_emergency_contact_id` INT)   BEGIN
+   DELETE FROM employee_emergency_contact WHERE employee_emergency_contact_id = p_employee_emergency_contact_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteEmployeeExperience`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmployeeExperience` (IN `p_employee_experience_id` INT)   BEGIN
    DELETE FROM employee_experience WHERE employee_experience_id = p_employee_experience_id;
@@ -631,6 +650,11 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteEmployeeIDRecord`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmployeeIDRecord` (IN `p_employee_id_record_id` INT)   BEGIN
    DELETE FROM employee_id_record WHERE employee_id_record_id = p_employee_id_record_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteEmployeeLanguage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmployeeLanguage` (IN `p_employee_language_id` INT)   BEGIN
+   DELETE FROM employee_language WHERE employee_language_id = p_employee_language_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteEmployeeLicense`$$
@@ -1197,6 +1221,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeEducation` (IN `p_e
 	WHERE employee_id = p_employee_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateEmployeeEmergencyContact`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeEmergencyContact` (IN `p_employee_id` INT)   BEGIN
+	SELECT * FROM employee_emergency_contact
+	WHERE employee_id = p_employee_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateEmployeeExperience`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeExperience` (IN `p_employee_id` INT)   BEGIN
 	SELECT * FROM employee_experience
@@ -1206,6 +1236,12 @@ END$$
 DROP PROCEDURE IF EXISTS `generateEmployeeIDRecord`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeIDRecord` (IN `p_employee_id` INT)   BEGIN
 	SELECT * FROM employee_id_record
+	WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmployeeLanguage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeLanguage` (IN `p_employee_id` INT)   BEGIN
+	SELECT * FROM employee_language
 	WHERE employee_id = p_employee_id;
 END$$
 
@@ -1876,6 +1912,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployeeEducation` (IN `p_employ
 	WHERE employee_education_id = p_employee_education_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getEmployeeEmergencyContact`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployeeEmergencyContact` (IN `p_employee_emergency_contact_id` INT)   BEGIN
+	SELECT * FROM employee_emergency_contact
+	WHERE employee_emergency_contact_id = p_employee_emergency_contact_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getEmployeeExperience`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployeeExperience` (IN `p_employee_experience_id` INT)   BEGIN
 	SELECT * FROM employee_experience
@@ -1886,6 +1928,12 @@ DROP PROCEDURE IF EXISTS `getEmployeeIDRecord`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployeeIDRecord` (IN `p_employee_id_record_id` INT)   BEGIN
 	SELECT * FROM employee_id_record
 	WHERE employee_id_record_id = p_employee_id_record_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getEmployeeLanguage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployeeLanguage` (IN `p_employee_language_id` INT)   BEGIN
+	SELECT * FROM employee_language
+	WHERE employee_language_id = p_employee_language_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmployeeLicense`$$
@@ -2237,6 +2285,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeEducation` (IN `p_emp
 	VALUES(p_employee_id, p_school, p_degree, p_field_of_study, p_start_month, p_start_year, p_end_month, p_end_year, p_activities_societies, p_education_description, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertEmployeeEmergencyContact`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeEmergencyContact` (IN `p_employee_id` INT, IN `p_emergency_contact_name` VARCHAR(500), IN `p_relation_id` INT, IN `p_relation_name` VARCHAR(100), IN `p_telephone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO employee_emergency_contact (employee_id, emergency_contact_name, relation_id, relation_name, telephone, mobile, email, last_log_by) 
+	VALUES(p_employee_id, p_emergency_contact_name, p_relation_id, p_relation_name, p_telephone, p_mobile, p_email, p_last_log_by);
+END$$
+
 DROP PROCEDURE IF EXISTS `insertEmployeeExperience`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeExperience` (IN `p_employee_id` INT, IN `p_job_title` VARCHAR(100), IN `p_employment_type_id` INT, IN `p_employment_type_name` VARCHAR(100), IN `p_company_name` VARCHAR(200), IN `p_location` VARCHAR(200), IN `p_employment_location_type_id` INT, IN `p_employment_location_type_name` VARCHAR(100), IN `p_start_month` VARCHAR(20), IN `p_start_year` VARCHAR(20), IN `p_end_month` VARCHAR(20), IN `p_end_year` VARCHAR(20), IN `p_job_description` VARCHAR(5000), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO employee_experience (employee_id, job_title, employment_type_id, employment_type_name, company_name, location, employment_location_type_id, employment_location_type_name, start_month, start_year, end_month, end_year, job_description, last_log_by) 
@@ -2247,6 +2301,12 @@ DROP PROCEDURE IF EXISTS `insertEmployeeIDRecord`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeIDRecord` (IN `p_employee_id` INT, IN `p_id_type_id` INT, IN `p_id_type_name` VARCHAR(100), IN `p_id_number` VARCHAR(100), IN `p_issue_date` DATE, IN `p_expiration_date` DATE, IN `p_issuing_authority` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO employee_id_record (employee_id, id_type_id, id_type_name, id_number, issue_date, expiration_date, issuing_authority, last_log_by) 
 	VALUES(p_employee_id, p_id_type_id, p_id_type_name, p_id_number, p_issue_date, p_expiration_date, p_issuing_authority, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertEmployeeLanguage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeLanguage` (IN `p_employee_id` INT, IN `p_language_id` INT, IN `p_language_name` VARCHAR(100), IN `p_language_proficiency_id` INT, IN `p_language_proficiency_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO employee_language (employee_id, language_id, language_name, language_proficiency_id, language_proficiency_name, last_log_by) 
+	VALUES(p_employee_id, p_language_id, p_language_name, p_language_proficiency_id, p_language_proficiency_name, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertEmployeeLicense`$$
@@ -2989,6 +3049,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeEducation` (IN `p_emp
     WHERE employee_education_id = p_employee_education_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateEmployeeEmergencyContact`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeEmergencyContact` (IN `p_employee_emergency_contact_id` INT, IN `p_employee_id` INT, IN `p_emergency_contact_name` VARCHAR(500), IN `p_relation_id` INT, IN `p_relation_name` VARCHAR(100), IN `p_telephone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee_emergency_contact
+    SET employee_id = p_employee_id,
+        emergency_contact_name = p_emergency_contact_name,
+        relation_id = p_relation_id,
+        relation_name = p_relation_name,
+        telephone = p_telephone,
+        mobile = p_mobile,
+        email = p_email,
+        last_log_by = p_last_log_by
+    WHERE employee_emergency_contact_id = p_employee_emergency_contact_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateEmployeeExperience`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeExperience` (IN `p_employee_experience_id` INT, IN `p_employee_id` INT, IN `p_job_title` VARCHAR(100), IN `p_employment_type_id` INT, IN `p_employment_type_name` VARCHAR(100), IN `p_company_name` VARCHAR(200), IN `p_location` VARCHAR(200), IN `p_employment_location_type_id` INT, IN `p_employment_location_type_name` VARCHAR(100), IN `p_start_month` VARCHAR(20), IN `p_start_year` VARCHAR(20), IN `p_end_month` VARCHAR(20), IN `p_end_year` VARCHAR(20), IN `p_job_description` VARCHAR(5000), IN `p_last_log_by` INT)   BEGIN
     UPDATE employee_experience
@@ -3051,9 +3125,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeImage` (IN `p_employe
     WHERE employee_id = p_employee_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateEmployeeLanguage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeLanguage` (IN `p_employee_language_id` INT, IN `p_employee_id` INT, IN `p_language_id` INT, IN `p_language_name` VARCHAR(100), IN `p_language_proficiency_id` INT, IN `p_language_proficiency_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee_language
+    SET employee_id = p_employee_id,
+        language_id = p_language_id,
+        language_name = p_language_name,
+        language_proficiency_id = p_language_proficiency_id,
+        language_proficiency_name = p_language_proficiency_name,
+        last_log_by = p_last_log_by
+    WHERE employee_language_id = p_employee_language_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateEmployeeLicense`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeLicense` (IN `p_employee_license_id` INT, IN `p_employee_id` INT, IN `p_licensed_profession` VARCHAR(200), IN `p_licensing_body` VARCHAR(200), IN `p_license_number` VARCHAR(200), IN `p_issue_date` DATE, IN `p_expiration_date` DATE, IN `p_last_log_by` INT)   BEGIN
-    UPDATE employee_id_record
+    UPDATE employee_license
     SET employee_id = p_employee_id,
         licensed_profession = p_licensed_profession,
         licensing_body = p_licensing_body,
@@ -7345,7 +7431,16 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3295, 'employee_id_record', 3, 'Employee ID record created. <br/><br/>ID Type Name: National Bureau of Investigation (NBI) Clearance<br/>ID Number: asd123<br/>Issue Date: 2024-08-30', 2, '2024-08-13 15:14:09', '2024-08-13 15:14:09'),
 (3296, 'employee_id_record', 4, 'Employee ID record created. <br/><br/>ID Type Name: Barangay ID<br/>ID Number: 1656<br/>Issue Date: 2024-08-14<br/>Expiration Date: 2024-08-20<br/>Issuing Authority: asdasd', 2, '2024-08-13 16:16:52', '2024-08-13 16:16:52'),
 (3297, 'employee_id_record', 4, 'Issuing Authority: asdasd -> asdasdasdasdasdasd<br/>', 2, '2024-08-13 16:20:14', '2024-08-13 16:20:14'),
-(3298, 'employee_id_record', 4, 'Issuing Authority: asdasdasdasdasdasd -> asdasdas dasdasdasd<br/>', 2, '2024-08-13 16:20:22', '2024-08-13 16:20:22');
+(3298, 'employee_id_record', 4, 'Issuing Authority: asdasdasdasdasdasd -> asdasdas dasdasdasd<br/>', 2, '2024-08-13 16:20:22', '2024-08-13 16:20:22'),
+(3299, 'user_account', 2, 'Last Connection Date: 2024-08-13 08:54:34 -> 2024-08-13 19:15:35<br/>', 2, '2024-08-13 19:15:35', '2024-08-13 19:15:35'),
+(3300, 'employee_license', 1, 'Employee license created. <br/><br/>Licensed Profession: 123123<br/>Licensing Body: test<br/>License Number: asdasd<br/>Issue Date: 2024-08-13', 2, '2024-08-13 19:20:54', '2024-08-13 19:20:54'),
+(3301, 'employee_license', 1, 'License Number: asdasd -> knokhaoihoinoin<br/>', 2, '2024-08-13 19:26:28', '2024-08-13 19:26:28'),
+(3302, 'employee_license', 1, 'Licensed Profession: 123123 -> Lawyer<br/>Licensing Body: test -> Philippine Board Association<br/>License Number: knokhaoihoinoin -> 0889219-0898<br/>Issue Date: 2024-08-13 -> 2024-08-20<br/>', 2, '2024-08-13 19:26:54', '2024-08-13 19:26:54'),
+(3303, 'employee_emergency_contact', 1, 'Employee emergency contact created. <br/><br/>Emergency Contact Name: Lawrence Agulto<br/>Relation Name: Brother<br/>Telephone: pkpoop<br/>Mobile: -0-09-09-09<br/>Email : klkmlk@gmail.com', 2, '2024-08-13 22:08:28', '2024-08-13 22:08:28'),
+(3304, 'employee_emergency_contact', 1, 'Emergency Contact Name: Lawrence Agulto -> Lawrence Agultoasda<br/>Relation Name: Brother -> Daughter<br/>Telephone: pkpoop -> pkpoopasdas<br/>Email: klkmlk@gmail.com -> asdasdklkmlk@gmail.com<br/>', 2, '2024-08-13 22:11:13', '2024-08-13 22:11:13'),
+(3305, 'employee_language', 1, 'Employee language created. <br/><br/>Language Name: Afrikaans<br/>Language Proficiency Name: Intermediate', 2, '2024-08-13 22:12:39', '2024-08-13 22:12:39'),
+(3306, 'employee_language', 1, 'Language Name: Afrikaans -> Albanian<br/>Language Proficiency Name: Intermediate -> Basic<br/>', 2, '2024-08-13 22:13:26', '2024-08-13 22:13:26'),
+(3307, 'employee_bank_account', 5, 'Bank Name: Banco de Oro (BDO) -> Development Bank of the Philippines (DBP)<br/>', 2, '2024-08-13 22:14:30', '2024-08-13 22:14:30');
 
 -- --------------------------------------------------------
 
@@ -10388,7 +10483,7 @@ CREATE TABLE `employee` (
 
 INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `badge_id`, `company_id`, `company_name`, `employment_type_id`, `employment_type_name`, `department_id`, `department_name`, `job_position_id`, `job_position_name`, `work_location_id`, `work_location_name`, `manager_id`, `manager_name`, `work_schedule_id`, `work_schedule_name`, `employment_status`, `pin_code`, `home_work_distance`, `visa_number`, `work_permit_number`, `visa_expiration_date`, `work_permit_expiration_date`, `work_permit`, `onboard_date`, `offboard_date`, `time_off_approver_id`, `time_off_approver_name`, `departure_reason_id`, `departure_reason_name`, `detailed_departure_reason`, `created_date`, `last_log_by`) VALUES
 (1, NULL, NULL, 'Lawrence De Vera Agulto, Suffix', 'Lawrence', 'De Vera', 'Agulto', 'Suffix', NULL, 'nickname', 2, 'Engaged', 2, 'Female', 1, 'Aglipayan Church', 1, 'A+', '2024-07-28', 'place of birth', 1, 2, 'badge id', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'pincode', 20, 'visa no', 'work permit no', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:03:54', 2),
-(2, NULL, NULL, 'Lennard De Vera Agulto, Suffix', 'Lennard', 'De Vera', 'Agulto', 'Suffix', 'No about found.', '--', 4, 'Married', 1, 'Male', 12, 'Roman Catholic', 2, 'A-', '2024-07-30', 'Cabanatuan city, Nueva Ecija', 0, 0, 'Badge IDs', 1, 'Christian General Motors Inc.', 11, 'Probationary', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Codes', 0, 'Visa Nos', 'Work Permit Nos', '2024-07-31', '2024-08-30', NULL, '2024-09-30', NULL, 0, '', NULL, NULL, NULL, '2024-07-28 20:40:04', 2);
+(2, './components/employee/image/2/profile/cMm3.jpg', NULL, 'Lennard De Vera Agulto, Suffix', 'Lennard', 'De Vera', 'Agulto', 'Suffix', 'No about found.', '--', 4, 'Married', 1, 'Male', 12, 'Roman Catholic', 2, 'A-', '2024-07-30', 'Cabanatuan city, Nueva Ecija', 0, 0, 'Badge IDs', 1, 'Christian General Motors Inc.', 11, 'Probationary', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Codes', 0, 'Visa Nos', 'Work Permit Nos', '2024-07-31', '2024-08-30', NULL, '2024-09-30', NULL, 0, '', NULL, NULL, NULL, '2024-07-28 20:40:04', 2);
 
 --
 -- Triggers `employee`
@@ -10845,7 +10940,7 @@ CREATE TABLE `employee_bank_account` (
 --
 
 INSERT INTO `employee_bank_account` (`employee_bank_account_id`, `employee_id`, `bank_id`, `bank_name`, `bank_account_type_id`, `bank_account_type_name`, `account_number`, `created_date`, `last_log_by`) VALUES
-(5, 2, 1, 'Banco de Oro (BDO)', 1, 'Checking Account', '1245623', '2024-08-12 11:59:27', 2);
+(5, 2, 8, 'Development Bank of the Philippines (DBP)', 1, 'Checking Account', '1245623', '2024-08-12 11:59:27', 2);
 
 --
 -- Triggers `employee_bank_account`
@@ -11021,6 +11116,92 @@ CREATE TRIGGER `employee_education_trigger_update` AFTER UPDATE ON `employee_edu
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('employee_education', NEW.employee_education_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_emergency_contact`
+--
+
+DROP TABLE IF EXISTS `employee_emergency_contact`;
+CREATE TABLE `employee_emergency_contact` (
+  `employee_emergency_contact_id` int(10) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `emergency_contact_name` varchar(500) NOT NULL,
+  `relation_id` int(11) NOT NULL,
+  `relation_name` varchar(100) NOT NULL,
+  `telephone` varchar(50) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `employee_emergency_contact`
+--
+DROP TRIGGER IF EXISTS `employee_emergency_contact_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `employee_emergency_contact_trigger_insert` AFTER INSERT ON `employee_emergency_contact` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee emergency contact created. <br/>';
+
+    IF NEW.emergency_contact_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Emergency Contact Name: ", NEW.emergency_contact_name);
+    END IF;
+
+    IF NEW.relation_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Relation Name: ", NEW.relation_name);
+    END IF;
+
+    IF NEW.telephone <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Telephone: ", NEW.telephone);
+    END IF;
+
+    IF NEW.mobile <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Mobile: ", NEW.mobile);
+    END IF;
+
+    IF NEW.email <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Email : ", NEW.email);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_emergency_contact', NEW.employee_emergency_contact_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `employee_emergency_contact_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `employee_emergency_contact_trigger_update` AFTER UPDATE ON `employee_emergency_contact` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.emergency_contact_name <> OLD.emergency_contact_name THEN
+        SET audit_log = CONCAT(audit_log, "Emergency Contact Name: ", OLD.emergency_contact_name, " -> ", NEW.emergency_contact_name, "<br/>");
+    END IF;
+
+    IF NEW.relation_name <> OLD.relation_name THEN
+        SET audit_log = CONCAT(audit_log, "Relation Name: ", OLD.relation_name, " -> ", NEW.relation_name, "<br/>");
+    END IF;
+
+    IF NEW.telephone <> OLD.telephone THEN
+        SET audit_log = CONCAT(audit_log, "Telephone: ", OLD.telephone, " -> ", NEW.telephone, "<br/>");
+    END IF;
+
+    IF NEW.mobile <> OLD.mobile THEN
+        SET audit_log = CONCAT(audit_log, "Mobile: ", OLD.mobile, " -> ", NEW.mobile, "<br/>");
+    END IF;
+
+    IF NEW.email <> OLD.email THEN
+        SET audit_log = CONCAT(audit_log, "Email: ", OLD.email, " -> ", NEW.email, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_emergency_contact', NEW.employee_emergency_contact_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -11255,6 +11436,66 @@ CREATE TRIGGER `employee_id_record_trigger_update` AFTER UPDATE ON `employee_id_
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('employee_id_record', NEW.employee_id_record_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_language`
+--
+
+DROP TABLE IF EXISTS `employee_language`;
+CREATE TABLE `employee_language` (
+  `employee_language_id` int(10) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `language_id` int(11) NOT NULL,
+  `language_name` varchar(100) NOT NULL,
+  `language_proficiency_id` int(11) NOT NULL,
+  `language_proficiency_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `employee_language`
+--
+DROP TRIGGER IF EXISTS `employee_language_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `employee_language_trigger_insert` AFTER INSERT ON `employee_language` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee language created. <br/>';
+
+    IF NEW.language_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Language Name: ", NEW.language_name);
+    END IF;
+
+    IF NEW.language_proficiency_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Language Proficiency Name: ", NEW.language_proficiency_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_language', NEW.employee_language_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `employee_language_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `employee_language_trigger_update` AFTER UPDATE ON `employee_language` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.language_name <> OLD.language_name THEN
+        SET audit_log = CONCAT(audit_log, "Language Name: ", OLD.language_name, " -> ", NEW.language_name, "<br/>");
+    END IF;
+
+    IF NEW.language_proficiency_name <> OLD.language_proficiency_name THEN
+        SET audit_log = CONCAT(audit_log, "Language Proficiency Name: ", OLD.language_proficiency_name, " -> ", NEW.language_proficiency_name, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_language', NEW.employee_language_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -13829,7 +14070,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-13 08:54:34', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'oMu2tOub%2BurHs9nlpoPn2aliLw0WrbLRqjWyhxJlcPY%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-13 19:15:35', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'aO27lnwYxfUxPVpS8sEd6KkAgbpTpsY0glKc02S1Xog%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -14438,6 +14679,16 @@ ALTER TABLE `employee_education`
   ADD KEY `employee_education_index_employee_employee_id` (`employee_id`);
 
 --
+-- Indexes for table `employee_emergency_contact`
+--
+ALTER TABLE `employee_emergency_contact`
+  ADD PRIMARY KEY (`employee_emergency_contact_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `employee_emergency_contact_index_emergency_contact_id` (`employee_emergency_contact_id`),
+  ADD KEY `employee_emergency_contact_index_employee_id` (`employee_id`),
+  ADD KEY `employee_emergency_contact_index_relation_id` (`relation_id`);
+
+--
 -- Indexes for table `employee_experience`
 --
 ALTER TABLE `employee_experience`
@@ -14457,6 +14708,17 @@ ALTER TABLE `employee_id_record`
   ADD KEY `employee_id_record_index_id_record_id` (`employee_id_record_id`),
   ADD KEY `employee_id_record_index_employee_id` (`employee_id`),
   ADD KEY `employee_id_record_index_id_type_id` (`id_type_id`);
+
+--
+-- Indexes for table `employee_language`
+--
+ALTER TABLE `employee_language`
+  ADD PRIMARY KEY (`employee_language_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `employee_language_index_employee_language_id` (`employee_language_id`),
+  ADD KEY `employee_language_index_employee_id` (`employee_id`),
+  ADD KEY `employee_language_index_language_id` (`language_id`),
+  ADD KEY `employee_language_index_language_proficiency_id` (`language_proficiency_id`);
 
 --
 -- Indexes for table `employee_license`
@@ -14800,7 +15062,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3299;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3308;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -14905,6 +15167,12 @@ ALTER TABLE `employee_education`
   MODIFY `employee_education_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `employee_emergency_contact`
+--
+ALTER TABLE `employee_emergency_contact`
+  MODIFY `employee_emergency_contact_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `employee_experience`
 --
 ALTER TABLE `employee_experience`
@@ -14917,10 +15185,16 @@ ALTER TABLE `employee_id_record`
   MODIFY `employee_id_record_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `employee_language`
+--
+ALTER TABLE `employee_language`
+  MODIFY `employee_language_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `employee_license`
 --
 ALTER TABLE `employee_license`
-  MODIFY `employee_license_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `employee_license_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `employment_location_type`
@@ -15268,6 +15542,13 @@ ALTER TABLE `employee_education`
   ADD CONSTRAINT `employee_education_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `employee_emergency_contact`
+--
+ALTER TABLE `employee_emergency_contact`
+  ADD CONSTRAINT `employee_emergency_contact_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
+  ADD CONSTRAINT `employee_emergency_contact_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `employee_experience`
 --
 ALTER TABLE `employee_experience`
@@ -15280,6 +15561,13 @@ ALTER TABLE `employee_experience`
 ALTER TABLE `employee_id_record`
   ADD CONSTRAINT `employee_id_record_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
   ADD CONSTRAINT `employee_id_record_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `employee_language`
+--
+ALTER TABLE `employee_language`
+  ADD CONSTRAINT `employee_language_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
+  ADD CONSTRAINT `employee_language_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `employee_license`
