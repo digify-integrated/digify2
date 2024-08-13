@@ -390,6 +390,72 @@ class EmployeeModel {
 
     # -------------------------------------------------------------
     #
+    # Function: updateEmployeeIDRecord
+    # Description: Updates the employee ID record.
+    #
+    # Parameters:
+    # - $p_employee_id_record_id (int): The employee ID record ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_id_type_id (int): The ID type ID.
+    # - $p_id_type_name (string): The ID type name.
+    # - $p_id_number (string): The ID number.
+    # - $p_issue_date (date): The issue date.
+    # - $p_expiration_date (date): The ID expiration date.
+    # - $p_issuing_authority (string): The issuing authority.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeIDRecord($p_employee_id_record_id, $p_employee_id, $p_id_type_id, $p_id_type_name, $p_id_number, $p_issue_date, $p_expiration_date, $p_issuing_authority, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeIDRecord(:p_employee_id_record_id, :p_employee_id, :p_id_type_id, :p_id_type_name, :p_id_number, :p_issue_date, :p_expiration_date, :p_issuing_authority, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id_record_id', $p_employee_id_record_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_id_type_id', $p_id_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_id_type_name', $p_id_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_id_number', $p_id_number, PDO::PARAM_STR);
+        $stmt->bindValue(':p_issue_date', $p_issue_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_expiration_date', $p_expiration_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_issuing_authority', $p_issuing_authority, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeLicense
+    # Description: Updates the employee license.
+    #
+    # Parameters:
+    # - $p_employee_id_record_id (int): The employee ID record ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_licensed_profession (string): The licensed profession.
+    # - $p_licensing_body (string): The licensing body.
+    # - $p_license_number (string): The license number.
+    # - $p_issue_date (date): The issue date.
+    # - $p_expiration_date (date): The ID expiration date.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeLicense($p_employee_id_record_id, $p_employee_id, $p_licensed_profession, $p_licensing_body, $p_license_number, $p_issue_date, $p_expiration_date, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeLicense(:p_employee_id_record_id, :p_employee_id, :p_licensed_profession, :p_licensing_body, :p_license_number, :p_issue_date, :p_expiration_date, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id_record_id', $p_employee_id_record_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_licensed_profession', $p_licensed_profession, PDO::PARAM_STR);
+        $stmt->bindValue(':p_licensing_body', $p_licensing_body, PDO::PARAM_STR);
+        $stmt->bindValue(':p_license_number', $p_license_number, PDO::PARAM_STR);
+        $stmt->bindValue(':p_issue_date', $p_issue_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_expiration_date', $p_expiration_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: updateEmployeeImage
     # Description: Updates the employee image.
     #
@@ -405,6 +471,28 @@ class EmployeeModel {
         $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeImage(:p_employee_id, :p_employee_image, :p_last_log_by)');
         $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_employee_image', $p_employee_image, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeIDRecordImage
+    # Description: Updates the employee ID record image.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_id_image (string): The employee ID record image path file.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeIDRecordImage($p_employee_id, $p_id_image, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeIDRecordImage(:p_employee_id, :p_id_image, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_id_image', $p_id_image, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -676,6 +764,68 @@ class EmployeeModel {
         $stmt->execute();
     }
     # -------------------------------------------------------------
+    
+    # -------------------------------------------------------------
+    #
+    # Function: insertEmployeeIDRecord
+    # Description: Inserts the employee ID record.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_id_type_id (int): The ID type ID.
+    # - $p_id_type_name (string): The ID type name.
+    # - $p_id_number (string): The ID number.
+    # - $p_issue_date (date): The issue date.
+    # - $p_expiration_date (date): The expiration date.
+    # - $p_issuing_authority (string): The issuing authority.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertEmployeeIDRecord($p_employee_id, $p_id_type_id, $p_id_type_name, $p_id_number, $p_issue_date, $p_expiration_date, $p_issuing_authority, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeIDRecord(:p_employee_id, :p_id_type_id, :p_id_type_name, :p_id_number, :p_issue_date, :p_expiration_date, :p_issuing_authority, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_id_type_id', $p_id_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_id_type_name', $p_id_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_id_number', $p_id_number, PDO::PARAM_STR);
+        $stmt->bindValue(':p_issue_date', $p_issue_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_expiration_date', $p_expiration_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_issuing_authority', $p_issuing_authority, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: insertEmployeeLicense
+    # Description: Inserts the employee license.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_licensed_profession (string): The licensed profession.
+    # - $p_licensing_body (string): The licensing body.
+    # - $p_license_number (string): The license number.
+    # - $p_issue_date (date): The issue date.
+    # - $p_expiration_date (date): The ID expiration date.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertEmployeeLicense($p_employee_id, $p_licensed_profession, $p_licensing_body, $p_license_number, $p_issue_date, $p_expiration_date, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertEmployeeLicense(:p_employee_id, :p_licensed_profession, :p_licensing_body, :p_license_number, :p_issue_date, :p_expiration_date, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_licensed_profession', $p_licensed_profession, PDO::PARAM_STR);
+        $stmt->bindValue(':p_licensing_body', $p_licensing_body, PDO::PARAM_STR);
+        $stmt->bindValue(':p_license_number', $p_license_number, PDO::PARAM_STR);
+        $stmt->bindValue(':p_issue_date', $p_issue_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_expiration_date', $p_expiration_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
 
     # -------------------------------------------------------------
     #   Check exist methods
@@ -777,6 +927,44 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: checkEmployeeIDRecordExist
+    # Description: Checks if a employee ID record exists.
+    #
+    # Parameters:
+    # - $p_employee_id_record_id (int): The employee ID record ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkEmployeeIDRecordExist($p_employee_id_record_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeIDRecordExist(:p_employee_id_record_id)');
+        $stmt->bindValue(':p_employee_id_record_id', $p_employee_id_record_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: checkEmployeeLicenseExist
+    # Description: Checks if a employee license exists.
+    #
+    # Parameters:
+    # - $p_employee_license_id (int): The employee license ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkEmployeeLicenseExist($p_employee_license_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkEmployeeLicenseExist(:p_employee_license_id)');
+        $stmt->bindValue(':p_employee_license_id', $p_employee_license_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -868,6 +1056,42 @@ class EmployeeModel {
     public function deleteEmployeeBankAccount($p_employee_bank_account_id) {
         $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeBankAccount(:p_employee_bank_account_id)');
         $stmt->bindValue(':p_employee_bank_account_id', $p_employee_bank_account_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeIDRecord
+    # Description: Deletes the employee ID record.
+    #
+    # Parameters:
+    # - $p_employee_id_record_id (int): The employee ID record ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeIDRecord($p_employee_id_record_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeIDRecord(:p_employee_id_record_id)');
+        $stmt->bindValue(':p_employee_id_record_id', $p_employee_id_record_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeLicense
+    # Description: Deletes the employee license.
+    #
+    # Parameters:
+    # - $p_employee_license_id (int): The employee license ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeLicense($p_employee_license_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteEmployeeLicense(:p_employee_license_id)');
+        $stmt->bindValue(':p_employee_license_id', $p_employee_license_id, PDO::PARAM_INT);
         $stmt->execute();
     }
     # -------------------------------------------------------------
@@ -971,6 +1195,46 @@ class EmployeeModel {
     public function getEmployeeBankAccount($p_employee_bank_account_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getEmployeeBankAccount(:p_employee_bank_account_id)');
         $stmt->bindValue(':p_employee_bank_account_id', $p_employee_bank_account_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeIDRecord
+    # Description: Retrieves the details of a employee ID record.
+    #
+    # Parameters:
+    # - $p_employee_id_record_id (int): The employee ID record ID.
+    #
+    # Returns:
+    # - An array containing the employee ID record details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeIDRecord($p_employee_id_record_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeeIDRecord(:p_employee_id_record_id)');
+        $stmt->bindValue(':p_employee_id_record_id', $p_employee_id_record_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeLicense
+    # Description: Retrieves the details of a employee license.
+    #
+    # Parameters:
+    # - $p_employee_license_id (int): The employee license ID.
+    #
+    # Returns:
+    # - An array containing the employee ID record details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeLicense($p_employee_license_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeeLicense(:p_employee_license_id)');
+        $stmt->bindValue(':p_employee_license_id', $p_employee_license_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

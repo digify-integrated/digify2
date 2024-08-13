@@ -648,8 +648,8 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "Issue Date: ", OLD.issue_date, " -> ", NEW.issue_date, "<br/>");
     END IF;
 
-    IF NEW.id_expiration_date <> OLD.id_expiration_date THEN
-        SET audit_log = CONCAT(audit_log, "ID Expiration Date: ", OLD.id_expiration_date, " -> ", NEW.id_expiration_date, "<br/>");
+    IF NEW.expiration_date <> OLD.expiration_date THEN
+        SET audit_log = CONCAT(audit_log, "Expiration Date: ", OLD.expiration_date, " -> ", NEW.expiration_date, "<br/>");
     END IF;
 
     IF NEW.issuing_authority <> OLD.issuing_authority THEN
@@ -680,8 +680,8 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "<br/>Issue Date: ", NEW.issue_date);
     END IF;
 
-    IF NEW.id_expiration_date <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>ID Expiration Date: ", NEW.id_expiration_date);
+    IF NEW.expiration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Expiration Date: ", NEW.expiration_date);
     END IF;
 
     IF NEW.issuing_authority <> '' THEN
@@ -690,4 +690,66 @@ BEGIN
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
     VALUES ('employee_id_record', NEW.employee_id_record_id, audit_log, NEW.last_log_by, NOW());
+END //
+
+CREATE TRIGGER employee_license_trigger_update
+AFTER UPDATE ON employee_license
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.licensed_profession <> OLD.licensed_profession THEN
+        SET audit_log = CONCAT(audit_log, "Licensed Profession: ", OLD.licensed_profession, " -> ", NEW.licensed_profession, "<br/>");
+    END IF;
+
+    IF NEW.licensing_body <> OLD.licensing_body THEN
+        SET audit_log = CONCAT(audit_log, "Licensing Body: ", OLD.licensing_body, " -> ", NEW.licensing_body, "<br/>");
+    END IF;
+
+    IF NEW.license_number <> OLD.license_number THEN
+        SET audit_log = CONCAT(audit_log, "License Number: ", OLD.license_number, " -> ", NEW.license_number, "<br/>");
+    END IF;
+
+    IF NEW.issue_date <> OLD.issue_date THEN
+        SET audit_log = CONCAT(audit_log, "Issue Date: ", OLD.issue_date, " -> ", NEW.issue_date, "<br/>");
+    END IF;
+
+    IF NEW.expiration_date <> OLD.expiration_date THEN
+        SET audit_log = CONCAT(audit_log, "Expiration Date: ", OLD.expiration_date, " -> ", NEW.expiration_date, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_license', NEW.employee_license_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END //
+
+CREATE TRIGGER employee_license_trigger_insert
+AFTER INSERT ON employee_license
+FOR EACH ROW
+BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee license created. <br/>';
+
+    IF NEW.licensed_profession <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Licensed Profession: ", NEW.licensed_profession);
+    END IF;
+
+    IF NEW.licensing_body <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Licensing Body: ", NEW.licensing_body);
+    END IF;
+
+    IF NEW.license_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>License Number: ", NEW.license_number);
+    END IF;
+
+    IF NEW.issue_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Issue Date: ", NEW.issue_date);
+    END IF;
+
+    IF NEW.expiration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Expiration Date: ", NEW.expiration_date);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_license', NEW.employee_license_id, audit_log, NEW.last_log_by, NOW());
 END //

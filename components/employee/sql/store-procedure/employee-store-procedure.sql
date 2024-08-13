@@ -44,6 +44,13 @@ BEGIN
     WHERE employee_id_record_id = p_employee_id_record_id;
 END //
 
+CREATE PROCEDURE checkEmployeeLicenseExist(IN p_employee_license_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_license
+    WHERE employee_license_id = p_employee_license_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
@@ -93,10 +100,16 @@ BEGIN
 	VALUES(p_employee_id, p_bank_id, p_bank_name, p_bank_account_type_id, p_bank_account_type_name, p_account_number, p_last_log_by);
 END //
 
-CREATE PROCEDURE insertEmployeeIDRecord(IN p_employee_id INT, IN p_id_type_id INT, IN p_id_type_name VARCHAR(100), IN p_id_number VARCHAR(100), IN p_issue_date DATE, IN p_id_expiration_date DATE, IN p_issuing_authority VARCHAR(100), IN p_last_log_by INT)
+CREATE PROCEDURE insertEmployeeIDRecord(IN p_employee_id INT, IN p_id_type_id INT, IN p_id_type_name VARCHAR(100), IN p_id_number VARCHAR(100), IN p_issue_date DATE, IN p_expiration_date DATE, IN p_issuing_authority VARCHAR(100), IN p_last_log_by INT)
 BEGIN
-    INSERT INTO employee_id_record (employee_id, id_type_id, id_type_name, id_number, issue_date, id_expiration_date, issuing_authority, last_log_by) 
-	VALUES(p_employee_id, p_id_type_id, p_id_type_name, p_id_number, p_issue_date, p_id_expiration_date, p_issuing_authority, p_last_log_by);
+    INSERT INTO employee_id_record (employee_id, id_type_id, id_type_name, id_number, issue_date, expiration_date, issuing_authority, last_log_by) 
+	VALUES(p_employee_id, p_id_type_id, p_id_type_name, p_id_number, p_issue_date, p_expiration_date, p_issuing_authority, p_last_log_by);
+END //
+
+CREATE PROCEDURE insertEmployeeLicense(IN p_employee_id INT, IN p_licensed_profession VARCHAR(200), IN p_licensing_body VARCHAR(200), IN p_license_number VARCHAR(200), IN p_issue_date DATE, IN p_expiration_date DATE, IN p_last_log_by INT)
+BEGIN
+    INSERT INTO employee_license (employee_id, licensed_profession, licensing_body, license_number, issue_date, expiration_date, last_log_by) 
+	VALUES(p_employee_id, p_licensed_profession, p_licensing_body, p_license_number, p_issue_date, p_expiration_date, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -241,7 +254,7 @@ BEGIN
         country_name = p_country_name,
         telephone = p_telephone,
         mobile = p_mobile,
-        p_email = p_email,
+        email = p_email,
         last_log_by = p_last_log_by
     WHERE employee_address_id = p_employee_address_id;
 END //
@@ -281,7 +294,7 @@ BEGIN
     WHERE employee_bank_account_id = p_employee_bank_account_id;
 END //
 
-CREATE PROCEDURE updateEmployeeIDRecord(IN p_employee_id_record_id INT, IN p_employee_id INT, IN p_id_type_id INT, IN p_id_type_name VARCHAR(100), IN p_id_number VARCHAR(100), IN p_issue_date DATE, IN p_id_expiration_date DATE, IN p_issuing_authority VARCHAR(100), IN p_last_log_by INT)
+CREATE PROCEDURE updateEmployeeIDRecord(IN p_employee_id_record_id INT, IN p_employee_id INT, IN p_id_type_id INT, IN p_id_type_name VARCHAR(100), IN p_id_number VARCHAR(100), IN p_issue_date DATE, IN p_expiration_date DATE, IN p_issuing_authority VARCHAR(100), IN p_last_log_by INT)
 BEGIN
     UPDATE employee_id_record
     SET employee_id = p_employee_id,
@@ -289,10 +302,31 @@ BEGIN
         id_type_name = p_id_type_name,
         id_number = p_id_number,
         issue_date = p_issue_date,
-        id_expiration_date = p_id_expiration_date,
+        expiration_date = p_expiration_date,
         issuing_authority = p_issuing_authority,
         last_log_by = p_last_log_by
     WHERE employee_id_record_id = p_employee_id_record_id;
+END //
+
+CREATE PROCEDURE updateEmployeeIDRecordImage(IN p_employee_id_record_id INT, IN p_id_image VARCHAR(500), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee_id_record
+    SET id_image = p_id_image,
+        last_log_by = p_last_log_by
+    WHERE employee_id_record_id = p_employee_id_record_id;
+END //
+
+CREATE PROCEDURE updateEmployeeLicense(IN p_employee_license_id INT, IN p_employee_id INT, IN p_licensed_profession VARCHAR(200), IN p_licensing_body VARCHAR(200), IN p_license_number VARCHAR(200), IN p_issue_date DATE, IN p_expiration_date DATE, IN p_last_log_by INT)
+BEGIN
+    UPDATE employee_id_record
+    SET employee_id = p_employee_id,
+        licensed_profession = p_licensed_profession,
+        licensing_body = p_licensing_body,
+        license_number = p_license_number,
+        issue_date = p_issue_date,
+        expiration_date = p_expiration_date,
+        last_log_by = p_last_log_by
+    WHERE employee_license_id = p_employee_license_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -313,6 +347,7 @@ BEGIN
     DELETE FROM employee_address WHERE employee_id = p_employee_id;
     DELETE FROM employee_bank_account WHERE employee_id = p_employee_id;
     DELETE FROM employee_id_record WHERE employee_id = p_employee_id;
+    DELETE FROM employee_license WHERE employee_id = p_employee_id;
     DELETE FROM employee WHERE employee_id = p_employee_id;
 
     COMMIT;
@@ -364,6 +399,11 @@ BEGIN
    DELETE FROM employee_id_record WHERE employee_id_record_id = p_employee_id_record_id;
 END //
 
+CREATE PROCEDURE deleteEmployeeLicense(IN p_employee_license_id INT)
+BEGIN
+   DELETE FROM employee_license WHERE employee_license_id = p_employee_license_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Get Stored Procedure */
@@ -402,6 +442,12 @@ CREATE PROCEDURE getEmployeeIDRecord(IN p_employee_id_record_id INT)
 BEGIN
 	SELECT * FROM employee_id_record
 	WHERE employee_id_record_id = p_employee_id_record_id;
+END //
+
+CREATE PROCEDURE getEmployeeLicense(IN p_employee_license_id INT)
+BEGIN
+	SELECT * FROM employee_license
+	WHERE employee_license_id = p_employee_license_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -496,6 +542,12 @@ END //
 CREATE PROCEDURE generateEmployeeIDRecord(IN p_employee_id INT)
 BEGIN
 	SELECT * FROM employee_id_record
+	WHERE employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE generateEmployeeLicense(IN p_employee_id INT)
+BEGIN
+	SELECT * FROM employee_license
 	WHERE employee_id = p_employee_id;
 END //
 

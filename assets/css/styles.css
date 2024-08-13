@@ -36603,7 +36603,7 @@ body div:where(.swal2-icon).swal2-success [class^="swal2-success-line"] {
     color: #FFFFFF;
     -webkit-text-shadow: 0 1px 0 #ffffff;
     text-shadow: 0 1px 0 #ffffff;
-    opacity: 0.8;
+    opacity: 1;
     -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
     filter: alpha(opacity=80);
     line-height: 1;
@@ -36613,7 +36613,7 @@ body div:where(.swal2-icon).swal2-success [class^="swal2-success-line"] {
     color: #000000;
     text-decoration: none;
     cursor: pointer;
-    opacity: 0.4;
+    opacity: 1;
     -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
     filter: alpha(opacity=40);
   }
@@ -36692,9 +36692,9 @@ body div:where(.swal2-icon).swal2-success [class^="swal2-success-line"] {
     background-position: 15px center;
     background-repeat: no-repeat;
     color: #FFFFFF;
-    opacity: 0.8;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
-    filter: alpha(opacity=80);
+    opacity: 1;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+    filter: alpha(opacity=100);
   }
   #toast-container > div.rtl {
     direction: rtl;
@@ -36755,9 +36755,9 @@ body div:where(.swal2-icon).swal2-success [class^="swal2-success-line"] {
     bottom: 0;
     height: 4px;
     background-color: #000000;
-    opacity: 0.4;
-    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);
-    filter: alpha(opacity=40);
+    opacity: 1;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+    filter: alpha(opacity=100);
   }
   /*Responsive Design*/
   @media all and (max-width: 240px) {

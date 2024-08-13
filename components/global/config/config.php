@@ -70,6 +70,7 @@ define('DEFAULT_FAVICON_IMAGE', './assets/images/default/default-favicon.svg');
 define('DEFAULT_COMPANY_LOGO', './assets/images/default/default-company-logo.png');
 define('DEFAULT_APP_MODULE_LOGO', './assets/images/default/app-module-logo.png');
 define('DEFAULT_PLACEHOLDER_IMAGE', './assets/images/default/default-image-placeholder.png');
+define('DEFAULT_ID_PLACEHOLDER_FRONT', './assets/images/default/id-placeholder-front.jpg');
 
 # -------------------------------------------------------------
 

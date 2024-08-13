@@ -195,7 +195,7 @@ CREATE TABLE employee_id_record (
     id_type_name VARCHAR(100) NOT NULL,
     id_number VARCHAR(100) NOT NULL,
     issue_date DATE NOT NULL,
-    id_expiration_date DATE,
+    expiration_date DATE,
     issuing_authority VARCHAR(100),
     id_image VARCHAR(500),
     created_date DATETIME NOT NULL DEFAULT NOW(),
@@ -207,5 +207,26 @@ CREATE TABLE employee_id_record (
 CREATE INDEX employee_id_record_index_id_record_id ON employee_id_record(employee_id_record_id);
 CREATE INDEX employee_id_record_index_employee_id ON employee_id_record(employee_id);
 CREATE INDEX employee_id_record_index_id_type_id ON employee_id_record(id_type_id);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Employee License Table */
+
+CREATE TABLE employee_license (
+    employee_license_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    employee_id INT UNSIGNED NOT NULL,
+    licensed_profession VARCHAR(200) NOT NULL,
+    licensing_body VARCHAR(200) NOT NULL,
+    license_number VARCHAR(200) NOT NULL,
+    issue_date DATE NOT NULL,
+    expiration_date DATE,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX employee_license_index_license_id ON employee_license(employee_license_id);
+CREATE INDEX employee_license_index_employee_id ON employee_license(employee_id);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

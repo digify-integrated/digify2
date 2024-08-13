@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 12, 2024 at 11:28 AM
+-- Generation Time: Aug 13, 2024 at 11:32 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -240,6 +240,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeIDRecordExist` (IN `p_
 	SELECT COUNT(*) AS total
     FROM employee_id_record
     WHERE employee_id_record_id = p_employee_id_record_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkEmployeeLicenseExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkEmployeeLicenseExist` (IN `p_employee_license_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM employee_license
+    WHERE employee_license_id = p_employee_license_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkEmploymentLocationTypeExist`$$
@@ -624,6 +631,11 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteEmployeeIDRecord`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmployeeIDRecord` (IN `p_employee_id_record_id` INT)   BEGIN
    DELETE FROM employee_id_record WHERE employee_id_record_id = p_employee_id_record_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteEmployeeLicense`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteEmployeeLicense` (IN `p_employee_license_id` INT)   BEGIN
+   DELETE FROM employee_license WHERE employee_license_id = p_employee_license_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteEmploymentLocationType`$$
@@ -1194,6 +1206,12 @@ END$$
 DROP PROCEDURE IF EXISTS `generateEmployeeIDRecord`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeIDRecord` (IN `p_employee_id` INT)   BEGIN
 	SELECT * FROM employee_id_record
+	WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmployeeLicense`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeLicense` (IN `p_employee_id` INT)   BEGIN
+	SELECT * FROM employee_license
 	WHERE employee_id = p_employee_id;
 END$$
 
@@ -1870,6 +1888,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployeeIDRecord` (IN `p_employe
 	WHERE employee_id_record_id = p_employee_id_record_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getEmployeeLicense`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmployeeLicense` (IN `p_employee_license_id` INT)   BEGIN
+	SELECT * FROM employee_license
+	WHERE employee_license_id = p_employee_license_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getEmploymentLocationType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmploymentLocationType` (IN `p_employment_location_type_id` INT)   BEGIN
 	SELECT * FROM employment_location_type
@@ -2220,9 +2244,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeExperience` (IN `p_em
 END$$
 
 DROP PROCEDURE IF EXISTS `insertEmployeeIDRecord`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeIDRecord` (IN `p_employee_id` INT, IN `p_id_type_id` INT, IN `p_id_type_name` VARCHAR(100), IN `p_id_number` VARCHAR(100), IN `p_issue_date` DATE, IN `p_id_expiration_date` DATE, IN `p_issuing_authority` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO employee_id_record (employee_id, id_type_id, id_type_name, id_number, issue_date, id_expiration_date, issuing_authority, last_log_by) 
-	VALUES(p_employee_id, p_id_type_id, p_id_type_name, p_id_number, p_issue_date, p_id_expiration_date, p_issuing_authority, p_last_log_by);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeIDRecord` (IN `p_employee_id` INT, IN `p_id_type_id` INT, IN `p_id_type_name` VARCHAR(100), IN `p_id_number` VARCHAR(100), IN `p_issue_date` DATE, IN `p_expiration_date` DATE, IN `p_issuing_authority` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO employee_id_record (employee_id, id_type_id, id_type_name, id_number, issue_date, expiration_date, issuing_authority, last_log_by) 
+	VALUES(p_employee_id, p_id_type_id, p_id_type_name, p_id_number, p_issue_date, p_expiration_date, p_issuing_authority, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertEmployeeLicense`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertEmployeeLicense` (IN `p_employee_id` INT, IN `p_licensed_profession` VARCHAR(200), IN `p_licensing_body` VARCHAR(200), IN `p_license_number` VARCHAR(200), IN `p_issue_date` DATE, IN `p_expiration_date` DATE, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO employee_license (employee_id, licensed_profession, licensing_body, license_number, issue_date, expiration_date, last_log_by) 
+	VALUES(p_employee_id, p_licensed_profession, p_licensing_body, p_license_number, p_issue_date, p_expiration_date, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertEmploymentLocationType`$$
@@ -2902,7 +2932,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeAddress` (IN `p_emplo
         country_name = p_country_name,
         telephone = p_telephone,
         mobile = p_mobile,
-        p_email = p_email,
+        email = p_email,
         last_log_by = p_last_log_by
     WHERE employee_address_id = p_employee_address_id;
 END$$
@@ -2992,15 +3022,23 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeHRSettings` (IN `p_em
 END$$
 
 DROP PROCEDURE IF EXISTS `updateEmployeeIDRecord`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeIDRecord` (IN `p_employee_id_record_id` INT, IN `p_employee_id` INT, IN `p_id_type_id` INT, IN `p_id_type_name` VARCHAR(100), IN `p_id_number` VARCHAR(100), IN `p_issue_date` DATE, IN `p_id_expiration_date` DATE, IN `p_issuing_authority` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeIDRecord` (IN `p_employee_id_record_id` INT, IN `p_employee_id` INT, IN `p_id_type_id` INT, IN `p_id_type_name` VARCHAR(100), IN `p_id_number` VARCHAR(100), IN `p_issue_date` DATE, IN `p_expiration_date` DATE, IN `p_issuing_authority` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     UPDATE employee_id_record
     SET employee_id = p_employee_id,
         id_type_id = p_id_type_id,
         id_type_name = p_id_type_name,
         id_number = p_id_number,
         issue_date = p_issue_date,
-        id_expiration_date = p_id_expiration_date,
+        expiration_date = p_expiration_date,
         issuing_authority = p_issuing_authority,
+        last_log_by = p_last_log_by
+    WHERE employee_id_record_id = p_employee_id_record_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateEmployeeIDRecordImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeIDRecordImage` (IN `p_employee_id_record_id` INT, IN `p_id_image` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee_id_record
+    SET id_image = p_id_image,
         last_log_by = p_last_log_by
     WHERE employee_id_record_id = p_employee_id_record_id;
 END$$
@@ -3011,6 +3049,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeImage` (IN `p_employe
     SET employee_image = p_employee_image,
         last_log_by = p_last_log_by
     WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateEmployeeLicense`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployeeLicense` (IN `p_employee_license_id` INT, IN `p_employee_id` INT, IN `p_licensed_profession` VARCHAR(200), IN `p_licensing_body` VARCHAR(200), IN `p_license_number` VARCHAR(200), IN `p_issue_date` DATE, IN `p_expiration_date` DATE, IN `p_last_log_by` INT)   BEGIN
+    UPDATE employee_id_record
+    SET employee_id = p_employee_id,
+        licensed_profession = p_licensed_profession,
+        licensing_body = p_licensing_body,
+        license_number = p_license_number,
+        issue_date = p_issue_date,
+        expiration_date = p_expiration_date,
+        last_log_by = p_last_log_by
+    WHERE employee_license_id = p_employee_license_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateEmployeePrivateInformation`$$
@@ -7272,7 +7323,29 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3273, 'employee_education', 2, 'Description: asdasd -> asdasdasdasdasdasd<br/>', 2, '2024-08-12 17:04:50', '2024-08-12 17:04:50'),
 (3274, 'employee_education', 3, 'End Month: 8 -> <br/>End Year: 2009 -> <br/>Description:  -> asdasdasd<br/>', 2, '2024-08-12 17:04:53', '2024-08-12 17:04:53'),
 (3275, 'employee_education', 3, 'End Month:  -> 11<br/>End Year:  -> 2007<br/>', 2, '2024-08-12 17:05:36', '2024-08-12 17:05:36'),
-(3276, 'employee_education', 3, 'End Year: 2007 -> 2009<br/>', 2, '2024-08-12 17:05:42', '2024-08-12 17:05:42');
+(3276, 'employee_education', 3, 'End Year: 2007 -> 2009<br/>', 2, '2024-08-12 17:05:42', '2024-08-12 17:05:42'),
+(3277, 'user_account', 2, 'Last Connection Date: 2024-08-12 08:58:51 -> 2024-08-13 08:54:34<br/>', 2, '2024-08-13 08:54:34', '2024-08-13 08:54:34'),
+(3278, 'upload_setting', 4, 'Upload Setting Name: Employee Work Permit -> Employee ID Record<br/>Upload Setting Description: Sets the upload setting when uploading employee work permit. -> Sets the upload setting when uploading employee ID record.<br/>', 2, '2024-08-13 09:08:07', '2024-08-13 09:08:07'),
+(3279, 'upload_setting_file_extension', 19, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Employee ID Record<br/>File Extension Name: JPEG<br/>File Extension: jpeg<br/>Date Assigned: 2024-08-13 09:08:33', 2, '2024-08-13 09:08:33', '2024-08-13 09:08:33'),
+(3280, 'upload_setting_file_extension', 20, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Employee ID Record<br/>File Extension Name: JPG<br/>File Extension: jpg<br/>Date Assigned: 2024-08-13 09:08:33', 2, '2024-08-13 09:08:33', '2024-08-13 09:08:33'),
+(3281, 'upload_setting_file_extension', 21, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Employee ID Record<br/>File Extension Name: PNG<br/>File Extension: png<br/>Date Assigned: 2024-08-13 09:08:33', 2, '2024-08-13 09:08:33', '2024-08-13 09:08:33'),
+(3282, 'employee_address', 3, 'Default Address: Primary -> Alternate<br/>', 2, '2024-08-13 09:21:03', '2024-08-13 09:21:03'),
+(3283, 'employee_address', 2, 'Default Address: Alternate -> Primary<br/>', 2, '2024-08-13 09:21:03', '2024-08-13 09:21:03'),
+(3284, 'employee_address', 2, 'Address Type Name: Billing Address -> Home Address<br/>', 2, '2024-08-13 09:22:18', '2024-08-13 09:22:18'),
+(3285, 'employee_address', 2, 'Default Address: Primary -> Alternate<br/>', 2, '2024-08-13 09:22:23', '2024-08-13 09:22:23'),
+(3286, 'employee_address', 3, 'Default Address: Alternate -> Primary<br/>', 2, '2024-08-13 09:22:23', '2024-08-13 09:22:23'),
+(3287, 'employee_address', 3, 'Default Address: Primary -> Alternate<br/>', 2, '2024-08-13 09:22:26', '2024-08-13 09:22:26'),
+(3288, 'employee_address', 2, 'Default Address: Alternate -> Primary<br/>', 2, '2024-08-13 09:22:26', '2024-08-13 09:22:26'),
+(3289, 'employee', 2, 'Full Name: Lennard De Vera Agultos, Suffix -> Lennard De Vera Agulto, Suffix<br/>Last Name: Agultos -> Agulto<br/>', 2, '2024-08-13 09:22:45', '2024-08-13 09:22:45'),
+(3290, 'employee_id_record', 1, 'Employee ID record created. <br/><br/>ID Type Name: Barangay ID<br/>ID Number: asd<br/>Issue Date: 2024-08-13', 2, '2024-08-13 12:29:30', '2024-08-13 12:29:30'),
+(3291, 'employee_id_record', 2, 'Employee ID record created. <br/><br/>ID Type Name: Barangay ID<br/>ID Number: asd<br/>Issue Date: 2024-08-13', 2, '2024-08-13 12:29:52', '2024-08-13 12:29:52'),
+(3292, 'employee_id_record', 1, 'Issuing Authority:  -> asdasdasd<br/>', 2, '2024-08-13 14:47:31', '2024-08-13 14:47:31'),
+(3293, 'employee_id_record', 1, 'Expiration Date: 2024-08-16 -> 2024-08-14<br/>', 2, '2024-08-13 14:47:35', '2024-08-13 14:47:35'),
+(3294, 'employee_id_record', 1, 'ID Type Name: Barangay ID -> Government Service Insurance System (GSIS) ID<br/>', 2, '2024-08-13 14:58:33', '2024-08-13 14:58:33'),
+(3295, 'employee_id_record', 3, 'Employee ID record created. <br/><br/>ID Type Name: National Bureau of Investigation (NBI) Clearance<br/>ID Number: asd123<br/>Issue Date: 2024-08-30', 2, '2024-08-13 15:14:09', '2024-08-13 15:14:09'),
+(3296, 'employee_id_record', 4, 'Employee ID record created. <br/><br/>ID Type Name: Barangay ID<br/>ID Number: 1656<br/>Issue Date: 2024-08-14<br/>Expiration Date: 2024-08-20<br/>Issuing Authority: asdasd', 2, '2024-08-13 16:16:52', '2024-08-13 16:16:52'),
+(3297, 'employee_id_record', 4, 'Issuing Authority: asdasd -> asdasdasdasdasdasd<br/>', 2, '2024-08-13 16:20:14', '2024-08-13 16:20:14'),
+(3298, 'employee_id_record', 4, 'Issuing Authority: asdasdasdasdasdasd -> asdasdas dasdasdasd<br/>', 2, '2024-08-13 16:20:22', '2024-08-13 16:20:22');
 
 -- --------------------------------------------------------
 
@@ -10315,7 +10388,7 @@ CREATE TABLE `employee` (
 
 INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `badge_id`, `company_id`, `company_name`, `employment_type_id`, `employment_type_name`, `department_id`, `department_name`, `job_position_id`, `job_position_name`, `work_location_id`, `work_location_name`, `manager_id`, `manager_name`, `work_schedule_id`, `work_schedule_name`, `employment_status`, `pin_code`, `home_work_distance`, `visa_number`, `work_permit_number`, `visa_expiration_date`, `work_permit_expiration_date`, `work_permit`, `onboard_date`, `offboard_date`, `time_off_approver_id`, `time_off_approver_name`, `departure_reason_id`, `departure_reason_name`, `detailed_departure_reason`, `created_date`, `last_log_by`) VALUES
 (1, NULL, NULL, 'Lawrence De Vera Agulto, Suffix', 'Lawrence', 'De Vera', 'Agulto', 'Suffix', NULL, 'nickname', 2, 'Engaged', 2, 'Female', 1, 'Aglipayan Church', 1, 'A+', '2024-07-28', 'place of birth', 1, 2, 'badge id', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'pincode', 20, 'visa no', 'work permit no', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:03:54', 2),
-(2, NULL, NULL, 'Lennard De Vera Agultos, Suffix', 'Lennard', 'De Vera', 'Agultos', 'Suffix', 'No about found.', '--', 4, 'Married', 1, 'Male', 12, 'Roman Catholic', 2, 'A-', '2024-07-30', 'Cabanatuan city, Nueva Ecija', 0, 0, 'Badge IDs', 1, 'Christian General Motors Inc.', 11, 'Probationary', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Codes', 0, 'Visa Nos', 'Work Permit Nos', '2024-07-31', '2024-08-30', NULL, '2024-09-30', NULL, 0, '', NULL, NULL, NULL, '2024-07-28 20:40:04', 2);
+(2, NULL, NULL, 'Lennard De Vera Agulto, Suffix', 'Lennard', 'De Vera', 'Agulto', 'Suffix', 'No about found.', '--', 4, 'Married', 1, 'Male', 12, 'Roman Catholic', 2, 'A-', '2024-07-30', 'Cabanatuan city, Nueva Ecija', 0, 0, 'Badge IDs', 1, 'Christian General Motors Inc.', 11, 'Probationary', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Codes', 0, 'Visa Nos', 'Work Permit Nos', '2024-07-31', '2024-08-30', NULL, '2024-09-30', NULL, 0, '', NULL, NULL, NULL, '2024-07-28 20:40:04', 2);
 
 --
 -- Triggers `employee`
@@ -10647,8 +10720,8 @@ CREATE TABLE `employee_address` (
 --
 
 INSERT INTO `employee_address` (`employee_address_id`, `employee_id`, `address_type_id`, `address_type_name`, `address`, `city_id`, `city_name`, `state_id`, `state_name`, `country_id`, `country_name`, `telephone`, `mobile`, `email`, `default_address`, `created_date`, `last_log_by`) VALUES
-(2, 2, 2, 'Billing Address', '1654 jnuinoknasd', 523, 'Aborlan', 26, 'Palawan', 174, 'Philippines', '16516521', '08615891516', '1@gmail.com', 'Alternate', '2024-08-12 16:14:58', 2),
-(3, 2, 2, 'Billing Address', '237 San Juan Accfa', 523, 'Aborlan', 26, 'Palawan', 174, 'Philippines', '1516498', '09181654986', '', 'Primary', '2024-08-12 16:19:24', 2);
+(2, 2, 1, 'Home Address', '1654 jnuinoknasd', 523, 'Aborlan', 26, 'Palawan', 174, 'Philippines', '16516521', '08615891516', '1@gmail.com', 'Primary', '2024-08-12 16:14:58', 2),
+(3, 2, 2, 'Billing Address', '237 San Juan Accfa', 523, 'Aborlan', 26, 'Palawan', 174, 'Philippines', '1516498', '09181654986', '', 'Alternate', '2024-08-12 16:19:24', 2);
 
 --
 -- Triggers `employee_address`
@@ -11107,12 +11180,19 @@ CREATE TABLE `employee_id_record` (
   `id_type_name` varchar(100) NOT NULL,
   `id_number` varchar(100) NOT NULL,
   `issue_date` date NOT NULL,
-  `id_expiration_date` date DEFAULT NULL,
+  `expiration_date` date DEFAULT NULL,
   `issuing_authority` varchar(100) DEFAULT NULL,
   `id_image` varchar(500) DEFAULT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `employee_id_record`
+--
+
+INSERT INTO `employee_id_record` (`employee_id_record_id`, `employee_id`, `id_type_id`, `id_type_name`, `id_number`, `issue_date`, `expiration_date`, `issuing_authority`, `id_image`, `created_date`, `last_log_by`) VALUES
+(4, 2, 1, 'Barangay ID', '1656', '2024-08-14', '2024-08-20', 'asdasdas dasdasdasd', './components/employee/image/2/id-record/cLfg.jpg', '2024-08-13 16:16:52', 2);
 
 --
 -- Triggers `employee_id_record`
@@ -11134,8 +11214,8 @@ CREATE TRIGGER `employee_id_record_trigger_insert` AFTER INSERT ON `employee_id_
         SET audit_log = CONCAT(audit_log, "<br/>Issue Date: ", NEW.issue_date);
     END IF;
 
-    IF NEW.id_expiration_date <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>ID Expiration Date: ", NEW.id_expiration_date);
+    IF NEW.expiration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Expiration Date: ", NEW.expiration_date);
     END IF;
 
     IF NEW.issuing_authority <> '' THEN
@@ -11164,8 +11244,8 @@ CREATE TRIGGER `employee_id_record_trigger_update` AFTER UPDATE ON `employee_id_
         SET audit_log = CONCAT(audit_log, "Issue Date: ", OLD.issue_date, " -> ", NEW.issue_date, "<br/>");
     END IF;
 
-    IF NEW.id_expiration_date <> OLD.id_expiration_date THEN
-        SET audit_log = CONCAT(audit_log, "ID Expiration Date: ", OLD.id_expiration_date, " -> ", NEW.id_expiration_date, "<br/>");
+    IF NEW.expiration_date <> OLD.expiration_date THEN
+        SET audit_log = CONCAT(audit_log, "Expiration Date: ", OLD.expiration_date, " -> ", NEW.expiration_date, "<br/>");
     END IF;
 
     IF NEW.issuing_authority <> OLD.issuing_authority THEN
@@ -11175,6 +11255,91 @@ CREATE TRIGGER `employee_id_record_trigger_update` AFTER UPDATE ON `employee_id_
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('employee_id_record', NEW.employee_id_record_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employee_license`
+--
+
+DROP TABLE IF EXISTS `employee_license`;
+CREATE TABLE `employee_license` (
+  `employee_license_id` int(10) UNSIGNED NOT NULL,
+  `employee_id` int(10) UNSIGNED NOT NULL,
+  `licensed_profession` varchar(200) NOT NULL,
+  `licensing_body` varchar(200) NOT NULL,
+  `license_number` varchar(200) NOT NULL,
+  `issue_date` date NOT NULL,
+  `expiration_date` date DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `employee_license`
+--
+DROP TRIGGER IF EXISTS `employee_license_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `employee_license_trigger_insert` AFTER INSERT ON `employee_license` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee license created. <br/>';
+
+    IF NEW.licensed_profession <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Licensed Profession: ", NEW.licensed_profession);
+    END IF;
+
+    IF NEW.licensing_body <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Licensing Body: ", NEW.licensing_body);
+    END IF;
+
+    IF NEW.license_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>License Number: ", NEW.license_number);
+    END IF;
+
+    IF NEW.issue_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Issue Date: ", NEW.issue_date);
+    END IF;
+
+    IF NEW.expiration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Expiration Date: ", NEW.expiration_date);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('employee_license', NEW.employee_license_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `employee_license_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `employee_license_trigger_update` AFTER UPDATE ON `employee_license` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.licensed_profession <> OLD.licensed_profession THEN
+        SET audit_log = CONCAT(audit_log, "Licensed Profession: ", OLD.licensed_profession, " -> ", NEW.licensed_profession, "<br/>");
+    END IF;
+
+    IF NEW.licensing_body <> OLD.licensing_body THEN
+        SET audit_log = CONCAT(audit_log, "Licensing Body: ", OLD.licensing_body, " -> ", NEW.licensing_body, "<br/>");
+    END IF;
+
+    IF NEW.license_number <> OLD.license_number THEN
+        SET audit_log = CONCAT(audit_log, "License Number: ", OLD.license_number, " -> ", NEW.license_number, "<br/>");
+    END IF;
+
+    IF NEW.issue_date <> OLD.issue_date THEN
+        SET audit_log = CONCAT(audit_log, "Issue Date: ", OLD.issue_date, " -> ", NEW.issue_date, "<br/>");
+    END IF;
+
+    IF NEW.expiration_date <> OLD.expiration_date THEN
+        SET audit_log = CONCAT(audit_log, "Expiration Date: ", OLD.expiration_date, " -> ", NEW.expiration_date, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('employee_license', NEW.employee_license_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -13495,7 +13660,7 @@ INSERT INTO `upload_setting` (`upload_setting_id`, `upload_setting_name`, `uploa
 (1, 'App Logo', 'Sets the upload setting when uploading app logo.', 800, '2024-06-26 16:34:32', 1),
 (2, 'Internal Notes Attachment', 'Sets the upload setting when uploading internal notes attachement.', 800, '2024-06-26 16:34:32', 1),
 (3, 'Employee Image', 'Sets the upload setting when uploading employee image.', 800, '2024-07-09 11:08:34', 2),
-(4, 'Employee Work Permit', 'Sets the upload setting when uploading employee work permit.', 800, '2024-07-09 11:18:55', 2);
+(4, 'Employee ID Record', 'Sets the upload setting when uploading employee ID record.', 800, '2024-07-09 11:18:55', 2);
 
 --
 -- Triggers `upload_setting`
@@ -13588,7 +13753,9 @@ INSERT INTO `upload_setting_file_extension` (`upload_setting_file_extension_id`,
 (15, 3, 'Employee Image', 62, 'JPEG', 'jpeg', '2024-07-09 11:08:48', '2024-07-09 11:08:48', 2),
 (16, 3, 'Employee Image', 61, 'JPG', 'jpg', '2024-07-09 11:08:48', '2024-07-09 11:08:48', 2),
 (17, 3, 'Employee Image', 63, 'PNG', 'png', '2024-07-09 11:08:48', '2024-07-09 11:08:48', 2),
-(18, 4, 'Employee Work Permit', 127, 'PDF', 'pdf', '2024-07-09 11:19:02', '2024-07-09 11:19:02', 2);
+(19, 4, 'Employee ID Record', 62, 'JPEG', 'jpeg', '2024-08-13 09:08:33', '2024-08-13 09:08:33', 2),
+(20, 4, 'Employee ID Record', 61, 'JPG', 'jpg', '2024-08-13 09:08:33', '2024-08-13 09:08:33', 2),
+(21, 4, 'Employee ID Record', 63, 'PNG', 'png', '2024-08-13 09:08:33', '2024-08-13 09:08:33', 2);
 
 --
 -- Triggers `upload_setting_file_extension`
@@ -13662,7 +13829,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-12 08:58:51', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'sjwb6B%2FAB9743yOQtnE2bhlpgx86MMZbl%2FJLNFXKE%2FM%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-13 08:54:34', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'oMu2tOub%2BurHs9nlpoPn2aliLw0WrbLRqjWyhxJlcPY%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -14292,6 +14459,15 @@ ALTER TABLE `employee_id_record`
   ADD KEY `employee_id_record_index_id_type_id` (`id_type_id`);
 
 --
+-- Indexes for table `employee_license`
+--
+ALTER TABLE `employee_license`
+  ADD PRIMARY KEY (`employee_license_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `employee_license_index_license_id` (`employee_license_id`),
+  ADD KEY `employee_license_index_employee_id` (`employee_id`);
+
+--
 -- Indexes for table `employment_location_type`
 --
 ALTER TABLE `employment_location_type`
@@ -14624,7 +14800,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3277;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3299;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -14738,7 +14914,13 @@ ALTER TABLE `employee_experience`
 -- AUTO_INCREMENT for table `employee_id_record`
 --
 ALTER TABLE `employee_id_record`
-  MODIFY `employee_id_record_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `employee_id_record_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `employee_license`
+--
+ALTER TABLE `employee_license`
+  MODIFY `employee_license_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `employment_location_type`
@@ -14930,7 +15112,7 @@ ALTER TABLE `upload_setting`
 -- AUTO_INCREMENT for table `upload_setting_file_extension`
 --
 ALTER TABLE `upload_setting_file_extension`
-  MODIFY `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `user_account`
@@ -15098,6 +15280,13 @@ ALTER TABLE `employee_experience`
 ALTER TABLE `employee_id_record`
   ADD CONSTRAINT `employee_id_record_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
   ADD CONSTRAINT `employee_id_record_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `employee_license`
+--
+ALTER TABLE `employee_license`
+  ADD CONSTRAINT `employee_license_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employee` (`employee_id`),
+  ADD CONSTRAINT `employee_license_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `employment_location_type`

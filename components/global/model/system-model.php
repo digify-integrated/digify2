@@ -245,6 +245,7 @@ class SystemModel {
             'module icon' => DEFAULT_MODULE_ICON_IMAGE,
             'favicon' => DEFAULT_FAVICON_IMAGE,
             'company logo' => DEFAULT_COMPANY_LOGO,
+            'id placeholder front' => DEFAULT_ID_PLACEHOLDER_FRONT,
             'app module logo' => DEFAULT_APP_MODULE_LOGO
         ];
     

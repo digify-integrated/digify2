@@ -62,6 +62,14 @@
             bankAccountForm();
         }
 
+        if($('#id-record-form').length){
+            idRecordForm();
+        }
+
+        if($('#license-form').length){
+            licenseForm();
+        }
+
         $(document).on('click','#edit-about-details',function() {
             displayDetails('get about details');
         });
@@ -443,12 +451,205 @@
             });
         });
 
-        $(document).on('click','#add-id-records-details',function() {
-            $('#id-records-title').text('Add ID Records');
+        $(document).on('click','#add-id-record-details',function() {
+            $('#id-record-title').text('Add ID Record');
+            resetModalForm('id-record-form');
         });
 
-        $(document).on('click','#add-licenses-details',function() {
-            $('#licenses-title').text('Add Licenses');
+        $(document).on('click','.edit-id-record-details',function() {
+            const employee_id_record_id = $(this).data('employee-id-record-id');
+            sessionStorage.setItem('employee_id_record_id', employee_id_record_id);
+
+            $('#id-record-title').text('Edit ID Record');
+
+            displayDetails('get employee id record details');
+        });
+
+        $(document).on('click','.edit-id-record-image-details',function() {
+            const employee_id_record_id = $(this).data('employee-id-record-id');
+            sessionStorage.setItem('employee_id_record_id', employee_id_record_id);
+        });
+
+        $(document).on('change','#id_image',function() {
+            const transaction = 'update employee id record image';
+            const employee_id = $('#details-id').text();
+            var employee_id_record_id = sessionStorage.getItem('employee_id_record_id');
+            var formData = new FormData();
+            formData.append('id_image', $(this)[0].files[0]);
+            formData.append('transaction', transaction);
+            formData.append('employee_id', employee_id);
+            formData.append('employee_id_record_id', employee_id_record_id);
+
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                dataType: 'json',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        idRecordList();
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+        });
+
+        $(document).on('click','.delete-id-record-details',function() {
+            const employee_id = $('#details-id').text();
+            const employee_id_record_id = $(this).data('employee-id-record-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'delete employee id record';
+    
+            Swal.fire({
+                title: 'Confirm ID Record Deletion',
+                text: 'Are you sure you want to delete this ID record?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            employee_id_record_id : employee_id_record_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                idRecordList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
+        $(document).on('click','#add-license-details',function() {
+            $('#license-title').text('Add License');
+            resetModalForm('license-form');
+        });
+
+        $(document).on('click','.edit-license-details',function() {
+            const employee_license_id = $(this).data('employee-license-id');
+            sessionStorage.setItem('employee_license_id', employee_license_id);
+
+            $('#license-title').text('Edit License');
+
+            displayDetails('get employee license details');
+        });
+
+        $(document).on('click','.delete-license-details',function() {
+            const employee_id = $('#details-id').text();
+            const employee_license_id = $(this).data('employee-license-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'delete employee license';
+    
+            Swal.fire({
+                title: 'Confirm License Deletion',
+                text: 'Are you sure you want to delete this license?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            employee_license_id : employee_license_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                licenseList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
         });
 
         $(document).on('click','#add-emergency-contact-details',function() {
@@ -534,6 +735,14 @@
             bankAccountList();
         }
 
+        if($('#id-record-container').length){
+            idRecordList();
+        }
+
+        if($('#license-container').length){
+            licenseList();
+        }
+
         if($('#log-notes-offcanvas').length){
             $(document).on('click','.view-employee-experience-log-notes',function() {
                 const employee_experience_id = $(this).data('employee-experience-id');
@@ -557,6 +766,18 @@
                 const employee_bank_account_id = $(this).data('employee-bank-account-id');
 
                 logNotes('employee_bank_account', employee_bank_account_id);
+            });
+
+            $(document).on('click','.view-employee-id-record-log-notes',function() {
+                const employee_id_record_id = $(this).data('employee-id-record-id');
+
+                logNotes('employee_id_record', employee_id_record_id);
+            });
+
+            $(document).on('click','.view-employee-license-log-notes',function() {
+                const employee_license_id = $(this).data('employee-license-id');
+
+                logNotes('employee_license_id', employee_license_id);
             });
         }
 
@@ -1434,6 +1655,204 @@ function bankAccountForm(){
     });
 }
 
+function idRecordForm(){
+    $('#id-record-form').validate({
+        rules: {
+            id_type_id: {
+                required: true
+            },
+            id_number: {
+                required: true
+            },
+            id_issue_date: {
+                required: true
+            }
+        },
+        messages: {
+            id_type_id: {
+                required: 'Choose the ID type'
+            },
+            id_number: {
+                required: 'Enter the ID number'
+            },
+            id_issue_date: {
+                required: 'Enter the issue date'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'save employee id record';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-id-record-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#id-record-modal').modal('hide');
+                        idRecordList();
+                        resetModalForm('id-record-form');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-id-record-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function licenseForm(){
+    $('#license-form').validate({
+        rules: {
+            licensed_profession: {
+                required: true
+            },
+            licensing_body: {
+                required: true
+            },
+            licensed_number: {
+                required: true
+            },
+            license_issue_date: {
+                required: true
+            }
+        },
+        messages: {
+            licensed_profession: {
+                required: 'Enter the licensed profession'
+            },
+            licensing_body: {
+                required: 'Enter the licensing body'
+            },
+            licensed_number: {
+                required: 'Enter the license number'
+            },
+            license_issue_date: {
+                required: 'Enter the issue date'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'save employee license';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-license-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#license-modal').modal('hide');
+                        licenseList();
+                        resetModalForm('license-form');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-license-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
 function experienceList(){
     const employee_id = $('#details-id').text();
     const page_id = $('#page-id').val();
@@ -1506,6 +1925,25 @@ function bankAccountList(){
         },
         success: function (result) {
             document.getElementById('bank-account-container').innerHTML = result[0].BANK_ACCOUNT_LIST;
+        }
+    });
+}
+
+function idRecordList(){
+    const employee_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'id record list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/employee/view/_employee_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'employee_id': employee_id },
+        beforeSend: function(){
+            document.getElementById('id-record-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        },
+        success: function (result) {
+            document.getElementById('id-record-container').innerHTML = result[0].ID_RECORD_LIST;
         }
     });
 }
@@ -1967,6 +2405,105 @@ function displayDetails(transaction){
 
                         $('#bank_id').val(response.bankID).trigger('change');
                         $('#bank_account_type_id').val(response.bankAccountTypeID).trigger('change');
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get employee id record details':
+            var employee_id = $('#details-id').text();
+            var employee_id_record_id = sessionStorage.getItem('employee_id_record_id');
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    employee_id_record_id : employee_id_record_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('id-record-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#employee_id_record_id').val(employee_id_record_id);
+                        $('#id_number').val(response.idNumber);
+                        $('#id_issue_date').val(response.issueDate);
+                        $('#id_expiration_date').val(response.expirationDate);
+                        $('#issuing_authority').val(response.issuingAuthority);
+
+                        $('#id_type_id').val(response.idTypeID).trigger('change');
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get employee license details':
+            var employee_id = $('#details-id').text();
+            var employee_license_id = sessionStorage.getItem('employee_license_id');
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    employee_license_id : employee_license_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('id-record-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#employee_license_id').val(employee_license_id);
+                        $('#licensed_profession').val(response.licensedProfession);
+                        $('#licensing_body').val(response.licensingBody);
+                        $('#licensed_number').val(response.licensedNumber);
+                        $('#license_issue_date').val(response.issueDate);
+                        $('#license_expiration_date').val(response.expirationDate);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {

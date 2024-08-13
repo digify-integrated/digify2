@@ -64,7 +64,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $departmentName = $row['department_name'];
                 $jobPositionName = $row['job_position_name'];
                 $employmentStatus = $row['employment_status'];
-                $employeeImage = $systemModel->checkImage($row['employee_image'], 'profile');
+                $employeeImage = $systemModel->checkImage($row['employee_image'] ?? null, 'profile');
 
                 $badgeClass = $employmentStatus == 'Active' ? 'text-bg-success' : 'text-bg-danger';
                 $employmentStatusBadge = '<span class="badge ' . $badgeClass . ' fs-2 lh-sm mb-9 me-9 py-1 px-2 fw-semibold position-absolute bottom-0 end-0">' . $employmentStatus . '</span>';
@@ -406,13 +406,11 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     $list .= '<div class="row ' . $mbClass . '">
                                 <div class="col-md-12">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <h6 class="fw-semibold mb-1">'. $addressTypeName .'</h6>
-                                            '. $getDefaultAddress .'
-                                        </div>
+                                        <h6 class="fw-semibold mb-0">'. $addressTypeName .'</h6>
+                                        '. $getDefaultAddress .'
                                     </div>
                                 </div>
-                                <div class="col-lg-12 mb-2">
+                                <div class="col-lg-12 mt-2 mb-2">
                                     '. $fullAddress .'<br/>
                                     '. $telephone .'
                                     '. $mobile .'
@@ -477,17 +475,6 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     $bankName = $row['bank_name'];
                     $bankAccountTypeName = $row['bank_account_type_name'];
                     $accountNumber = $row['account_number'];
-    
-                    $updateButton = '';
-                    $deleteButton = '';
-                    if($employeeWriteAccess['total'] > 0){
-                        $updateButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 edit-bank-account-details" data-bs-toggle="modal" data-bs-target="#bank-account-modal" data-employee-bank-account-id="' . $employeeBankAccountID . '">
-                                                <i class="ti ti-pencil"></i>
-                                            </a>';
-                        $deleteButton = '<a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0 delete-bank-account-details" data-employee-bank-account-id="' . $employeeBankAccountID . '">
-                                                <i class="ti ti-trash"></i>
-                                            </a>';
-                    }
                     
                     $updateButton = '';
                     $deleteButton = '';
@@ -529,6 +516,174 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
             $response[] = [
                 'BANK_ACCOUNT_LIST' => $list
+            ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: id record list
+        # Description:
+        # Generates the id record list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'id record list':
+            $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeIDRecord(:employeeID)');
+            $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($options); 
+            $sql->closeCursor();
+
+            $list = '';
+
+            if($count > 0){
+                $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+            
+                $i = 0;
+                $totalIterations = count($options);
+
+                foreach ($options as $row) {
+                    $employeeIDRecordID = $row['employee_id_record_id'];
+                    $idTypeName = $row['id_type_name'];
+                    $idNumber = $row['id_number'];
+                    $issuingAuthority = $row['issuing_authority'];
+                    $issueDate =  $systemModel->checkDate('summary', $row['issue_date'], '', 'M d, Y', '');
+                    $idExpirationDate =  $systemModel->checkDate('summary', $row['expiration_date'], '', 'M d, Y', '');
+                    $idImage = $systemModel->checkImage($row['id_image'] ?? null, 'id placeholder front');
+    
+                    $updateButton = '';
+                    $deleteButton = '';
+                    if($employeeWriteAccess['total'] > 0){
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-id-record-details" data-bs-toggle="modal" data-bs-target="#id-record-modal" data-employee-id-record-id="' . $employeeIDRecordID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-id-record-details" data-employee-id-record-id="' . $employeeIDRecordID . '">Delete</button>';
+                    }
+                    
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
+                                <div class="col-md-12">
+                                    <label for="id_image" class="cursor-pointer bg-light mb-3">
+                                        <img src="'. $idImage .'" alt="id-record-img" class="card-img w-100 object-fit-cover cursor-pointer edit-id-record-image-details" data-employee-id-record-id="' . $employeeIDRecordID . '" height="100">
+                                    </label>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                           <h6 class="fw-semibold mb-2">'. $idTypeName .'</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="fs-2 mb-0">ID Number: '. $idNumber .'</p>
+                                <p class="fs-2 mb-0">Issued on: '. $issueDate .'</p>
+                                <p class="fs-2 mb-0">Expires on: '. $idExpirationDate .'</p>
+                                <p class="fs-2 mb-0">Issuing Authority on: '. $issuingAuthority .'</p>
+                                <div class="d-flex gap-2 mt-2">
+                                    '. $updateButton .'                                 
+                                    <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-employee-id-record-log-notes" data-employee-id-record-id="' . $employeeIDRecordID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
+                                    Log Notes
+                                    </button>
+                                    '. $deleteButton .'
+                                </div>
+                            </div>';
+
+                    $i++;
+                }
+            }
+            else{
+                $list = 'No ID record found.';
+            }
+            
+
+            $response[] = [
+                'ID_RECORD_LIST' => $list
+            ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: license list
+        # Description:
+        # Generates the license list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'license list':
+            $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeLicense(:employeeID)');
+            $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($options); 
+            $sql->closeCursor();
+
+            $list = '';
+
+            if($count > 0){
+                $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+            
+                $i = 0;
+                $totalIterations = count($options);
+
+                foreach ($options as $row) {
+                    $employeeLicenseID = $row['employee_license_id'];
+                    $licensedProfession = $row['licensed_profession'];
+                    $licensingBody = $row['licensing_body'];
+                    $licenseNumber = $row['license_number'];
+                    $issueDate =  $systemModel->checkDate('summary', $row['issue_date'], '', 'M d, Y', '');
+                    $idExpirationDate =  $systemModel->checkDate('summary', $row['expiration_date'], '', 'M d, Y', '');
+    
+                    $updateButton = '';
+                    $deleteButton = '';
+                    if($employeeWriteAccess['total'] > 0){
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-license-details" data-bs-toggle="modal" data-bs-target="#license-modal" data-employee-license-id="' . $employeeLicenseID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-license-details" data-employee-license-id="' . $employeeLicenseID . '">Delete</button>';
+                    }
+                    
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                           <h6 class="fw-semibold mb-2">'. $licensedProfession .'</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="fs-2 mb-0">Licensing Body: '. $licensingBody .'</p>
+                                <p class="fs-2 mb-0">License Number: '. $licenseNumber .'</p>
+                                <p class="fs-2 mb-0">Issued on: '. $issueDate .'</p>
+                                <p class="fs-2 mb-0">Expires on: '. $idExpirationDate .'</p>
+                                <div class="d-flex gap-2 mt-2">
+                                    '. $updateButton .'                                 
+                                    <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-employee-license-log-notes" data-employee-license-id="' . $employeeLicenseID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
+                                    Log Notes
+                                    </button>
+                                    '. $deleteButton .'
+                                </div>
+                            </div>';
+
+                    $i++;
+                }
+            }
+            else{
+                $list = 'No ID record found.';
+            }
+            
+
+            $response[] = [
+                'ID_RECORD_LIST' => $list
             ];
 
             echo json_encode($response);

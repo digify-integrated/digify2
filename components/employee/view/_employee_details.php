@@ -278,45 +278,8 @@
                 ?>
             </div>
             <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <img src="./assets/images/backgrounds/profilebg.jpg" alt="matdash-img" class="card-img w-100 object-fit-cover mb-3" height="100">
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                <h6 class="fw-semibold mb-2">Government Service Insurance System (GSIS) ID</h6>
-                                <p class="mb-1 fs-2 text-dark">1211-554444315</p>
-                                </div>
-                            </div>
-                            <div class="d-flex">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Bank Account</h5>
-                <?php
-                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-account-modal" id="add-bank-account-details"></i></a>
-                                                        </div>' : '';
-                ?>
-            </div>
-            <hr class="m-0" />
-            <div class="card-body" id="bank-account-container"></div>
+            <div class="card-body" id="id-record-container"></div>
+            <input type="file" class="form-control d-none" id="id_image" name="id_image">
         </div>
 
         <div class="card">
@@ -324,39 +287,12 @@
                 <h5 class="card-title mb-0">Licenses</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#licenses-modal" id="add-licenses-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#license-modal" id="add-license-details"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
             <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="d-flex align-items-center gap-3">
-                                <div>
-                                    <h5 class="fs-4 fw-semibold">Profession</h5>
-                                    <p class="mb-0">Jurisdiction</p>
-                                    <p class="mb-0">License Number: 165+1584</p>
-                                    <p class="mb-0">Issued on: Jul 19, 2024</p>
-                                    <p class="mb-0">Expires on: Jul 24, 2024</p>
-                                </div>
-                            </div>
-                            <div class="d-flex">
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-pencil"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-file-text"></i>
-                                </a>
-                                <a href="javascript:void(0);" class="text-dark fs-6 bg-transparent p-2 mb-0">
-                                    <i class="ti ti-trash"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div class="card-body" id="license-container"></div>
         </div>
 
         <div class="card">
@@ -408,6 +344,19 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Bank Account</h5>
+                <?php
+                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-account-modal" id="add-bank-account-details"></i></a>
+                                                        </div>' : '';
+                ?>
+            </div>
+            <hr class="m-0" />
+            <div class="card-body" id="bank-account-container"></div>
         </div>
 
         <div class="card">
@@ -1117,6 +1066,7 @@
             </div>
             <div class="modal-body">
                 <form id="id-record-form" method="post" action="#">
+                    <input type="hidden" id="employee_id_record_id" name="employee_id_record_id">
                     <div class="row">
                         <div class="col-lg-12">
                             <label for="id_type_id" class="form-label">ID Type <span class="text-danger">*</span></label>
@@ -1162,14 +1112,6 @@
                             <label class="form-label" for="issuing_authority">Issuing Authority</label>
                             <div class="mb-3">
                                 <input type="text" class="form-control maxlength" id="issuing_authority" name="issuing_authority" maxlength="100" autocomplete="off">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <label class="form-label" for="issuing_authority">ID Image</label>
-                            <div class="mb-3">
-                                <input type="file" class="form-control" id="id_image" name="id_image">
                             </div>
                         </div>
                     </div>
@@ -1227,15 +1169,16 @@
     </div>
 </div>
 
-<div id="licenses-modal" class="modal fade" tabindex="-1" aria-labelledby="licenses-modal" aria-hidden="true">
+<div id="license-modal" class="modal fade" tabindex="-1" aria-labelledby="license-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-md">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8" id="licenses-title"></h5>
+                <h5 class="modal-title fw-8" id="license-title"></h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="licenses-form" method="post" action="#">
+                <form id="license-form" method="post" action="#">
+                    <input type="hidden" id="employee_license_id" name="employee_license_id">
                     <div class="row">
                         <div class="col-lg-6">
                             <label class="form-label" for="licensed_profession">Licensed Profession <span class="text-danger">*</span> <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Enter the official professional title as recognized in the field. Examples include 'Attorney at Law,' 'Licensed Physician,' 'Registered Nurse,' etc. This should reflect the qualified status in the profession."></span></label>
@@ -1244,7 +1187,7 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <label class="form-label" for="licensing_body">Jurisdiction or Licensing Body  <span class="text-danger">*</span> <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Specify the licensing body or jurisdiction that granted the professional license. This could be a state board, a national association, or a regulatory council. Examples include 'Philippine Bar Association,' 'Philippine Board of Medicine,' etc."></span></label>
+                            <label class="form-label" for="licensing_body">Licensing Body  <span class="text-danger">*</span> <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Specify the licensing body or jurisdiction that granted the professional license. This could be a state board, a national association, or a regulatory council. Examples include 'Philippine Bar Association,' 'Philippine Board of Medicine,' etc."></span></label>
                             <div class="mb-3">
                                 <input type="text" class="form-control maxlength" id="licensing_body" name="licensing_body" maxlength="200" autocomplete="off">
                             </div>
@@ -1286,7 +1229,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="licenses-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="license-form" class="btn btn-success" id="submit-license-data">Save changes</button>
             </div>
         </div>
     </div>

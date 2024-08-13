@@ -33,6 +33,7 @@ class EmployeeController {
     private $countryModel;
     private $bankModel;
     private $bankAccountTypeModel;
+    private $idTypeModel;
     private $authenticationModel;
     private $securityModel;
     private $systemModel;
@@ -64,6 +65,7 @@ class EmployeeController {
     # - @param CountryModel $countryModel     The countryModel instance for country related operations.
     # - @param BankModel $bankModel     The bankModel instance for bank related operations.
     # - @param BankAccountTypeModel $bankAccountTypeModel     The bankAccountTypeModel instance for bank account type related operations.
+    # - @param IDTypeModel $idTypeModel     The idTypeModel instance for ID type related operations.
     # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
@@ -72,7 +74,7 @@ class EmployeeController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, EmploymentLocationTypeModel $employmentLocationTypeModel, AddressTypeModel $addressTypeModel, CityModel $cityModel, StateModel $stateModel, CountryModel $countryModel, BankModel $bankModel, BankAccountTypeModel $bankAccountTypeModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
+    public function __construct(EmployeeModel $employeeModel, GenderModel $genderModel, ReligionModel $religionModel, BloodTypeModel $bloodTypeModel, CivilStatusModel $civilStatusModel, CompanyModel $companyModel, EmploymentTypeModel $employmentTypeModel, DepartmentModel $departmentModel, JobPositionModel $jobPositionModel, WorkLocationModel $workLocationModel, WorkScheduleModel $workScheduleModel, UserAccountModel $userAccountModel, EmploymentLocationTypeModel $employmentLocationTypeModel, AddressTypeModel $addressTypeModel, CityModel $cityModel, StateModel $stateModel, CountryModel $countryModel, BankModel $bankModel, BankAccountTypeModel $bankAccountTypeModel, IDTypeModel $idTypeModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
         $this->employeeModel = $employeeModel;
         $this->genderModel = $genderModel;
         $this->religionModel = $religionModel;
@@ -92,6 +94,7 @@ class EmployeeController {
         $this->countryModel = $countryModel;
         $this->bankModel = $bankModel;
         $this->bankAccountTypeModel = $bankAccountTypeModel;
+        $this->idTypeModel = $idTypeModel;
         $this->uploadSettingModel = $uploadSettingModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
@@ -202,6 +205,9 @@ class EmployeeController {
                 case 'set employee address as default':
                     $this->updateEmployeeAddressDefault();
                     break;
+                case 'update employee id record image':
+                    $this->updateEmployeeIDRecordImage();
+                    break;
                 case 'save employee experience':
                     $this->saveEmployeeExperience();
                     break;
@@ -213,6 +219,12 @@ class EmployeeController {
                     break;
                 case 'save employee bank account':
                     $this->saveEmployeeBankAccount();
+                    break;
+                case 'save employee id record':
+                    $this->saveEmployeeIDRecord();
+                    break;
+                case 'save employee license':
+                    $this->saveEmployeeLicense();
                     break;
                 case 'get about details':
                     $this->getAboutDetails();
@@ -241,6 +253,12 @@ class EmployeeController {
                 case 'get employee bank account details':
                     $this->getEmployeeBankAccountDetails();
                     break;
+                case 'get employee id record details':
+                    $this->getEmployeeIDRecordDetails();
+                    break;
+                case 'get employee license details':
+                    $this->getEmployeeLicenseDetails();
+                    break;
                 case 'delete employee':
                     $this->deleteEmployee();
                     break;
@@ -258,6 +276,12 @@ class EmployeeController {
                     break;
                 case 'delete employee bank account':
                     $this->deleteEmployeeBankAccount();
+                    break;
+                case 'delete employee id record':
+                    $this->deleteEmployeeIDRecord();
+                    break;
+                case 'delete employee license':
+                    $this->deleteEmployeeLicense();
                     break;
                 default:
                     $response = [
@@ -863,6 +887,187 @@ class EmployeeController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeIDRecordImage
+    # Description: 
+    # Saves the employee ID record if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeIDRecordImage() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_id_record_id']) && !empty($_POST['employee_id_record_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeIDRecordID = htmlspecialchars($_POST['employee_id_record_id'], ENT_QUOTES, 'UTF-8');
+           
+            $checkEmployeeIDRecordExist = $this->employeeModel->checkEmployeeIDRecordExist($employeeIDRecordID);
+            $total = $checkEmployeeIDRecordExist['total'] ?? 0;
+
+            if($total > 0){
+                $idRecordFileName = $_FILES['id_image']['name'];
+                $idRecordFileSize = $_FILES['id_image']['size'];
+                $idRecordFileError = $_FILES['id_image']['error'];
+                $idRecordTempName = $_FILES['id_image']['tmp_name'];
+                $idRecordFileExtension = explode('.', $idRecordFileName);
+                $idRecordActualFileExtension = strtolower(end($idRecordFileExtension));
+    
+                $uploadSetting = $this->uploadSettingModel->getUploadSetting(4);
+                $maxFileSize = $uploadSetting['max_file_size'];
+    
+                $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(4);
+                $allowedFileExtensions = [];
+    
+                foreach ($uploadSettingFileExtension as $row) {
+                    $allowedFileExtensions[] = $row['file_extension'];
+                }
+    
+                if (!in_array($idRecordActualFileExtension, $allowedFileExtensions)) {
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload ID Record Image Error',
+                        'message' => 'The file uploaded is not supported.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if(empty($idRecordTempName)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload ID Record Image Error',
+                        'message' => 'Please choose the ID record image.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($idRecordFileError){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload ID Record Image Error',
+                        'message' => 'An error occurred while uploading the file.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+                
+                if($idRecordFileSize > ($maxFileSize * 1024)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload ID Record Image Error',
+                        'message' => 'The ID record image exceeds the maximum allowed size of ' . number_format($maxFileSize) . ' kb.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $fileName = $this->securityModel->generateFileName();
+                $fileNew = $fileName . '.' . $idRecordActualFileExtension;
+                
+                define('PROJECT_BASE_DIR', dirname(__DIR__));
+                define('ID_RECORD_DIR', 'id-record/');
+    
+                $directory = PROJECT_BASE_DIR . '/image/' .  $employeeID . '/'. ID_RECORD_DIR. '/';
+                $fileDestination = $directory. $fileNew;
+                $filePath = './components/employee/image/'. $employeeID . '/id-record/' . $fileNew;
+    
+                $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
+    
+                if(!$directoryChecker){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload ID Record Image Error',
+                        'message' => $directoryChecker,
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+    
+                $employeeIDRecordDetails = $this->employeeModel->getEmployeeIDRecord($employeeIDRecordID);
+                $idRecordPath = !empty($employeeIDRecordDetails['id_image']) ? str_replace('./components/', '../../', $employeeIDRecordDetails['id_image']) : null;
+    
+                if(file_exists($idRecordPath)){
+                    if (!unlink($idRecordPath)) {
+                        $response = [
+                            'success' => false,
+                            'title' => 'Upload ID Record Image Error',
+                            'message' => 'The ID record image cannot be deleted due to an error.',
+                            'messageType' => 'error'
+                        ];
+                        
+                        echo json_encode($response);
+                        exit;
+                    }
+                }
+    
+                if(!move_uploaded_file($idRecordTempName, $fileDestination)){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Upload ID Record Image Error',
+                        'message' => 'The ID record image cannot be uploaded due to an error.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+
+                $this->employeeModel->updateEmployeeIDRecordImage($employeeIDRecordID, $filePath, $userID);
+
+                $response = [
+                    'success' => true,
+                    'title' => 'Upload ID Record Image Success',
+                    'message' => 'The ID record has been uploaded successfully.',
+                    'messageType' => 'success'
+                ];
+    
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $response = [
+                    'success' => false,
+                    'title' => 'Upload ID Record Image Error',
+                    'message' => 'The ID record does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Save methods
     # -------------------------------------------------------------
 
@@ -1169,6 +1374,149 @@ class EmployeeController {
                 exit;
             }
            
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: saveEmployeeIDRecord
+    # Description: 
+    # Saves the employee ID record if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveEmployeeIDRecord() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_id_record_id']) && isset($_POST['id_type_id']) && !empty($_POST['id_type_id']) && isset($_POST['id_number']) && !empty($_POST['id_number']) && isset($_POST['id_issue_date']) && !empty($_POST['id_issue_date']) && isset($_POST['id_expiration_date'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeIDRecordID = htmlspecialchars($_POST['employee_id_record_id'], ENT_QUOTES, 'UTF-8');
+            $idTypeID = htmlspecialchars($_POST['id_type_id'], ENT_QUOTES, 'UTF-8');
+            $issueDate = $this->systemModel->checkDate('empty', $_POST['id_issue_date'], '', 'Y-m-d', '');
+            $expirationDate = $this->systemModel->checkDate('empty', $_POST['id_expiration_date'], '', 'Y-m-d', '');
+            $idNumber = $_POST['id_number'];
+            $issuingAuthority = $_POST['issuing_authority'];
+
+            $idTypeDetails = $this->idTypeModel->getIDType($idTypeID);
+            $idTypeName = $idTypeDetails['id_type_name'] ?? null;
+        
+            $checkEmployeeIDRecordExist = $this->employeeModel->checkEmployeeIDRecordExist($employeeIDRecordID);
+            $total = $checkEmployeeIDRecordExist['total'] ?? 0;
+
+            if($total > 0){
+                $this->employeeModel->updateEmployeeIDRecord($employeeIDRecordID, $employeeID, $idTypeID, $idTypeName, $idNumber, $issueDate, $expirationDate, $issuingAuthority, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update ID Record Success',
+                    'message' => 'The ID record has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->employeeModel->insertEmployeeIDRecord($employeeID, $idTypeID, $idTypeName, $idNumber, $issueDate, $expirationDate, $issuingAuthority, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert ID Record Success',
+                    'message' => 'The ID record has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: saveEmployeeLicense
+    # Description: 
+    # Saves the employee license if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveEmployeeLicense() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['employee_id_record_id']) && isset($_POST['licensed_profession']) && !empty($_POST['licensed_profession']) && isset($_POST['licensing_body']) && !empty($_POST['licensing_body']) && isset($_POST['licensed_number']) && !empty($_POST['licensed_number']) && isset($_POST['license_issue_date']) && !empty($_POST['license_issue_date']) && isset($_POST['license_expiration_date'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeLicenseID = htmlspecialchars($_POST['employee_id_record_id'], ENT_QUOTES, 'UTF-8');
+            $licensedProfession = $_POST['licensed_profession'];
+            $licensingBody = $_POST['licensing_body'];
+            $licensedNumber = $_POST['licensed_number'];
+            $issueDate = $this->systemModel->checkDate('empty', $_POST['license_issue_date'], '', 'Y-m-d', '');
+            $expirationDate = $this->systemModel->checkDate('empty', $_POST['license_expiration_date'], '', 'Y-m-d', '');
+        
+            $checkEmployeeLicenseExist = $this->employeeModel->checkEmployeeLicenseExist($employeeLicenseID);
+            $total = $checkEmployeeLicenseExist['total'] ?? 0;
+
+            if($total > 0){
+                $this->employeeModel->updateEmployeeLicense($employeeLicenseID, $employeeID, $licensedProfession, $licensingBody, $licensedNumber, $issueDate, $expirationDate, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update License Success',
+                    'message' => 'The license has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->employeeModel->insertEmployeeLicense($employeeID, $licensedProfession, $licensingBody, $licensedNumber, $issueDate, $expirationDate, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert License Success',
+                    'message' => 'The license has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
         }
         else{
             $response = [
@@ -1541,6 +1889,179 @@ class EmployeeController {
                 'success' => true,
                 'title' => 'Delete Bank Account Success',
                 'message' => 'The bank account has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeIDRecord
+    # Description: 
+    # Delete the employee ID record if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeIDRecord() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeIDRecordID = htmlspecialchars($_POST['employee_id_record_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete ID Record Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkEmployeeIDRecordExist = $this->employeeModel->checkEmployeeIDRecordExist($employeeIDRecordID);
+            $total = $checkEmployeeIDRecordExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete ID Record Error',
+                    'message' => 'The ID record does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $idRecordDetails = $this->employeeModel->getEmployeeIDRecord($employeeIDRecordID);
+            $idImagePath = !empty($idRecordDetails['id_image']) ? str_replace('./components/', '../../', $idRecordDetails['id_image']) : null;
+
+            if(file_exists($idImagePath)){
+                if (!unlink($idImagePath)) {
+                    $response = [
+                        'success' => false,
+                        'title' => 'Delete ID Record Error',
+                        'message' => 'The ID record cannot be deleted due to an error.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+            }
+
+            $this->employeeModel->deleteEmployeeIDRecord($employeeIDRecordID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete ID Record Success',
+                'message' => 'The ID record has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteEmployeeLicense
+    # Description: 
+    # Delete the employee license if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteEmployeeLicense() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeLicenseID = htmlspecialchars($_POST['employee_bank_account_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete License Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkEmployeeLicenseExist = $this->employeeModel->checkEmployeeLicenseExist($employeeLicenseID);
+            $total = $checkEmployeeLicenseExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete License Error',
+                    'message' => 'The license does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->employeeModel->deleteEmployeeLicense($employeeLicenseID, $employeeID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete License Success',
+                'message' => 'The license has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -2175,6 +2696,168 @@ class EmployeeController {
         }
     }
     # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeIDRecordDetails
+    # Description: 
+    # Handles the retrieval of employee ID record details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeIDRecordDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_id_record_id']) && !empty($_POST['employee_id_record_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeIDRecordID = htmlspecialchars($_POST['employee_id_record_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get ID Record Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $checkEmployeeIDRecordExist = $this->employeeModel->checkEmployeeIDRecordExist($employeeIDRecordID);
+            $total = $checkEmployeeIDRecordExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get ID Record Details Error',
+                    'message' => 'The ID record does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeIDRecordDetails = $this->employeeModel->getEmployeeIDRecord($employeeIDRecordID);
+
+            $response = [
+                'success' => true,
+                'idTypeID' => $employeeIDRecordDetails['id_type_id'] ?? null,
+                'idNumber' => $employeeIDRecordDetails['id_number'] ?? null,
+                'issueDate' => $this->systemModel->checkDate('empty', $employeeIDRecordDetails['issue_date'], '', 'm/d/Y', ''),
+                'expirationDate' => $this->systemModel->checkDate('empty', $employeeIDRecordDetails['expiration_date'], '', 'm/d/Y', ''),
+                'issuingAuthority' => $employeeIDRecordDetails['issuing_authority'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeLicenseDetails
+    # Description: 
+    # Handles the retrieval of employee license details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeLicenseDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_license_id']) && !empty($_POST['employee_license_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $employeeLicenseID = htmlspecialchars($_POST['employee_license_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get License Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $checkEmployeeLicenseExist = $this->employeeModel->checkEmployeeLicenseExist($employeeLicenseID);
+            $total = $checkEmployeeLicenseExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get License Details Error',
+                    'message' => 'The license does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeLicenseDetails = $this->employeeModel->getEmployeeLicense($employeeLicenseID);
+
+            $response = [
+                'success' => true,
+                'licensedProfession' => $employeeLicenseDetails['licensed_profession'] ?? null,
+                'licensingBody' => $employeeLicenseDetails['licensing_body'] ?? null,
+                'licenseNumber' => $employeeLicenseDetails['license_number'] ?? null,
+                'issueDate' => $this->systemModel->checkDate('empty', $employeeLicenseDetails['issue_date'], '', 'm/d/Y', ''),
+                'expirationDate' => $this->systemModel->checkDate('empty', $employeeLicenseDetails['expiration_date'], '', 'm/d/Y', '')
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
 }
 # -------------------------------------------------------------
 
@@ -2201,10 +2884,11 @@ require_once '../../state/model/state-model.php';
 require_once '../../country/model/country-model.php';
 require_once '../../bank/model/bank-model.php';
 require_once '../../bank-account-type/model/bank-account-type-model.php';
+require_once '../../id-type/model/id-type-model.php';
 require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new EmploymentLocationTypeModel(new DatabaseModel), new AddressTypeModel(new DatabaseModel), new CityModel(new DatabaseModel), new StateModel(new DatabaseModel), new CountryModel(new DatabaseModel), new BankModel(new DatabaseModel), new BankAccountTypeModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
+$controller = new EmployeeController(new EmployeeModel(new DatabaseModel), new GenderModel(new DatabaseModel), new ReligionModel(new DatabaseModel), new BloodTypeModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new CompanyModel(new DatabaseModel), new EmploymentTypeModel(new DatabaseModel), new DepartmentModel(new DatabaseModel), new JobPositionModel(new DatabaseModel), new WorkLocationModel(new DatabaseModel), new WorkScheduleModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new EmploymentLocationTypeModel(new DatabaseModel), new AddressTypeModel(new DatabaseModel), new CityModel(new DatabaseModel), new StateModel(new DatabaseModel), new CountryModel(new DatabaseModel), new BankModel(new DatabaseModel), new BankAccountTypeModel(new DatabaseModel), new IDTypeModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
 $controller->handleRequest();
 
 ?>

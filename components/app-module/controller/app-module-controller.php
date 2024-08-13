@@ -401,7 +401,7 @@ class AppModuleController {
             define('PROJECT_BASE_DIR', dirname(__DIR__));
             define('APP_LOGO_DIR', 'image/logo/');
 
-            $directory = PROJECT_BASE_DIR. '/'. APP_LOGO_DIR. $appModuleID. '/';
+            $directory = PROJECT_BASE_DIR . '/'. APP_LOGO_DIR. $appModuleID. '/';
             $fileDestination = $directory. $fileNew;
             $filePath = './components/app-module/image/logo/'. $appModuleID . '/' . $fileNew;
 
