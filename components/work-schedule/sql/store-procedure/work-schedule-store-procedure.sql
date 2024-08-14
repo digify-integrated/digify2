@@ -65,7 +65,7 @@ BEGIN
 
     START TRANSACTION;
 
-    UPDATE work_information
+    UPDATE employee
     SET work_schedule_name = p_work_schedule_name,
         last_log_by = p_last_log_by
     WHERE work_schedule_id = p_work_schedule_id;

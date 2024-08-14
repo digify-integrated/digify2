@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateAddressType(IN p_address_type_id INT, IN p_address_type_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee_address
+    SET address_type_name = p_address_type_name,
+        last_log_by = p_last_log_by
+    WHERE address_type_id = p_address_type_id;
+
     UPDATE address_type
     SET address_type_name = p_address_type_name,
         last_log_by = p_last_log_by
     WHERE address_type_id = p_address_type_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

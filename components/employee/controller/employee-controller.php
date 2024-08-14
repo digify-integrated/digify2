@@ -250,6 +250,9 @@ class EmployeeController {
                 case 'get about details':
                     $this->getAboutDetails();
                     break;
+                case 'get employee image details':
+                    $this->getEmployeeImageDetails();
+                    break;
                 case 'get private information details':
                     $this->getPrivateInformationDetails();
                     break;
@@ -315,6 +318,12 @@ class EmployeeController {
                     break;
                 case 'delete employee language':
                     $this->deleteEmployeeLanguage();
+                    break;
+                case 'archive employee':
+                    $this->archiveEmployee();
+                    break;
+                case 'unarchive employee':
+                    $this->unarchiveEmployee();
                     break;
                 default:
                     $response = [
@@ -2598,6 +2607,136 @@ class EmployeeController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: archiveEmployee
+    # Description: 
+    # Archive the employee if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function archiveEmployee() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id']) && isset($_POST['offboard_date']) && !empty($_POST['offboard_date']) && isset($_POST['departure_reason_id']) && !empty($_POST['departure_reason_id']) && isset($_POST['detailed_departure_reason']) && !empty($_POST['detailed_departure_reason'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+            $offboardDate = $this->systemModel->checkDate('empty', $_POST['offboard_date'], '', 'Y-m-d', '');
+            $departureReasonID = htmlspecialchars($_POST['departure_reason_id'], ENT_QUOTES, 'UTF-8');
+            $detailedDepartureReason = $_POST['detailed_departure_reason'];
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Archive Employee Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $departureReasonDetails = $this->departureReasonModel->getDepartureReason($departureReasonID);
+            $departureReasonName = $departureReasonDetails['departure_reason_name'] ?? null;
+
+            $this->employeeModel->updateEmployeeEmploymentStatus($employeeID, 'Archived', $offboardDate, $departureReasonID, $departureReasonName, $detailedDepartureReason, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Archive Employee Success',
+                'message' => 'The emaployee has been archived successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: unarchiveEmployee
+    # Description: 
+    # Unarchive the employee if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function unarchiveEmployee() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Unarchive Employee Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->employeeModel->updateEmployeeEmploymentStatus($employeeID, 'Active', null, '', '', '', $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Unarchive Employee Success',
+                'message' => 'The employee has been unarchived successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Get details methods
     # -------------------------------------------------------------
 
@@ -2642,6 +2781,67 @@ class EmployeeController {
             $response = [
                 'success' => true,
                 'about' => $employeeDetails['about'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeImageDetails
+    # Description: 
+    # Handles the retrieval of employee about details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeImageDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Employee Image Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $employeeDetails = $this->employeeModel->getEmployee($employeeID);
+            $employeeImage = $this->systemModel->checkImage($employeeDetails['employee_image'] ?? null, 'upload placeholder');
+
+            $response = [
+                'success' => true,
+                'employeeImage' => $employeeImage
             ];
 
             echo json_encode($response);
@@ -2858,7 +3058,10 @@ class EmployeeController {
                 'employmentTypeName' => $this->systemModel->displaySummary($employeeDetails['employment_type_name'] ?? null),
                 'pinCode' => $this->systemModel->displaySummary($employeeDetails['pin_code'] ?? null),
                 'onboardDate' => $this->systemModel->checkDate('empty', $employeeDetails['onboard_date'], '', 'm/d/Y', ''),
-                'onboardDateSummary' => $this->systemModel->checkDate('summary', $employeeDetails['onboard_date'], '', 'M d, Y', '')
+                'offboardDate' => $this->systemModel->checkDate('summary', $employeeDetails['offboard_date'], '', 'M d, Y', ''),
+                'onboardDateSummary' => $this->systemModel->checkDate('summary', $employeeDetails['onboard_date'], '', 'M d, Y', ''),
+                'departureReasonName' => $this->systemModel->displaySummary($employeeDetails['departure_reason_name'] ?? null),
+                'detailedDepartureReason' => $this->systemModel->displaySummary($employeeDetails['detailed_departure_reason'] ?? null)
             ];
 
             echo json_encode($response);

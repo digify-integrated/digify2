@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateRelation(IN p_relation_id INT, IN p_relation_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee_emergency_contact
+    SET relation_name = p_relation_name,
+        last_log_by = p_last_log_by
+    WHERE relation_id = p_relation_id;
+
     UPDATE relation
     SET relation_name = p_relation_name,
         last_log_by = p_last_log_by
     WHERE relation_id = p_relation_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

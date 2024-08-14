@@ -35,8 +35,8 @@ BEGIN
 
     START TRANSACTION;
 
-    UPDATE work_information
-    SET departure_reason_name = p_departure_reason_name,
+    UPDATE employee
+    SET departure_reason_name = p_departure_reason_name
     WHERE departure_reason_id = p_departure_reason_id;
 
     UPDATE departure_reason

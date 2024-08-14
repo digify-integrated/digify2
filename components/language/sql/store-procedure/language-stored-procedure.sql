@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateLanguage(IN p_language_id INT, IN p_language_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
-    UPDATE language
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee_language
     SET language_name = p_language_name,
         last_log_by = p_last_log_by
     WHERE language_id = p_language_id;
+
+   UPDATE language
+    SET language_name = p_language_name,
+        last_log_by = p_last_log_by
+    WHERE language_id = p_language_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

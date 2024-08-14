@@ -27,11 +27,25 @@ END //
 
 CREATE PROCEDURE updateLanguageProficiency(IN p_language_proficiency_id INT, IN p_language_proficiency_name VARCHAR(100), IN p_language_proficiency_description VARCHAR(200), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee_language
+    SET language_proficiency_name = p_language_proficiency_name,
+        last_log_by = p_last_log_by
+    WHERE language_proficiency_id = p_language_proficiency_id;
+
     UPDATE language_proficiency
     SET language_proficiency_name = p_language_proficiency_name,
         language_proficiency_description = p_language_proficiency_description,
         last_log_by = p_last_log_by
     WHERE language_proficiency_id = p_language_proficiency_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

@@ -246,7 +246,8 @@ class SystemModel {
             'favicon' => DEFAULT_FAVICON_IMAGE,
             'company logo' => DEFAULT_COMPANY_LOGO,
             'id placeholder front' => DEFAULT_ID_PLACEHOLDER_FRONT,
-            'app module logo' => DEFAULT_APP_MODULE_LOGO
+            'app module logo' => DEFAULT_APP_MODULE_LOGO,
+            'upload placeholder' => DEFAULT_UPLOAD_PLACEHOLDER,
         ];
     
         return $defaultImages[$type] ?? DEFAULT_PLACEHOLDER_IMAGE;

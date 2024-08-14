@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateIDType(IN p_id_type_id INT, IN p_id_type_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee_id_record
+    SET id_type_name = p_id_type_name,
+        last_log_by = p_last_log_by
+    WHERE id_type_id = p_id_type_id;
+
     UPDATE id_type
     SET id_type_name = p_id_type_name,
         last_log_by = p_last_log_by
     WHERE id_type_id = p_id_type_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

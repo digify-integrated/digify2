@@ -1,3 +1,26 @@
+<?php
+    require('components/employee/model/employee-model.php');
+
+    $employeeModel = new EmployeeModel($databaseModel);
+
+    $employeeDetails = $employeeModel->getEmployee($detailID);
+    $employmentStatus = $employeeDetails['employment_status'];
+
+    $archiveEmployee  = $globalModel->checkSystemActionAccessRights($userID, 20);
+    $unarchiveEmployee  = $globalModel->checkSystemActionAccessRights($userID, 21);
+
+    if($employmentStatus == 'Archived' && $unarchiveEmployee['total'] > 0){
+        $archiveButton = ' <li>
+                                <a class="dropdown-item" href="javascript:void(0)" id="unarchive-employee">Unarchive Employee</a>
+                            </li>';
+    }
+
+    if($employmentStatus == 'Active' && $archiveEmployee['total'] > 0){
+        $archiveButton = ' <li>
+                            <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#archive-employee-modal" id="archive-employee">Archive Employee</a>
+                        </li>';
+    }
+?>
 <div class="row">
     <div class="col-lg-8">
         <div class="card overflow-hidden">
@@ -18,17 +41,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 order-last my-3 text-center text-lg-start">
+                    <div class="col-lg-6 order-2 my-3 text-center text-lg-start">
                         <h6 class="mb-0" id="employee_full_name_summary">--</h6>
                         <p class="mb-0" id="employee_job_position_summary">--</p>
                     </div>
-                    <div class="col-lg-5 order-last">
-                        <ul class="list-unstyled d-flex align-items-center justify-content-center my-3 mx-4 gap-3">
+                    <div class="col-lg-3 order-3">
+                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            Action
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="dropdownMenuButton" style="">
+                            <?php echo $archiveButton; ?>
                             <li>
-                                <button class="btn btn-danger text-nowrap"><i class="ti ti-archive"></i> Archive</button>
-                            </li>
-                            <li>
-                                <button class="btn btn-info text-nowrap"><i class="ti ti-qrcode"></i> QR Code</button>
+                                <a class="dropdown-item" href="javascript:void(0)">QR Code</a>
                             </li>
                         </ul>
                     </div>
@@ -214,23 +238,33 @@
             <hr class="m-0" />
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-6 mb-3">
+                    <div class="col-lg-12 mb-3">
                         <p class="mb-1 fs-2">PIN Code</p>
                         <h6 class="fw-semibold mb-0" id="pin_code_summary">--</h6>
                     </div>
-                    <div class="col-lg-6 mb-3">
+                    <div class="col-lg-12 mb-3">
                         <p class="mb-1 fs-2">Badge ID</p>
                         <h6 class="fw-semibold mb-0" id="badge_id_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6 mb-0">
+                    <div class="col-lg-12 mb-3">
                         <p class="mb-1 fs-2">Employment Type</p>
                         <h6 class="fw-semibold mb-0" id="employment_type_summary">--</h6>
                     </div>
-                    <div class="col-lg-6 mb-0">
+                    <div class="col-lg-12 mb-3">
                         <p class="mb-1 fs-2">On-Board Date</p>
                         <h6 class="fw-semibold mb-0" id="onboard_date_summary">--</h6>
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <p class="mb-1 fs-2">Offboard Date</p>
+                        <h6 class="fw-semibold mb-0" id="offboard_date_summary">--</h6>
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <p class="mb-1 fs-2">Departure Reason</p>
+                        <h6 class="fw-semibold mb-0" id="departure_reason_summary">--</h6>
+                    </div>
+                    <div class="col-lg-12 mb-0">
+                        <p class="mb-1 fs-2">Detailed Departure Reason</p>
+                        <h6 class="fw-semibold mb-0" id="detailed_departure_reason_summary">--</h6>
                     </div>
                 </div>
             </div>
@@ -605,7 +639,7 @@
 </div>
 
 <div id="experience-modal" class="modal fade" tabindex="-1" aria-labelledby="experience-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title fw-8" id="experience-title"></h5>
@@ -713,7 +747,7 @@
 </div>
 
 <div id="education-modal" class="modal fade" tabindex="-1" aria-labelledby="education-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
                 <h5 class="modal-title fw-8" id="education-title"></h5>
@@ -1262,6 +1296,54 @@
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="language-form" class="btn btn-success" id="submit-language-data">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="archive-employee-modal" class="modal fade" tabindex="-1" aria-labelledby="archive-employee-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-8">Archive Employee</h5>
+                <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="archive-employee-form" method="post" action="#">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label for="offboard_date" class="form-label">Offboard Date <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control regular-datepicker" id="offboard_date" name="offboard_date" autocomplete="off"/>
+                                    <span class="input-group-text">
+                                        <i class="ti ti-calendar fs-5"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="departure_reason_id" class="form-label">Departure Reason <span class="text-danger">*</span></label>
+                            <div class="mb-3">
+                                <select id="departure_reason_id" name="departure_reason_id" class="select2 form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="detailed_departure_reason" class="form-label">Detailed Reason <span class="text-danger">*</span></label>
+                            <div class="mb-3">
+                                <textarea class="form-control" id="detailed_departure_reason" name="detailed_departure_reason" maxlength="5000"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="archive-employee-form" class="btn btn-success" id="submit-archive-employee-data">Save changes</button>
             </div>
         </div>
     </div>

@@ -34,7 +34,7 @@ BEGIN
 
     START TRANSACTION;
 
-    UPDATE work_information
+    UPDATE employee
     SET department_name = p_department_name,
         last_log_by = p_last_log_by
     WHERE department_id = p_department_id;

@@ -563,6 +563,36 @@ class EmployeeModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: updateEmployeeEmploymentStatus
+    # Description: Updates the employee employment stauts.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    # - $p_employment_status (string): The employment status.
+    # - $p_offboard_date (string): The offboard date.
+    # - $p_departure_reason_id (int): The departure reason ID.
+    # - $p_departure_reason_name (string): The departure reason name.
+    # - $p_detailed_departure_reason (string): The detailed departure reason.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateEmployeeEmploymentStatus($p_employee_id, $p_employment_status, $p_offboard_date, $p_departure_reason_id, $p_departure_reason_name, $p_detailed_departure_reason, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateEmployeeEmploymentStatus(:p_employee_id, :p_employment_status, :p_offboard_date, :p_departure_reason_id, :p_departure_reason_name, :p_detailed_departure_reason, :p_last_log_by)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employment_status', $p_employment_status, PDO::PARAM_STR);
+        $stmt->bindValue(':p_offboard_date', $p_offboard_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_departure_reason_id', $p_departure_reason_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_departure_reason_name', $p_departure_reason_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_detailed_departure_reason', $p_detailed_departure_reason, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Insert methods
     # -------------------------------------------------------------
 

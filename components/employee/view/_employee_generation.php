@@ -745,11 +745,11 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div>
                                             <h6 class="fw-semibold mb-1">'. $emergencyContactName .'</h6>
-                                            <p class="mb-2 fs-2">'. $relationName .'</p>
+                                            <p class="fs-2">'. $relationName .'</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-12 mt-2 mb-2">
+                                <div class="col-lg-12 mb-2">
                                     '. $telephone .'
                                     '. $mobile .'
                                     '. $email .'

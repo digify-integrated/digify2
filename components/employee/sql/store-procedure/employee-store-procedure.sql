@@ -381,6 +381,18 @@ BEGIN
     WHERE employee_language_id = p_employee_language_id;
 END //
 
+CREATE PROCEDURE updateEmployeeEmploymentStatus(IN p_employee_id INT, IN p_employment_status VARCHAR(50), IN p_offboard_date DATE, IN p_departure_reason_id INT, IN p_departure_reason_name VARCHAR(100), IN p_detailed_departure_reason VARCHAR(500), IN p_last_log_by INT)
+BEGIN
+    UPDATE employee
+    SET employment_status = p_employment_status,
+        offboard_date = p_offboard_date,
+        departure_reason_id = p_departure_reason_id,    
+        departure_reason_name = p_departure_reason_name,
+        detailed_departure_reason = p_detailed_departure_reason,
+        last_log_by = p_last_log_by
+    WHERE employee_id = p_employee_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Delete Stored Procedure */

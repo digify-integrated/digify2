@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateEmploymentLocationType(IN p_employment_location_type_id INT, IN p_employment_location_type_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee_experience
+    SET employment_location_type_name = p_employment_location_type_name,
+        last_log_by = p_last_log_by
+    WHERE employment_location_type_id = p_employment_location_type_id;
+
     UPDATE employment_location_type
     SET employment_location_type_name = p_employment_location_type_name,
         last_log_by = p_last_log_by
     WHERE employment_location_type_id = p_employment_location_type_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

@@ -27,10 +27,24 @@ END //
 
 CREATE PROCEDURE updateBankAccountType(IN p_bank_account_type_id INT, IN p_bank_account_type_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE employee_bank_account
+    SET bank_account_type_name = p_bank_account_type_name,
+        last_log_by = p_last_log_by
+    WHERE bank_account_type_id = p_bank_account_type_id;
+
     UPDATE bank_account_type
     SET bank_account_type_name = p_bank_account_type_name,
         last_log_by = p_last_log_by
     WHERE bank_account_type_id = p_bank_account_type_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

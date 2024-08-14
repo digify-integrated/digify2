@@ -34,7 +34,12 @@ BEGIN
 
     START TRANSACTION;
 
-    UPDATE work_information
+    UPDATE employee
+    SET employment_type_name = p_employment_type_name,
+        last_log_by = p_last_log_by
+    WHERE employment_type_id = p_employment_type_id;
+
+    UPDATE employee_experience
     SET employment_type_name = p_employment_type_name,
         last_log_by = p_last_log_by
     WHERE employment_type_id = p_employment_type_id;

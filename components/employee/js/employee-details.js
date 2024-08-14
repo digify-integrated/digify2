@@ -22,8 +22,10 @@
         generateDropdownOptions('relation options');
         generateDropdownOptions('language options');
         generateDropdownOptions('language proficiency options');
+        generateDropdownOptions('departure reason options');
         
         displayDetails('get about details');
+        displayDetails('get employee image details');
         displayDetails('get private information details');
         displayDetails('get work information details');
         displayDetails('get hr settings details');
@@ -80,6 +82,73 @@
         if($('#language-form').length){
             languageForm();
         }
+
+        if($('#archive-employee-form').length){
+            archiveEmployeeForm();
+        }
+
+        $(document).on('click','#archive-employee',function() {
+            resetModalForm('archive-employee-form');
+        });
+
+        $(document).on('click','#unarchive-employee',function() {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'unarchive employee';
+    
+            Swal.fire({
+                title: 'Confirm Employee Unarchive',
+                text: 'Are you sure you want to unarchive this employee?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Unarchive',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-success mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/employee/controller/employee-controller.php',
+                        dataType: 'json',
+                        data: {
+                            employee_id : employee_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                setNotification(response.title, response.message, response.messageType);
+                                window.location.reload();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
 
         $(document).on('click','#edit-about-details',function() {
             displayDetails('get about details');
@@ -873,46 +942,49 @@
         });
 
         $(document).on('change','#employee_image',function() {
-            const transaction = 'update employee image';
-            const employee_id = $('#details-id').text();
-            var formData = new FormData();
-            formData.append('employee_image', $(this)[0].files[0]);
-            formData.append('transaction', transaction);
-            formData.append('employee_id', employee_id);
-
-            $.ajax({
-                type: 'POST',
-                url: 'components/employee/controller/employee-controller.php',
-                dataType: 'json',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    if (response.success) {
-                        showNotification(response.title, response.message, response.messageType);
-                    }
-                    else {
-                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = page_link;
+            if ($(this).val() !== '' && $(this)[0].files.length > 0) {
+                const transaction = 'update employee image';
+                const employee_id = $('#details-id').text();
+                var formData = new FormData();
+                formData.append('employee_image', $(this)[0].files[0]);
+                formData.append('transaction', transaction);
+                formData.append('employee_id', employee_id);
+        
+                $.ajax({
+                    type: 'POST',
+                    url: 'components/employee/controller/employee-controller.php',
+                    dataType: 'json',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.success) {
+                            showNotification(response.title, response.message, response.messageType);
+                            displayDetails('get employee image details');
                         }
                         else {
-                            showNotification(response.title, response.message, response.messageType);
+                            if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                setNotification(response.title, response.message, response.messageType);
+                                window.location = 'logout.php?logout';
+                            }
+                            else if (response.notExist) {
+                                setNotification(response.title, response.message, response.messageType);
+                                window.location = page_link;
+                            }
+                            else {
+                                showNotification(response.title, response.message, response.messageType);
+                            }
                         }
+                    },
+                    error: function(xhr, status, error) {
+                        var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                        if (xhr.responseText) {
+                            fullErrorMessage += `, Response: ${xhr.responseText}`;
+                        }
+                        showErrorDialog(fullErrorMessage);
                     }
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                }
-            });
+                });
+            }
         });
 
         if($('#experience-container').length){
@@ -2255,6 +2327,100 @@ function languageForm(){
     });
 }
 
+function archiveEmployeeForm(){
+    $('#archive-employee-form').validate({
+        rules: {
+            offboard_date: {
+                required: true
+            },
+            departure_reason_id: {
+                required: true
+            },
+            detailed_departure_reason: {
+                required: true
+            }
+        },
+        messages: {
+            offboard_date: {
+                required: 'Enter the offboard date'
+            },
+            departure_reason_id: {
+                required: 'Choose the departure reason'
+            },
+            detailed_departure_reason: {
+                required: 'Enter the detailed reason'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const employee_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const transaction = 'archive employee';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/employee/controller/employee-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&employee_id=' + employee_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-archive-employee-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        setNotification(response.title, response.message, response.messageType);
+                        window.location.reload();
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-archive-employee-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
 function experienceList(){
     const employee_id = $('#details-id').text();
     const page_id = $('#page-id').val();
@@ -2453,6 +2619,48 @@ function displayDetails(transaction){
                 }
             });
             break;
+        case 'get employee image details':
+            var employee_id = $('#details-id').text();
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    transaction : transaction
+                },
+                beforeSend: function(){
+                    resetModalForm('about-form');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        document.getElementById('employee-image').src = response.employeeImage;
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
         case 'get private information details':
             var employee_id = $('#details-id').text();
             var page_link = document.getElementById('page-link').getAttribute('href');
@@ -2606,6 +2814,9 @@ function displayDetails(transaction){
                         $('#badge_id_summary').text(response.badgeID);
                         $('#employment_type_summary').text(response.employmentTypeName);
                         $('#onboard_date_summary').text(response.onboardDateSummary);
+                        $('#offboard_date_summary').text(response.offboardDate);
+                        $('#departure_reason_summary').text(response.departureReasonName);
+                        $('#detailed_departure_reason_summary').text(response.detailedDepartureReason);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
