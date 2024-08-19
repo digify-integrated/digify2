@@ -50,7 +50,10 @@
                             Action
                         </button>
                         <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="dropdownMenuButton" style="">
-                            <?php echo $archiveButton; ?>
+                            <?php
+                                echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Employee</a></li>' : ''; 
+                                echo $archiveButton;
+                            ?>
                             <li>
                                 <a class="dropdown-item" href="javascript:void(0)">QR Code</a>
                             </li>

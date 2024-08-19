@@ -44,6 +44,10 @@
                                         </div>
                                     </div>
                                     <button id="signin" type="submit" class="btn btn-dark w-100 py-8 mb-4 rounded-1">Login</button>
+                                    <div class="d-flex align-items-center">
+                                        <p class="fs-12 mb-0 fw-medium">Don’t have an account yet?</p>
+                                        <a class="text-primary fw-bolder ms-2" href="register.php">Sign Up Now</a>
+                                    </div>
                                 </form>
                             </div>
                         </div>

@@ -1,0 +1,70 @@
+<?php
+    require('components/global/view/_required_php_files.php');
+    require('components/global/view/_check_user_status.php');
+    require('components/global/view/_page_details.php');
+?>
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical" data-boxed-layout="full">
+<head>
+    <?php require_once('components/global/view/_head.php'); ?>
+    <link rel="stylesheet" href="./assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="./assets/libs/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="./assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+</head>
+<body>
+    <?php require_once('components/global/view/_preloader.php'); ?>
+    <div id="main-wrapper">
+        <?php require_once('components/global/view/_sidebar.php'); ?>
+        <div class="page-wrapper">
+            <?php require_once('components/global/view/_header.php'); ?>
+            <div class="body-wrapper">
+                <div class="container-fluid">
+                    <?php 
+                        require_once('components/global/view/_breadcrumbs.php'); 
+
+                        if($newRecord){
+                            require_once('components/customer/view/_customer_new.php');
+                        }
+                        else if(!empty($detailID)){
+                            require_once('components/customer/view/_customer_details.php');
+                        }
+                        else{
+                            require_once('components/customer/view/_customer.php');
+                        }
+                    ?>
+                </div>
+                <?php require_once('components/global/view/_customizer.php'); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="dark-transparent sidebartoggler"></div>
+    <?php 
+        require_once('components/global/view/_error_modal.php');
+        require_once('components/global/view/_global_js.php');
+    ?>
+
+    <script src="./assets/libs/max-length/bootstrap-maxlength.min.js"></script>
+    <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
+    <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
+    <script src="./assets/libs/jquery-steps/build/jquery.steps.min.js"></script>
+    <script src="./assets/js/extra-libs/moment/moment.min.js"></script>
+    <script src="./assets/libs/inputmask/dist/jquery.inputmask.min.js"></script>
+    <script src="./assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
+    <?php
+        $scriptLink = 'customer.js';
+
+        if($newRecord){
+            $scriptLink = 'customer-new.js';
+        }
+        else if(!empty($detailID)){
+            $scriptLink = 'customer-details.js';
+        }
+
+        echo '<script src="./components/customer/js/'. $scriptLink .'?v=' . rand() .'"></script>';
+    ?>
+</body>
+
+</html>

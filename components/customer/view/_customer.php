@@ -11,7 +11,7 @@
                 <?php
                     echo $deleteAccess['total'] > 0 ? '<button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0 d-none" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                                                         <ul class="dropdown-menu dropdown-menu-end">
-                                                            <li><button class="dropdown-item" type="button" id="delete-employee">Delete Employee</button></li>
+                                                            <li><button class="dropdown-item" type="button" id="delete-customer">Delete Customer</button></li>
                                                         </ul>' : '';
                     
                     echo $createAccess['total'] > 0 ? '<a href="'. $pageLink .'&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<div class="row" id="employee-card"></div>
+<div class="row" id="customer-card"></div>
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="filter-offcanvas" aria-labelledby="filter-offcanvas-label">
     <div class="offcanvas-header">
@@ -31,33 +31,9 @@
     </div>
     <div class="offcanvas-body p-0">
         <div class="border-bottom rounded-0">
-            <h6 class="mt-4 mb-3 mx-4 fw-semibold">By Company</h6>
-            <div class="pb-4 px-4 text-dark" id="company-filter">
-                <select id="company_filter" name="company_filter" class="select2 form-control"></select>
-            </div>
-        </div>
-        <div class="border-bottom rounded-0">
-            <h6 class="mt-4 mb-3 mx-4 fw-semibold">By Department</h6>
-            <div class="pb-4 px-4 text-dark" id="department-filter">
-                <select id="department_filter" name="department_filter" class="select2 form-control"></select>
-            </div>
-        </div>
-        <div class="border-bottom rounded-0">
-            <h6 class="mt-4 mb-3 mx-4 fw-semibold">By Job Position</h6>
-            <div class="pb-4 px-4 text-dark" id="job-position-filter">
-                <select id="job_position_filter" name="job_position_filter" class="select2 form-control"></select>
-            </div>
-        </div>
-        <div class="border-bottom rounded-0">
-            <h6 class="mt-4 mb-3 mx-4 fw-semibold">By Employee Status</h6>
-            <div class="pb-4 px-4 text-dark" id="employee-status-filter">
-                <select id="employee_status_filter" name="employee_status_filter" class="select2 form-control"></select>
-            </div>
-        </div>
-        <div class="border-bottom rounded-0">
-            <h6 class="mt-4 mb-3 mx-4 fw-semibold">By Employment Type</h6>
-            <div class="pb-4 px-4 text-dark" id="employment-type-filter">
-                <select id="employment_type_filter" name="employment_type_filter" class="select2 form-control"></select>
+            <h6 class="mt-4 mb-3 mx-4 fw-semibold">By Customer Status</h6>
+            <div class="pb-4 px-4 text-dark" id="customer-status-filter">
+                <select id="customer_status_filter" name="customer_status_filter" class="select2 form-control"></select>
             </div>
         </div>
         <div class="border-bottom rounded-0">

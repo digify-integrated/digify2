@@ -22,6 +22,24 @@
             });
         }
 
+        if($('.cc-inputmask').length){
+            $('.cc-inputmask').each(function() {
+                $(this).inputmask('9999 9999 9999 9999');
+            });
+        }
+
+        if($('.expiry-inputmask').length){
+            $('.expiry-inputmask').each(function() {
+                $(this).inputmask('99/99');
+            });
+        }
+
+        if($('.cvv-inputmask').length){
+            $('.cvv-inputmask').each(function() {
+                $(this).inputmask('999');
+            });
+        }
+
         $(document).on('click','#discard-create',function() {
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             discardCreate(page_link);

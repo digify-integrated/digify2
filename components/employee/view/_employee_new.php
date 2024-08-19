@@ -98,8 +98,8 @@
                                 <label class="form-label col-lg-12 col-form-label fs-4">Approvers</label>
                             </div>
                             <div class="row align-items-center">
-                                <label for="time_off_approver_id" class="form-label col-lg-3 col-form-label">Time Off <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Select the user responsible for approving &quot;Time Off&quot; of this employee."></span></label>
-                                <div class="col-lg-9">
+                                <label for="time_off_approver_id" class="form-label col-lg-4 col-form-label">Time Off <span class="ti text-info ti-info-circle cursor-pointer fs-2" data-bs-toggle="tooltip" title="Select the user responsible for approving &quot;Time Off&quot; of this employee."></span></label>
+                                <div class="col-lg-8">
                                     <select id="time_off_approver_id" name="time_off_approver_id" class="select2 form-control"></select>
                                 </div>
                             </div>
@@ -107,8 +107,8 @@
                                 <label class="form-label col-lg-12 col-form-label fs-4">Schedule</label>
                             </div>
                             <div class="row align-items-center">
-                                <label for="work_schedule_id" class="form-label col-lg-3 col-form-label">Work Schedule</span></label>
-                                <div class="col-lg-9">
+                                <label for="work_schedule_id" class="form-label col-lg-4 col-form-label">Work Schedule</span></label>
+                                <div class="col-lg-8">
                                     <select id="work_schedule_id" name="work_schedule_id" class="select2 form-control"></select>
                                 </div>
                             </div>

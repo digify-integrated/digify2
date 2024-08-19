@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2024 at 07:40 AM
+-- Generation Time: Aug 19, 2024 at 11:28 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -163,6 +163,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCurrencyExist` (IN `p_currency
 	SELECT COUNT(*) AS total
     FROM currency
     WHERE currency_id = p_currency_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCustomerAddressExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCustomerAddressExist` (IN `p_customer_address_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM customer_address
+    WHERE customer_address_id = p_customer_address_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCustomerBankCardExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCustomerBankCardExist` (IN `p_customer_bank_card_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM customer_bank_card
+    WHERE customer_bank_card_id = p_customer_bank_card_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCustomerExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCustomerExist` (IN `p_customer_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM customer
+    WHERE customer_id = p_customer_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCustomerIDRecordExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCustomerIDRecordExist` (IN `p_customer_id_record_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM customer_id_record
+    WHERE customer_id_record_id = p_customer_id_record_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkDepartmentExist`$$
@@ -578,6 +606,80 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteCurrency`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCurrency` (IN `p_currency_id` INT)   BEGIN
     DELETE FROM currency WHERE currency_id = p_currency_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCustomer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCustomer` (IN `p_customer_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM customer_address WHERE customer_id = p_customer_id;
+    DELETE FROM customer_bank_card WHERE customer_id = p_customer_id;
+    DELETE FROM customer_id_record WHERE customer_id = p_customer_id;
+    DELETE FROM customer WHERE customer_id = p_customer_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCustomerAddress`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCustomerAddress` (IN `p_customer_address_id` INT, IN `p_customer_id` INT)   BEGIN
+    DECLARE existing_address_count INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    DELETE FROM customer_address
+    WHERE customer_address_id = p_customer_address_id;
+
+    SELECT COUNT(*) INTO existing_address_count
+    FROM customer_address
+    WHERE customer_id = p_customer_id AND default_address = 'Primary';
+
+    IF existing_address_count = 0 THEN
+        UPDATE customer_address
+        SET default_address = 'Primary'
+        WHERE customer_id = p_customer_id
+        AND default_address = 'Alternate'
+        LIMIT 1;
+    END IF;   
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCustomerBankCard`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCustomerBankCard` (IN `p_customer_bank_card_id` INT)   BEGIN
+    DECLARE existing_bank_card_count INT;
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    DELETE FROM customer_bank_card
+    WHERE customer_bank_card_id = p_customer_bank_card_id;
+
+    SELECT COUNT(*) INTO existing_bank_card_count
+    FROM customer_bank_card
+    WHERE customer_id = p_customer_id AND default_address = 'Primary';
+
+    IF existing_bank_card_count = 0 THEN
+        UPDATE customer_bank_card
+        SET default_address = 'Primary'
+        WHERE customer_id = p_customer_id
+        AND default_address = 'Alternate'
+        LIMIT 1;
+    END IF;   
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCustomerIDRecord`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCustomerIDRecord` (IN `p_customer_id_record_id` INT)   BEGIN
+   DELETE FROM customer_id_record WHERE customer_id_record_id = p_customer_id_record_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteDepartment`$$
@@ -1085,6 +1187,81 @@ END$$
 DROP PROCEDURE IF EXISTS `generateCurrencyTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCurrencyTable` ()   BEGIN
     SELECT currency_id, currency_name, currency_symbol FROM currency;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCustomerAddress`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerAddress` (IN `p_customer_id` INT)   BEGIN
+	SELECT * FROM customer_address
+	WHERE customer_id = p_customer_id
+    ORDER BY default_address DESC;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCustomerBankCard`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerBankCard` (IN `p_customer_id` INT)   BEGIN
+	SELECT * FROM customer_bank_card
+	WHERE customer_id = p_customer_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCustomerCard`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerCard` (IN `p_search_value` TEXT, IN `p_filter_by_company` INT, IN `p_filter_by_customer_status` VARCHAR(50), IN `p_filter_by_gender` INT, IN `p_filter_by_civil_status` INT, IN `p_limit` INT, IN `p_offset` INT)   BEGIN
+    DECLARE query TEXT;
+
+    SET query = '
+        SELECT customer_id, full_name, customer_status, customer_image
+        FROM customer 
+        WHERE 1=1';
+
+    IF p_search_value IS NOT NULL AND p_search_value <> '' THEN
+        SET query = CONCAT(query, ' AND (
+            first_name LIKE ? OR
+            middle_name LIKE ? OR
+            last_name LIKE ? OR
+            customer_status LIKE ?
+        )');
+    END IF;
+
+    IF p_filter_by_customer_status IS NOT NULL AND p_filter_by_customer_status <> '' THEN
+        SET query = CONCAT(query, ' AND customer_status =', QUOTE(p_filter_by_customer_status));
+    END IF;
+
+    IF p_filter_by_gender IS NOT NULL AND p_filter_by_gender <> '' THEN
+        SET query = CONCAT(query, ' AND gender_id =', p_filter_by_gender);
+    END IF;
+
+    IF p_filter_by_civil_status IS NOT NULL AND p_filter_by_civil_status <> '' THEN
+        SET query = CONCAT(query, ' AND civil_status_id =', p_filter_by_civil_status);
+    END IF;
+
+    SET query = CONCAT(query, ' ORDER BY full_name LIMIT ?, ?;');
+
+    PREPARE stmt FROM query;
+    IF p_search_value IS NOT NULL AND p_search_value <> '' THEN
+        EXECUTE stmt USING CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), CONCAT("%", p_search_value, "%"), p_offset, p_limit;
+    ELSE
+        EXECUTE stmt USING p_offset, p_limit;
+    END IF;
+
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCustomerIDRecord`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerIDRecord` (IN `p_customer_id` INT)   BEGIN
+	SELECT * FROM customer_id_record
+	WHERE customer_id = p_customer_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCustomerOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerOptions` (IN `p_customer_id` INT)   BEGIN
+    IF p_customer_id IS NOT NULL AND p_customer_id != '' THEN
+        SELECT customer_id, customer_name 
+        FROM customer 
+        WHERE customer_id != p_customer_id
+        ORDER BY customer_name;
+    ELSE
+        SELECT customer_id, customer_name 
+        FROM customer 
+        ORDER BY customer_name;
+    END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateDepartmentOptions`$$
@@ -1858,6 +2035,30 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getCurrency` (IN `p_currency_id` IN
 	WHERE currency_id = p_currency_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCustomer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCustomer` (IN `p_customer_id` INT)   BEGIN
+	SELECT * FROM customer
+	WHERE customer_id = p_customer_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCustomerAddress`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCustomerAddress` (IN `p_customer_address_id` INT)   BEGIN
+	SELECT * FROM customer_address
+	WHERE customer_address_id = p_customer_address_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCustomerBankCard`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCustomerBankCard` (IN `p_customer_bank_card_id` INT)   BEGIN
+	SELECT * FROM customer_bank_card
+	WHERE customer_bank_card_id = p_customer_bank_card_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCustomerIDRecord`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCustomerIDRecord` (IN `p_customer_id_record_id` INT)   BEGIN
+	SELECT * FROM customer_id_record
+	WHERE customer_id_record_id = p_customer_id_record_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getDepartment`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getDepartment` (IN `p_department_id` INT)   BEGIN
 	SELECT * FROM department
@@ -2206,6 +2407,45 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCurrency` (IN `p_currency_nam
 	VALUES(p_currency_name, p_currency_code, p_currency_symbol, p_exchange_rate, p_last_log_by);
 	
     SET p_currency_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCustomer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomer` (IN `p_full_name` VARCHAR(1000), IN `p_first_name` VARCHAR(300), IN `p_middle_name` VARCHAR(300), IN `p_last_name` VARCHAR(300), IN `p_suffix` VARCHAR(10), IN `p_nickname` VARCHAR(100), IN `p_civil_status_id` INT, IN `p_civil_status_name` VARCHAR(100), IN `p_gender_id` INT, IN `p_gender_name` VARCHAR(100), IN `p_birthday` DATE, IN `p_birth_place` VARCHAR(1000), IN `p_last_log_by` INT, OUT `p_customer_id` INT)   BEGIN
+    INSERT INTO customer (full_name, first_name, middle_name, last_name, suffix, nickname, civil_status_id, civil_status_name, gender_id, gender_name, birthday, birth_place, last_log_by) 
+	VALUES(p_full_name, p_first_name, p_middle_name, p_last_name, p_suffix, p_nickname, p_civil_status_id, p_civil_status_name, p_gender_id, p_gender_name, p_birthday, p_birth_place, p_last_log_by);
+	
+    SET p_customer_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCustomerAddress`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerAddress` (IN `p_customer_id` INT, IN `p_address_type_id` INT, IN `p_address_type_name` VARCHAR(100), IN `p_address` VARCHAR(1000), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_telephone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
+    DECLARE existing_address_count INT;
+    DECLARE p_default_address VARCHAR(10);
+
+    SELECT COUNT(*) INTO existing_address_count
+    FROM customer_address
+    WHERE customer_id = p_customer_id AND default_address = 'Primary';
+
+    IF existing_address_count = 0 THEN
+        SET p_default_address = 'Primary';
+    ELSE
+        SET p_default_address = 'Alternate';
+    END IF;
+
+    INSERT INTO customer_address (customer_id, address_type_id, address_type_name, address, city_id, city_name, state_id, state_name, country_id, country_name, default_address, telephone, mobile, email, last_log_by) 
+	VALUES(p_customer_id, p_address_type_id, p_address_type_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_default_address, p_telephone, p_mobile, p_email, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCustomerBankCard`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerBankCard` (IN `p_customer_id` INT, IN `p_name_on_card` VARCHAR(1000), IN `p_card_number` VARCHAR(50), IN `p_expiry_date` VARCHAR(10), IN `p_cvv` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO customer_bank_account (customer_id, name_on_card, card_number, expiry_date, cvv, last_log_by) 
+	VALUES(p_customer_id, p_name_on_card, p_card_number, p_expiry_date, p_cvv, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCustomerIDRecord`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerIDRecord` (IN `p_customer_id` INT, IN `p_id_type_id` INT, IN `p_id_type_name` VARCHAR(100), IN `p_id_number` VARCHAR(100), IN `p_issue_date` DATE, IN `p_expiration_date` DATE, IN `p_issuing_authority` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO customer_id_record (customer_id, id_type_id, id_type_name, id_number, issue_date, expiration_date, issuing_authority, last_log_by) 
+	VALUES(p_customer_id, p_id_type_id, p_id_type_name, p_id_number, p_issue_date, p_expiration_date, p_issuing_authority, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertDepartment`$$
@@ -2889,6 +3129,148 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCurrency` (IN `p_currency_id`
     WHERE currency_id = p_currency_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerAbout`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerAbout` (IN `p_customer_id` INT, IN `p_about` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    UPDATE customer
+    SET about = p_about,
+        last_log_by = p_last_log_by
+    WHERE customer_id = p_customer_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerAddress`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerAddress` (IN `p_customer_address_id` INT, IN `p_customer_id` INT, IN `p_address_type_id` INT, IN `p_address_type_name` VARCHAR(100), IN `p_address` VARCHAR(1000), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_telephone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(200), IN `p_last_log_by` INT)   BEGIN
+    UPDATE customer_address
+    SET customer_id = p_customer_id,
+        address_type_id = p_address_type_id,
+        address_type_name = p_address_type_name,
+        address = p_address,
+        city_id = p_city_id,
+        city_name = p_city_name,
+        state_id = p_state_id,
+        state_name = p_state_name,
+        country_id = p_country_id,
+        country_name = p_country_name,
+        telephone = p_telephone,
+        mobile = p_mobile,
+        email = p_email,
+        last_log_by = p_last_log_by
+    WHERE customer_address_id = p_customer_address_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerAddressDefault`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerAddressDefault` (IN `p_customer_address_id` INT, IN `p_customer_id` INT, IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE customer_address
+    SET default_address = 'Alternate',
+        last_log_by = p_last_log_by
+    WHERE customer_id = p_customer_id AND default_address = 'Primary';
+
+    UPDATE customer_address
+    SET default_address = 'Primary',
+        last_log_by = p_last_log_by
+    WHERE customer_address_id = p_customer_address_id AND customer_id = p_customer_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerBankCard`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerBankCard` (IN `p_customer_bank_card_id` INT, IN `p_customer_id` INT, IN `p_name_on_card` VARCHAR(1000), IN `p_card_number` VARCHAR(50), IN `p_expiry_date` VARCHAR(10), IN `p_cvv` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE customer_bank_card
+    SET customer_id = p_customer_id,
+        name_on_card = p_name_on_card,
+        card_number = p_card_number,
+        expiry_date = p_expiry_date,
+        cvv = p_cvv,
+        last_log_by = p_last_log_by
+    WHERE customer_bank_card_id = p_customer_bank_card_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerBankCardDefault`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerBankCardDefault` (IN `p_customer_bank_card_id` INT, IN `p_customer_id` INT, IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE customer_bank_card
+    SET default_card = 'Alternate',
+        last_log_by = p_last_log_by
+    WHERE customer_id = p_customer_id AND default_card = 'Primary';
+
+    UPDATE customer_bank_card
+    SET default_card = 'Primary',
+        last_log_by = p_last_log_by
+    WHERE customer_bank_card_id = p_customer_bank_card_id AND customer_id = p_customer_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerIDRecord`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerIDRecord` (IN `p_customer_id_record_id` INT, IN `p_customer_id` INT, IN `p_id_type_id` INT, IN `p_id_type_name` VARCHAR(100), IN `p_id_number` VARCHAR(100), IN `p_issue_date` DATE, IN `p_expiration_date` DATE, IN `p_issuing_authority` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE customer_id_record
+    SET customer_id = p_customer_id,
+        id_type_id = p_id_type_id,
+        id_type_name = p_id_type_name,
+        id_number = p_id_number,
+        issue_date = p_issue_date,
+        expiration_date = p_expiration_date,
+        issuing_authority = p_issuing_authority,
+        last_log_by = p_last_log_by
+    WHERE customer_id_record_id = p_customer_id_record_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerIDRecordImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerIDRecordImage` (IN `p_customer_id_record_id` INT, IN `p_id_image` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    UPDATE customer_id_record
+    SET id_image = p_id_image,
+        last_log_by = p_last_log_by
+    WHERE customer_id_record_id = p_customer_id_record_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerImage` (IN `p_customer_id` INT, IN `p_customer_image` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    UPDATE customer
+    SET customer_image = p_customer_image,
+        last_log_by = p_last_log_by
+    WHERE customer_id = p_customer_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerPrivateInformation`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerPrivateInformation` (IN `p_customer_id` INT, IN `p_full_name` VARCHAR(1000), IN `p_first_name` VARCHAR(300), IN `p_middle_name` VARCHAR(300), IN `p_last_name` VARCHAR(300), IN `p_suffix` VARCHAR(10), IN `p_nickname` VARCHAR(100), IN `p_civil_status_id` INT, IN `p_civil_status_name` VARCHAR(100), IN `p_gender_id` INT, IN `p_gender_name` VARCHAR(100), IN `p_birthday` DATE, IN `p_birth_place` VARCHAR(1000), IN `p_last_log_by` INT)   BEGIN
+    UPDATE customer
+    SET full_name = p_full_name,
+        first_name = p_first_name,
+        middle_name = p_middle_name,
+        last_name = p_last_name,
+        suffix = p_suffix,
+        nickname = p_nickname,
+        civil_status_id = p_civil_status_id,
+        civil_status_name = p_civil_status_name,
+        gender_id = p_gender_id,
+        gender_name = p_gender_name,
+        birthday = p_birthday,
+        birth_place = p_birth_place,
+        last_log_by = p_last_log_by
+    WHERE customer_id = p_customer_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCustomerStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerStatus` (IN `p_customer_id` INT, IN `p_customer_status` VARCHAR(50), IN `p_last_log_by` INT)   BEGIN
+    UPDATE customer
+    SET customer_status = p_customer_status,
+        archive_date = NOW(),
+        last_log_by = p_last_log_by
+    WHERE customer_id = p_customer_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateDepartment`$$
@@ -4156,7 +4538,8 @@ CREATE TABLE `app_module` (
 
 INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_description`, `app_logo`, `app_version`, `menu_item_id`, `menu_item_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
 (1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 22, 'Account Setting', 100, '2024-06-26 13:43:48', 2),
-(2, 'Employees', 'Centralize employee information', './components/app-module/image/logo/2/kwDc.png', '1.0.0', 23, 'Inventory Overview', 1, '2024-06-27 15:30:44', 2);
+(2, 'Employees', 'Centralize employee information', './components/app-module/image/logo/2/kwDc.png', '1.0.0', 23, 'Inventory Overview', 1, '2024-06-27 15:30:44', 2),
+(3, 'Customer', 'Bring all your customer information into one easy-to-access location', './components/app-module/image/logo/3/rL4r.png', '1.0.0', 50, 'Customer', 3, '2024-08-19 10:28:21', 2);
 
 --
 -- Triggers `app_module`
@@ -7589,7 +7972,19 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3330, 'employee', 2, 'Employment Status: Active -> Archived<br/>Off-Board Date: 0000-00-00 -> 2024-08-14<br/>Departure Reason Name:  -> Career Change<br/>Detailed Departure Reason:  -> asdasd<br/>', 2, '2024-08-14 11:55:04', '2024-08-14 11:55:04'),
 (3331, 'employee', 2, 'Employment Status: Archived -> Active<br/>Departure Reason Name: Career Change -> <br/>Detailed Departure Reason: asdasd -> <br/>', 2, '2024-08-14 11:55:25', '2024-08-14 11:55:25'),
 (3332, 'employee', 2, 'On-Board Date: 2024-09-30 -> 2024-08-21<br/>', 2, '2024-08-14 11:57:47', '2024-08-14 11:57:47'),
-(3333, 'employee', 2, 'Employment Status: Active -> Archived<br/>Departure Reason Name:  -> Company Restructuring<br/>Detailed Departure Reason:  -> sdfsdfsdfwer<br/>', 2, '2024-08-14 11:59:57', '2024-08-14 11:59:57');
+(3333, 'employee', 2, 'Employment Status: Active -> Archived<br/>Departure Reason Name:  -> Company Restructuring<br/>Detailed Departure Reason:  -> sdfsdfsdfwer<br/>', 2, '2024-08-14 11:59:57', '2024-08-14 11:59:57'),
+(3334, 'user_account', 2, 'Last Connection Date: 2024-08-14 08:40:02 -> 2024-08-19 09:40:05<br/>', 2, '2024-08-19 09:40:05', '2024-08-19 09:40:05'),
+(3335, 'employee', 2, 'Employment Status: Archived -> Active<br/>Departure Reason Name: Company Restructuring -> <br/>Detailed Departure Reason: sdfsdfsdfwer -> <br/>', 2, '2024-08-19 10:11:00', '2024-08-19 10:11:00'),
+(3336, 'app_module', 3, 'App module created. <br/><br/>App Module Name: Customer<br/>App Module Description: Bring all your customer information into one easy-to-access location<br/>App Version: 1.0.0<br/>Menu Item Name: Relation<br/>Order Sequence: 3', 2, '2024-08-19 10:28:21', '2024-08-19 10:28:21'),
+(3337, 'menu_group', 7, 'Menu group created. <br/><br/>Menu Group Name: Customer<br/>App Module: Customer<br/>Order Sequence: 3', 2, '2024-08-19 10:29:11', '2024-08-19 10:29:11'),
+(3338, 'menu_group', 7, 'Menu Group Name: Customer -> Customers<br/>', 2, '2024-08-19 10:29:22', '2024-08-19 10:29:22'),
+(3339, 'menu_item', 50, 'Menu Item created. <br/><br/>Menu Item Name: Customer<br/>Menu Item URL: customer.php<br/>Menu Item Icon:  ti ti-users<br/>Menu Group Name: Customers<br/>App Module: Customer<br/>Order Sequence: 3', 2, '2024-08-19 10:30:06', '2024-08-19 10:30:06'),
+(3340, 'app_module', 3, 'Menu Item Name: Relation -> Customer<br/>', 2, '2024-08-19 10:30:19', '2024-08-19 10:30:19'),
+(3341, 'role_permission', 51, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Customer<br/>Date Assigned: 2024-08-19 10:32:57', 2, '2024-08-19 10:32:57', '2024-08-19 10:32:57'),
+(3342, 'role_permission', 51, 'Read Access: 0 -> 1<br/>', 2, '2024-08-19 10:32:59', '2024-08-19 10:32:59'),
+(3343, 'role_permission', 51, 'Create Access: 0 -> 1<br/>', 2, '2024-08-19 10:33:00', '2024-08-19 10:33:00'),
+(3344, 'role_permission', 51, 'Write Access: 0 -> 1<br/>', 2, '2024-08-19 10:33:00', '2024-08-19 10:33:00'),
+(3345, 'role_permission', 51, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-19 10:33:01', '2024-08-19 10:33:01');
 
 -- --------------------------------------------------------
 
@@ -10224,6 +10619,454 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `customer`
+--
+
+DROP TABLE IF EXISTS `customer`;
+CREATE TABLE `customer` (
+  `customer_id` int(10) UNSIGNED NOT NULL,
+  `customer_image` varchar(500) DEFAULT NULL,
+  `customer_digital_signature` varchar(500) DEFAULT NULL,
+  `full_name` varchar(1000) NOT NULL,
+  `first_name` varchar(300) NOT NULL,
+  `middle_name` varchar(300) DEFAULT NULL,
+  `last_name` varchar(300) NOT NULL,
+  `suffix` varchar(10) DEFAULT NULL,
+  `about` varchar(500) DEFAULT 'No about found.',
+  `nickname` varchar(100) DEFAULT NULL,
+  `civil_status_id` int(10) UNSIGNED DEFAULT NULL,
+  `civil_status_name` varchar(100) DEFAULT NULL,
+  `gender_id` int(10) UNSIGNED DEFAULT NULL,
+  `gender_name` varchar(100) DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  `birth_place` varchar(1000) DEFAULT NULL,
+  `customer_status` varchar(50) NOT NULL DEFAULT 'Active',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `customer`
+--
+DROP TRIGGER IF EXISTS `customer_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `customer_trigger_insert` AFTER INSERT ON `customer` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Customer created. <br/>';
+
+    IF NEW.full_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Full Name: ", NEW.full_name);
+    END IF;
+
+    IF NEW.first_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>First Name: ", NEW.first_name);
+    END IF;
+
+    IF NEW.middle_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Middle Name: ", NEW.middle_name);
+    END IF;
+
+    IF NEW.last_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Last Name: ", NEW.last_name);
+    END IF;
+
+    IF NEW.suffix <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Suffix: ", NEW.suffix);
+    END IF;
+
+    IF NEW.about <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>About: ", NEW.about);
+    END IF;
+
+    IF NEW.nickname <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Nickname: ", NEW.nickname);
+    END IF;
+
+    IF NEW.civil_status_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Civil Status Name: ", NEW.civil_status_name);
+    END IF;
+
+    IF NEW.gender_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Gender Name: ", NEW.gender_name);
+    END IF;
+
+    IF NEW.birthday <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Date of Birth: ", NEW.birthday);
+    END IF;
+
+    IF NEW.birth_place <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Birth Place: ", NEW.birth_place);
+    END IF;
+
+    IF NEW.customer_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Customer Status: ", NEW.customer_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('customer', NEW.customer_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `customer_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `customer_trigger_update` AFTER UPDATE ON `customer` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.full_name <> OLD.full_name THEN
+        SET audit_log = CONCAT(audit_log, "Full Name: ", OLD.full_name, " -> ", NEW.full_name, "<br/>");
+    END IF;
+
+    IF NEW.first_name <> OLD.first_name THEN
+        SET audit_log = CONCAT(audit_log, "First Name: ", OLD.first_name, " -> ", NEW.first_name, "<br/>");
+    END IF;
+
+    IF NEW.middle_name <> OLD.middle_name THEN
+        SET audit_log = CONCAT(audit_log, "Middle Name: ", OLD.middle_name, " -> ", NEW.middle_name, "<br/>");
+    END IF;
+
+    IF NEW.last_name <> OLD.last_name THEN
+        SET audit_log = CONCAT(audit_log, "Last Name: ", OLD.last_name, " -> ", NEW.last_name, "<br/>");
+    END IF;
+
+    IF NEW.suffix <> OLD.suffix THEN
+        SET audit_log = CONCAT(audit_log, "Suffix: ", OLD.suffix, " -> ", NEW.suffix, "<br/>");
+    END IF;
+
+    IF NEW.about <> OLD.about THEN
+        SET audit_log = CONCAT(audit_log, "About: ", OLD.about, " -> ", NEW.about, "<br/>");
+    END IF;
+
+    IF NEW.nickname <> OLD.nickname THEN
+        SET audit_log = CONCAT(audit_log, "Nickname: ", OLD.nickname, " -> ", NEW.nickname, "<br/>");
+    END IF;
+
+    IF NEW.civil_status_name <> OLD.civil_status_name THEN
+        SET audit_log = CONCAT(audit_log, "Civil Status Name: ", OLD.civil_status_name, " -> ", NEW.civil_status_name, "<br/>");
+    END IF;
+
+    IF NEW.gender_name <> OLD.gender_name THEN
+        SET audit_log = CONCAT(audit_log, "Gender Name: ", OLD.gender_name, " -> ", NEW.gender_name, "<br/>");
+    END IF;
+
+    IF NEW.birthday <> OLD.birthday THEN
+        SET audit_log = CONCAT(audit_log, "Date of Birth: ", OLD.birthday, " -> ", NEW.birthday, "<br/>");
+    END IF;
+
+    IF NEW.birth_place <> OLD.birth_place THEN
+        SET audit_log = CONCAT(audit_log, "Birth Place: ", OLD.birth_place, " -> ", NEW.birth_place, "<br/>");
+    END IF;
+
+    IF NEW.customer_status <> OLD.customer_status THEN
+        SET audit_log = CONCAT(audit_log, "Customer Status: ", OLD.customer_status, " -> ", NEW.customer_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('customer', NEW.customer_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_address`
+--
+
+DROP TABLE IF EXISTS `customer_address`;
+CREATE TABLE `customer_address` (
+  `customer_address_id` int(10) UNSIGNED NOT NULL,
+  `customer_id` int(10) UNSIGNED NOT NULL,
+  `address_type_id` int(10) UNSIGNED NOT NULL,
+  `address_type_name` varchar(100) NOT NULL,
+  `address` varchar(1000) DEFAULT NULL,
+  `city_id` int(10) UNSIGNED NOT NULL,
+  `city_name` varchar(100) NOT NULL,
+  `state_id` int(10) UNSIGNED NOT NULL,
+  `state_name` varchar(100) NOT NULL,
+  `country_id` int(10) UNSIGNED NOT NULL,
+  `country_name` varchar(100) NOT NULL,
+  `telephone` varchar(50) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `email` varchar(200) DEFAULT NULL,
+  `default_address` varchar(10) NOT NULL DEFAULT 'Primary',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `customer_address`
+--
+DROP TRIGGER IF EXISTS `customer_address_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `customer_address_trigger_insert` AFTER INSERT ON `customer_address` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Customer address created. <br/>';
+
+    IF NEW.address_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Address Type Name: ", NEW.address_type_name);
+    END IF;
+
+    IF NEW.address <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Address: ", NEW.address);
+    END IF;
+
+    IF NEW.city_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>City Name: ", NEW.city_name);
+    END IF;
+
+    IF NEW.state_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>State Name: ", NEW.state_name);
+    END IF;
+
+    IF NEW.country_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Country Name: ", NEW.country_name);
+    END IF;
+
+    IF NEW.telephone <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Telephone: ", NEW.telephone);
+    END IF;
+
+    IF NEW.mobile <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Mobile: ", NEW.mobile);
+    END IF;
+
+    IF NEW.email <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Email: ", NEW.email);
+    END IF;
+
+    IF NEW.default_address <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Default Address: ", NEW.default_address);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('customer_address', NEW.customer_address_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `customer_address_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `customer_address_trigger_update` AFTER UPDATE ON `customer_address` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.address_type_name <> OLD.address_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Address Type Name: ", OLD.address_type_name, " -> ", NEW.address_type_name, "<br/>");
+    END IF;
+
+    IF NEW.address <> OLD.address THEN
+        SET audit_log = CONCAT(audit_log, "Address: ", OLD.address, " -> ", NEW.address, "<br/>");
+    END IF;
+
+    IF NEW.city_name <> OLD.city_name THEN
+        SET audit_log = CONCAT(audit_log, "City Name: ", OLD.city_name, " -> ", NEW.city_name, "<br/>");
+    END IF;
+
+    IF NEW.state_name <> OLD.state_name THEN
+        SET audit_log = CONCAT(audit_log, "State Name: ", OLD.state_name, " -> ", NEW.state_name, "<br/>");
+    END IF;
+
+    IF NEW.country_name <> OLD.country_name THEN
+        SET audit_log = CONCAT(audit_log, "Country Name: ", OLD.country_name, " -> ", NEW.country_name, "<br/>");
+    END IF;
+
+    IF NEW.telephone <> OLD.telephone THEN
+        SET audit_log = CONCAT(audit_log, "Telephone: ", OLD.telephone, " -> ", NEW.telephone, "<br/>");
+    END IF;
+
+    IF NEW.mobile <> OLD.mobile THEN
+        SET audit_log = CONCAT(audit_log, "Mobile: ", OLD.mobile, " -> ", NEW.mobile, "<br/>");
+    END IF;
+
+    IF NEW.email <> OLD.email THEN
+        SET audit_log = CONCAT(audit_log, "Email: ", OLD.email, " -> ", NEW.email, "<br/>");
+    END IF;
+
+    IF NEW.default_address <> OLD.default_address THEN
+        SET audit_log = CONCAT(audit_log, "Default Address: ", OLD.default_address, " -> ", NEW.default_address, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('customer_address', NEW.customer_address_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_bank_card`
+--
+
+DROP TABLE IF EXISTS `customer_bank_card`;
+CREATE TABLE `customer_bank_card` (
+  `customer_bank_card_id` int(10) UNSIGNED NOT NULL,
+  `customer_id` int(10) UNSIGNED NOT NULL,
+  `name_on_card` varchar(1000) NOT NULL,
+  `card_number` varchar(50) NOT NULL,
+  `expiry_date` varchar(10) NOT NULL,
+  `cvv` varchar(5) NOT NULL,
+  `default_card` varchar(10) NOT NULL DEFAULT 'Primary',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `customer_bank_card`
+--
+DROP TRIGGER IF EXISTS `customer_bank_card_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `customer_bank_card_trigger_insert` AFTER INSERT ON `customer_bank_card` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Customer bank card created. <br/>';
+
+    IF NEW.name_on_card <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Name On Card: ", NEW.name_on_card);
+    END IF;
+
+    IF NEW.card_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Card Number: ", NEW.card_number);
+    END IF;
+
+    IF NEW.expiry_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Expiry Date: ", NEW.expiry_date);
+    END IF;
+
+    IF NEW.cvv <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>CVV: ", NEW.cvv);
+    END IF;
+
+    IF NEW.default_card <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Default Card: ", NEW.default_card);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('customer_bank_card', NEW.customer_bank_card_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `customer_bank_card_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `customer_bank_card_trigger_update` AFTER UPDATE ON `customer_bank_card` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.name_on_card <> OLD.name_on_card THEN
+        SET audit_log = CONCAT(audit_log, "Name Of Card: ", OLD.name_on_card, " -> ", NEW.name_on_card, "<br/>");
+    END IF;
+
+    IF NEW.card_number <> OLD.card_number THEN
+        SET audit_log = CONCAT(audit_log, "Card Number: ", OLD.card_number, " -> ", NEW.card_number, "<br/>");
+    END IF;
+
+    IF NEW.expiry_date <> OLD.expiry_date THEN
+        SET audit_log = CONCAT(audit_log, "Expiry Date: ", OLD.expiry_date, " -> ", NEW.expiry_date, "<br/>");
+    END IF;
+
+    IF NEW.cvv <> OLD.cvv THEN
+        SET audit_log = CONCAT(audit_log, "CVV: ", OLD.cvv, " -> ", NEW.cvv, "<br/>");
+    END IF;
+
+    IF NEW.default_card <> OLD.default_card THEN
+        SET audit_log = CONCAT(audit_log, "Default Card: ", OLD.default_card, " -> ", NEW.default_card, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('customer_bank_card', NEW.customer_bank_card_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_id_record`
+--
+
+DROP TABLE IF EXISTS `customer_id_record`;
+CREATE TABLE `customer_id_record` (
+  `customer_id_record_id` int(10) UNSIGNED NOT NULL,
+  `customer_id` int(10) UNSIGNED NOT NULL,
+  `id_type_id` int(10) UNSIGNED NOT NULL,
+  `id_type_name` varchar(100) NOT NULL,
+  `id_number` varchar(100) NOT NULL,
+  `issue_date` date NOT NULL,
+  `expiration_date` date DEFAULT NULL,
+  `issuing_authority` varchar(100) DEFAULT NULL,
+  `id_image` varchar(500) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `customer_id_record`
+--
+DROP TRIGGER IF EXISTS `customer_id_record_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `customer_id_record_trigger_insert` AFTER INSERT ON `customer_id_record` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Customer ID record created. <br/>';
+
+    IF NEW.id_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>ID Type Name: ", NEW.id_type_name);
+    END IF;
+
+    IF NEW.id_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>ID Number: ", NEW.id_number);
+    END IF;
+
+    IF NEW.issue_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Issue Date: ", NEW.issue_date);
+    END IF;
+
+    IF NEW.expiration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Expiration Date: ", NEW.expiration_date);
+    END IF;
+
+    IF NEW.issuing_authority <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Issuing Authority: ", NEW.issuing_authority);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('customer_id_record', NEW.customer_id_record_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `customer_id_record_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `customer_id_record_trigger_update` AFTER UPDATE ON `customer_id_record` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.id_type_name <> OLD.id_type_name THEN
+        SET audit_log = CONCAT(audit_log, "ID Type Name: ", OLD.id_type_name, " -> ", NEW.id_type_name, "<br/>");
+    END IF;
+
+    IF NEW.id_number <> OLD.id_number THEN
+        SET audit_log = CONCAT(audit_log, "ID Number: ", OLD.id_number, " -> ", NEW.id_number, "<br/>");
+    END IF;
+
+    IF NEW.issue_date <> OLD.issue_date THEN
+        SET audit_log = CONCAT(audit_log, "Issue Date: ", OLD.issue_date, " -> ", NEW.issue_date, "<br/>");
+    END IF;
+
+    IF NEW.expiration_date <> OLD.expiration_date THEN
+        SET audit_log = CONCAT(audit_log, "Expiration Date: ", OLD.expiration_date, " -> ", NEW.expiration_date, "<br/>");
+    END IF;
+
+    IF NEW.issuing_authority <> OLD.issuing_authority THEN
+        SET audit_log = CONCAT(audit_log, "Issuing Authority: ", OLD.issuing_authority, " -> ", NEW.issuing_authority, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('customer_id_record', NEW.customer_id_record_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `department`
 --
 
@@ -10632,7 +11475,7 @@ CREATE TABLE `employee` (
 
 INSERT INTO `employee` (`employee_id`, `employee_image`, `employee_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `religion_id`, `religion_name`, `blood_type_id`, `blood_type_name`, `birthday`, `birth_place`, `height`, `weight`, `badge_id`, `company_id`, `company_name`, `employment_type_id`, `employment_type_name`, `department_id`, `department_name`, `job_position_id`, `job_position_name`, `work_location_id`, `work_location_name`, `manager_id`, `manager_name`, `work_schedule_id`, `work_schedule_name`, `employment_status`, `pin_code`, `home_work_distance`, `visa_number`, `work_permit_number`, `visa_expiration_date`, `work_permit_expiration_date`, `work_permit`, `onboard_date`, `offboard_date`, `time_off_approver_id`, `time_off_approver_name`, `departure_reason_id`, `departure_reason_name`, `detailed_departure_reason`, `created_date`, `last_log_by`) VALUES
 (1, NULL, NULL, 'Lawrence De Vera Agulto, Suffix', 'Lawrence', 'De Vera', 'Agulto', 'Suffix', NULL, 'nickname', 2, 'Engaged', 2, 'Female', 1, 'Aglipayan Church', 1, 'A+', '2024-07-28', 'place of birth', 1, 2, 'badge id', 1, 'Christian General Motors Inc.', 10, 'Apprentice', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'pincode', 20, 'visa no', 'work permit no', '2024-07-29', '2024-07-30', NULL, '2024-07-31', NULL, 2, 'Administrator', NULL, NULL, NULL, '2024-07-28 20:03:54', 2),
-(2, './components/employee/image/2/profile/uHPq.png', NULL, 'Lennard De Vera Agulto, Suffix', 'Lennard', 'De Vera', 'Agulto', 'Suffix', 'No about found.', '--', 4, 'Married', 1, 'Male', 12, 'Roman Catholic', 2, 'A-', '2024-07-30', 'Cabanatuan city, Nueva Ecija', 0, 0, 'Badge IDs', 1, 'Christian General Motors Inc.', 11, 'Probationary', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Archived', 'Pin Codes', 0, 'Visa Nos', 'Work Permit Nos', '2024-07-31', '2024-08-30', NULL, '2024-08-21', '2024-08-14', 0, '', 13, 'Company Restructuring', 'sdfsdfsdfwer', '2024-07-28 20:40:04', 2);
+(2, './components/employee/image/2/profile/uHPq.png', NULL, 'Lennard De Vera Agulto, Suffix', 'Lennard', 'De Vera', 'Agulto', 'Suffix', 'No about found.', '--', 4, 'Married', 1, 'Male', 12, 'Roman Catholic', 2, 'A-', '2024-07-30', 'Cabanatuan city, Nueva Ecija', 0, 0, 'Badge IDs', 1, 'Christian General Motors Inc.', 11, 'Probationary', 1, 'Data Center', 1, 'Data Center Staff', 1, 'CGMI', 0, '', 1, 'Regular', 'Active', 'Pin Codes', 0, 'Visa Nos', 'Work Permit Nos', '2024-07-31', '2024-08-30', NULL, '2024-08-21', NULL, 0, '', 0, '', '', '2024-07-28 20:40:04', 2);
 
 --
 -- Triggers `employee`
@@ -12635,7 +13478,8 @@ INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `
 (3, 'Configurations', 1, 'Settings', 50, '2024-06-26 14:28:45', 2),
 (4, 'Profile', 1, 'Settings', 1, '2024-06-27 14:49:24', 2),
 (5, 'Employees', 2, 'Employees', 1, '2024-06-27 15:29:15', 2),
-(6, 'Employee Configurations', 2, 'Employees', 23, '2024-06-27 17:17:10', 2);
+(6, 'Employee Configurations', 2, 'Employees', 23, '2024-06-27 17:17:10', 2),
+(7, 'Customers', 3, 'Customer', 3, '2024-08-19 10:29:11', 2);
 
 --
 -- Triggers `menu_group`
@@ -12763,7 +13607,8 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (46, 'Contact Information', '', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, '2024-07-09 08:59:29', 2),
 (47, 'Language Settings', '', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', NULL, NULL, 12, '2024-07-09 09:02:08', 2),
 (48, 'Banking Configuration', '', ' ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-09 09:04:13', 2),
-(49, 'Employment Location Type', 'employment-location-type.php', 'ti ti-map-2', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 5, '2024-07-31 09:01:33', 2);
+(49, 'Employment Location Type', 'employment-location-type.php', 'ti ti-map-2', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 5, '2024-07-31 09:01:33', 2),
+(50, 'Customer', 'customer.php', ' ti ti-users', 7, 'Customers', 3, 'Customer', 0, NULL, 3, '2024-08-19 10:30:06', 2);
 
 --
 -- Triggers `menu_item`
@@ -13401,7 +14246,8 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (47, 1, 'Administrator', 46, 'Contact Information', 1, 0, 0, 0, '2024-07-09 08:59:33', '2024-07-09 08:59:33', 2),
 (48, 1, 'Administrator', 47, 'Language Settings', 1, 0, 0, 0, '2024-07-09 09:02:12', '2024-07-09 09:02:12', 2),
 (49, 1, 'Administrator', 48, 'Banking Configuration', 1, 0, 0, 0, '2024-07-09 09:04:17', '2024-07-09 09:04:17', 2),
-(50, 1, 'Administrator', 49, 'Employment Location Type', 1, 1, 1, 1, '2024-07-31 09:01:37', '2024-07-31 09:01:37', 2);
+(50, 1, 'Administrator', 49, 'Employment Location Type', 1, 1, 1, 1, '2024-07-31 09:01:37', '2024-07-31 09:01:37', 2),
+(51, 1, 'Administrator', 50, 'Customer', 1, 1, 1, 1, '2024-08-19 10:32:57', '2024-08-19 10:32:57', 2);
 
 --
 -- Triggers `role_permission`
@@ -14244,7 +15090,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-14 08:40:02', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'FFCqH38Pba4JbHGCwnMmgQE3Qsf78UerJwt8NAse52Q%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-19 09:40:05', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'TiQscr%2FgJdOt6ncOonBix5YROp6L1IUcVnIdNlP0yoM%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -14765,6 +15611,51 @@ ALTER TABLE `currency`
   ADD KEY `currency_index_currency_id` (`currency_id`);
 
 --
+-- Indexes for table `customer`
+--
+ALTER TABLE `customer`
+  ADD PRIMARY KEY (`customer_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `customer_index_customer_id` (`customer_id`),
+  ADD KEY `customer_index_civil_status_id` (`civil_status_id`),
+  ADD KEY `customer_index_gender_id` (`gender_id`),
+  ADD KEY `customer_index_customer_status` (`customer_status`);
+
+--
+-- Indexes for table `customer_address`
+--
+ALTER TABLE `customer_address`
+  ADD PRIMARY KEY (`customer_address_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `customer_address_index_customer_address_id` (`customer_address_id`),
+  ADD KEY `customer_address_index_customer_id` (`customer_id`),
+  ADD KEY `customer_address_index_address_type_id` (`address_type_id`),
+  ADD KEY `customer_address_index_city_id` (`city_id`),
+  ADD KEY `customer_address_index_state_id` (`state_id`),
+  ADD KEY `customer_address_index_country_id` (`country_id`),
+  ADD KEY `customer_address_index_default_address` (`default_address`);
+
+--
+-- Indexes for table `customer_bank_card`
+--
+ALTER TABLE `customer_bank_card`
+  ADD PRIMARY KEY (`customer_bank_card_id`),
+  ADD KEY `customer_id` (`customer_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `customer_bank_card_index_customer_bank_card_id` (`customer_bank_card_id`),
+  ADD KEY `customer_bank_card_index_default_card` (`default_card`);
+
+--
+-- Indexes for table `customer_id_record`
+--
+ALTER TABLE `customer_id_record`
+  ADD PRIMARY KEY (`customer_id_record_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `customer_id_record_index_id_record_id` (`customer_id_record_id`),
+  ADD KEY `customer_id_record_index_customer_id` (`customer_id`),
+  ADD KEY `customer_id_record_index_id_type_id` (`id_type_id`);
+
+--
 -- Indexes for table `department`
 --
 ALTER TABLE `department`
@@ -15230,13 +16121,13 @@ ALTER TABLE `address_type`
 -- AUTO_INCREMENT for table `app_module`
 --
 ALTER TABLE `app_module`
-  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3334;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3346;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -15291,6 +16182,30 @@ ALTER TABLE `country`
 --
 ALTER TABLE `currency`
   MODIFY `currency_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+
+--
+-- AUTO_INCREMENT for table `customer`
+--
+ALTER TABLE `customer`
+  MODIFY `customer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customer_address`
+--
+ALTER TABLE `customer_address`
+  MODIFY `customer_address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customer_bank_card`
+--
+ALTER TABLE `customer_bank_card`
+  MODIFY `customer_bank_card_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customer_id_record`
+--
+ALTER TABLE `customer_id_record`
+  MODIFY `customer_id_record_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `department`
@@ -15440,13 +16355,13 @@ ALTER TABLE `language_proficiency`
 -- AUTO_INCREMENT for table `menu_group`
 --
 ALTER TABLE `menu_group`
-  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -15500,7 +16415,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -15663,6 +16578,33 @@ ALTER TABLE `country`
 --
 ALTER TABLE `currency`
   ADD CONSTRAINT `currency_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `customer`
+--
+ALTER TABLE `customer`
+  ADD CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `customer_address`
+--
+ALTER TABLE `customer_address`
+  ADD CONSTRAINT `customer_address_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+  ADD CONSTRAINT `customer_address_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `customer_bank_card`
+--
+ALTER TABLE `customer_bank_card`
+  ADD CONSTRAINT `customer_bank_card_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+  ADD CONSTRAINT `customer_bank_card_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `customer_id_record`
+--
+ALTER TABLE `customer_id_record`
+  ADD CONSTRAINT `customer_id_record_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+  ADD CONSTRAINT `customer_id_record_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `department`
