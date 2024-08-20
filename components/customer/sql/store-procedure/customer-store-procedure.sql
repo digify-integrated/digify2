@@ -49,6 +49,14 @@ BEGIN
     SET p_customer_id = LAST_INSERT_ID();
 END //
 
+CREATE PROCEDURE insertCustomerSignUp(IN p_full_name VARCHAR(1000), IN p_first_name VARCHAR(300), IN p_middle_name VARCHAR(300), IN p_last_name VARCHAR(300), IN p_suffix VARCHAR(10), IN p_last_log_by INT, OUT p_customer_id INT)
+BEGIN
+    INSERT INTO customer (full_name, first_name, middle_name, last_name, suffix, last_log_by) 
+	VALUES(p_full_name, p_first_name, p_middle_name, p_last_name, p_suffix, p_last_log_by);
+	
+    SET p_customer_id = LAST_INSERT_ID();
+END //
+
 CREATE PROCEDURE insertCustomerAddress(IN p_customer_id INT, IN p_address_type_id INT, IN p_address_type_name VARCHAR(100), IN p_address VARCHAR(1000), IN p_city_id INT, IN p_city_name VARCHAR(100), IN p_state_id INT, IN p_state_name VARCHAR(100), IN p_country_id INT, IN p_country_name VARCHAR(100), IN p_telephone VARCHAR(50), IN p_mobile VARCHAR(50), IN p_email VARCHAR(200), IN p_last_log_by INT)
 BEGIN
     DECLARE existing_address_count INT;

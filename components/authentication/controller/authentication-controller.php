@@ -15,6 +15,9 @@ session_start();
 class AuthenticationController {
     private $authenticationModel;
     private $securitySettingModel;
+    private $systemSettingModel;
+    private $userAccountModel;
+    private $customerModel;
     private $emailSettingModel;
     private $notificationSettingModel;
     private $systemModel;
@@ -30,6 +33,9 @@ class AuthenticationController {
     # Parameters:
     # - @param AuthenticationModel $authenticationModel     The authenticationModel instance for authentication related operations.
     # - @param SecuritySettingModel $securitySettingModel     The securitySettingModel instance for security setting related operations.
+    # - @param SystemSettingModel $systemSettingModel     The systemSettingModel instance for system setting related operations.
+    # - @param UserAccountModel $userAccountModel     The UserAccountModel instance for user account related operations.
+    # - @param CustomerModel $customerModel     The CustomerModel instance for customer related operations.
     # - @param EmailSettingModel $emailSettingModel     The emailSettingModel instance for email setting related operations.
     # - @param NotificationSettingModel $notificationSettingModel     The notificationSettingModel instance for notification setting related operations.
     # - @param SystemModel $systemModel     The SystemModel instance for user related operations.
@@ -38,9 +44,12 @@ class AuthenticationController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(AuthenticationModel $authenticationModel, SecuritySettingModel $securitySettingModel, EmailSettingModel $emailSettingModel, NotificationSettingModel $notificationSettingModel, SystemModel $systemModel, SecurityModel $securityModel) {
+    public function __construct(AuthenticationModel $authenticationModel, SecuritySettingModel $securitySettingModel, SystemSettingModel $systemSettingModel, UserAccountModel $userAccountModel, CustomerModel $customerModel, EmailSettingModel $emailSettingModel, NotificationSettingModel $notificationSettingModel, SystemModel $systemModel, SecurityModel $securityModel) {
         $this->authenticationModel = $authenticationModel;
         $this->securitySettingModel = $securitySettingModel;
+        $this->systemSettingModel = $systemSettingModel;
+        $this->userAccountModel = $userAccountModel;
+        $this->customerModel = $customerModel;
         $this->emailSettingModel = $emailSettingModel;
         $this->notificationSettingModel = $notificationSettingModel;
         $this->systemModel = $systemModel;
@@ -71,6 +80,9 @@ class AuthenticationController {
                     break; 
                 case 'otp verification':
                     $this->verifyOTP();
+                    break;
+                case 'user account sign up':
+                    $this->userAccountSignUp();
                     break;
                 case 'forgot password':
                     $this->forgotPassword();
@@ -338,6 +350,120 @@ class AuthenticationController {
         
         echo json_encode($response);
         exit;
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Custom methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: userAccountSignUp
+    # Description: 
+    # Inserts a user account.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function userAccountSignUp() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['middle_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['suffix']) && isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && !empty($_POST['password'])) {
+            $userID = $_SESSION['user_account_id'];
+            $firstName = htmlspecialchars($_POST['first_name'], ENT_QUOTES, 'UTF-8');
+            $middleName = htmlspecialchars($_POST['middle_name'], ENT_QUOTES, 'UTF-8');
+            $lastName = htmlspecialchars($_POST['last_name'], ENT_QUOTES, 'UTF-8');
+            $suffix = htmlspecialchars($_POST['suffix'], ENT_QUOTES, 'UTF-8');
+            $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+            $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
+            $password = $this->securityModel->encryptData($_POST['password']);
+
+            $fullNameParts = array_filter([$firstName, $middleName, $lastName]);
+            $fullName = implode(' ', $fullNameParts);
+
+            if (!empty($suffix)) {
+                $fullName .= ', ' . $suffix;
+            }
+
+            $checkUserAccountEmailExist = $this->userAccountModel->checkUserAccountEmailExist($email);
+            $total = $checkUserAccountEmailExist['total'] ?? 0;
+
+            if($total > 0){
+                $response = [
+                    'success' => false,
+                    'title' => 'User Account Sign Up Error',
+                    'message' => 'The email address already exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $checkUserAccountUsernameExist = $this->userAccountModel->checkUserAccountUsernameExist($email);
+            $total = $checkUserAccountUsernameExist['total'] ?? 0;
+
+            if($total > 0){
+                $response = [
+                    'success' => false,
+                    'title' => 'User Account Sign Up Error',
+                    'message' => 'The user address already exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $securitySettingDetails = $this->securitySettingModel->getSecuritySetting(4);
+            $defaultPasswordDuration = $securitySettingDetails['value'] ?? DEFAULT_PASSWORD_DURATION;
+        
+            $lastPasswordChange = date('Y-m-d H:i:s');
+            $passwordExpiryDate = date('Y-m-d', strtotime('+'. $defaultPasswordDuration .' days'));
+
+            $securitySettingDetails = $this->securitySettingModel->getSecuritySetting(8);
+            $registrationVerificationTokenDuration = $securitySettingDetails['value'] ?? REGISTRATION_VERIFICATION_TOKEN_DURATION;
+
+            $registrationVerificationToken = $this->generateRegistrationToken();
+            $encryptedRegistrationVerificationToken = $this->securityModel->encryptData($registrationVerificationToken);
+            $registrationVerificationTokenExpiryDate = date('Y-m-d H:i:s', strtotime('+'. $registrationVerificationTokenDuration .' minutes'));
+        
+            $customerID = $this->customerModel->insertCustomerSignUp($fullName, $firstName, $middleName, $lastName, $suffix, 1);
+            $userAccountID = $this->userAccountModel->insertUserAccountSignUp($fullName, $firstName, $middleName, $lastName, $suffix, $email, $username, $password, $passwordExpiryDate, $lastPasswordChange, 'Customer', $customerID, $encryptedRegistrationVerificationToken, $registrationVerificationTokenExpiryDate, 1);
+            $this->authenticationModel->insertPasswordHistory($userAccountID, $password, $lastPasswordChange);
+
+            
+            $encryptedUserID = $this->securityModel->encryptData($userAccountID);
+
+            $this->sendRegistrationVerification($email, $encryptedUserID, $encryptedRegistrationVerificationToken, $registrationVerificationTokenDuration);
+    
+            $response = [
+                'success' => true,
+                'userAccountID' => $this->securityModel->encryptData($userAccountID),
+                'title' => 'Insert User Account Success',
+                'message' => 'The user account has been inserted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
     }
     # -------------------------------------------------------------
 
@@ -999,6 +1125,29 @@ class AuthenticationController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: generateRegistrationToken
+    # Description: 
+    # Generates a random registration token of specified length.
+    #
+    # Parameters: 
+    # - $minLength (int): The minimum length of the generated token. Default is 10.
+    # - $maxLength (int): The maximum length of the generated token. Default is 12.
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function generateRegistrationToken($minLength = 10, $maxLength = 12) {
+        $length = mt_rand($minLength, $maxLength);
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        
+        $resetToken = substr(str_shuffle($characters), 0, $length);
+        
+        return $resetToken;
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Send methods
     # -------------------------------------------------------------
 
@@ -1060,6 +1209,7 @@ class AuthenticationController {
     # - $email (string): The email address of the user.
     # - $userAccountID (int): The user ID.
     # - $resetToken (string): The reset token generated.
+    # - $resetPasswordTokenDuration (string): The reset token duration.
     #
     # Returns: Array
     #
@@ -1095,6 +1245,56 @@ class AuthenticationController {
         } 
         else {
             return 'Failed to send password reset email. Error: ' . $mailer->ErrorInfo;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: sendRegistrationVerification
+    # Description: 
+    # Sends a password reset email containing a password reset link to the user's email address.
+    #
+    # Parameters: 
+    # - $email (string): The email address of the user.
+    # - $userAccountID (int): The user ID.
+    # - $registrationVerificationToken (string): The registration verification token generated.
+    # - $registrationVerificationTokenDuration (string): The registration verification token duration.
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function sendRegistrationVerification($email, $userAccountID, $registrationVerificationToken, $registrationVerificationTokenDuration) {
+        $emailSetting = $this->emailSettingModel->getEmailSetting(1);
+        $mailFromName = $emailSetting['mail_from_name'];
+        $mailFromEmail = $emailSetting['mail_from_email'];
+
+        $securitySettingDetails = $this->securitySettingModel->getSecuritySetting(9);
+        $defaultRegistrationVerificationLink = $securitySettingDetails['value'] ?? null;
+
+        $notificationSettingDetails = $this->notificationSettingModel->getEmailNotificationTemplate(3);
+        $emailSubject = $notificationSettingDetails['email_notification_subject'] ?? null;
+        $emailBody = $notificationSettingDetails['email_notification_body'] ?? null;
+        $emailBody = str_replace('#{REGISTRATION_VERIFICATION_LINK}', $defaultRegistrationVerificationLink . $userAccountID .'&token=' . $registrationVerificationToken, $emailBody);
+        $emailBody = str_replace('#{REGISTRATION_VERIFICATION_VALIDITY}', ($registrationVerificationTokenDuration / 60) . ' hours', $emailBody);
+
+        $message = file_get_contents('../../notification-setting/template/default-email.html');
+        $message = str_replace('{EMAIL_SUBJECT}', $emailSubject, $message);
+        $message = str_replace('{EMAIL_CONTENT}', $emailBody, $message);
+    
+        $mailer = new PHPMailer\PHPMailer\PHPMailer();
+        $this->configureSMTP(1, $mailer);
+        
+        $mailer->setFrom($mailFromEmail, $mailFromName);
+        $mailer->addAddress($email);
+        $mailer->Subject = $emailSubject;
+        $mailer->Body = $message;
+    
+        if ($mailer->send()) {
+            return true;
+        } 
+        else {
+            return 'Failed to send registration verification email. Error: ' . $mailer->ErrorInfo;
         }
     }
     # -------------------------------------------------------------
@@ -1142,12 +1342,15 @@ require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
 require_once '../../authentication/model/authentication-model.php';
 require_once '../../general-settings/model/security-setting-model.php';
+require_once '../../general-settings/model/system-setting-model.php';
+require_once '../../user-account/model/user-account-model.php';
+require_once '../../customer/model/customer-model.php';
 require_once '../../email-setting/model/email-setting-model.php';
 require_once '../../notification-setting/model/notification-setting-model.php';
 require_once '../../../assets/libs/phpmailer/src/PHPMailer.php';
 require_once '../../../assets/libs/phpmailer/src/Exception.php';
 require_once '../../../assets/libs/phpmailer/src/SMTP.php';
 
-$controller = new AuthenticationController(new AuthenticationModel(new DatabaseModel), new SecuritySettingModel(new DatabaseModel), new EmailSettingModel(new DatabaseModel), new NotificationSettingModel(new DatabaseModel), new SystemModel(), new SecurityModel());
+$controller = new AuthenticationController(new AuthenticationModel(new DatabaseModel), new SecuritySettingModel(new DatabaseModel), new SystemSettingModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new CustomerModel(new DatabaseModel), new EmailSettingModel(new DatabaseModel), new NotificationSettingModel(new DatabaseModel), new SystemModel(), new SecurityModel());
 $controller->handleRequest();
 ?>

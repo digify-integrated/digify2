@@ -697,9 +697,9 @@ class EmployeeModel {
         $stmt->execute();
         
         $result = $this->db->getConnection()->query('SELECT @p_employee_id AS employee_id');
-        $menuItemID = $result->fetch(PDO::FETCH_ASSOC)['employee_id'];
+        $employeeID = $result->fetch(PDO::FETCH_ASSOC)['employee_id'];
         
-        return $menuItemID;
+        return $employeeID;
     }
     # -------------------------------------------------------------
 

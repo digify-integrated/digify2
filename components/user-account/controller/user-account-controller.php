@@ -247,6 +247,21 @@ class UserAccountController {
                 exit;
             }
 
+            $checkUserAccountUsernameExist = $this->userAccountModel->checkUserAccountUsernameExist($email);
+            $total = $checkUserAccountUsernameExist['total'] ?? 0;
+
+            if($total > 0){
+                $response = [
+                    'success' => false,
+                    'title' => 'User Account Sign Up Error',
+                    'message' => 'The user address already exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
             $securitySettingDetails = $this->securitySettingModel->getSecuritySetting(4);
             $defaultPasswordDuration = $securitySettingDetails['value'] ?? DEFAULT_PASSWORD_DURATION;
         
@@ -332,6 +347,21 @@ class UserAccountController {
                     'success' => false,
                     'title' => 'Update User Account Error',
                     'message' => 'The email address already exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkUserAccountUsernameUpdateExist = $this->userAccountModel->checkUserAccountUsernameUpdateExist($userAccountID, $email);
+            $total = $checkUserAccoucheckUserAccountUsernameUpdateExistntEmailUpdateExist['total'] ?? 0;
+
+            if($total > 0){
+                $response = [
+                    'success' => false,
+                    'title' => 'Update User Account Error',
+                    'message' => 'The username already exist.',
                     'messageType' => 'error'
                 ];
                 

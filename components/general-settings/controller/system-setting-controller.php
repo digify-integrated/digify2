@@ -25,9 +25,9 @@ class SystemSettingController {
     # These instances are used for system setting related, user related operations and system related operations, respectively.
     #
     # Parameters:
-    # - @param systemSettingModel $systemSettingModel     The systemSettingModel instance for system setting related operations.
+    # - @param SystemSettingModel $systemSettingModel     The SystemSettingModel instance for system setting related operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
-    # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
+    # - @param SecurityModel $securityModel   The SystemModel instance for security related operations.
     #
     # Returns: None
     #
@@ -121,20 +121,11 @@ class SystemSettingController {
             $transaction = isset($_POST['transaction']) ? $_POST['transaction'] : null;
 
             switch ($transaction) {
-                case 'add system setting':
-                    $this->addSystemSetting();
-                    break;
-                case 'update system setting':
+                case 'update system settings':
                     $this->updateSystemSetting();
                     break;
                 case 'get system setting details':
                     $this->getSystemSettingDetails();
-                    break;
-                case 'delete system setting':
-                    $this->deleteSystemSetting();
-                    break;
-                case 'delete multiple system setting':
-                    $this->deleteMultipleSystemSetting();
                     break;
                 default:
                     $response = [
@@ -147,59 +138,6 @@ class SystemSettingController {
                     echo json_encode($response);
                     break;
             }
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #   Add methods
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: addSystemSetting
-    # Description: 
-    # Inserts a system setting.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function addSystemSetting() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        if (isset($_POST['system_setting_name']) && !empty($_POST['system_setting_name']) && isset($_POST['system_setting_description']) && !empty($_POST['system_setting_description']) && isset($_POST['value']) && !empty($_POST['value'])) {
-            $userID = $_SESSION['user_account_id'];
-            $systemSettingName = htmlspecialchars($_POST['system_setting_name'], ENT_QUOTES, 'UTF-8');
-            $systemSettingDescription = htmlspecialchars($_POST['system_setting_description'], ENT_QUOTES, 'UTF-8');
-            $value = $_POST['value'];
-        
-            $systemSettingID = $this->systemSettingModel->insertSystemSetting($systemSettingName, $systemSettingDescription, $value, $userID);
-    
-            $response = [
-                'success' => true,
-                'systemSettingID' => $this->securityModel->encryptData($systemSettingID),
-                'title' => 'Insert System Setting Success',
-                'message' => 'The system setting has been inserted successfully.',
-                'messageType' => 'success'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
         }
     }
     # -------------------------------------------------------------
@@ -224,152 +162,16 @@ class SystemSettingController {
             return;
         }
         
-        if (isset($_POST['system_setting_id']) && !empty($_POST['system_setting_id']) && isset($_POST['system_setting_name']) && !empty($_POST['system_setting_name']) && isset($_POST['system_setting_description']) && !empty($_POST['system_setting_description']) && isset($_POST['value']) && !empty($_POST['value'])) {
+        if (isset($_POST['allow_registration']) && !empty($_POST['allow_registration'])) {
             $userID = $_SESSION['user_account_id'];
-            $systemSettingID = htmlspecialchars($_POST['system_setting_id'], ENT_QUOTES, 'UTF-8');
-            $systemSettingName = htmlspecialchars($_POST['system_setting_name'], ENT_QUOTES, 'UTF-8');
-            $systemSettingDescription = htmlspecialchars($_POST['system_setting_description'], ENT_QUOTES, 'UTF-8');
-            $value = $_POST['value'];
-        
-            $checkSystemSettingExist = $this->systemSettingModel->checkSystemSettingExist($systemSettingID);
-            $total = $checkSystemSettingExist['total'] ?? 0;
+            $allowRegistration = $_POST['allow_registration'];
 
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'notExist' => true,
-                    'title' => 'Update System Setting Error',
-                    'message' => 'The system setting does not exist.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-
-            $this->systemSettingModel->updateSystemSetting($systemSettingID, $systemSettingName, $systemSettingDescription, $value, $userID);
+            $this->systemSettingModel->updateSystemSetting($allowRegistration, $userID);
                 
             $response = [
                 'success' => true,
                 'title' => 'Update System Setting Success',
                 'message' => 'The system setting has been updated successfully.',
-                'messageType' => 'success'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #   Delete methods
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: deleteSystemSetting
-    # Description: 
-    # Delete the system setting if it exists; otherwise, return an error message.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function deleteSystemSetting() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        if (isset($_POST['system_setting_id']) && !empty($_POST['system_setting_id'])) {
-            $systemSettingID = htmlspecialchars($_POST['system_setting_id'], ENT_QUOTES, 'UTF-8');
-        
-            $checkSystemSettingExist = $this->systemSettingModel->checkSystemSettingExist($systemSettingID);
-            $total = $checkSystemSettingExist['total'] ?? 0;
-
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'notExist' => true,
-                    'title' => 'Delete System Setting Error',
-                    'message' => 'The system setting does not exist.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-
-            $this->systemSettingModel->deleteSystemSetting($systemSettingID);
-                
-            $response = [
-                'success' => true,
-                'title' => 'Delete System Setting Success',
-                'message' => 'The system setting has been deleted successfully.',
-                'messageType' => 'success'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: deleteMultipleSystemSetting
-    # Description: 
-    # Delete the selected system settings if it exists; otherwise, skip it.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function deleteMultipleSystemSetting() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        if (isset($_POST['system_setting_id']) && !empty($_POST['system_setting_id'])) {
-            $systemSettingIDs = $_POST['system_setting_id'];
-    
-            foreach($systemSettingIDs as $systemSettingID){
-                $checkSystemSettingExist = $this->systemSettingModel->checkSystemSettingExist($systemSettingID);
-                $total = $checkSystemSettingExist['total'] ?? 0;
-
-                if($total > 0){
-                    $this->systemSettingModel->deleteSystemSetting($systemSettingID);
-                }
-            }
-                
-            $response = [
-                'success' => true,
-                'title' => 'Delete Multiple System Setting Success',
-                'message' => 'The selected system settings have been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -410,49 +212,15 @@ class SystemSettingController {
             return;
         }
     
-        if (isset($_POST['system_setting_id']) && !empty($_POST['system_setting_id'])) {
-            $userID = $_SESSION['user_account_id'];
-            $systemSettingID = htmlspecialchars($_POST['system_setting_id'], ENT_QUOTES, 'UTF-8');
+        $userID = $_SESSION['user_account_id'];
 
-            $checkSystemSettingExist = $this->systemSettingModel->checkSystemSettingExist($systemSettingID);
-            $total = $checkSystemSettingExist['total'] ?? 0;
+        $response = [
+            'success' => true,
+            'allowRegistration' => $this->systemSettingModel->getSystemSetting(1)['value'] ?? ALLOW_REGISTRATION,
+        ];
 
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'notExist' => true,
-                    'title' => 'Get System Setting Details Error',
-                    'message' => 'The system setting does not exist.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-    
-            $systemSettingDetails = $this->systemSettingModel->getSystemSetting($systemSettingID);
-
-            $response = [
-                'success' => true,
-                'systemSettingName' => $systemSettingDetails['system_setting_name'] ?? null,
-                'systemSettingDescription' => $systemSettingDetails['system_setting_description'] ?? null,
-                'value' => $systemSettingDetails['value'] ?? null
-            ];
-
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
+        echo json_encode($response);
+        exit;
     }
     # -------------------------------------------------------------
 }
@@ -460,12 +228,12 @@ class SystemSettingController {
 
 require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
-require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../system-setting/model/system-setting-model.php';
+require_once '../../global/model/security-model.php';
+require_once '../../general-settings/model/system-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new SystemSettingController(new systemSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new SystemSettingController(new SystemSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>

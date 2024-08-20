@@ -6,7 +6,9 @@
   $updateSecuritySetting = $globalModel->checkSystemActionAccessRights($userID, 2);
 
   $securitySettingUpdate = $updateSecuritySetting['total'] == 0 ? 'disabled' : '';
+  $systemSettingUpdate = $updateSystemSetting['total'] == 0 ? 'disabled' : '';
   $securitySettingUpdateButton = $updateSecuritySetting['total'] > 0 ? '<button type="submit" form="security-settings-form" class="btn btn-success mb-0" id="submit-security-setting-data">Save</button>' : null;
+  $systemSettingUpdateButton = $updateSystemSetting['total'] > 0 ? '<button type="submit" form="system-settings-form" class="btn btn-success mb-0" id="submit-system-setting-data">Save</button>' : null;
 
   $userAccountButton = '';
   if ($userAccountPageAccess['total'] > 0) {
@@ -58,6 +60,26 @@
       <hr class="m-0" />
       <div class="card-body d-flex align-items-center">
         <h5 class="card-title mb-0">System Settings</h5>
+        <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+          <?php
+            echo $systemSettingUpdateButton;
+          ?>
+        </div>
+      </div>
+      <hr class="m-0" />
+      <div class="card-body">
+        <form id="system-settings-form" method="post" action="#">
+          <div class="row">
+            <div class="col-lg-6">
+              <h4 class="card-title mb-0">Allow Registration</h4>
+              <p class="mb-3">The setting for allowing customer registration</p>
+              <select class="form-control mb-0" id="allow_registration" name="allow_registration" <?php echo $systemSettingUpdate; ?>>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+          </div>
+        </form>
       </div>
       <hr class="m-0" />
       <div class="card-body d-flex align-items-center">
@@ -87,7 +109,7 @@
               <p class="mb-3">Sets the duration of the password expiry</p>
               <div class="input-group mb-3">
                 <input class="form-control" type="number" id="password_expiry_duration" name="password_expiry_duration" min="1" <?php echo $securitySettingUpdate; ?>>
-              <span class="input-group-text">day(s)</span>
+              <span class="input-group-text">days</span>
               </div>
             </div>
             <div class="col-lg-6">
@@ -95,7 +117,7 @@
               <p class="mb-3">The time window during which a one-time password (OTP) is valid</p>
               <div class="input-group mb-3">
                 <input class="form-control" type="number" id="otp_duration" name="otp_duration" min="1" <?php echo $securitySettingUpdate; ?>>
-                <span class="input-group-text">minute(s)</span>
+                <span class="input-group-text">minutes</span>
               </div>
             </div>
             <div class="col-lg-6">
@@ -103,7 +125,7 @@
               <p class="mb-3">The time window during which a reset password token remains valid</p>
               <div class="input-group mb-3">
                 <input class="form-control" type="number" id="reset_password_token_duration" name="reset_password_token_duration" min="1" <?php echo $securitySettingUpdate; ?>>
-                <span class="input-group-text">minute(s)</span>
+                <span class="input-group-text">minutes</span>
               </div>
             </div>
             <div class="col-lg-6">
@@ -111,13 +133,20 @@
               <p class="mb-3">Time before inactive sessions end</p>
               <div class="input-group mb-3">
                 <input class="form-control" type="number" id="session_inactivity_limit" name="session_inactivity_limit" min="1" <?php echo $securitySettingUpdate; ?>>
-                <span class="input-group-text">minute(s)</span>
+                <span class="input-group-text">minutes</span>
               </div>
             </div>
             <div class="col-lg-6">
               <h4 class="card-title mb-0">Password Recovery Link</h4>
               <p class="mb-3">The default URL used for resetting user account password</p>
               <input class="form-control mb-0" type="text" id="password_recovery_link" name="password_recovery_link" maxlength="500" <?php echo $securitySettingUpdate; ?>>
+            </div> <div class="col-lg-6">
+              <h4 class="card-title mb-0">Registration Verification Token Validity Period</h4>
+              <p class="mb-3">The time window during which a reset password token remains valid</p>
+              <div class="input-group mb-3">
+                <input class="form-control" type="number" id="registration_verification_token_duration" name="registration_verification_token_duration" min="1" <?php echo $securitySettingUpdate; ?>>
+                <span class="input-group-text">minutes</span>
+              </div>
             </div>
           </div>
         </form>

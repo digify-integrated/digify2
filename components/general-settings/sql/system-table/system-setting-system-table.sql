@@ -12,6 +12,6 @@ CREATE TABLE system_setting(
 
 CREATE INDEX system_setting_index_system_setting_id ON system_setting(system_setting_id);
 
-INSERT INTO system_setting (system_setting_name, system_setting_description, value, last_log_by) VALUES ('File As Arrangement', 'This sets the arrangement of the file as.', '{last_name}, {first_name} {suffix} {middle_name}', '1');
+INSERT INTO system_setting (system_setting_name, value, last_log_by) VALUES ('Allow Registration', 'Yes', '1');
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

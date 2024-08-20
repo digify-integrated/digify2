@@ -16,11 +16,25 @@ BEGIN
     WHERE email = p_email;
 END //
 
+CREATE PROCEDURE checkUserAccountUsernameExist(IN p_username VARCHAR(100))
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM user_account
+    WHERE username = p_username;
+END //
+
 CREATE PROCEDURE checkUserAccountEmailUpdateExist(IN p_user_account_id INT, IN p_email VARCHAR(255))
 BEGIN
 	SELECT COUNT(*) AS total
     FROM user_account
     WHERE email = p_email AND user_account_id != p_user_account_id;
+END //
+
+CREATE PROCEDURE checkUserAccountUsernameUpdateExist(IN p_user_account_id INT, IN p_username VARCHAR(100))
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM user_account
+    WHERE username = p_username AND user_account_id != p_user_account_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -31,6 +45,14 @@ CREATE PROCEDURE insertUserAccount(IN p_file_as VARCHAR(300), IN p_email VARCHAR
 BEGIN
     INSERT INTO user_account (file_as, email, username, password, password_expiry_date, last_password_change, last_log_by) 
 	VALUES(p_file_as, p_email, p_username, p_password, p_password_expiry_date, p_last_password_change, p_last_log_by);
+	
+    SET p_user_account_id = LAST_INSERT_ID();
+END //
+
+CREATE PROCEDURE insertUserAccountSignUp(IN p_file_as VARCHAR(300), IN p_email VARCHAR(255), IN p_username VARCHAR(100), IN p_password VARCHAR(255), IN p_password_expiry_date DATE, IN p_last_password_change DATETIME, IN p_user_type VARCHAR(20), IN p_linked_id INT, IN p_registration_verification_token VARCHAR(255), IN p_registration_verification_token_expiry_date DATETIME, IN p_last_log_by INT, OUT p_user_account_id INT)
+BEGIN
+    INSERT INTO user_account (file_as, email, username, password, password_expiry_date, last_password_change, user_type, linked_id, registration_date, registration_verification_token, registration_verification_token_expiry_date, last_log_by) 
+	VALUES(p_file_as, p_email, p_username, p_password, p_password_expiry_date, p_last_password_change, p_user_type, p_linked_id, NOW(), p_registration_verification_token, p_registration_verification_token_expiry_date, p_last_log_by);
 	
     SET p_user_account_id = LAST_INSERT_ID();
 END //

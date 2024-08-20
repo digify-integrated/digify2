@@ -217,6 +217,49 @@ class UserAccountModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: insertUserAccountSignUp
+    # Description: Inserts the user account.
+    #
+    # Parameters:
+    # - $p_file_as (string): The name of the user account.
+    # - $p_email (string): The email of the user account.
+    # - $p_username (string): The username of the user account.
+    # - $p_password (string): The password of the user account.
+    # - $p_password_expiry_date (date): The password expiry date.
+    # - $p_last_password_change (datetime): The last password change.
+    # - $p_user_type (string): The user type.
+    # - $p_linked_id (int): The linked ID.
+    # - $p_registration_verification_token (string): The registration verification token.
+    # - $p_registration_verification_token_expiry_date (int): The registration verification token expiry date.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: String
+    #
+    # -------------------------------------------------------------
+    public function insertUserAccountSignUp($p_file_as, $p_email, $p_username, $p_password, $p_password_expiry_date, $p_last_password_change, $p_user_type, $p_linked_id, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertUserAccountSignUp(:p_file_as, :p_email, :p_username, :p_password, :p_password_expiry_date, :p_last_password_change, :p_user_type, :p_linked_id, :p_registration_verification_token, :p_registration_verification_token_expiry_date, :p_last_log_by, @p_user_account_id)');
+        $stmt->bindValue(':p_file_as', $p_file_as, PDO::PARAM_STR);
+        $stmt->bindValue(':p_email', $p_email, PDO::PARAM_STR);
+        $stmt->bindValue(':p_username', $p_username, PDO::PARAM_STR);
+        $stmt->bindValue(':p_password', $p_password, PDO::PARAM_STR);
+        $stmt->bindValue(':p_password_expiry_date', $p_password_expiry_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_password_change', $p_last_password_change, PDO::PARAM_STR);
+        $stmt->bindValue(':p_user_type', $p_user_type, PDO::PARAM_STR);
+        $stmt->bindValue(':p_linked_id', $p_linked_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_registration_verification_token', $p_registration_verification_token, PDO::PARAM_STR);
+        $stmt->bindValue(':p_registration_verification_token_expiry_date', $p_registration_verification_token_expiry_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $result = $this->db->getConnection()->query('SELECT @p_user_account_id AS user_account_id');
+        $menuGroupID = $result->fetch(PDO::FETCH_ASSOC)['user_account_id'];
+        
+        return $menuGroupID;
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Check exist methods
     # -------------------------------------------------------------
 
@@ -260,6 +303,25 @@ class UserAccountModel {
 
     # -------------------------------------------------------------
     #
+    # Function: checkUserAccountUsernameExist
+    # Description: Checks if a user account username exists.
+    #
+    # Parameters:
+    # - $p_username (string): The username of the user account.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkUserAccountUsernameExist($p_username) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkUserAccountUsernameExist(:p_username)');
+        $stmt->bindValue(':p_username', $p_username, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: checkUserAccountEmailUpdateExist
     # Description: Checks if a user account email exists for updating.
     #
@@ -274,6 +336,27 @@ class UserAccountModel {
         $stmt = $this->db->getConnection()->prepare('CALL checkUserAccountEmailUpdateExist(:p_user_account_id, :p_email)');
         $stmt->bindValue(':p_user_account_id', $p_user_account_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_email', $p_email, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: checkUserAccountUsernameUpdateExist
+    # Description: Checks if a user account username exists for updating.
+    #
+    # Parameters:
+    # - $p_user_account_id (int): The user account ID.
+    # - $p_username (string): The username of the user account.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkUserAccountUsernameUpdateExist($p_user_account_id, $p_username) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkUserAccountUsernameUpdateExist(:p_user_account_id, :p_username)');
+        $stmt->bindValue(':p_user_account_id', $p_user_account_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_username', $p_username, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

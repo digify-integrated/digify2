@@ -18,5 +18,6 @@ INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES 
 INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('Session Timeout Duration', 240, '1');
 INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('OTP Duration', 5, '1');
 INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('Reset Password Token Duration', 10, '1');
+INSERT INTO security_setting (security_setting_name, value, last_log_by) VALUES ('Registration Verification Token Duration', 180, '1');
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

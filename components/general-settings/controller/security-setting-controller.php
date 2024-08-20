@@ -162,7 +162,7 @@ class SecuritySettingController {
             return;
         }
         
-        if (isset($_POST['max_failed_login']) && !empty($_POST['max_failed_login']) && isset($_POST['max_failed_otp_attempt']) && !empty($_POST['max_failed_otp_attempt']) && isset($_POST['password_expiry_duration']) && !empty($_POST['password_expiry_duration']) && isset($_POST['otp_duration']) && !empty($_POST['otp_duration']) && isset($_POST['reset_password_token_duration']) && !empty($_POST['reset_password_token_duration']) && isset($_POST['session_inactivity_limit']) && !empty($_POST['session_inactivity_limit']) && isset($_POST['password_recovery_link']) && !empty($_POST['password_recovery_link'])) {
+        if (isset($_POST['max_failed_login']) && !empty($_POST['max_failed_login']) && isset($_POST['max_failed_otp_attempt']) && !empty($_POST['max_failed_otp_attempt']) && isset($_POST['password_expiry_duration']) && !empty($_POST['password_expiry_duration']) && isset($_POST['otp_duration']) && !empty($_POST['otp_duration']) && isset($_POST['reset_password_token_duration']) && !empty($_POST['reset_password_token_duration']) && isset($_POST['session_inactivity_limit']) && !empty($_POST['session_inactivity_limit']) && isset($_POST['password_recovery_link']) && !empty($_POST['password_recovery_link']) && isset($_POST['registration_verification_token_duration']) && !empty($_POST['registration_verification_token_duration'])) {
             $userID = $_SESSION['user_account_id'];
             $maxFailedLogin = htmlspecialchars($_POST['max_failed_login'], ENT_QUOTES, 'UTF-8');
             $max_FailedOTPAttempt = htmlspecialchars($_POST['max_failed_otp_attempt'], ENT_QUOTES, 'UTF-8');
@@ -171,8 +171,9 @@ class SecuritySettingController {
             $resetPasswordTokenDuration = htmlspecialchars($_POST['reset_password_token_duration'], ENT_QUOTES, 'UTF-8');
             $sessionInactivityLimit = htmlspecialchars($_POST['session_inactivity_limit'], ENT_QUOTES, 'UTF-8');
             $passwordRecoveryLink = $_POST['password_recovery_link'];
+            $registrationVerificationTokenDuration = $_POST['registration_verification_token_duration'];
 
-            $this->securitySettingModel->updateSecuritySetting($maxFailedLogin, $max_FailedOTPAttempt, $passwordExpiryDuration, $otpDuration, $resetPasswordTokenDuration, $sessionInactivityLimit, $passwordRecoveryLink, $userID);
+            $this->securitySettingModel->updateSecuritySetting($maxFailedLogin, $max_FailedOTPAttempt, $passwordExpiryDuration, $otpDuration, $resetPasswordTokenDuration, $sessionInactivityLimit, $passwordRecoveryLink, $registrationVerificationTokenDuration, $userID);
                 
             $response = [
                 'success' => true,
@@ -228,7 +229,8 @@ class SecuritySettingController {
             'passwordExpiryDuration' => $this->securitySettingModel->getSecuritySetting(4)['value'] ?? DEFAULT_PASSWORD_DURATION,
             'sessionInactivityLimit' => $this->securitySettingModel->getSecuritySetting(5)['value'] ?? DEFAULT_SESSION_INACTIVITY,
             'otpDuration' => $this->securitySettingModel->getSecuritySetting(6)['value'] ?? DEFAULT_OTP_DURATION,
-            'resetPasswordTokenDuration' => $this->securitySettingModel->getSecuritySetting(7)['value'] ?? RESET_PASSWORD_TOKEN_DURATION
+            'resetPasswordTokenDuration' => $this->securitySettingModel->getSecuritySetting(7)['value'] ?? RESET_PASSWORD_TOKEN_DURATION,
+            'registrationVerificationTokenDuration' => $this->securitySettingModel->getSecuritySetting(8)['value'] ?? REGISTRATION_VERIFICATION_TOKEN_DURATION
         ];
 
         echo json_encode($response);

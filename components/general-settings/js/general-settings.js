@@ -7,6 +7,11 @@
             displayDetails('get security setting details');
         }
 
+        if($('#system-settings-form').length){
+            systemSettingsForm();
+            displayDetails('get system setting details');
+        }
+
         $(document).on('click','#discard-create',function() {
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             discardCreate(page_link);
@@ -37,6 +42,9 @@ function securitySettingsForm(){
             },
             password_recovery_link: {
                 required: true
+            },
+            registration_verification_token_duration: {
+                required: true
             }
         },
         messages: {
@@ -60,6 +68,9 @@ function securitySettingsForm(){
             },
             password_recovery_link: {
                 required: 'Enter the password recovery link'
+            },
+            registration_verification_token_duration: {
+                required: 'Enter the reset token validity period'
             }
         },
         errorPlacement: function(error, element) {
@@ -126,10 +137,86 @@ function securitySettingsForm(){
     });
 }
 
+function systemSettingsForm(){
+    $('#system-settings-form').validate({
+        rules: {
+            allow_registration: {
+                required: true
+            }
+        },
+        messages: {
+            allow_registration: {
+                required: 'Choose the allow registration'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const transaction = 'update system settings';
+            const page_link = document.getElementById('page-link').getAttribute('href');
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/general-settings/controller/system-setting-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                    }
+                    else {
+                        if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
 function displayDetails(transaction){
     switch (transaction) {
         case 'get security setting details':
-            const page_link = document.getElementById('page-link').getAttribute('href');
+            var page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
                 url: 'components/general-settings/controller/security-setting-controller.php',
@@ -147,6 +234,44 @@ function displayDetails(transaction){
                         $('#reset_password_token_duration').val(response.resetPasswordTokenDuration);
                         $('#session_inactivity_limit').val(response.sessionInactivityLimit);
                         $('#password_recovery_link').val(response.passwordRecoveryLink);
+                        $('#registration_verification_token_duration').val(response.registrationVerificationTokenDuration);
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get system setting details':
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/general-settings/controller/system-setting-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    transaction : transaction
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $('#allow_registration').val(response.allowRegistration);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {

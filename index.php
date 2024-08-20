@@ -1,10 +1,16 @@
 <?php
     require('components/global/config/config.php');
     require('components/global/model/database-model.php');
+    require('components/general-settings/model/system-setting-model.php');
+
+    $databaseModel = new DatabaseModel();
+    $systemSettingModel = new SystemSettingModel($databaseModel);
 
     $pageTitle = 'CGMI Digital Solutions';
 
     require('components/global/config/session-check.php');
+
+    $allowRegistration = $systemSettingModel->getSystemSetting(1)['value'] ?? ALLOW_REGISTRATION;
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
@@ -44,10 +50,14 @@
                                         </div>
                                     </div>
                                     <button id="signin" type="submit" class="btn btn-dark w-100 py-8 mb-4 rounded-1">Login</button>
-                                    <div class="d-flex align-items-center">
-                                        <p class="fs-12 mb-0 fw-medium">Don’t have an account yet?</p>
-                                        <a class="text-primary fw-bolder ms-2" href="register.php">Sign Up Now</a>
-                                    </div>
+                                    <?php
+                                        if($allowRegistration == 'Yes'){
+                                            echo '<div class="d-flex align-items-center">
+                                                    <p class="fs-4 mb-0 text-dark">Don’t have an account yet?</p>
+                                                    <a class="text-primary fs-4 fw-medium ms-2" href="sign-up.php">Sign Up Now</a>
+                                                </div>';
+                                        }
+                                    ?>
                                 </form>
                             </div>
                         </div>

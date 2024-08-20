@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 20, 2024 at 11:33 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 20, 2024 at 04:55 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -513,6 +513,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountExist` (IN `p_user_
 	SELECT COUNT(*) AS total
     FROM user_account
     WHERE user_account_id = p_user_account_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkUserAccountUsernameExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountUsernameExist` (IN `p_username` VARCHAR(100))   BEGIN
+	SELECT COUNT(*) AS total
+    FROM user_account
+    WHERE username = p_username;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkUserAccountUsernameUpdateExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountUsernameUpdateExist` (IN `p_user_account_id` INT, IN `p_username` VARCHAR(100))   BEGIN
+	SELECT COUNT(*) AS total
+    FROM user_account
+    WHERE username = p_username AND user_account_id != p_user_account_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkWorkHoursExist`$$
@@ -2311,6 +2325,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getSystemNotificationTemplate` (IN 
 	WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getSystemSetting`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getSystemSetting` (IN `p_system_setting_id` INT)   BEGIN
+	SELECT * FROM system_setting
+	WHERE system_setting_id = p_system_setting_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getUICustomizationSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUICustomizationSetting` (IN `p_user_account__id` INT)   BEGIN
 	SELECT * FROM ui_customization_setting
@@ -2476,6 +2496,14 @@ DROP PROCEDURE IF EXISTS `insertCustomerIDRecord`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerIDRecord` (IN `p_customer_id` INT, IN `p_id_type_id` INT, IN `p_id_type_name` VARCHAR(100), IN `p_id_number` VARCHAR(100), IN `p_issue_date` DATE, IN `p_expiration_date` DATE, IN `p_issuing_authority` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO customer_id_record (customer_id, id_type_id, id_type_name, id_number, issue_date, expiration_date, issuing_authority, last_log_by) 
 	VALUES(p_customer_id, p_id_type_id, p_id_type_name, p_id_number, p_issue_date, p_expiration_date, p_issuing_authority, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCustomerSignUp`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerSignUp` (IN `p_full_name` VARCHAR(1000), IN `p_first_name` VARCHAR(300), IN `p_middle_name` VARCHAR(300), IN `p_last_name` VARCHAR(300), IN `p_suffix` VARCHAR(10), IN `p_last_log_by` INT, OUT `p_customer_id` INT)   BEGIN
+    INSERT INTO customer (full_name, first_name, middle_name, last_name, suffix, last_log_by) 
+	VALUES(p_full_name, p_first_name, p_middle_name, p_last_name, p_suffix, p_last_log_by);
+	
+    SET p_customer_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertDepartment`$$
@@ -2817,6 +2845,14 @@ DROP PROCEDURE IF EXISTS `insertUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUserAccount` (IN `p_file_as` VARCHAR(300), IN `p_email` VARCHAR(255), IN `p_username` VARCHAR(100), IN `p_password` VARCHAR(255), IN `p_password_expiry_date` DATE, IN `p_last_password_change` DATETIME, IN `p_last_log_by` INT, OUT `p_user_account_id` INT)   BEGIN
     INSERT INTO user_account (file_as, email, username, password, password_expiry_date, last_password_change, last_log_by) 
 	VALUES(p_file_as, p_email, p_username, p_password, p_password_expiry_date, p_last_password_change, p_last_log_by);
+	
+    SET p_user_account_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertUserAccountSignUp`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUserAccountSignUp` (IN `p_file_as` VARCHAR(300), IN `p_email` VARCHAR(255), IN `p_username` VARCHAR(100), IN `p_password` VARCHAR(255), IN `p_password_expiry_date` DATE, IN `p_last_password_change` DATETIME, IN `p_user_type` VARCHAR(20), IN `p_linked_id` INT, IN `p_registration_verification_token` VARCHAR(255), IN `p_registration_verification_token_expiry_date` DATETIME, IN `p_last_log_by` INT, OUT `p_user_account_id` INT)   BEGIN
+    INSERT INTO user_account (file_as, email, username, password, password_expiry_date, last_password_change, user_type, linked_id, registration_date, registration_verification_token, registration_verification_token_expiry_date, last_log_by) 
+	VALUES(p_file_as, p_email, p_username, p_password, p_password_expiry_date, p_last_password_change, p_user_type, p_linked_id, NOW(), p_registration_verification_token, p_registration_verification_token_expiry_date, p_last_log_by);
 	
     SET p_user_account_id = LAST_INSERT_ID();
 END$$
@@ -4139,7 +4175,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateScheduleType` (IN `p_schedule
 END$$
 
 DROP PROCEDURE IF EXISTS `updateSecuritySetting`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSecuritySetting` (IN `p_max_failed_login` INT, IN `p_max_failed_otp_attempt` INT, IN `p_password_expiry_duration` INT, IN `p_otp_duration` INT, IN `p_reset_password_token_duration` INT, IN `p_session_inactivity_limit` INT, IN `p_password_recovery_link` VARCHAR(1000), IN `p_last_log_by` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSecuritySetting` (IN `p_max_failed_login` INT, IN `p_max_failed_otp_attempt` INT, IN `p_password_expiry_duration` INT, IN `p_otp_duration` INT, IN `p_reset_password_token_duration` INT, IN `p_session_inactivity_limit` INT, IN `p_password_recovery_link` VARCHAR(1000), IN `p_registration_verification_token_duration` INT, IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -4181,6 +4217,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSecuritySetting` (IN `p_max_f
     SET value = p_reset_password_token_duration,
         last_log_by = p_last_log_by
     WHERE security_setting_id = 7;
+
+    UPDATE security_setting
+    SET value = p_registration_verification_token_duration,
+        last_log_by = p_last_log_by
+    WHERE security_setting_id = 8;
 
     COMMIT;
 END$$
@@ -4286,6 +4327,23 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemNotificationTemplate` (
         system_notification_message = p_system_notification_message,
         last_log_by = p_last_log_by
     WHERE notification_setting_id = p_notification_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateSystemSetting`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemSetting` (IN `p_allow_registration` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE system_setting
+    SET value = p_allow_registration,
+        last_log_by = p_last_log_by
+    WHERE system_setting_id = 1;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateTwoFactorAuthenticationStatus`$$
@@ -8064,7 +8122,21 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3379, 'menu_item', 52, 'Menu Item Name: My Bank Accounts -> Banks & Cards<br/>Menu Item URL: my-bank-accounts.php -> banks-and-cards.php<br/>', 2, '2024-08-20 17:09:59', '2024-08-20 17:09:59'),
 (3380, 'menu_item', 52, 'Order Sequence: 13 -> 2<br/>', 2, '2024-08-20 17:10:08', '2024-08-20 17:10:08'),
 (3381, 'role_permission', 52, 'Menu Item: My Addresses -> Addresses<br/>', 2, '2024-08-20 17:10:28', '2024-08-20 17:10:28'),
-(3382, 'menu_item', 51, 'Menu Item Name: My Addresses -> Addresses<br/>Menu Item URL: my-addresses.php -> addresses.php<br/>Order Sequence: 13 -> 2<br/>', 2, '2024-08-20 17:10:28', '2024-08-20 17:10:28');
+(3382, 'menu_item', 51, 'Menu Item Name: My Addresses -> Addresses<br/>Menu Item URL: my-addresses.php -> addresses.php<br/>Order Sequence: 13 -> 2<br/>', 2, '2024-08-20 17:10:28', '2024-08-20 17:10:28'),
+(3383, 'user_account', 2, 'Last Connection Date: 2024-08-20 08:44:41 -> 2024-08-20 19:41:06<br/>', 2, '2024-08-20 19:41:06', '2024-08-20 19:41:06'),
+(3384, 'security_setting', 8, 'Security Setting created. <br/><br/>Security Setting Name: Registration Verification Token Duration<br/>Value: 180', 1, '2024-08-20 19:51:46', '2024-08-20 19:51:46'),
+(3385, 'security_setting', 8, 'Value: 180 -> 90<br/>', 2, '2024-08-20 19:51:55', '2024-08-20 19:51:55'),
+(3386, 'security_setting', 8, 'Value: 90 -> 180<br/>', 2, '2024-08-20 19:51:58', '2024-08-20 19:51:58'),
+(3387, 'security_setting', 9, 'Security Setting created. <br/><br/>Security Setting Name: Allow Registration<br/>Value: Yes', 1, '2024-08-20 20:06:53', '2024-08-20 20:06:53'),
+(3388, 'user_account', 2, 'Last Connection Date: 2024-08-20 19:41:06 -> 2024-08-20 20:37:26<br/>', 2, '2024-08-20 20:37:26', '2024-08-20 20:37:26'),
+(3389, 'user_account', 2, 'Last Connection Date: 2024-08-20 20:37:26 -> 2024-08-20 20:42:52<br/>', 2, '2024-08-20 20:42:52', '2024-08-20 20:42:52'),
+(3390, 'user_account', 2, 'Last Connection Date: 2024-08-20 20:42:52 -> 2024-08-20 20:54:35<br/>', 2, '2024-08-20 20:54:35', '2024-08-20 20:54:35'),
+(3391, 'user_account', 2, 'Last Connection Date: 2024-08-20 20:54:35 -> 2024-08-20 21:59:20<br/>', 2, '2024-08-20 21:59:20', '2024-08-20 21:59:20'),
+(3392, 'user_account', 2, 'Last Connection Date: 2024-08-20 21:59:20 -> 2024-08-20 22:44:32<br/>', 2, '2024-08-20 22:44:32', '2024-08-20 22:44:32'),
+(3393, 'notification_setting', 3, 'Notification Setting created. <br/><br/>Notification Setting Name: Registration Verification<br/>Notification Setting Description: Notification setting when the user sign-up for an account.<br/>System Notification: 1', 2, '2024-08-20 22:46:12', '2024-08-20 22:46:12'),
+(3394, 'notification_setting', 3, 'Email Notification: 0 -> 1<br/>', 2, '2024-08-20 22:46:19', '2024-08-20 22:46:19'),
+(3395, 'notification_setting', 3, 'System Notification: 1 -> 0<br/>', 2, '2024-08-20 22:46:20', '2024-08-20 22:46:20'),
+(3396, 'notification_setting_email_template', 3, 'Email Notification Template created. <br/><br/>Email Notification Subject: Sign Up Verification - Action Required<br/>Email Notification Body: <p>Thank you for registering! To complete your registration, please verify your email address by clicking the link below:</p>\n<p>#{REGISTRATION_VERIFICATION_LINK}</p>\n<p>Important: This link is time-sensitive and will expire after #{REGISTRATION_VERIFICATION_VALIDITY}. If you do not verify your email within this timeframe, you may need to request another verification link.</p>\n<p>If you did not register for an account with us, please ignore this email. Your account will not be activated.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', 2, '2024-08-20 22:53:51', '2024-08-20 22:53:51');
 
 -- --------------------------------------------------------
 
@@ -13823,7 +13895,8 @@ CREATE TABLE `notification_setting` (
 
 INSERT INTO `notification_setting` (`notification_setting_id`, `notification_setting_name`, `notification_setting_description`, `system_notification`, `email_notification`, `sms_notification`, `created_date`, `last_log_by`) VALUES
 (1, 'Login OTP', 'Notification setting for Login OTP received by the users.', 0, 1, 0, '2024-06-27 14:59:41', 2),
-(2, 'Forgot Password', 'Notification setting when the user initiates forgot password.', 0, 1, 0, '2024-06-27 15:03:26', 2);
+(2, 'Forgot Password', 'Notification setting when the user initiates forgot password.', 0, 1, 0, '2024-06-27 15:03:26', 2),
+(3, 'Registration Verification', 'Notification setting when the user sign-up for an account.', 0, 1, 0, '2024-08-20 22:46:12', 2);
 
 --
 -- Triggers `notification_setting`
@@ -13913,7 +13986,8 @@ CREATE TABLE `notification_setting_email_template` (
 
 INSERT INTO `notification_setting_email_template` (`notification_setting_email_id`, `notification_setting_id`, `email_notification_subject`, `email_notification_body`, `created_date`, `last_log_by`) VALUES
 (1, 1, 'Login OTP - Secure Access to Your Account', '<p>To ensure the security of your account, we have generated a unique One-Time Password (OTP) for you to use during the login process. Please use the following OTP to access your account:</p>\n<p><br>OTP:&nbsp;<strong>{OTP_CODE}</strong></p>\n<p><br>Please note that this OTP is valid for &nbsp;<strong>#{OTP_CODE_VALIDITY}</strong>. Once you have logged in successfully, we recommend enabling two-factor authentication for an added layer of security.<br>If you did not initiate this login or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-06-27 15:02:58', 2),
-(2, 2, 'Password Reset Request - Action Required', '<p>We received a request to reset your password. To proceed with the password reset, please follow the steps below:</p>\n<ol>\n<li>\n<p>Click on the following link to reset your password:&nbsp; <strong><a href=\"#{RESET_LINK}\">Password Reset Link</a></strong></p>\n</li>\n<li>\n<p>If you did not request this password reset, please ignore this email. Your account remains secure.</p>\n</li>\n</ol>\n<p>Please note that this link is time-sensitive and will expire after <strong>#{RESET_LINK_VALIDITY}</strong>. If you do not reset your password within this timeframe, you may need to request another password reset.</p>\n<p><br>If you did not initiate this password reset request or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.<br><br>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-06-27 15:13:04', 2);
+(2, 2, 'Password Reset Request - Action Required', '<p>We received a request to reset your password. To proceed with the password reset, please follow the steps below:</p>\n<ol>\n<li>\n<p>Click on the following link to reset your password:&nbsp; <strong><a href=\"#{RESET_LINK}\">Password Reset Link</a></strong></p>\n</li>\n<li>\n<p>If you did not request this password reset, please ignore this email. Your account remains secure.</p>\n</li>\n</ol>\n<p>Please note that this link is time-sensitive and will expire after <strong>#{RESET_LINK_VALIDITY}</strong>. If you do not reset your password within this timeframe, you may need to request another password reset.</p>\n<p><br>If you did not initiate this password reset request or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.<br><br>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-06-27 15:13:04', 2),
+(3, 3, 'Sign Up Verification - Action Required', '<p>Thank you for registering! To complete your registration, please verify your email address by clicking the link below:</p>\n<p>#{REGISTRATION_VERIFICATION_LINK}</p>\n<p>Important: This link is time-sensitive and will expire after #{REGISTRATION_VERIFICATION_VALIDITY}. If you do not verify your email within this timeframe, you may need to request another verification link.</p>\n<p>If you did not register for an account with us, please ignore this email. Your account will not be activated.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-08-20 22:53:51', 2);
 
 --
 -- Triggers `notification_setting_email_template`
@@ -14686,13 +14760,14 @@ CREATE TABLE `security_setting` (
 --
 
 INSERT INTO `security_setting` (`security_setting_id`, `security_setting_name`, `value`, `created_date`, `last_log_by`) VALUES
-(1, 'Max Failed Login Attempt', '5', '2024-08-12 08:53:59', 1),
-(2, 'Max Failed OTP Attempt', '5', '2024-08-12 08:53:59', 1),
-(3, 'Default Forgot Password Link', 'http://localhost/modernize/password-reset.php?id=', '2024-08-12 08:53:59', 1),
-(4, 'Password Expiry Duration', '180', '2024-08-12 08:53:59', 1),
-(5, 'Session Timeout Duration', '240', '2024-08-12 08:53:59', 1),
-(6, 'OTP Duration', '5', '2024-08-12 08:53:59', 1),
-(7, 'Reset Password Token Duration', '10', '2024-08-12 08:53:59', 1);
+(1, 'Max Failed Login Attempt', '5', '2024-08-12 08:53:59', 2),
+(2, 'Max Failed OTP Attempt', '5', '2024-08-12 08:53:59', 2),
+(3, 'Default Forgot Password Link', 'http://localhost/modernize/password-reset.php?id=', '2024-08-12 08:53:59', 2),
+(4, 'Password Expiry Duration', '180', '2024-08-12 08:53:59', 2),
+(5, 'Session Timeout Duration', '240', '2024-08-12 08:53:59', 2),
+(6, 'OTP Duration', '5', '2024-08-12 08:53:59', 2),
+(7, 'Reset Password Token Duration', '10', '2024-08-12 08:53:59', 2),
+(8, 'Registration Verification Token Duration', '180', '2024-08-20 19:51:46', 2);
 
 --
 -- Triggers `security_setting`
@@ -14984,6 +15059,13 @@ CREATE TABLE `system_setting` (
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `system_setting`
+--
+
+INSERT INTO `system_setting` (`system_setting_id`, `system_setting_name`, `system_setting_description`, `value`, `created_date`, `last_log_by`) VALUES
+(1, 'Allow Registration', '', 'Yes', '2024-08-20 20:21:34', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -15008,7 +15090,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'dark', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -15203,7 +15285,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-20 08:44:41', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'P8m0coO3GjC4r%2Bdys63NJwVVqNuPkYX%2FDWM18TvXAQc%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-20 22:44:32', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'Z1mVt%2BUOw4Z1sRRCe0v6viu2xI0%2BBm7EJfHujnLkpcc%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -16251,7 +16333,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3383;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3397;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -16497,13 +16579,13 @@ ALTER TABLE `menu_item`
 -- AUTO_INCREMENT for table `notification_setting`
 --
 ALTER TABLE `notification_setting`
-  MODIFY `notification_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `notification_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `notification_setting_email_template`
 --
 ALTER TABLE `notification_setting_email_template`
-  MODIFY `notification_setting_email_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `notification_setting_email_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `notification_setting_sms_template`
@@ -16569,7 +16651,7 @@ ALTER TABLE `schedule_type`
 -- AUTO_INCREMENT for table `security_setting`
 --
 ALTER TABLE `security_setting`
-  MODIFY `security_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `security_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `state`
@@ -16587,7 +16669,7 @@ ALTER TABLE `system_action`
 -- AUTO_INCREMENT for table `system_setting`
 --
 ALTER TABLE `system_setting`
-  MODIFY `system_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `system_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `ui_customization_setting`
