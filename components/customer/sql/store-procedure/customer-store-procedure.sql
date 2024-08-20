@@ -16,6 +16,13 @@ BEGIN
     WHERE customer_address_id = p_customer_address_id;
 END //
 
+CREATE PROCEDURE checkCustomerBankAccountExist(IN p_customer_bank_account_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM customer_bank_account
+    WHERE customer_bank_account_id = p_customer_bank_account_id;
+END //
+
 CREATE PROCEDURE checkCustomerBankCardExist(IN p_customer_bank_card_id INT)
 BEGIN
 	SELECT COUNT(*) AS total
@@ -61,9 +68,15 @@ BEGIN
 	VALUES(p_customer_id, p_address_type_id, p_address_type_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_default_address, p_telephone, p_mobile, p_email, p_last_log_by);
 END //
 
-CREATE PROCEDURE insertCustomerBankCard(IN p_customer_id INT, IN p_name_on_card VARCHAR(1000), IN p_card_number VARCHAR(50), IN p_expiry_date VARCHAR(10), IN p_cvv VARCHAR(5), IN p_last_log_by INT)
+CREATE PROCEDURE insertCustomerBankAccount(IN p_customer_id INT, IN p_bank_id INT, IN p_bank_name VARCHAR(100), IN p_bank_account_type_id INT, IN p_bank_account_type_name VARCHAR(100), IN p_account_number VARCHAR(100), IN p_last_log_by INT)
 BEGIN
-    INSERT INTO customer_bank_account (customer_id, name_on_card, card_number, expiry_date, cvv, last_log_by) 
+    INSERT INTO customer_bank_account (customer_id, bank_id, bank_name, bank_account_type_id,bank_account_type_name, account_number, last_log_by) 
+	VALUES(p_customer_id, p_bank_id, p_bank_name, p_bank_account_type_id, p_bank_account_type_name, p_account_number, p_last_log_by);
+END //
+
+CREATE PROCEDURE insertCustomerBankCard(IN p_customer_id INT, IN p_name_on_card VARCHAR(255), IN p_card_number VARCHAR(255), IN p_expiry_date VARCHAR(255), IN p_cvv VARCHAR(255), IN p_last_log_by INT)
+BEGIN
+    INSERT INTO customer_bank_card (customer_id, name_on_card, card_number, expiry_date, cvv, last_log_by) 
 	VALUES(p_customer_id, p_name_on_card, p_card_number, p_expiry_date, p_cvv, p_last_log_by);
 END //
 
@@ -154,7 +167,20 @@ BEGIN
     COMMIT;
 END //
 
-CREATE PROCEDURE updateCustomerBankCard(IN p_customer_bank_card_id INT, IN p_customer_id INT, IN p_name_on_card VARCHAR(1000), IN p_card_number VARCHAR(50), IN p_expiry_date VARCHAR(10), IN p_cvv VARCHAR(5), IN p_last_log_by INT)
+CREATE PROCEDURE updateCustomerBankAccount(IN p_customer_bank_account_id INT, IN p_customer_id INT, IN p_bank_id INT, IN p_bank_name VARCHAR(100), IN p_bank_account_type_id INT, IN p_bank_account_type_name VARCHAR(100), IN p_account_number VARCHAR(100), IN p_last_log_by INT)
+BEGIN
+    UPDATE customer_bank_account
+    SET customer_id = p_customer_id,
+        bank_id = p_bank_id,
+        bank_name = p_bank_name,
+        bank_account_type_id = p_bank_account_type_id,
+        bank_account_type_name = p_bank_account_type_name,
+        account_number = p_account_number,
+        last_log_by = p_last_log_by
+    WHERE customer_bank_account_id = p_customer_bank_account_id;
+END //
+
+CREATE PROCEDURE updateCustomerBankCard(IN p_customer_bank_card_id INT, IN p_customer_id INT, IN p_name_on_card VARCHAR(255), IN p_card_number VARCHAR(255), IN p_expiry_date VARCHAR(255), IN p_cvv VARCHAR(255), IN p_last_log_by INT)
 BEGIN
     UPDATE customer_bank_card
     SET customer_id = p_customer_id,
@@ -233,6 +259,7 @@ BEGIN
     START TRANSACTION;
 
     DELETE FROM customer_address WHERE customer_id = p_customer_id;
+    DELETE FROM customer_bank_account WHERE customer_id = p_customer_id;
     DELETE FROM customer_bank_card WHERE customer_id = p_customer_id;
     DELETE FROM customer_id_record WHERE customer_id = p_customer_id;
     DELETE FROM customer WHERE customer_id = p_customer_id;
@@ -264,6 +291,11 @@ BEGIN
     END IF;   
 
     COMMIT;
+END //
+
+CREATE PROCEDURE deleteCustomerBankAccount(IN p_customer_bank_account_id INT)
+BEGIN
+   DELETE FROM customer_bank_account WHERE customer_bank_account_id = p_customer_bank_account_id;
 END //
 
 CREATE PROCEDURE deleteCustomerBankCard(IN p_customer_bank_card_id INT)
@@ -313,6 +345,12 @@ BEGIN
 	WHERE customer_address_id = p_customer_address_id;
 END //
 
+CREATE PROCEDURE getCustomerBankAccount(IN p_customer_bank_account_id INT)
+BEGIN
+	SELECT * FROM customer_bank_account
+	WHERE customer_bank_account_id = p_customer_bank_account_id;
+END //
+
 CREATE PROCEDURE getCustomerBankCard(IN p_customer_bank_card_id INT)
 BEGIN
 	SELECT * FROM customer_bank_card
@@ -329,7 +367,7 @@ END //
 
 /* Generate Stored Procedure */
 
-CREATE PROCEDURE generateCustomerCard(IN p_search_value TEXT, IN p_filter_by_company INT, IN p_filter_by_customer_status VARCHAR(50), IN p_filter_by_gender INT, IN p_filter_by_civil_status INT, IN p_limit INT, IN p_offset INT)
+CREATE PROCEDURE generateCustomerCard(IN p_search_value TEXT, IN p_filter_by_customer_status VARCHAR(50), IN p_filter_by_gender INT, IN p_filter_by_civil_status INT, IN p_limit INT, IN p_offset INT)
 BEGIN
     DECLARE query TEXT;
 
@@ -376,6 +414,12 @@ BEGIN
 	SELECT * FROM customer_address
 	WHERE customer_id = p_customer_id
     ORDER BY default_address DESC;
+END //
+
+CREATE PROCEDURE generateCustomerBankAccount(IN p_customer_id INT)
+BEGIN
+	SELECT * FROM customer_bank_account
+	WHERE customer_id = p_customer_id;
 END //
 
 CREATE PROCEDURE generateCustomerBankCard(IN p_customer_id INT)

@@ -93,6 +93,33 @@ class SecurityModel {
     }
     # -------------------------------------------------------------
 
+    # -------------------------------------------------------------
+    #
+    # Function: obscureCardNumber
+    # Description: Obscures the bank card number by showing only the last 4 digits.
+    #
+    # Parameters:
+    # - $cardNumber (string): The bank card number to obscure.
+    #
+    # Returns:
+    # - The obscured bank card number.
+    #
+    # -------------------------------------------------------------
+    public function obscureCardNumber($cardNumber) {
+        $last4Digits = substr($cardNumber, -4);
+
+        $maskedCardNumber = str_repeat('*', max(0, strlen($cardNumber) - 4));
+    
+        $formattedMaskedCardNumber = implode(' ', str_split($maskedCardNumber, 4));
+    
+        $formattedMaskedCardNumber = substr($formattedMaskedCardNumber, 0, -4);
+    
+        $formattedCardNumber = $formattedMaskedCardNumber . ' ' . $last4Digits;
+    
+        return $formattedCardNumber;
+    }
+    # -------------------------------------------------------------
+
 
     # -------------------------------------------------------------
     #

@@ -18,6 +18,7 @@ CREATE TABLE customer (
     birthday DATE,
     birth_place VARCHAR(1000),
 	customer_status VARCHAR(50) NOT NULL DEFAULT 'Active',
+	archive_date DATE,
     created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
@@ -64,15 +65,38 @@ CREATE INDEX customer_address_index_default_address ON customer_address(default_
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
+/* Customer Bank Account Table */
+
+CREATE TABLE customer_bank_account (
+    customer_bank_account_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    customer_id INT UNSIGNED NOT NULL,
+    bank_id INT UNSIGNED NOT NULL,
+    bank_name VARCHAR(100) NOT NULL,
+    bank_account_type_id INT UNSIGNED NOT NULL,
+    bank_account_type_name VARCHAR(100) NOT NULL,
+    account_number VARCHAR(100) NOT NULL,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX customer_bank_account_index_customer_bank_account_id ON customer_bank_account(customer_bank_account_id);
+CREATE INDEX customer_bank_account_index_customer_id ON customer_bank_account(customer_id);
+CREATE INDEX customer_bank_account_index_bank_id ON customer_bank_account(bank_id);
+CREATE INDEX customer_bank_account_index_bank_account_type_id ON customer_bank_account(bank_account_type_id);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */
+
 /* Customer Bank Card Table */
 
 CREATE TABLE customer_bank_card (
     customer_bank_card_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
     customer_id INT UNSIGNED NOT NULL,
-    name_on_card VARCHAR(1000) NOT NULL,
-    card_number VARCHAR(50) NOT NULL,
-    expiry_date VARCHAR(10) NOT NULL,
-    cvv VARCHAR(5) NOT NULL,
+    name_on_card VARCHAR(255) NOT NULL,
+    card_number VARCHAR(255) NOT NULL,
+    expiry_date VARCHAR(255) NOT NULL,
+    cvv VARCHAR(255) NOT NULL,
     default_card VARCHAR(10) NOT NULL DEFAULT 'Primary',
     created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,

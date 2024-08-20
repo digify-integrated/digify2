@@ -6,8 +6,8 @@
     $customerDetails = $customerModel->getCustomer($detailID);
     $customerStatus = $customerDetails['customer_status'];
 
-    $archiveCustomer  = $globalModel->checkSystemActionAccessRights($userID, 20);
-    $unarchiveCustomer  = $globalModel->checkSystemActionAccessRights($userID, 21);
+    $archiveCustomer  = $globalModel->checkSystemActionAccessRights($userID, 22);
+    $unarchiveCustomer  = $globalModel->checkSystemActionAccessRights($userID, 23);
 
     if($customerStatus == 'Archived' && $unarchiveCustomer['total'] > 0){
         $archiveButton = ' <li>
@@ -17,7 +17,7 @@
 
     if($customerStatus == 'Active' && $archiveCustomer['total'] > 0){
         $archiveButton = ' <li>
-                            <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#archive-customer-modal" id="archive-customer">Archive Customer</a>
+                            <a class="dropdown-item" href="javascript:void(0)" id="archive-customer">Archive Customer</a>
                         </li>';
     }
 ?>
@@ -43,7 +43,6 @@
                     </div>
                     <div class="col-lg-6 order-2 my-3 text-center text-lg-start">
                         <h6 class="mb-0" id="customer_full_name_summary">--</h6>
-                        <p class="mb-0" id="customer_job_position_summary">--</p>
                     </div>
                     <div class="col-lg-3 order-3">
                         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -54,9 +53,6 @@
                                 echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Customer</a></li>' : ''; 
                                 echo $archiveButton;
                             ?>
-                            <li>
-                                <a class="dropdown-item" href="javascript:void(0)">QR Code</a>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -86,62 +82,6 @@
 
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Private Information</h5>
-                <?php
-                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-pencil fs-6" data-bs-toggle="modal" data-bs-target="#private-information-modal" id="edit-private-information-details"></i></a>
-                                                        </div>' : '';
-                ?>
-            </div>
-            <hr class="m-0" />
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-lg-4 mb-3">
-                                <p class="mb-1 fs-2">Nickname</p>
-                                <h6 class="fw-semibold mb-0" id="nickname_summary">--</h6>
-                            </div>
-                            <div class="col-lg-4 mb-3">
-                                <p class="mb-1 fs-2">Civil Status</p>
-                                <h6 class="fw-semibold mb-0" id="civil_status_summary">--</h6>
-                            </div>
-                            <div class="col-lg-4 mb-3">
-                                <p class="mb-1 fs-2">Place of Birth</p>
-                                <h6 class="fw-semibold mb-0" id="place_of_birth_summary">--</h6>
-                            </div>
-                            <div class="col-lg-4 mb-3">
-                                <p class="mb-1 fs-2">Date of Birth</p>
-                                <h6 class="fw-semibold mb-0" id="date_of_birth_summary">--</h6>
-                            </div>
-                            <div class="col-lg-4 mb-3">
-                                <p class="mb-1 fs-2">Blood Type</p>
-                                <h6 class="fw-semibold mb-0" id="blood_type_summary">--</h6>
-                            </div>
-                            <div class="col-lg-4 mb-3">
-                                <p class="mb-1 fs-2">Gender</p>
-                                <h6 class="fw-semibold mb-0" id="gender_summary">--</h6>
-                            </div>
-                            <div class="col-lg-4 mb-3">
-                                <p class="mb-1 fs-2">Height</p>
-                                <h6 class="fw-semibold mb-0" id="height_summary">--</h6>
-                            </div>
-                            <div class="col-lg-4 mb-3">
-                                <p class="mb-1 fs-2">Weight</p>
-                                <h6 class="fw-semibold mb-0" id="weight_summary">--</h6>
-                            </div>
-                            <div class="col-lg-4 mb-3">
-                                <p class="mb-1 fs-2">Religion</p>
-                                <h6 class="fw-semibold mb-0" id="religion_summary">--</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0">Address</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
@@ -155,6 +95,46 @@
     </div>
 
     <div class="col-lg-4">
+        
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Private Information</h5>
+                <?php
+                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-pencil fs-6" data-bs-toggle="modal" data-bs-target="#private-information-modal" id="edit-private-information-details"></i></a>
+                                                        </div>' : '';
+                ?>
+            </div>
+            <hr class="m-0" />
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-lg-12 mb-3">
+                                <p class="mb-1 fs-2">Nickname</p>
+                                <h6 class="fw-semibold mb-0" id="nickname_summary">--</h6>
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <p class="mb-1 fs-2">Civil Status</p>
+                                <h6 class="fw-semibold mb-0" id="civil_status_summary">--</h6>
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <p class="mb-1 fs-2">Place of Birth</p>
+                                <h6 class="fw-semibold mb-0" id="place_of_birth_summary">--</h6>
+                            </div>
+                            <div class="col-lg-12 mb-3">
+                                <p class="mb-1 fs-2">Date of Birth</p>
+                                <h6 class="fw-semibold mb-0" id="date_of_birth_summary">--</h6>
+                            </div>
+                            <div class="col-lg-12 mb-0">
+                                <p class="mb-1 fs-2">Gender</p>
+                                <h6 class="fw-semibold mb-0" id="gender_summary">--</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="card">
             <div class="card-header d-flex align-items-center">
@@ -181,6 +161,19 @@
             </div>
             <hr class="m-0" />
             <div class="card-body" id="bank-card-container"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Bank Account</h5>
+                <?php
+                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-account-modal" id="add-bank-account-details"></i></a>
+                                                        </div>' : '';
+                ?>
+            </div>
+            <hr class="m-0" />
+            <div class="card-body" id="bank-account-container"></div>
         </div>
     </div>
 </div>
@@ -266,6 +259,24 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="last_name" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control maxlength" id="last_name" name="last_name" maxlength="200" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="mb-3">
+                                        <label for="suffix" class="form-label">Suffix</label>
+                                        <input type="text" class="form-control maxlength" id="suffix" name="suffix" maxlength="10" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="mb-3">
@@ -284,24 +295,6 @@
                                     <div class="mb-3">
                                         <label for="birth_place" class="form-label">Place of Birth <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control maxlength" id="birth_place" name="birth_place" maxlength="1000" autocomplete="off">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="last_name" class="form-label">Last Name <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control maxlength" id="last_name" name="last_name" maxlength="200" autocomplete="off">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="mb-3">
-                                        <label for="suffix" class="form-label">Suffix</label>
-                                        <input type="text" class="form-control maxlength" id="suffix" name="suffix" maxlength="10" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
@@ -492,6 +485,50 @@
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="bank-card-form" class="btn btn-success" id="submit-bank-card-data">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="bank-account-modal" class="modal fade" tabindex="-1" aria-labelledby="bank-account-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-8" id="bank-account-title"></h5>
+                <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="bank-account-form" method="post" action="#">
+                    <input type="hidden" id="customer_bank_account_id" name="customer_bank_account_id">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="bank_id" class="form-label">Bank <span class="text-danger">*</span></label>
+                            <div class="mb-3">
+                                <select id="bank_id" name="bank_id" class="select2 form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="bank_account_type_id" class="form-label">Bank Account Type <span class="text-danger">*</span></label>
+                            <div class="mb-3">
+                                <select id="bank_account_type_id" name="bank_account_type_id" class="select2 form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label class="form-label" for="account_number">Account Number <span class="text-danger">*</span></label>
+                            <div class="mb-3">
+                                <input type="text" class="form-control maxlength" id="account_number" name="account_number" maxlength="100" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="bank-account-form" class="btn btn-success" id="submit-bank-account-data">Save changes</button>
             </div>
         </div>
     </div>

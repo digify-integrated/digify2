@@ -25,6 +25,10 @@ CREATE TABLE user_account (
     last_password_reset DATETIME,
     multiple_session VARCHAR(5) DEFAULT 'Yes',
     session_token VARCHAR(255),
+    user_type VARCHAR(20),
+    registration_date DATETIME,
+    registration_verification_token VARCHAR(255),
+    registration_verification_date DATETIME,
     created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)

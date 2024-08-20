@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                             <div class="mb-3 row align-items-center">
-                                <label for="birthday" class="form-label col-lg-4 col-form-label">Date of Birth <span class="text-danger">*</span></label>
+                                <label for="birthday" class="form-label col-lg-4 col-form-label">Date of Birth</label>
                                 <div class="col-lg-8">
                                     <div class="input-group">
                                         <input type="text" class="form-control regular-datepicker" id="birthday" name="birthday" autocomplete="off"/>
@@ -68,45 +68,23 @@
                                 </div>
                             </div>
                             <div class="mb-3 row align-items-center">
-                                <label for="birth_place" class="form-label col-lg-4 col-form-label">Place of Birth <span class="text-danger">*</span></label>
+                                <label for="birth_place" class="form-label col-lg-4 col-form-label">Place of Birth</label>
                                 <div class="col-lg-8">
                                     <input type="text" class="form-control maxlength" id="birth_place" name="birth_place" maxlength="1000" autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="mb-3 row align-items-center">
-                                <label for="gender_id" class="form-label col-lg-4 col-form-label">Gender <span class="text-danger">*</span></label>
-                                <div class="col-lg-8">
-                                    <select id="gender_id" name="gender_id" class="select2 form-control"></select>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="mb-3 row align-items-center">
-                                <label for="civil_status_id" class="form-label col-lg-4 col-form-label">Civil Status <span class="text-danger">*</span></label>
+                                <label for="gender_id" class="form-label col-lg-4 col-form-label">Gender</label>
                                 <div class="col-lg-8">
-                                    <select id="civil_status_id" name="civil_status_id" class="select2 form-control"></select>
+                                    <select id="gender_id" name="gender_id" class="select2 form-control"></select>
                                 </div>
                             </div>
                             <div class="mb-3 row align-items-center">
-                                <label for="height" class="form-label col-lg-4 col-form-label">Height</label>
+                                <label for="civil_status_id" class="form-label col-lg-4 col-form-label">Civil Status</label>
                                 <div class="col-lg-8">
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="height" name="height" min="0" value="0" step="0.01">
-                                        <span class="input-group-text">
-                                            cm
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row align-items-center">
-                                <label for="weight" class="form-label col-lg-4 col-form-label">Weight</label>
-                                <div class="col-lg-8">
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="weight" name="weight" min="0" value="0" step="0.01">
-                                        <span class="input-group-text">
-                                            kg
-                                        </span>
-                                    </div>
+                                    <select id="civil_status_id" name="civil_status_id" class="select2 form-control"></select>
                                 </div>
                             </div>
                         </div>

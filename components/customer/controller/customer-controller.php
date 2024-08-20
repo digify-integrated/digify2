@@ -23,6 +23,8 @@ class CustomerController {
     private $stateModel;
     private $countryModel;
     private $idTypeModel;
+    private $bankModel;
+    private $bankAccountTypeModel;
     private $authenticationModel;
     private $securityModel;
     private $systemModel;
@@ -44,6 +46,8 @@ class CustomerController {
     # - @param StateModel $stateModel     The stateModel instance for state related operations.
     # - @param CountryModel $countryModel     The countryModel instance for country related operations.
     # - @param IDTypeModel $idTypeModel     The idTypeModel instance for ID type related operations.
+    # - @param BankModel $bankModel     The bankModel instance for bank related operations.
+    # - @param BankAccountTypeModel $bankAccountTypeModel     The bankAccountTypeModel instance for bank account type related operations.
     # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
@@ -52,7 +56,7 @@ class CustomerController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(CustomerModel $customerModel, GenderModel $genderModel, CivilStatusModel $civilStatusModel, UserAccountModel $userAccountModel, AddressTypeModel $addressTypeModel, CityModel $cityModel, StateModel $stateModel, CountryModel $countryModel, IDTypeModel $idTypeModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
+    public function __construct(CustomerModel $customerModel, GenderModel $genderModel, CivilStatusModel $civilStatusModel, UserAccountModel $userAccountModel, AddressTypeModel $addressTypeModel, CityModel $cityModel, StateModel $stateModel, CountryModel $countryModel, IDTypeModel $idTypeModel, BankModel $bankModel, BankAccountTypeModel $bankAccountTypeModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel, SystemModel $systemModel) {
         $this->customerModel = $customerModel;
         $this->genderModel = $genderModel;
         $this->civilStatusModel = $civilStatusModel;
@@ -62,6 +66,8 @@ class CustomerController {
         $this->stateModel = $stateModel;
         $this->countryModel = $countryModel;
         $this->idTypeModel = $idTypeModel;
+        $this->bankModel = $bankModel;
+        $this->bankAccountTypeModel = $bankAccountTypeModel;
         $this->uploadSettingModel = $uploadSettingModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
@@ -172,6 +178,9 @@ class CustomerController {
                 case 'save customer address':
                     $this->saveCustomerAddress();
                     break;
+                case 'save customer bank account':
+                    $this->saveCustomerBankAccount();
+                    break;
                 case 'save customer bank card':
                     $this->saveCustomerBankCard();
                     break;
@@ -190,6 +199,9 @@ class CustomerController {
                 case 'get customer address details':
                     $this->getCustomerAddressDetails();
                     break;
+                case 'get customer bank account details':
+                    $this->getCustomerBankAccountDetails();
+                    break;
                 case 'get customer bank card details':
                     $this->getCustomerBankCardDetails();
                     break;
@@ -206,6 +218,9 @@ class CustomerController {
                     $this->deleteCustomerAddress();
                     break;
                 case 'delete customer bank account':
+                    $this->deleteCustomerBankAccount();
+                    break;
+                case 'delete customer bank card':
                     $this->deleteCustomerBankCard();
                     break;
                 case 'delete customer id record':
@@ -252,7 +267,7 @@ class CustomerController {
             return;
         }
 
-        if (isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['middle_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['suffix']) && isset($_POST['nickname']) && isset($_POST['religion_id']) && isset($_POST['height']) && isset($_POST['weight']) && isset($_POST['gender_id']) && !empty($_POST['gender_id']) && isset($_POST['civil_status_id']) && !empty($_POST['civil_status_id']) && isset($_POST['birthday']) && !empty($_POST['birthday'])) {
+        if (isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['middle_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['suffix']) && isset($_POST['nickname']) && isset($_POST['gender_id']) && isset($_POST['civil_status_id']) && isset($_POST['birthday']) && isset($_POST['birth_place'])) {
             $userID = $_SESSION['user_account_id'];
             $firstName = $_POST['first_name'];
             $middleName = $_POST['middle_name'];
@@ -263,8 +278,6 @@ class CustomerController {
             $genderID = htmlspecialchars($_POST['gender_id'], ENT_QUOTES, 'UTF-8');
             $civilStatusID = htmlspecialchars($_POST['civil_status_id'], ENT_QUOTES, 'UTF-8');
             $birthday = $this->systemModel->checkDate('empty', $_POST['birthday'], '', 'Y-m-d', '');
-            $height = htmlspecialchars($_POST['height'], ENT_QUOTES, 'UTF-8');
-            $weight = htmlspecialchars($_POST['weight'], ENT_QUOTES, 'UTF-8');
 
             $fullNameParts = array_filter([$firstName, $middleName, $lastName]);
             $fullName = implode(' ', $fullNameParts);
@@ -279,7 +292,7 @@ class CustomerController {
             $genderDetails = $this->genderModel->getGender($genderID);
             $genderName = $genderDetails['gender_name'] ?? '';
 
-            $customerID = $this->customerModel->insertCustomer($fullName, $firstName, $middleName, $lastName, $suffix, $nickname, $civilStatusID, $civilStatusName, $genderID, $genderName, $religionName, $birthday, $birthPlace, $height, $weight, $userID);
+            $customerID = $this->customerModel->insertCustomer($fullName, $firstName, $middleName, $lastName, $suffix, $nickname, $civilStatusID, $civilStatusName, $genderID, $genderName, $birthday, $birthPlace, $userID);
             
             $response = [
                 'success' => true,
@@ -389,7 +402,7 @@ class CustomerController {
             return;
         }
         
-        if (isset($_POST['customer_id']) && !empty($_POST['customer_id']) && isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['middle_name']) && isset($_POST['nickname']) && isset($_POST['gender_id']) && !empty($_POST['gender_id']) && isset($_POST['civil_status_id']) && !empty($_POST['civil_status_id']) && isset($_POST['birthday']) && !empty($_POST['birthday']) && isset($_POST['birth_place']) && !empty($_POST['birth_place']) && isset($_POST['suffix']) && isset($_POST['religion_id']) && isset($_POST['height']) && isset($_POST['weight'])) {
+        if (isset($_POST['customer_id']) && !empty($_POST['customer_id']) && isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['middle_name']) && isset($_POST['suffix']) && isset($_POST['nickname']) && isset($_POST['gender_id']) && !empty($_POST['gender_id']) && isset($_POST['civil_status_id']) && !empty($_POST['civil_status_id']) && isset($_POST['birthday']) && !empty($_POST['birthday']) && isset($_POST['birth_place']) && !empty($_POST['birth_place'])) {
             $userID = $_SESSION['user_account_id'];
             $customerID = htmlspecialchars($_POST['customer_id'], ENT_QUOTES, 'UTF-8');
             $firstName = $_POST['first_name'];
@@ -399,11 +412,8 @@ class CustomerController {
             $nickname = $_POST['nickname'];
             $genderID = htmlspecialchars($_POST['gender_id'], ENT_QUOTES, 'UTF-8');
             $civilStatusID = htmlspecialchars($_POST['civil_status_id'], ENT_QUOTES, 'UTF-8');
-            $religionID = htmlspecialchars($_POST['religion_id'], ENT_QUOTES, 'UTF-8');
             $birthday = $this->systemModel->checkDate('empty', $_POST['birthday'], '', 'Y-m-d', '');
             $birthPlace = $_POST['birth_place'];
-            $height = $_POST['height'];
-            $weight = $_POST['weight'];
         
             $checkCustomerExist = $this->customerModel->checkCustomerExist($customerID);
             $total = $checkCustomerExist['total'] ?? 0;
@@ -434,7 +444,7 @@ class CustomerController {
             $genderDetails = $this->genderModel->getGender($genderID);
             $genderName = $genderDetails['gender_name'] ?? '';
 
-            $this->customerModel->updateCustomerPrivateInformation($customerID, $fullName, $firstName, $middleName, $lastName, $suffix, $nickname, $civilStatusID, $civilStatusName, $genderID, $genderName, $bloodTypeName, $birthday, $birthPlace, $height, $weight, $userID);
+            $this->customerModel->updateCustomerPrivateInformation($customerID, $fullName, $firstName, $middleName, $lastName, $suffix, $nickname, $civilStatusID, $civilStatusName, $genderID, $genderName, $birthday, $birthPlace, $userID);
                 
             $response = [
                 'success' => true,
@@ -992,6 +1002,81 @@ class CustomerController {
 
     # -------------------------------------------------------------
     #
+    # Function: saveCustomerBankAccount
+    # Description: 
+    # Saves the customer bank account if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveCustomerBankAccount() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['customer_id']) && !empty($_POST['customer_id']) && isset($_POST['customer_bank_account_id']) && isset($_POST['bank_id']) && !empty($_POST['bank_id']) && isset($_POST['bank_account_type_id']) && !empty($_POST['bank_account_type_id']) && isset($_POST['account_number']) && !empty($_POST['account_number']) ) {
+            $userID = $_SESSION['user_account_id'];
+            $customerID = htmlspecialchars($_POST['customer_id'], ENT_QUOTES, 'UTF-8');
+            $customerBankAccountID = htmlspecialchars($_POST['customer_bank_account_id'], ENT_QUOTES, 'UTF-8');
+            $bankID = htmlspecialchars($_POST['bank_id'], ENT_QUOTES, 'UTF-8');
+            $bankAccountTypeID = htmlspecialchars($_POST['bank_account_type_id'], ENT_QUOTES, 'UTF-8');
+            $accountNumber = $_POST['account_number'];
+
+            $bankDetails = $this->bankModel->getBank($bankID);
+            $bankName = $bankDetails['bank_name'];
+
+            $bankAccountTypeDetails = $this->bankAccountTypeModel->getBankAccountType($bankAccountTypeID);
+            $bankAccountTypeName = $bankAccountTypeDetails['bank_account_type_name'];
+        
+            $checkCustomerBankAccountExist = $this->customerModel->checkCustomerBankAccountExist($customerBankAccountID);
+            $total = $checkCustomerBankAccountExist['total'] ?? 0;
+
+            if($total > 0){
+                $this->customerModel->updateCustomerBankAccount($customerBankAccountID, $customerID, $bankID, $bankName, $bankAccountTypeID, $bankAccountTypeName, $accountNumber, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Bank Account Success',
+                    'message' => 'The bank account has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->customerModel->insertCustomerBankAccount($customerID, $bankID, $bankName, $bankAccountTypeID, $bankAccountTypeName, $accountNumber, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert Bank Account Success',
+                    'message' => 'The bank account has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+           
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: saveCustomerBankCard
     # Description: 
     # Saves the customer bank account if it exists; otherwise, return an error message.
@@ -1006,30 +1091,25 @@ class CustomerController {
             return;
         }
         
-        if (isset($_POST['customer_id']) && !empty($_POST['customer_id']) && isset($_POST['customer_bank_account_id']) && isset($_POST['bank_id']) && !empty($_POST['bank_id']) && isset($_POST['bank_account_type_id']) && !empty($_POST['bank_account_type_id']) && isset($_POST['account_number']) && !empty($_POST['account_number']) ) {
+        if (isset($_POST['customer_id']) && !empty($_POST['customer_id']) && isset($_POST['customer_bank_card_id']) && isset($_POST['name_on_card']) && !empty($_POST['name_on_card']) && isset($_POST['card_number']) && !empty($_POST['card_number']) && isset($_POST['expiry_date']) && !empty($_POST['expiry_date']) && isset($_POST['cvv']) && !empty($_POST['cvv'])) {
             $userID = $_SESSION['user_account_id'];
             $customerID = htmlspecialchars($_POST['customer_id'], ENT_QUOTES, 'UTF-8');
-            $customerBankCardID = htmlspecialchars($_POST['customer_bank_account_id'], ENT_QUOTES, 'UTF-8');
-            $bankID = htmlspecialchars($_POST['bank_id'], ENT_QUOTES, 'UTF-8');
-            $bankAccountTypeID = htmlspecialchars($_POST['bank_account_type_id'], ENT_QUOTES, 'UTF-8');
-            $accountNumber = $_POST['account_number'];
-
-            $bankDetails = $this->bankModel->getBank($bankID);
-            $bankName = $bankDetails['bank_name'];
-
-            $bankAccountTypeDetails = $this->bankAccountTypeModel->getBankCardType($bankAccountTypeID);
-            $bankAccountTypeName = $bankAccountTypeDetails['bank_account_type_name'];
+            $customerBankCardID = htmlspecialchars($_POST['customer_bank_card_id'], ENT_QUOTES, 'UTF-8');
+            $nameOnCard = $this->securityModel->encryptData($_POST['name_on_card']);
+            $cardNumber = $this->securityModel->encryptData($_POST['card_number']);
+            $expiryDate = $this->securityModel->encryptData($_POST['expiry_date']);
+            $cvv = $this->securityModel->encryptData($_POST['cvv']);
         
             $checkCustomerBankCardExist = $this->customerModel->checkCustomerBankCardExist($customerBankCardID);
             $total = $checkCustomerBankCardExist['total'] ?? 0;
 
             if($total > 0){
-                $this->customerModel->updateCustomerBankCard($customerBankCardID, $customerID, $bankID, $bankName, $bankAccountTypeID, $bankAccountTypeName, $accountNumber, $userID);
+                $this->customerModel->updateCustomerBankCard($customerBankCardID, $customerID, $nameOnCard, $cardNumber, $expiryDate, $cvv, $userID);
                 
                 $response = [
                     'success' => true,
-                    'title' => 'Update Bank Account Success',
-                    'message' => 'The bank account has been updated successfully.',
+                    'title' => 'Update Bank Card Success',
+                    'message' => 'The bank card has been updated successfully.',
                     'messageType' => 'success'
                 ];
                 
@@ -1037,12 +1117,12 @@ class CustomerController {
                 exit;
             }
             else{
-                $this->customerModel->insertCustomerBankCard($customerID, $bankID, $bankName, $bankAccountTypeID, $bankAccountTypeName, $accountNumber, $userID);
+                $this->customerModel->insertCustomerBankCard($customerID, $nameOnCard, $cardNumber, $expiryDate, $cvv, $userID);
                 
                 $response = [
                     'success' => true,
-                    'title' => 'Insert Bank Account Success',
-                    'message' => 'The bank account has been inserted successfully.',
+                    'title' => 'Insert Bank Card Success',
+                    'message' => 'The bank card has been inserted successfully.',
                     'messageType' => 'success'
                 ];
                 
@@ -1280,12 +1360,90 @@ class CustomerController {
         }
     }
     # -------------------------------------------------------------
+    
+    # -------------------------------------------------------------
+    #
+    # Function: deleteCustomerBankAccount
+    # Description: 
+    # Delete the customer bank account if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteCustomerBankAccount() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['customer_id']) && !empty($_POST['customer_id']) && isset($_POST['customer_bank_account_id']) && !empty($_POST['customer_bank_account_id'])) {
+            $customerID = htmlspecialchars($_POST['customer_id'], ENT_QUOTES, 'UTF-8');
+            $customerBankAccountID = htmlspecialchars($_POST['customer_bank_account_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkCustomerExist = $this->customerModel->checkCustomerExist($customerID);
+            $total = $checkCustomerExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Bank Account Error',
+                    'message' => 'The customer does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkCustomerBankAccountExist = $this->customerModel->checkCustomerBankAccountExist($customerBankAccountID);
+            $total = $checkCustomerBankAccountExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Bank Account Error',
+                    'message' => 'The bank account does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->customerModel->deleteCustomerBankAccount($customerBankAccountID, $customerID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete Bank Account Success',
+                'message' => 'The bank account has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
 
     # -------------------------------------------------------------
     #
     # Function: deleteCustomerBankCard
     # Description: 
-    # Delete the customer bank account if it exists; otherwise, return an error message.
+    # Delete the customer bank card if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -1297,9 +1455,9 @@ class CustomerController {
             return;
         }
 
-        if (isset($_POST['customer_id']) && !empty($_POST['customer_id']) && isset($_POST['customer_bank_account_id']) && !empty($_POST['customer_bank_account_id'])) {
+        if (isset($_POST['customer_id']) && !empty($_POST['customer_id']) && isset($_POST['customer_bank_card_id']) && !empty($_POST['customer_bank_card_id'])) {
             $customerID = htmlspecialchars($_POST['customer_id'], ENT_QUOTES, 'UTF-8');
-            $customerBankCardID = htmlspecialchars($_POST['customer_bank_account_id'], ENT_QUOTES, 'UTF-8');
+            $customerBankCardID = htmlspecialchars($_POST['customer_bank_card_id'], ENT_QUOTES, 'UTF-8');
         
             $checkCustomerExist = $this->customerModel->checkCustomerExist($customerID);
             $total = $checkCustomerExist['total'] ?? 0;
@@ -1490,7 +1648,7 @@ class CustomerController {
                 exit;
             }
 
-            $this->customerModel->updateCustomerEmploymentStatus($customerID, 'Archived', $userID);
+            $this->customerModel->updateCustomerStatus($customerID, 'Archived', $userID);
                 
             $response = [
                 'success' => true,
@@ -1552,7 +1710,7 @@ class CustomerController {
                 exit;
             }
 
-            $this->customerModel->updateCustomerEmploymentStatus($customerID, 'Active', $userID);
+            $this->customerModel->updateCustomerStatus($customerID, 'Active', $userID);
                 
             $response = [
                 'success' => true,
@@ -1866,6 +2024,85 @@ class CustomerController {
 
     # -------------------------------------------------------------
     #
+    # Function: getCustomerBankAccountDetails
+    # Description: 
+    # Handles the retrieval of customer bank account details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getCustomerBankAccountDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['customer_bank_account_id']) && !empty($_POST['customer_bank_account_id']) && isset($_POST['customer_id']) && !empty($_POST['customer_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $customerID = htmlspecialchars($_POST['customer_id'], ENT_QUOTES, 'UTF-8');
+            $customerBankAccountID = htmlspecialchars($_POST['customer_bank_account_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkCustomerExist = $this->customerModel->checkCustomerExist($customerID);
+            $total = $checkCustomerExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Bank Account Details Error',
+                    'message' => 'The customer does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $checkCustomerBankAccountExist = $this->customerModel->checkCustomerBankAccountExist($customerBankAccountID);
+            $total = $checkCustomerBankAccountExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'detailsNotExist' => true,
+                    'title' => 'Get Bank Account Details Error',
+                    'message' => 'The bank account does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $customerBankAccountDetails = $this->customerModel->getCustomerBankAccount($customerBankAccountID);
+
+            $response = [
+                'success' => true,
+                'bankID' => $customerBankAccountDetails['bank_id'] ?? null,
+                'bankAccountTypeID' => $customerBankAccountDetails['bank_account_type_id'] ?? null,
+                'accountNumber' => $customerBankAccountDetails['account_number'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: getCustomerBankCardDetails
     # Description: 
     # Handles the retrieval of customer bank account details.
@@ -2039,10 +2276,12 @@ require_once '../../city/model/city-model.php';
 require_once '../../state/model/state-model.php';
 require_once '../../country/model/country-model.php';
 require_once '../../id-type/model/id-type-model.php';
+require_once '../../bank/model/bank-model.php';
+require_once '../../bank-account-type/model/bank-account-type-model.php';
 require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new CustomerController(new CustomerModel(new DatabaseModel), new GenderModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new AddressTypeModel(new DatabaseModel), new CityModel(new DatabaseModel), new StateModel(new DatabaseModel), new CountryModel(new DatabaseModel), new IDTypeModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
+$controller = new CustomerController(new CustomerModel(new DatabaseModel), new GenderModel(new DatabaseModel), new CivilStatusModel(new DatabaseModel), new UserAccountModel(new DatabaseModel), new AddressTypeModel(new DatabaseModel), new CityModel(new DatabaseModel), new StateModel(new DatabaseModel), new CountryModel(new DatabaseModel), new IDTypeModel(new DatabaseModel), new BankModel(new DatabaseModel), new BankAccountTypeModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel(), new SystemModel());
 $controller->handleRequest();
 
 ?>

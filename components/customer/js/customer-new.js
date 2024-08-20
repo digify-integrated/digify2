@@ -19,18 +19,6 @@ function customerForm(){
             },
             last_name: {
                 required: true
-            },
-            gender_id: {
-                required: true
-            },
-            civil_status_id: {
-                required: true
-            },
-            birthday: {
-                required: true
-            },
-            birth_place: {
-                required: true
             }
         },
         messages: {
@@ -39,18 +27,6 @@ function customerForm(){
             },
             last_name: {
                 required: 'Enter the last name'
-            },
-            gender_id: {
-                required: 'Choose the gender'
-            },
-            civil_status_id: {
-                required: 'Choose the civil status'
-            },
-            birthday: {
-                required: 'Enter the date of birth'
-            },
-            birth_place: {
-                required: 'Enter the birth place'
             }
         },
         errorPlacement: function(error, element) {

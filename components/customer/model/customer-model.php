@@ -129,6 +129,38 @@ class CustomerModel {
 
     # -------------------------------------------------------------
     #
+    # Function: updateCustomerBankAccount
+    # Description: Updates the customer bank account.
+    #
+    # Parameters:
+    # - $p_customer_bank_account_id (int): The customer bank account ID.
+    # - $p_customer_id (int): The customer ID.
+    # - $p_bank_id (int): The bank ID.
+    # - $p_bank_name (string): The bank name.
+    # - $p_bank_account_type_id (int): The bank account type ID.
+    # - $p_bank_account_type_name (string): The bank account type name.
+    # - $p_account_number (string): The account number.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateCustomerBankAccount($p_customer_bank_account_id, $p_customer_id, $p_bank_id, $p_bank_name, $p_bank_account_type_id, $p_bank_account_type_name, $p_account_number, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateCustomerBankAccount(:p_customer_bank_account_id, :p_customer_id, :p_bank_id, :p_bank_name, :p_bank_account_type_id, :p_bank_account_type_name, :p_account_number, :p_last_log_by)');
+        $stmt->bindValue(':p_customer_bank_account_id', $p_customer_bank_account_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_customer_id', $p_customer_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_id', $p_bank_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_name', $p_bank_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_bank_account_type_id', $p_bank_account_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_account_type_name', $p_bank_account_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_account_number', $p_account_number, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: updateCustomerBankCard
     # Description: Updates the customer bank card.
     #
@@ -396,6 +428,36 @@ class CustomerModel {
         $stmt->execute();
     }
     # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: insertCustomerBankAccount
+    # Description: Inserts the customer bank account.
+    #
+    # Parameters:
+    # - $p_customer_id (int): The customer ID.
+    # - $p_bank_id (int): The bank ID.
+    # - $p_bank_name (string): The bank name.
+    # - $p_bank_account_type_id (int): The bank account type ID.
+    # - $p_bank_account_type_name (string): The bank account type name.
+    # - $p_account_number (string): The account number.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertCustomerBankAccount($p_customer_id, $p_bank_id, $p_bank_name, $p_bank_account_type_id, $p_bank_account_type_name, $p_account_number, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertCustomerBankAccount(:p_customer_id, :p_bank_id, :p_bank_name, :p_bank_account_type_id, :p_bank_account_type_name, :p_account_number, :p_last_log_by)');
+        $stmt->bindValue(':p_customer_id', $p_customer_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_id', $p_bank_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_name', $p_bank_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_bank_account_type_id', $p_bank_account_type_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_bank_account_type_name', $p_bank_account_type_name, PDO::PARAM_STR);
+        $stmt->bindValue(':p_account_number', $p_account_number, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
     
     # -------------------------------------------------------------
     #
@@ -501,6 +563,25 @@ class CustomerModel {
 
     # -------------------------------------------------------------
     #
+    # Function: checkCustomerBankAccountExist
+    # Description: Checks if a customer bank account exists.
+    #
+    # Parameters:
+    # - $p_customer_bank_account_id (int): The customer bank account ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkCustomerBankAccountExist($p_customer_bank_account_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkCustomerBankAccountExist(:p_customer_bank_account_id)');
+        $stmt->bindValue(':p_customer_bank_account_id', $p_customer_bank_account_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: checkCustomerBankCardExist
     # Description: Checks if a customer bank card exists.
     #
@@ -581,6 +662,24 @@ class CustomerModel {
 
     # -------------------------------------------------------------
     #
+    # Function: deleteCustomerBankAccount
+    # Description: Deletes the customer bank account.
+    #
+    # Parameters:
+    # - $p_customer_bank_account_id (int): The customer bank account ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteCustomerBankAccount($p_customer_bank_account_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteCustomerBankAccount(:p_customer_bank_account_id)');
+        $stmt->bindValue(':p_customer_bank_account_id', $p_customer_bank_account_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: deleteCustomerBankCard
     # Description: Deletes the customer bank card.
     #
@@ -654,6 +753,26 @@ class CustomerModel {
     public function getCustomerAddress($p_customer_address_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getCustomerAddress(:p_customer_address_id)');
         $stmt->bindValue(':p_customer_address_id', $p_customer_address_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getCustomerBankAccount
+    # Description: Retrieves the details of a customer bank account.
+    #
+    # Parameters:
+    # - $p_customer_bank_account_id (int): The customer bank account ID.
+    #
+    # Returns:
+    # - An array containing the customer bank account details.
+    #
+    # -------------------------------------------------------------
+    public function getCustomerBankAccount($p_customer_bank_account_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getCustomerBankAccount(:p_customer_bank_account_id)');
+        $stmt->bindValue(':p_customer_bank_account_id', $p_customer_bank_account_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 19, 2024 at 11:28 AM
+-- Generation Time: Aug 20, 2024 at 11:33 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -170,6 +170,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCustomerAddressExist` (IN `p_c
 	SELECT COUNT(*) AS total
     FROM customer_address
     WHERE customer_address_id = p_customer_address_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCustomerBankAccountExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCustomerBankAccountExist` (IN `p_customer_bank_account_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM customer_bank_account
+    WHERE customer_bank_account_id = p_customer_bank_account_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkCustomerBankCardExist`$$
@@ -649,6 +656,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCustomerAddress` (IN `p_custo
     END IF;   
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCustomerBankAccount`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCustomerBankAccount` (IN `p_customer_bank_account_id` INT)   BEGIN
+   DELETE FROM customer_bank_account WHERE customer_bank_account_id = p_customer_bank_account_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteCustomerBankCard`$$
@@ -1196,6 +1208,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerAddress` (IN `p_cus
     ORDER BY default_address DESC;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCustomerBankAccount`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerBankAccount` (IN `p_customer_id` INT)   BEGIN
+	SELECT * FROM customer_bank_account
+	WHERE customer_id = p_customer_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateCustomerBankCard`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerBankCard` (IN `p_customer_id` INT)   BEGIN
 	SELECT * FROM customer_bank_card
@@ -1203,7 +1221,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerBankCard` (IN `p_cu
 END$$
 
 DROP PROCEDURE IF EXISTS `generateCustomerCard`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerCard` (IN `p_search_value` TEXT, IN `p_filter_by_company` INT, IN `p_filter_by_customer_status` VARCHAR(50), IN `p_filter_by_gender` INT, IN `p_filter_by_civil_status` INT, IN `p_limit` INT, IN `p_offset` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerCard` (IN `p_search_value` TEXT, IN `p_filter_by_customer_status` VARCHAR(50), IN `p_filter_by_gender` INT, IN `p_filter_by_civil_status` INT, IN `p_limit` INT, IN `p_offset` INT)   BEGIN
     DECLARE query TEXT;
 
     SET query = '
@@ -1253,14 +1271,14 @@ END$$
 DROP PROCEDURE IF EXISTS `generateCustomerOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerOptions` (IN `p_customer_id` INT)   BEGIN
     IF p_customer_id IS NOT NULL AND p_customer_id != '' THEN
-        SELECT customer_id, customer_name 
+        SELECT customer_id, customer_status 
         FROM customer 
         WHERE customer_id != p_customer_id
-        ORDER BY customer_name;
+        ORDER BY customer_status;
     ELSE
-        SELECT customer_id, customer_name 
+        SELECT customer_id, customer_status 
         FROM customer 
-        ORDER BY customer_name;
+        ORDER BY customer_status;
     END IF;
 END$$
 
@@ -2047,6 +2065,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getCustomerAddress` (IN `p_customer
 	WHERE customer_address_id = p_customer_address_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCustomerBankAccount`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCustomerBankAccount` (IN `p_customer_bank_account_id` INT)   BEGIN
+	SELECT * FROM customer_bank_account
+	WHERE customer_bank_account_id = p_customer_bank_account_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getCustomerBankCard`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCustomerBankCard` (IN `p_customer_bank_card_id` INT)   BEGIN
 	SELECT * FROM customer_bank_card
@@ -2436,9 +2460,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerAddress` (IN `p_custo
 	VALUES(p_customer_id, p_address_type_id, p_address_type_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_default_address, p_telephone, p_mobile, p_email, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertCustomerBankAccount`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerBankAccount` (IN `p_customer_id` INT, IN `p_bank_id` INT, IN `p_bank_name` VARCHAR(100), IN `p_bank_account_type_id` INT, IN `p_bank_account_type_name` VARCHAR(100), IN `p_account_number` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO customer_bank_account (customer_id, bank_id, bank_name, bank_account_type_id,bank_account_type_name, account_number, last_log_by) 
+	VALUES(p_customer_id, p_bank_id, p_bank_name, p_bank_account_type_id, p_bank_account_type_name, p_account_number, p_last_log_by);
+END$$
+
 DROP PROCEDURE IF EXISTS `insertCustomerBankCard`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerBankCard` (IN `p_customer_id` INT, IN `p_name_on_card` VARCHAR(1000), IN `p_card_number` VARCHAR(50), IN `p_expiry_date` VARCHAR(10), IN `p_cvv` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO customer_bank_account (customer_id, name_on_card, card_number, expiry_date, cvv, last_log_by) 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerBankCard` (IN `p_customer_id` INT, IN `p_name_on_card` VARCHAR(255), IN `p_card_number` VARCHAR(255), IN `p_expiry_date` VARCHAR(255), IN `p_cvv` VARCHAR(255), IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO customer_bank_card (customer_id, name_on_card, card_number, expiry_date, cvv, last_log_by) 
 	VALUES(p_customer_id, p_name_on_card, p_card_number, p_expiry_date, p_cvv, p_last_log_by);
 END$$
 
@@ -3181,8 +3211,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerAddressDefault` (IN `
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCustomerBankAccount`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerBankAccount` (IN `p_customer_bank_account_id` INT, IN `p_customer_id` INT, IN `p_bank_id` INT, IN `p_bank_name` VARCHAR(100), IN `p_bank_account_type_id` INT, IN `p_bank_account_type_name` VARCHAR(100), IN `p_account_number` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE customer_bank_account
+    SET customer_id = p_customer_id,
+        bank_id = p_bank_id,
+        bank_name = p_bank_name,
+        bank_account_type_id = p_bank_account_type_id,
+        bank_account_type_name = p_bank_account_type_name,
+        account_number = p_account_number,
+        last_log_by = p_last_log_by
+    WHERE customer_bank_account_id = p_customer_bank_account_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateCustomerBankCard`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerBankCard` (IN `p_customer_bank_card_id` INT, IN `p_customer_id` INT, IN `p_name_on_card` VARCHAR(1000), IN `p_card_number` VARCHAR(50), IN `p_expiry_date` VARCHAR(10), IN `p_cvv` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCustomerBankCard` (IN `p_customer_bank_card_id` INT, IN `p_customer_id` INT, IN `p_name_on_card` VARCHAR(255), IN `p_card_number` VARCHAR(255), IN `p_expiry_date` VARCHAR(255), IN `p_cvv` VARCHAR(255), IN `p_last_log_by` INT)   BEGIN
     UPDATE customer_bank_card
     SET customer_id = p_customer_id,
         name_on_card = p_name_on_card,
@@ -7984,7 +8027,44 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3342, 'role_permission', 51, 'Read Access: 0 -> 1<br/>', 2, '2024-08-19 10:32:59', '2024-08-19 10:32:59'),
 (3343, 'role_permission', 51, 'Create Access: 0 -> 1<br/>', 2, '2024-08-19 10:33:00', '2024-08-19 10:33:00'),
 (3344, 'role_permission', 51, 'Write Access: 0 -> 1<br/>', 2, '2024-08-19 10:33:00', '2024-08-19 10:33:00'),
-(3345, 'role_permission', 51, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-19 10:33:01', '2024-08-19 10:33:01');
+(3345, 'role_permission', 51, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-19 10:33:01', '2024-08-19 10:33:01'),
+(3346, 'user_account', 2, 'Last Connection Date: 2024-08-19 09:40:05 -> 2024-08-20 08:44:41<br/>', 2, '2024-08-20 08:44:41', '2024-08-20 08:44:41'),
+(3347, 'system_action', 22, 'System action created. <br/><br/>System Action Name: Archive Customer<br/>System Action Description: Access to archive the customer.', 2, '2024-08-20 13:39:01', '2024-08-20 13:39:01'),
+(3348, 'role_system_action_permission', 22, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Archive Customer<br/>Date Assigned: 2024-08-20 13:39:05', 2, '2024-08-20 13:39:05', '2024-08-20 13:39:05'),
+(3349, 'role_system_action_permission', 22, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-20 13:39:06', '2024-08-20 13:39:06'),
+(3350, 'system_action', 23, 'System action created. <br/><br/>System Action Name: Unarchive Customer<br/>System Action Description: Access to unarchive the customer.', 2, '2024-08-20 13:39:35', '2024-08-20 13:39:35'),
+(3351, 'role_system_action_permission', 23, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Unarchive Customer<br/>Date Assigned: 2024-08-20 13:39:39', 2, '2024-08-20 13:39:39', '2024-08-20 13:39:39'),
+(3352, 'role_system_action_permission', 23, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-20 13:39:40', '2024-08-20 13:39:40'),
+(3353, 'customer', 1, 'About: No about found. -> No about founds.<br/>', 2, '2024-08-20 15:29:48', '2024-08-20 15:29:48'),
+(3354, 'customer_bank_account', 1, 'Employee bank created. <br/><br/>Bank Name: Bank of the Philippine Islands (BPI)<br/>Bank Account Type Name: Checking Account<br/>Account Number: 18946587', 2, '2024-08-20 15:37:26', '2024-08-20 15:37:26'),
+(3355, 'customer_address', 1, 'Customer address created. <br/><br/>Address Type Name: Billing Address<br/>Address: asdasd<br/>City Name: Aborlan<br/>State Name: Palawan<br/>Country Name: Philippines<br/>Mobile: 123123123123<br/>Default Address: Primary', 2, '2024-08-20 16:42:42', '2024-08-20 16:42:42'),
+(3356, 'customer_id_record', 1, 'Customer ID record created. <br/><br/>ID Type Name: Barangay ID<br/>ID Number: 123123<br/>Issue Date: 2024-08-20', 2, '2024-08-20 16:44:11', '2024-08-20 16:44:11'),
+(3357, 'customer', 1, 'About: No about founds. -> No about found.<br/>', 2, '2024-08-20 16:45:19', '2024-08-20 16:45:19'),
+(3358, 'customer', 1, 'Customer Status: Active -> Archived<br/>', 2, '2024-08-20 16:50:55', '2024-08-20 16:50:55'),
+(3359, 'customer', 1, 'Customer Status: Archived -> Active<br/>', 2, '2024-08-20 16:51:12', '2024-08-20 16:51:12'),
+(3360, 'customer', 1, 'Customer Status: Active -> Archived<br/>', 2, '2024-08-20 16:51:18', '2024-08-20 16:51:18'),
+(3361, 'customer', 1, 'Customer Status: Archived -> Active<br/>', 2, '2024-08-20 16:54:56', '2024-08-20 16:54:56'),
+(3362, 'menu_item', 51, 'Menu Item created. <br/><br/>Menu Item Name: My Addresses<br/>Menu Item URL: my-addresses.php<br/>Menu Item Icon:  ti ti-location<br/>Menu Group Name: Profile<br/>App Module: Settings<br/>Order Sequence: 13', 2, '2024-08-20 17:00:09', '2024-08-20 17:00:09'),
+(3363, 'role_permission', 52, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: My Addresses<br/>Date Assigned: 2024-08-20 17:00:14', 2, '2024-08-20 17:00:14', '2024-08-20 17:00:14'),
+(3364, 'role_permission', 52, 'Read Access: 0 -> 1<br/>', 2, '2024-08-20 17:00:15', '2024-08-20 17:00:15'),
+(3365, 'role_permission', 52, 'Create Access: 0 -> 1<br/>', 2, '2024-08-20 17:00:16', '2024-08-20 17:00:16'),
+(3366, 'role_permission', 52, 'Write Access: 0 -> 1<br/>', 2, '2024-08-20 17:00:16', '2024-08-20 17:00:16'),
+(3367, 'role_permission', 52, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-20 17:00:18', '2024-08-20 17:00:18'),
+(3368, 'menu_item', 51, 'Menu Item Icon:  ti ti-location -> ti ti-map-pin<br/>', 2, '2024-08-20 17:01:01', '2024-08-20 17:01:01'),
+(3369, 'menu_item', 52, 'Menu Item created. <br/><br/>Menu Item Name: Bank Accounts<br/>Menu Item URL: bank-accounts.php<br/>Menu Item Icon: ti ti-credit-card<br/>Menu Group Name: Profile<br/>App Module: Settings<br/>Order Sequence: 2', 2, '2024-08-20 17:06:28', '2024-08-20 17:06:28'),
+(3370, 'role_permission', 53, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Bank Accounts<br/>Date Assigned: 2024-08-20 17:06:32', 2, '2024-08-20 17:06:32', '2024-08-20 17:06:32'),
+(3371, 'role_permission', 53, 'Read Access: 0 -> 1<br/>', 2, '2024-08-20 17:06:33', '2024-08-20 17:06:33'),
+(3372, 'role_permission', 53, 'Create Access: 0 -> 1<br/>', 2, '2024-08-20 17:06:33', '2024-08-20 17:06:33'),
+(3373, 'role_permission', 53, 'Write Access: 0 -> 1<br/>', 2, '2024-08-20 17:06:34', '2024-08-20 17:06:34'),
+(3374, 'role_permission', 53, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-20 17:06:35', '2024-08-20 17:06:35'),
+(3375, 'role_permission', 53, 'Menu Item: Bank Accounts -> My Bank Accounts<br/>', 2, '2024-08-20 17:06:49', '2024-08-20 17:06:49'),
+(3376, 'menu_item', 52, 'Menu Item Name: Bank Accounts -> My Bank Accounts<br/>Menu Item URL: bank-accounts.php -> my-bank-accounts.php<br/>', 2, '2024-08-20 17:06:50', '2024-08-20 17:06:50'),
+(3377, 'menu_item', 52, 'Order Sequence: 2 -> 13<br/>', 2, '2024-08-20 17:07:02', '2024-08-20 17:07:02'),
+(3378, 'role_permission', 53, 'Menu Item: My Bank Accounts -> Banks & Cards<br/>', 2, '2024-08-20 17:09:59', '2024-08-20 17:09:59'),
+(3379, 'menu_item', 52, 'Menu Item Name: My Bank Accounts -> Banks & Cards<br/>Menu Item URL: my-bank-accounts.php -> banks-and-cards.php<br/>', 2, '2024-08-20 17:09:59', '2024-08-20 17:09:59'),
+(3380, 'menu_item', 52, 'Order Sequence: 13 -> 2<br/>', 2, '2024-08-20 17:10:08', '2024-08-20 17:10:08'),
+(3381, 'role_permission', 52, 'Menu Item: My Addresses -> Addresses<br/>', 2, '2024-08-20 17:10:28', '2024-08-20 17:10:28'),
+(3382, 'menu_item', 51, 'Menu Item Name: My Addresses -> Addresses<br/>Menu Item URL: my-addresses.php -> addresses.php<br/>Order Sequence: 13 -> 2<br/>', 2, '2024-08-20 17:10:28', '2024-08-20 17:10:28');
 
 -- --------------------------------------------------------
 
@@ -10641,9 +10721,17 @@ CREATE TABLE `customer` (
   `birthday` date DEFAULT NULL,
   `birth_place` varchar(1000) DEFAULT NULL,
   `customer_status` varchar(50) NOT NULL DEFAULT 'Active',
+  `archive_date` date DEFAULT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `customer`
+--
+
+INSERT INTO `customer` (`customer_id`, `customer_image`, `customer_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `birthday`, `birth_place`, `customer_status`, `archive_date`, `created_date`, `last_log_by`) VALUES
+(1, './components/customer/image/1/profile/V3Xn.png', NULL, 'Lawrence Agulto', 'Lawrence', '', 'Agulto', '', 'No about found.', 'nickname', 2, 'Engaged', 1, 'Male', '2024-08-20', 'test', 'Active', '2024-08-20', '2024-08-20 13:36:10', 2);
 
 --
 -- Triggers `customer`
@@ -10795,6 +10883,13 @@ CREATE TABLE `customer_address` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `customer_address`
+--
+
+INSERT INTO `customer_address` (`customer_address_id`, `customer_id`, `address_type_id`, `address_type_name`, `address`, `city_id`, `city_name`, `state_id`, `state_name`, `country_id`, `country_name`, `telephone`, `mobile`, `email`, `default_address`, `created_date`, `last_log_by`) VALUES
+(1, 1, 2, 'Billing Address', 'asdasd', 523, 'Aborlan', 26, 'Palawan', 174, 'Philippines', '', '123123123123', '', 'Primary', '2024-08-20 16:42:42', 2);
+
+--
 -- Triggers `customer_address`
 --
 DROP TRIGGER IF EXISTS `customer_address_trigger_insert`;
@@ -10895,6 +10990,75 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `customer_bank_account`
+--
+
+DROP TABLE IF EXISTS `customer_bank_account`;
+CREATE TABLE `customer_bank_account` (
+  `customer_bank_account_id` int(10) UNSIGNED NOT NULL,
+  `customer_id` int(10) UNSIGNED NOT NULL,
+  `bank_id` int(10) UNSIGNED NOT NULL,
+  `bank_name` varchar(100) NOT NULL,
+  `bank_account_type_id` int(10) UNSIGNED NOT NULL,
+  `bank_account_type_name` varchar(100) NOT NULL,
+  `account_number` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `customer_bank_account`
+--
+DROP TRIGGER IF EXISTS `customer_bank_account_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `customer_bank_account_trigger_insert` AFTER INSERT ON `customer_bank_account` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Employee bank created. <br/>';
+
+    IF NEW.bank_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Bank Name: ", NEW.bank_name);
+    END IF;
+
+    IF NEW.bank_account_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Bank Account Type Name: ", NEW.bank_account_type_name);
+    END IF;
+
+    IF NEW.account_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Account Number: ", NEW.account_number);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('customer_bank_account', NEW.customer_bank_account_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `customer_bank_account_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `customer_bank_account_trigger_update` AFTER UPDATE ON `customer_bank_account` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.bank_name <> OLD.bank_name THEN
+        SET audit_log = CONCAT(audit_log, "Bank Name: ", OLD.bank_name, " -> ", NEW.bank_name, "<br/>");
+    END IF;
+
+    IF NEW.bank_account_type_name <> OLD.bank_account_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Bank Account Type Name: ", OLD.bank_account_type_name, " -> ", NEW.bank_account_type_name, "<br/>");
+    END IF;
+
+    IF NEW.account_number <> OLD.account_number THEN
+        SET audit_log = CONCAT(audit_log, "Account Number: ", OLD.account_number, " -> ", NEW.account_number, "<br/>");
+    END IF;
+
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('customer_bank_account', NEW.customer_bank_account_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `customer_bank_card`
 --
 
@@ -10902,80 +11066,14 @@ DROP TABLE IF EXISTS `customer_bank_card`;
 CREATE TABLE `customer_bank_card` (
   `customer_bank_card_id` int(10) UNSIGNED NOT NULL,
   `customer_id` int(10) UNSIGNED NOT NULL,
-  `name_on_card` varchar(1000) NOT NULL,
-  `card_number` varchar(50) NOT NULL,
-  `expiry_date` varchar(10) NOT NULL,
-  `cvv` varchar(5) NOT NULL,
+  `name_on_card` varchar(255) NOT NULL,
+  `card_number` varchar(255) NOT NULL,
+  `expiry_date` varchar(255) NOT NULL,
+  `cvv` varchar(255) NOT NULL,
   `default_card` varchar(10) NOT NULL DEFAULT 'Primary',
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Triggers `customer_bank_card`
---
-DROP TRIGGER IF EXISTS `customer_bank_card_trigger_insert`;
-DELIMITER $$
-CREATE TRIGGER `customer_bank_card_trigger_insert` AFTER INSERT ON `customer_bank_card` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Customer bank card created. <br/>';
-
-    IF NEW.name_on_card <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Name On Card: ", NEW.name_on_card);
-    END IF;
-
-    IF NEW.card_number <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Card Number: ", NEW.card_number);
-    END IF;
-
-    IF NEW.expiry_date <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Expiry Date: ", NEW.expiry_date);
-    END IF;
-
-    IF NEW.cvv <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>CVV: ", NEW.cvv);
-    END IF;
-
-    IF NEW.default_card <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Default Card: ", NEW.default_card);
-    END IF;
-
-    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('customer_bank_card', NEW.customer_bank_card_id, audit_log, NEW.last_log_by, NOW());
-END
-$$
-DELIMITER ;
-DROP TRIGGER IF EXISTS `customer_bank_card_trigger_update`;
-DELIMITER $$
-CREATE TRIGGER `customer_bank_card_trigger_update` AFTER UPDATE ON `customer_bank_card` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT '';
-
-    IF NEW.name_on_card <> OLD.name_on_card THEN
-        SET audit_log = CONCAT(audit_log, "Name Of Card: ", OLD.name_on_card, " -> ", NEW.name_on_card, "<br/>");
-    END IF;
-
-    IF NEW.card_number <> OLD.card_number THEN
-        SET audit_log = CONCAT(audit_log, "Card Number: ", OLD.card_number, " -> ", NEW.card_number, "<br/>");
-    END IF;
-
-    IF NEW.expiry_date <> OLD.expiry_date THEN
-        SET audit_log = CONCAT(audit_log, "Expiry Date: ", OLD.expiry_date, " -> ", NEW.expiry_date, "<br/>");
-    END IF;
-
-    IF NEW.cvv <> OLD.cvv THEN
-        SET audit_log = CONCAT(audit_log, "CVV: ", OLD.cvv, " -> ", NEW.cvv, "<br/>");
-    END IF;
-
-    IF NEW.default_card <> OLD.default_card THEN
-        SET audit_log = CONCAT(audit_log, "Default Card: ", OLD.default_card, " -> ", NEW.default_card, "<br/>");
-    END IF;
-
-    IF LENGTH(audit_log) > 0 THEN
-        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('customer_bank_card', NEW.customer_bank_card_id, audit_log, NEW.last_log_by, NOW());
-    END IF;
-END
-$$
-DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -10997,6 +11095,13 @@ CREATE TABLE `customer_id_record` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `customer_id_record`
+--
+
+INSERT INTO `customer_id_record` (`customer_id_record_id`, `customer_id`, `id_type_id`, `id_type_name`, `id_number`, `issue_date`, `expiration_date`, `issuing_authority`, `id_image`, `created_date`, `last_log_by`) VALUES
+(1, 1, 1, 'Barangay ID', '123123', '2024-08-20', NULL, '', './components/customer/image/1/id-record/OO7i.jpg', '2024-08-20 16:44:11', 2);
 
 --
 -- Triggers `customer_id_record`
@@ -13608,7 +13713,9 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (47, 'Language Settings', '', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', NULL, NULL, 12, '2024-07-09 09:02:08', 2),
 (48, 'Banking Configuration', '', ' ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-09 09:04:13', 2),
 (49, 'Employment Location Type', 'employment-location-type.php', 'ti ti-map-2', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 5, '2024-07-31 09:01:33', 2),
-(50, 'Customer', 'customer.php', ' ti ti-users', 7, 'Customers', 3, 'Customer', 0, NULL, 3, '2024-08-19 10:30:06', 2);
+(50, 'Customer', 'customer.php', ' ti ti-users', 7, 'Customers', 3, 'Customer', 0, NULL, 3, '2024-08-19 10:30:06', 2),
+(51, 'Addresses', 'addresses.php', 'ti ti-map-pin', 4, 'Profile', 1, 'Settings', 0, NULL, 2, '2024-08-20 17:00:09', 2),
+(52, 'Banks & Cards', 'banks-and-cards.php', 'ti ti-credit-card', 4, 'Profile', 1, 'Settings', 0, NULL, 2, '2024-08-20 17:06:28', 2);
 
 --
 -- Triggers `menu_item`
@@ -14247,7 +14354,9 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (48, 1, 'Administrator', 47, 'Language Settings', 1, 0, 0, 0, '2024-07-09 09:02:12', '2024-07-09 09:02:12', 2),
 (49, 1, 'Administrator', 48, 'Banking Configuration', 1, 0, 0, 0, '2024-07-09 09:04:17', '2024-07-09 09:04:17', 2),
 (50, 1, 'Administrator', 49, 'Employment Location Type', 1, 1, 1, 1, '2024-07-31 09:01:37', '2024-07-31 09:01:37', 2),
-(51, 1, 'Administrator', 50, 'Customer', 1, 1, 1, 1, '2024-08-19 10:32:57', '2024-08-19 10:32:57', 2);
+(51, 1, 'Administrator', 50, 'Customer', 1, 1, 1, 1, '2024-08-19 10:32:57', '2024-08-19 10:32:57', 2),
+(52, 1, 'Administrator', 51, 'Addresses', 1, 1, 1, 1, '2024-08-20 17:00:14', '2024-08-20 17:00:14', 2),
+(53, 1, 'Administrator', 52, 'Banks & Cards', 1, 1, 1, 1, '2024-08-20 17:06:32', '2024-08-20 17:06:32', 2);
 
 --
 -- Triggers `role_permission`
@@ -14371,7 +14480,9 @@ INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`,
 (18, 1, 'Administrator', 18, 'Update Work Hours', 1, '2024-07-02 10:24:05', '2024-07-02 10:24:05', 2),
 (19, 1, 'Administrator', 19, 'Delete Work Hours', 1, '2024-07-02 10:24:23', '2024-07-02 10:24:23', 2),
 (20, 1, 'Administrator', 20, 'Archive Employee', 1, '2024-08-14 09:59:07', '2024-08-14 09:59:07', 2),
-(21, 1, 'Administrator', 21, 'Unarchive Employee', 1, '2024-08-14 09:59:29', '2024-08-14 09:59:29', 2);
+(21, 1, 'Administrator', 21, 'Unarchive Employee', 1, '2024-08-14 09:59:29', '2024-08-14 09:59:29', 2),
+(22, 1, 'Administrator', 22, 'Archive Customer', 1, '2024-08-20 13:39:05', '2024-08-20 13:39:05', 2),
+(23, 1, 'Administrator', 23, 'Unarchive Customer', 1, '2024-08-20 13:39:39', '2024-08-20 13:39:39', 2);
 
 --
 -- Triggers `role_system_action_permission`
@@ -14811,7 +14922,9 @@ INSERT INTO `system_action` (`system_action_id`, `system_action_name`, `system_a
 (18, 'Update Work Hours', 'Access to update the work hours.', '2024-07-02 10:23:59', 2),
 (19, 'Delete Work Hours', 'Access to delete the work hours.', '2024-07-02 10:24:19', 2),
 (20, 'Archive Employee', 'Access to archive the employee.', '2024-08-14 09:59:03', 2),
-(21, 'Unarchive Employee', 'Access to unarchive the employee.', '2024-08-14 09:59:25', 2);
+(21, 'Unarchive Employee', 'Access to unarchive the employee.', '2024-08-14 09:59:25', 2),
+(22, 'Archive Customer', 'Access to archive the customer.', '2024-08-20 13:39:01', 2),
+(23, 'Unarchive Customer', 'Access to unarchive the customer.', '2024-08-20 13:39:35', 2);
 
 --
 -- Triggers `system_action`
@@ -15090,7 +15203,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-19 09:40:05', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'TiQscr%2FgJdOt6ncOonBix5YROp6L1IUcVnIdNlP0yoM%3D', '2024-06-26 13:25:47', 2);
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-20 08:44:41', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'P8m0coO3GjC4r%2Bdys63NJwVVqNuPkYX%2FDWM18TvXAQc%3D', '2024-06-26 13:25:47', 2);
 
 --
 -- Triggers `user_account`
@@ -15636,6 +15749,17 @@ ALTER TABLE `customer_address`
   ADD KEY `customer_address_index_default_address` (`default_address`);
 
 --
+-- Indexes for table `customer_bank_account`
+--
+ALTER TABLE `customer_bank_account`
+  ADD PRIMARY KEY (`customer_bank_account_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `customer_bank_account_index_customer_bank_account_id` (`customer_bank_account_id`),
+  ADD KEY `customer_bank_account_index_customer_id` (`customer_id`),
+  ADD KEY `customer_bank_account_index_bank_id` (`bank_id`),
+  ADD KEY `customer_bank_account_index_bank_account_type_id` (`bank_account_type_id`);
+
+--
 -- Indexes for table `customer_bank_card`
 --
 ALTER TABLE `customer_bank_card`
@@ -16127,7 +16251,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3346;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3383;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -16187,25 +16311,31 @@ ALTER TABLE `currency`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `customer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `customer_address`
 --
 ALTER TABLE `customer_address`
-  MODIFY `customer_address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `customer_address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `customer_bank_account`
+--
+ALTER TABLE `customer_bank_account`
+  MODIFY `customer_bank_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `customer_bank_card`
 --
 ALTER TABLE `customer_bank_card`
-  MODIFY `customer_bank_card_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `customer_bank_card_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `customer_id_record`
 --
 ALTER TABLE `customer_id_record`
-  MODIFY `customer_id_record_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `customer_id_record_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `department`
@@ -16361,7 +16491,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -16415,13 +16545,13 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
 --
 ALTER TABLE `role_system_action_permission`
-  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `role_user_account`
@@ -16451,7 +16581,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `system_action`
 --
 ALTER TABLE `system_action`
-  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `system_setting`
@@ -16591,6 +16721,13 @@ ALTER TABLE `customer`
 ALTER TABLE `customer_address`
   ADD CONSTRAINT `customer_address_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
   ADD CONSTRAINT `customer_address_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `customer_bank_account`
+--
+ALTER TABLE `customer_bank_account`
+  ADD CONSTRAINT `customer_bank_account_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
+  ADD CONSTRAINT `customer_bank_account_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `customer_bank_card`

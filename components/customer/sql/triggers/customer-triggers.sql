@@ -212,66 +212,50 @@ BEGIN
     VALUES ('customer_address', NEW.customer_address_id, audit_log, NEW.last_log_by, NOW());
 END //
 
-CREATE TRIGGER customer_bank_card_trigger_update
-AFTER UPDATE ON customer_bank_card
+CREATE TRIGGER customer_bank_account_trigger_update
+AFTER UPDATE ON customer_bank_account
 FOR EACH ROW
 BEGIN
     DECLARE audit_log TEXT DEFAULT '';
 
-    IF NEW.name_on_card <> OLD.name_on_card THEN
-        SET audit_log = CONCAT(audit_log, "Name Of Card: ", OLD.name_on_card, " -> ", NEW.name_on_card, "<br/>");
+    IF NEW.bank_name <> OLD.bank_name THEN
+        SET audit_log = CONCAT(audit_log, "Bank Name: ", OLD.bank_name, " -> ", NEW.bank_name, "<br/>");
     END IF;
 
-    IF NEW.card_number <> OLD.card_number THEN
-        SET audit_log = CONCAT(audit_log, "Card Number: ", OLD.card_number, " -> ", NEW.card_number, "<br/>");
+    IF NEW.bank_account_type_name <> OLD.bank_account_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Bank Account Type Name: ", OLD.bank_account_type_name, " -> ", NEW.bank_account_type_name, "<br/>");
     END IF;
 
-    IF NEW.expiry_date <> OLD.expiry_date THEN
-        SET audit_log = CONCAT(audit_log, "Expiry Date: ", OLD.expiry_date, " -> ", NEW.expiry_date, "<br/>");
-    END IF;
-
-    IF NEW.cvv <> OLD.cvv THEN
-        SET audit_log = CONCAT(audit_log, "CVV: ", OLD.cvv, " -> ", NEW.cvv, "<br/>");
-    END IF;
-
-    IF NEW.default_card <> OLD.default_card THEN
-        SET audit_log = CONCAT(audit_log, "Default Card: ", OLD.default_card, " -> ", NEW.default_card, "<br/>");
+    IF NEW.account_number <> OLD.account_number THEN
+        SET audit_log = CONCAT(audit_log, "Account Number: ", OLD.account_number, " -> ", NEW.account_number, "<br/>");
     END IF;
 
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('customer_bank_card', NEW.customer_bank_card_id, audit_log, NEW.last_log_by, NOW());
+        VALUES ('customer_bank_account', NEW.customer_bank_account_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END //
 
-CREATE TRIGGER customer_bank_card_trigger_insert
-AFTER INSERT ON customer_bank_card
+CREATE TRIGGER customer_bank_account_trigger_insert
+AFTER INSERT ON customer_bank_account
 FOR EACH ROW
 BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Customer bank card created. <br/>';
+    DECLARE audit_log TEXT DEFAULT 'Employee bank created. <br/>';
 
-    IF NEW.name_on_card <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Name On Card: ", NEW.name_on_card);
+    IF NEW.bank_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Bank Name: ", NEW.bank_name);
     END IF;
 
-    IF NEW.card_number <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Card Number: ", NEW.card_number);
+    IF NEW.bank_account_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Bank Account Type Name: ", NEW.bank_account_type_name);
     END IF;
 
-    IF NEW.expiry_date <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Expiry Date: ", NEW.expiry_date);
-    END IF;
-
-    IF NEW.cvv <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>CVV: ", NEW.cvv);
-    END IF;
-
-    IF NEW.default_card <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Default Card: ", NEW.default_card);
+    IF NEW.account_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Account Number: ", NEW.account_number);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('customer_bank_card', NEW.customer_bank_card_id, audit_log, NEW.last_log_by, NOW());
+    VALUES ('customer_bank_account', NEW.customer_bank_account_id, audit_log, NEW.last_log_by, NOW());
 END //
 
 CREATE TRIGGER customer_id_record_trigger_update
