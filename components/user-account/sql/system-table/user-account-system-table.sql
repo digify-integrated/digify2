@@ -40,8 +40,8 @@ CREATE TABLE user_account (
 CREATE INDEX user_account_index_user_account_id ON user_account(user_account_id);
 CREATE INDEX user_account_index_email ON user_account(email);
 
-INSERT INTO user_account (file_as, username, email, password, locked, active, password_expiry_date, two_factor_auth, last_log_by) VALUES ('CGMI Bot', 'cgmibot', 'cgmibot.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', 'No', 'Yes', '2025-12-30', 'No', '1');
-INSERT INTO user_account (file_as, username, email, password, locked, active, password_expiry_date, two_factor_auth, last_log_by) VALUES ('Administrator', 'ldagulto', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', 'No', 'Yes', '2025-12-30', 'No', '1');
+INSERT INTO user_account (file_as, username, email, password, locked, active, password_expiry_date, two_factor_auth, user_type, user_verified, last_log_by) VALUES ('CGMI Bot', 'cgmibot', 'cgmibot.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', 'No', 'Yes', '2025-12-30', 'No', 'Administrator', 'Yes', '1');
+INSERT INTO user_account (file_as, username, email, password, locked, active, password_expiry_date, two_factor_auth, user_type, user_verified, last_log_by) VALUES ('Administrator', 'ldagulto', 'lawrenceagulto.317@gmail.com', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', 'No', 'Yes', '2025-12-30', 'No', 'Administrator', 'Yes', '1');
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 

@@ -140,6 +140,15 @@ BEGIN
     WHERE user_account_id = p_user_account_id;
 END //
 
+CREATE PROCEDURE updateRegistrationVerification(IN p_user_account_id INT, IN p_registration_verification_token VARCHAR(255), IN p_registration_verification_token_expiry_date DATETIME, IN p_last_log_by INT)
+BEGIN
+    UPDATE user_account
+    SET registration_verification_token = p_registration_verification_token,
+        registration_verification_token_expiry_date = p_registration_verification_token_expiry_date,
+        last_log_by = p_last_log_by
+    WHERE user_account_id = p_user_account_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Delete Stored Procedures */

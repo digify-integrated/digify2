@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 20, 2024 at 04:55 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Aug 21, 2024 at 11:34 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -4041,6 +4041,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOTPAsExpired` (IN `p_user_acc
     WHERE user_account_id = p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateRegistrationVerification`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRegistrationVerification` (IN `p_user_account_id` INT, IN `p_registration_verification_token` VARCHAR(255), IN `p_registration_verification_token_expiry_date` DATETIME, IN `p_last_log_by` INT)   BEGIN
+    UPDATE user_account
+    SET registration_verification_token = p_registration_verification_token,
+        registration_verification_token_expiry_date = p_registration_verification_token_expiry_date,
+        last_log_by = p_last_log_by
+    WHERE user_account_id = p_user_account_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateRelation`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateRelation` (IN `p_relation_id` INT, IN `p_relation_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     UPDATE relation
@@ -4550,6 +4559,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkSchedule` (IN `p_work_sch
     WHERE work_schedule_id = p_work_schedule_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `verifyUserAccount`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyUserAccount` (IN `p_user_account_id` INT, IN `p_registration_verification_token_expiry_date` DATETIME, IN `p_last_log_by` INT)   BEGIN
+	UPDATE user_account 
+    SET user_verified = 'Yes',
+        active = 'Yes',
+        registration_verification_token_expiry_date = p_registration_verification_token_expiry_date,
+        registration_verification_date = NOW(),
+        last_log_by = p_last_log_by
+    WHERE user_account_id = p_user_account_id;
 END$$
 
 DELIMITER ;
@@ -8136,7 +8156,86 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3393, 'notification_setting', 3, 'Notification Setting created. <br/><br/>Notification Setting Name: Registration Verification<br/>Notification Setting Description: Notification setting when the user sign-up for an account.<br/>System Notification: 1', 2, '2024-08-20 22:46:12', '2024-08-20 22:46:12'),
 (3394, 'notification_setting', 3, 'Email Notification: 0 -> 1<br/>', 2, '2024-08-20 22:46:19', '2024-08-20 22:46:19'),
 (3395, 'notification_setting', 3, 'System Notification: 1 -> 0<br/>', 2, '2024-08-20 22:46:20', '2024-08-20 22:46:20'),
-(3396, 'notification_setting_email_template', 3, 'Email Notification Template created. <br/><br/>Email Notification Subject: Sign Up Verification - Action Required<br/>Email Notification Body: <p>Thank you for registering! To complete your registration, please verify your email address by clicking the link below:</p>\n<p>#{REGISTRATION_VERIFICATION_LINK}</p>\n<p>Important: This link is time-sensitive and will expire after #{REGISTRATION_VERIFICATION_VALIDITY}. If you do not verify your email within this timeframe, you may need to request another verification link.</p>\n<p>If you did not register for an account with us, please ignore this email. Your account will not be activated.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', 2, '2024-08-20 22:53:51', '2024-08-20 22:53:51');
+(3396, 'notification_setting_email_template', 3, 'Email Notification Template created. <br/><br/>Email Notification Subject: Sign Up Verification - Action Required<br/>Email Notification Body: <p>Thank you for registering! To complete your registration, please verify your email address by clicking the link below:</p>\n<p>#{REGISTRATION_VERIFICATION_LINK}</p>\n<p>Important: This link is time-sensitive and will expire after #{REGISTRATION_VERIFICATION_VALIDITY}. If you do not verify your email within this timeframe, you may need to request another verification link.</p>\n<p>If you did not register for an account with us, please ignore this email. Your account will not be activated.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', 2, '2024-08-20 22:53:51', '2024-08-20 22:53:51'),
+(3397, 'user_account', 2, 'Last Connection Date: 2024-08-20 22:44:32 -> 2024-08-21 08:43:30<br/>', 2, '2024-08-21 08:43:30', '2024-08-21 08:43:30'),
+(3398, 'notification_setting_email_template', 3, 'Email Notification Body: <p>Thank you for registering! To complete your registration, please verify your email address by clicking the link below:</p>\n<p>#{REGISTRATION_VERIFICATION_LINK}</p>\n<p>Important: This link is time-sensitive and will expire after #{REGISTRATION_VERIFICATION_VALIDITY}. If you do not verify your email within this timeframe, you may need to request another verification link.</p>\n<p>If you did not register for an account with us, please ignore this email. Your account will not be activated.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p> -> <p>Thank you for registering! To complete your registration, please verify your email address by clicking the link below:</p>\n<p><a href=\"#{REGISTRATION_VERIFICATION_LINK}\">Click to verify your account</a></p>\n<p>Important: This link is time-sensitive and will expire after #{REGISTRATION_VERIFICATION_VALIDITY}. If you do not verify your email within this timeframe, you may need to request another verification link.</p>\n<p>If you did not register for an account with us, please ignore this email. Your account will not be activated.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p><br/>', 2, '2024-08-21 09:04:34', '2024-08-21 09:04:34'),
+(3399, 'security_setting', 3, 'Value: http://localhost/modernize/password-reset.php?id= -> http://localhost/digify2/password-reset.php?id=<br/>', 2, '2024-08-21 09:06:33', '2024-08-21 09:06:33'),
+(3400, 'customer', 2, 'Customer created. <br/><br/>Full Name: Lennard Agulto<br/>First Name: Lennard<br/>Last Name: Agulto<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-21 09:09:39', '2024-08-21 09:09:39'),
+(3401, 'customer', 3, 'Customer created. <br/><br/>Full Name: lawrence agulto<br/>First Name: lawrence<br/>Last Name: agulto<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-21 09:53:08', '2024-08-21 09:53:08'),
+(3402, 'customer', 4, 'Customer created. <br/><br/>Full Name: lawrence agulto<br/>First Name: lawrence<br/>Last Name: agulto<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-21 09:58:20', '2024-08-21 09:58:20'),
+(3403, 'customer', 5, 'Customer created. <br/><br/>Full Name: lawrence agulto<br/>First Name: lawrence<br/>Last Name: agulto<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-21 10:02:42', '2024-08-21 10:02:42'),
+(3404, 'customer', 6, 'Customer created. <br/><br/>Full Name: lawrence agulto<br/>First Name: lawrence<br/>Last Name: agulto<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-21 10:02:49', '2024-08-21 10:02:49'),
+(3405, 'customer', 7, 'Customer created. <br/><br/>Full Name: lawrence agulto<br/>First Name: lawrence<br/>Last Name: agulto<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-21 10:03:11', '2024-08-21 10:03:11'),
+(3406, 'customer', 8, 'Customer created. <br/><br/>Full Name: lawrence agulto<br/>First Name: lawrence<br/>Last Name: agulto<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-21 10:05:59', '2024-08-21 10:05:59'),
+(3407, 'user_account', 8, 'User account created. <br/><br/>File As: lawrence agulto<br/>Email: agulto.lawrence03@gmail.com<br/>Username: leagulto<br/>Locked: No<br/>Active: No<br/>Password Expiry Date: 2025-02-17<br/>Receive Notification: Yes<br/>Two-Factor Authentication: Yes<br/>Last Password Change: 2024-08-21 10:05:59<br/>Multiple Session: Yes<br/>User Type: Customer<br/>User Verified: No<br/>Registration Date: 2024-08-21 10:05:59', 1, '2024-08-21 10:05:59', '2024-08-21 10:05:59'),
+(3408, 'customer', 9, 'Customer created. <br/><br/>Full Name: lawrence agulto<br/>First Name: lawrence<br/>Last Name: agulto<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-21 10:18:07', '2024-08-21 10:18:07'),
+(3409, 'user_account', 9, 'User account created. <br/><br/>File As: lawrence agulto<br/>Email: agulto.lawrence03@gmail.com<br/>Username: leagulto<br/>Locked: No<br/>Active: No<br/>Password Expiry Date: 2025-02-17<br/>Receive Notification: Yes<br/>Two-Factor Authentication: Yes<br/>Last Password Change: 2024-08-21 10:18:07<br/>Multiple Session: Yes<br/>User Type: Customer<br/>User Verified: No<br/>Registration Date: 2024-08-21 10:18:07', 1, '2024-08-21 10:18:07', '2024-08-21 10:18:07'),
+(3410, 'user_account', 9, 'User Verified: No -> Yes<br/>', 1, '2024-08-21 11:03:16', '2024-08-21 11:03:16'),
+(3411, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:03:16 -> 2024-08-21 11:03:17<br/>', 1, '2024-08-21 11:03:17', '2024-08-21 11:03:17'),
+(3412, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:03:17 -> 2024-08-21 11:03:18<br/>', 1, '2024-08-21 11:03:18', '2024-08-21 11:03:18'),
+(3413, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:03:18 -> 2024-08-21 11:03:19<br/>', 1, '2024-08-21 11:03:19', '2024-08-21 11:03:19'),
+(3414, 'user_account', 9, 'Active: No -> Yes<br/>Registration Verification Date: 2024-08-21 11:03:19 -> 2024-08-21 11:05:26<br/>', 1, '2024-08-21 11:05:26', '2024-08-21 11:05:26'),
+(3415, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:05:26 -> 2024-08-21 11:05:29<br/>', 1, '2024-08-21 11:05:29', '2024-08-21 11:05:29'),
+(3416, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:05:29 -> 2024-08-21 11:06:28<br/>', 1, '2024-08-21 11:06:28', '2024-08-21 11:06:28'),
+(3417, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:06:28 -> 2024-08-21 11:07:06<br/>', 1, '2024-08-21 11:07:06', '2024-08-21 11:07:06'),
+(3418, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:07:06 -> 2024-08-21 11:07:07<br/>', 1, '2024-08-21 11:07:07', '2024-08-21 11:07:07'),
+(3419, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:07:07 -> 2024-08-21 11:07:38<br/>', 1, '2024-08-21 11:07:38', '2024-08-21 11:07:38'),
+(3420, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:07:38 -> 2024-08-21 11:07:39<br/>', 1, '2024-08-21 11:07:39', '2024-08-21 11:07:39'),
+(3421, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:07:39 -> 2024-08-21 11:07:55<br/>', 1, '2024-08-21 11:07:55', '2024-08-21 11:07:55'),
+(3422, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:07:55 -> 2024-08-21 11:08:11<br/>', 1, '2024-08-21 11:08:11', '2024-08-21 11:08:11'),
+(3423, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:08:11 -> 2024-08-21 11:08:26<br/>', 1, '2024-08-21 11:08:26', '2024-08-21 11:08:26'),
+(3424, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:08:26 -> 2024-08-21 11:08:40<br/>', 1, '2024-08-21 11:08:40', '2024-08-21 11:08:40'),
+(3425, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:08:40 -> 2024-08-21 11:08:45<br/>', 1, '2024-08-21 11:08:45', '2024-08-21 11:08:45'),
+(3426, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:08:45 -> 2024-08-21 11:12:20<br/>', 1, '2024-08-21 11:12:20', '2024-08-21 11:12:20'),
+(3427, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:12:20 -> 2024-08-21 11:12:23<br/>', 1, '2024-08-21 11:12:23', '2024-08-21 11:12:23'),
+(3428, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:12:23 -> 2024-08-21 11:14:32<br/>', 1, '2024-08-21 11:14:32', '2024-08-21 11:14:32'),
+(3429, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:14:32 -> 2024-08-21 11:14:47<br/>', 1, '2024-08-21 11:14:47', '2024-08-21 11:14:47'),
+(3430, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:14:47 -> 2024-08-21 11:21:18<br/>', 1, '2024-08-21 11:21:18', '2024-08-21 11:21:18'),
+(3431, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:21:18 -> 2024-08-21 11:39:08<br/>', 1, '2024-08-21 11:39:08', '2024-08-21 11:39:08'),
+(3432, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:39:08 -> 2024-08-21 11:43:30<br/>', 1, '2024-08-21 11:43:30', '2024-08-21 11:43:30'),
+(3433, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:43:30 -> 2024-08-21 11:52:28<br/>', 1, '2024-08-21 11:52:28', '2024-08-21 11:52:28'),
+(3434, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:52:28 -> 2024-08-21 11:53:05<br/>', 1, '2024-08-21 11:53:05', '2024-08-21 11:53:05'),
+(3435, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:53:05 -> 2024-08-21 11:53:09<br/>', 1, '2024-08-21 11:53:09', '2024-08-21 11:53:09'),
+(3436, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:53:09 -> 2024-08-21 11:53:50<br/>', 1, '2024-08-21 11:53:50', '2024-08-21 11:53:50'),
+(3437, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:53:50 -> 2024-08-21 11:53:57<br/>', 1, '2024-08-21 11:53:57', '2024-08-21 11:53:57'),
+(3438, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:53:57 -> 2024-08-21 11:54:00<br/>', 1, '2024-08-21 11:54:00', '2024-08-21 11:54:00'),
+(3439, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:54:00 -> 2024-08-21 11:54:04<br/>', 1, '2024-08-21 11:54:04', '2024-08-21 11:54:04'),
+(3440, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:54:04 -> 2024-08-21 11:54:17<br/>', 1, '2024-08-21 11:54:17', '2024-08-21 11:54:17'),
+(3441, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:54:17 -> 2024-08-21 11:54:20<br/>', 1, '2024-08-21 11:54:20', '2024-08-21 11:54:20'),
+(3442, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:54:20 -> 2024-08-21 11:54:24<br/>', 1, '2024-08-21 11:54:24', '2024-08-21 11:54:24'),
+(3443, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:54:24 -> 2024-08-21 11:54:53<br/>', 1, '2024-08-21 11:54:53', '2024-08-21 11:54:53'),
+(3444, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:54:53 -> 2024-08-21 11:55:22<br/>', 1, '2024-08-21 11:55:22', '2024-08-21 11:55:22'),
+(3445, 'user_account', 9, 'Registration Verification Date: 2024-08-21 11:55:22 -> 2024-08-21 12:06:56<br/>', 1, '2024-08-21 12:06:56', '2024-08-21 12:06:56'),
+(3446, 'user_account', 9, 'Registration Verification Date: 2024-08-21 12:06:56 -> 2024-08-21 12:09:27<br/>', 1, '2024-08-21 12:09:27', '2024-08-21 12:09:27'),
+(3447, 'user_account', 9, 'User Verified: Yes -> NO<br/>', 1, '2024-08-21 12:09:58', '2024-08-21 12:09:58'),
+(3448, 'user_account', 9, 'User Verified: No -> Yes<br/>Registration Verification Date: 2024-08-21 12:09:27 -> 2024-08-21 12:10:04<br/>', 1, '2024-08-21 12:10:04', '2024-08-21 12:10:04'),
+(3449, 'user_account', 9, 'Registration Verification Date: 2024-08-21 12:10:04 -> 2024-08-21 12:11:59<br/>', 1, '2024-08-21 12:11:59', '2024-08-21 12:11:59'),
+(3450, 'user_account', 9, 'Registration Verification Date: 2024-08-21 12:11:59 -> 2024-08-21 12:12:06<br/>', 1, '2024-08-21 12:12:06', '2024-08-21 12:12:06'),
+(3451, 'user_account', 9, 'User Verified: Yes -> No<br/>', 1, '2024-08-21 12:12:28', '2024-08-21 12:12:28'),
+(3452, 'user_account', 9, 'User Verified: No -> Yes<br/>Registration Verification Date: 2024-08-21 12:12:06 -> 2024-08-21 14:25:07<br/>', 1, '2024-08-21 14:25:07', '2024-08-21 14:25:07'),
+(3453, 'notification_setting_email_template', 1, 'Email Notification Body: <p>To ensure the security of your account, we have generated a unique One-Time Password (OTP) for you to use during the login process. Please use the following OTP to access your account:</p>\n<p><br>OTP:&nbsp;<strong>{OTP_CODE}</strong></p>\n<p><br>Please note that this OTP is valid for &nbsp;<strong>#{OTP_CODE_VALIDITY}</strong>. Once you have logged in successfully, we recommend enabling two-factor authentication for an added layer of security.<br>If you did not initiate this login or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p> -> <p>To ensure the security of your account, we have generated a unique One-Time Password (OTP) for you to use during the login process. Please use the following OTP to access your account:</p>\n<p><br>OTP: <strong>#{OTP_CODE}</strong></p>\n<p><br>Please note that this OTP is valid for &nbsp;<strong>#{OTP_CODE_VALIDITY}</strong>. Once you have logged in successfully, we recommend enabling two-factor authentication for an added layer of security.<br>If you did not initiate this login or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p><br/>', 2, '2024-08-21 14:28:48', '2024-08-21 14:28:48'),
+(3454, 'customer', 10, 'Customer created. <br/><br/>Full Name: maricris agulto<br/>First Name: maricris<br/>Last Name: agulto<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-21 14:34:24', '2024-08-21 14:34:24'),
+(3455, 'user_account', 10, 'User account created. <br/><br/>File As: maricris agulto<br/>Email: marishein.fashion@gmail.com<br/>Username: magulto<br/>Locked: No<br/>Active: No<br/>Password Expiry Date: 2025-02-17<br/>Receive Notification: Yes<br/>Two-Factor Authentication: Yes<br/>Last Password Change: 2024-08-21 14:34:24<br/>Multiple Session: Yes<br/>User Type: Customer<br/>User Verified: No<br/>Registration Date: 2024-08-21 14:34:24', 1, '2024-08-21 14:34:24', '2024-08-21 14:34:24'),
+(3456, 'user_account', 2, 'Last Connection Date: 2024-08-21 14:28:25 -> 2024-08-21 14:42:47<br/>', 1, '2024-08-21 14:42:47', '2024-08-21 14:42:47'),
+(3457, 'user_account', 2, 'Last Connection Date: 2024-08-21 14:42:47 -> 2024-08-21 14:58:51<br/>', 1, '2024-08-21 14:58:51', '2024-08-21 14:58:51'),
+(3458, 'system_action', 24, 'System action created. <br/><br/>System Action Name: Send Registration Verification Link<br/>System Action Description: Access to send the registration verification link to unverified users.', 2, '2024-08-21 15:07:39', '2024-08-21 15:07:39'),
+(3459, 'role_system_action_permission', 24, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Send Registration Verification Link<br/>Date Assigned: 2024-08-21 15:07:43', 2, '2024-08-21 15:07:43', '2024-08-21 15:07:43'),
+(3460, 'role_system_action_permission', 24, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-21 15:07:43', '2024-08-21 15:07:43'),
+(3461, 'user_account', 9, 'User Verified: Yes -> No<br/>', 1, '2024-08-21 15:10:12', '2024-08-21 15:10:12'),
+(3462, 'system_action', 25, 'System action created. <br/><br/>System Action Name: Verify User Registration<br/>System Action Description: Access to verify unverified users registration.', 2, '2024-08-21 15:20:18', '2024-08-21 15:20:18'),
+(3463, 'role_system_action_permission', 25, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Verify User Registration<br/>Date Assigned: 2024-08-21 15:20:26', 2, '2024-08-21 15:20:26', '2024-08-21 15:20:26'),
+(3464, 'role_system_action_permission', 25, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-21 15:20:27', '2024-08-21 15:20:27'),
+(3465, 'user_account', 10, 'Active: No -> Yes<br/>User Verified: No -> Yes<br/>', 1, '2024-08-21 15:50:32', '2024-08-21 15:50:32'),
+(3466, 'user_account', 10, 'User Verified: Yes -> No<br/>', 1, '2024-08-21 16:02:37', '2024-08-21 16:02:37'),
+(3467, 'user_account', 10, 'User Verified: No -> Yes<br/>Registration Verification Date: 2024-08-21 15:50:32 -> 2024-08-21 16:04:38<br/>', 1, '2024-08-21 16:04:38', '2024-08-21 16:04:38'),
+(3468, 'user_account', 2, 'Last Connection Date: 2024-08-21 14:58:51 -> 2024-08-21 16:48:05<br/>', 1, '2024-08-21 16:48:05', '2024-08-21 16:48:05'),
+(3469, 'user_account', 11, 'User account created. <br/><br/>File As: test<br/>Email: test@gmail.com<br/>Username: test<br/>Locked: No<br/>Active: No<br/>Password Expiry Date: 2025-02-17<br/>Receive Notification: Yes<br/>Two-Factor Authentication: Yes<br/>Last Password Change: 2024-08-21 16:48:18<br/>Multiple Session: Yes<br/>User Type: Guest<br/>User Verified: No', 2, '2024-08-21 16:48:18', '2024-08-21 16:48:18'),
+(3470, 'user_account', 11, 'Active: No -> Yes<br/>', 2, '2024-08-21 16:48:29', '2024-08-21 16:48:29'),
+(3471, 'system_action', 26, 'System action created. <br/><br/>System Action Name: Link User Account<br/>System Action Description: Access to link the user account to an employee or customer.', 2, '2024-08-21 16:49:59', '2024-08-21 16:49:59'),
+(3472, 'role_system_action_permission', 26, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Link User Account<br/>Date Assigned: 2024-08-21 16:50:05', 2, '2024-08-21 16:50:05', '2024-08-21 16:50:05'),
+(3473, 'role_system_action_permission', 26, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-21 16:50:06', '2024-08-21 16:50:06'),
+(3474, 'system_action', 27, 'System action created. <br/><br/>System Action Name: Unlink User Account<br/>System Action Description: Access to unlink the user account to an employee or customer.', 2, '2024-08-21 16:51:44', '2024-08-21 16:51:44'),
+(3475, 'user_account', 11, 'User Verified: No -> Yes<br/>', 1, '2024-08-21 16:58:36', '2024-08-21 16:58:36');
 
 -- --------------------------------------------------------
 
@@ -10803,7 +10902,9 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`customer_id`, `customer_image`, `customer_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `birthday`, `birth_place`, `customer_status`, `archive_date`, `created_date`, `last_log_by`) VALUES
-(1, './components/customer/image/1/profile/V3Xn.png', NULL, 'Lawrence Agulto', 'Lawrence', '', 'Agulto', '', 'No about found.', 'nickname', 2, 'Engaged', 1, 'Male', '2024-08-20', 'test', 'Active', '2024-08-20', '2024-08-20 13:36:10', 2);
+(1, './components/customer/image/1/profile/V3Xn.png', NULL, 'Lawrence Agulto', 'Lawrence', '', 'Agulto', '', 'No about found.', 'nickname', 2, 'Engaged', 1, 'Male', '2024-08-20', 'test', 'Active', '2024-08-20', '2024-08-20 13:36:10', 2),
+(9, NULL, NULL, 'lawrence agulto', 'lawrence', '', 'agulto', '', 'No about found.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', NULL, '2024-08-21 10:18:07', 1),
+(10, NULL, NULL, 'maricris agulto', 'maricris', '', 'agulto', '', 'No about found.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', NULL, '2024-08-21 14:34:24', 1);
 
 --
 -- Triggers `customer`
@@ -13985,9 +14086,9 @@ CREATE TABLE `notification_setting_email_template` (
 --
 
 INSERT INTO `notification_setting_email_template` (`notification_setting_email_id`, `notification_setting_id`, `email_notification_subject`, `email_notification_body`, `created_date`, `last_log_by`) VALUES
-(1, 1, 'Login OTP - Secure Access to Your Account', '<p>To ensure the security of your account, we have generated a unique One-Time Password (OTP) for you to use during the login process. Please use the following OTP to access your account:</p>\n<p><br>OTP:&nbsp;<strong>{OTP_CODE}</strong></p>\n<p><br>Please note that this OTP is valid for &nbsp;<strong>#{OTP_CODE_VALIDITY}</strong>. Once you have logged in successfully, we recommend enabling two-factor authentication for an added layer of security.<br>If you did not initiate this login or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-06-27 15:02:58', 2),
+(1, 1, 'Login OTP - Secure Access to Your Account', '<p>To ensure the security of your account, we have generated a unique One-Time Password (OTP) for you to use during the login process. Please use the following OTP to access your account:</p>\n<p><br>OTP: <strong>#{OTP_CODE}</strong></p>\n<p><br>Please note that this OTP is valid for &nbsp;<strong>#{OTP_CODE_VALIDITY}</strong>. Once you have logged in successfully, we recommend enabling two-factor authentication for an added layer of security.<br>If you did not initiate this login or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-06-27 15:02:58', 2),
 (2, 2, 'Password Reset Request - Action Required', '<p>We received a request to reset your password. To proceed with the password reset, please follow the steps below:</p>\n<ol>\n<li>\n<p>Click on the following link to reset your password:&nbsp; <strong><a href=\"#{RESET_LINK}\">Password Reset Link</a></strong></p>\n</li>\n<li>\n<p>If you did not request this password reset, please ignore this email. Your account remains secure.</p>\n</li>\n</ol>\n<p>Please note that this link is time-sensitive and will expire after <strong>#{RESET_LINK_VALIDITY}</strong>. If you do not reset your password within this timeframe, you may need to request another password reset.</p>\n<p><br>If you did not initiate this password reset request or believe it was sent to you in error, please disregard this email and delete it immediately. Your account\'s security remains our utmost priority.<br><br>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-06-27 15:13:04', 2),
-(3, 3, 'Sign Up Verification - Action Required', '<p>Thank you for registering! To complete your registration, please verify your email address by clicking the link below:</p>\n<p>#{REGISTRATION_VERIFICATION_LINK}</p>\n<p>Important: This link is time-sensitive and will expire after #{REGISTRATION_VERIFICATION_VALIDITY}. If you do not verify your email within this timeframe, you may need to request another verification link.</p>\n<p>If you did not register for an account with us, please ignore this email. Your account will not be activated.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-08-20 22:53:51', 2);
+(3, 3, 'Sign Up Verification - Action Required', '<p>Thank you for registering! To complete your registration, please verify your email address by clicking the link below:</p>\n<p><a href=\"#{REGISTRATION_VERIFICATION_LINK}\">Click to verify your account</a></p>\n<p>Important: This link is time-sensitive and will expire after #{REGISTRATION_VERIFICATION_VALIDITY}. If you do not verify your email within this timeframe, you may need to request another verification link.</p>\n<p>If you did not register for an account with us, please ignore this email. Your account will not be activated.</p>\n<p>Note: This is an automatically generated email. Please do not reply to this address.</p>', '2024-08-20 22:53:51', 2);
 
 --
 -- Triggers `notification_setting_email_template`
@@ -14152,6 +14253,16 @@ CREATE TABLE `password_history` (
   `password_change_date` datetime DEFAULT current_timestamp(),
   `created_date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `password_history`
+--
+
+INSERT INTO `password_history` (`password_history_id`, `user_account_id`, `password`, `password_change_date`, `created_date`) VALUES
+(1, 8, 'lOfoIcheblgd%2FFe%2FVcWDpKDn6pKmO8PtH4%2F8Jc%2FUxR8%3D', '2024-08-21 10:05:59', '2024-08-21 10:05:59'),
+(2, 9, 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', '2024-08-21 10:18:07', '2024-08-21 10:18:07'),
+(3, 10, 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', '2024-08-21 14:34:24', '2024-08-21 14:34:24'),
+(4, 11, '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', '2024-08-21 16:48:18', '2024-08-21 16:48:18');
 
 -- --------------------------------------------------------
 
@@ -14556,7 +14667,10 @@ INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`,
 (20, 1, 'Administrator', 20, 'Archive Employee', 1, '2024-08-14 09:59:07', '2024-08-14 09:59:07', 2),
 (21, 1, 'Administrator', 21, 'Unarchive Employee', 1, '2024-08-14 09:59:29', '2024-08-14 09:59:29', 2),
 (22, 1, 'Administrator', 22, 'Archive Customer', 1, '2024-08-20 13:39:05', '2024-08-20 13:39:05', 2),
-(23, 1, 'Administrator', 23, 'Unarchive Customer', 1, '2024-08-20 13:39:39', '2024-08-20 13:39:39', 2);
+(23, 1, 'Administrator', 23, 'Unarchive Customer', 1, '2024-08-20 13:39:39', '2024-08-20 13:39:39', 2),
+(24, 1, 'Administrator', 24, 'Send Registration Verification Link', 1, '2024-08-21 15:07:43', '2024-08-21 15:07:43', 2),
+(25, 1, 'Administrator', 25, 'Verify User Registration', 1, '2024-08-21 15:20:26', '2024-08-21 15:20:26', 2),
+(26, 1, 'Administrator', 26, 'Link User Account', 1, '2024-08-21 16:50:05', '2024-08-21 16:50:05', 2);
 
 --
 -- Triggers `role_system_action_permission`
@@ -14762,7 +14876,7 @@ CREATE TABLE `security_setting` (
 INSERT INTO `security_setting` (`security_setting_id`, `security_setting_name`, `value`, `created_date`, `last_log_by`) VALUES
 (1, 'Max Failed Login Attempt', '5', '2024-08-12 08:53:59', 2),
 (2, 'Max Failed OTP Attempt', '5', '2024-08-12 08:53:59', 2),
-(3, 'Default Forgot Password Link', 'http://localhost/modernize/password-reset.php?id=', '2024-08-12 08:53:59', 2),
+(3, 'Default Forgot Password Link', 'http://localhost/digify2/password-reset.php?id=', '2024-08-12 08:53:59', 2),
 (4, 'Password Expiry Duration', '180', '2024-08-12 08:53:59', 2),
 (5, 'Session Timeout Duration', '240', '2024-08-12 08:53:59', 2),
 (6, 'OTP Duration', '5', '2024-08-12 08:53:59', 2),
@@ -14999,7 +15113,11 @@ INSERT INTO `system_action` (`system_action_id`, `system_action_name`, `system_a
 (20, 'Archive Employee', 'Access to archive the employee.', '2024-08-14 09:59:03', 2),
 (21, 'Unarchive Employee', 'Access to unarchive the employee.', '2024-08-14 09:59:25', 2),
 (22, 'Archive Customer', 'Access to archive the customer.', '2024-08-20 13:39:01', 2),
-(23, 'Unarchive Customer', 'Access to unarchive the customer.', '2024-08-20 13:39:35', 2);
+(23, 'Unarchive Customer', 'Access to unarchive the customer.', '2024-08-20 13:39:35', 2),
+(24, 'Send Registration Verification Link', 'Access to send the registration verification link to unverified users.', '2024-08-21 15:07:39', 2),
+(25, 'Verify User Registration', 'Access to verify unverified users registration.', '2024-08-21 15:20:18', 2),
+(26, 'Link User Account', 'Access to link the user account to an employee or customer.', '2024-08-21 16:49:59', 2),
+(27, 'Unlink User Account', 'Access to unlink the user account to an employee or customer.', '2024-08-21 16:51:44', 2);
 
 --
 -- Triggers `system_action`
@@ -15275,6 +15393,13 @@ CREATE TABLE `user_account` (
   `last_password_reset` datetime DEFAULT NULL,
   `multiple_session` varchar(5) DEFAULT 'Yes',
   `session_token` varchar(255) DEFAULT NULL,
+  `user_type` varchar(20) DEFAULT 'Guest',
+  `user_verified` varchar(20) DEFAULT 'No',
+  `linked_id` int(10) UNSIGNED DEFAULT NULL,
+  `registration_date` datetime DEFAULT NULL,
+  `registration_verification_token` varchar(255) DEFAULT NULL,
+  `registration_verification_token_expiry_date` datetime DEFAULT NULL,
+  `registration_verification_date` datetime DEFAULT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -15283,9 +15408,12 @@ CREATE TABLE `user_account` (
 -- Dumping data for table `user_account`
 --
 
-INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `created_date`, `last_log_by`) VALUES
-(1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, '2024-06-26 13:25:46', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-20 22:44:32', '2025-12-30', 'bU%2F41KMPtp29KGq570qa7DvenZNSVa952N%2BQzi8t6iE%3D', '2024-08-12 08:59:12', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'Z1mVt%2BUOw4Z1sRRCe0v6viu2xI0%2BBm7EJfHujnLkpcc%3D', '2024-06-26 13:25:47', 2);
+INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
+(1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 16:48:05', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'VhDUynEU1WPnCWjEaIrXA24l7Y4ytVM%2BhHlXMCAosgI%3D', 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
+(9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
+(10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-21 16:04:38', '2024-08-21 16:04:38', '2024-08-21 14:34:24', 1),
+(11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1);
 
 --
 -- Triggers `user_account`
@@ -15349,6 +15477,22 @@ CREATE TRIGGER `user_account_trigger_insert` AFTER INSERT ON `user_account` FOR 
 
     IF NEW.multiple_session <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Multiple Session: ", NEW.multiple_session);
+    END IF;
+
+    IF NEW.user_type <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>User Type: ", NEW.user_type);
+    END IF;
+
+    IF NEW.user_verified <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>User Verified: ", NEW.user_verified);
+    END IF;
+
+    IF NEW.registration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Registration Date: ", NEW.registration_date);
+    END IF;
+
+    IF NEW.registration_verification_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Registration Verification Date: ", NEW.registration_verification_date);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
@@ -15415,6 +15559,22 @@ CREATE TRIGGER `user_account_trigger_update` AFTER UPDATE ON `user_account` FOR 
 
     IF NEW.multiple_session <> OLD.multiple_session THEN
         SET audit_log = CONCAT(audit_log, "Multiple Session: ", OLD.multiple_session, " -> ", NEW.multiple_session, "<br/>");
+    END IF;
+
+    IF NEW.user_type <> OLD.user_type THEN
+        SET audit_log = CONCAT(audit_log, "User Type: ", OLD.user_type, " -> ", NEW.user_type, "<br/>");
+    END IF;
+
+    IF NEW.user_verified <> OLD.user_verified THEN
+        SET audit_log = CONCAT(audit_log, "User Verified: ", OLD.user_verified, " -> ", NEW.user_verified, "<br/>");
+    END IF;
+
+    IF NEW.registration_date <> OLD.registration_date THEN
+        SET audit_log = CONCAT(audit_log, "Registration Date: ", OLD.registration_date, " -> ", NEW.registration_date, "<br/>");
+    END IF;
+
+    IF NEW.registration_verification_date <> OLD.registration_verification_date THEN
+        SET audit_log = CONCAT(audit_log, "Registration Verification Date: ", OLD.registration_verification_date, " -> ", NEW.registration_verification_date, "<br/>");
     END IF;
     
     IF LENGTH(audit_log) > 0 THEN
@@ -16333,7 +16493,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3397;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3476;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -16393,7 +16553,7 @@ ALTER TABLE `currency`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `customer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `customer_address`
@@ -16603,7 +16763,7 @@ ALTER TABLE `notification_setting_system_template`
 -- AUTO_INCREMENT for table `password_history`
 --
 ALTER TABLE `password_history`
-  MODIFY `password_history_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `password_history_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `relation`
@@ -16633,7 +16793,7 @@ ALTER TABLE `role_permission`
 -- AUTO_INCREMENT for table `role_system_action_permission`
 --
 ALTER TABLE `role_system_action_permission`
-  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `role_user_account`
@@ -16663,7 +16823,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `system_action`
 --
 ALTER TABLE `system_action`
-  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `system_setting`
@@ -16693,7 +16853,7 @@ ALTER TABLE `upload_setting_file_extension`
 -- AUTO_INCREMENT for table `user_account`
 --
 ALTER TABLE `user_account`
-  MODIFY `user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `work_hours`

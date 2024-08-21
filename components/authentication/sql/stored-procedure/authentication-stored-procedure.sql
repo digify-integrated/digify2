@@ -109,3 +109,18 @@ BEGIN
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Verify Stored Procedure */
+
+CREATE PROCEDURE verifyUserAccount(IN p_user_account_id INT, IN p_registration_verification_token_expiry_date DATETIME, IN p_last_log_by INT)
+BEGIN
+	UPDATE user_account 
+    SET user_verified = 'Yes',
+        active = 'Yes',
+        registration_verification_token_expiry_date = p_registration_verification_token_expiry_date,
+        registration_verification_date = NOW(),
+        last_log_by = p_last_log_by
+    WHERE user_account_id = p_user_account_id;
+END //
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */

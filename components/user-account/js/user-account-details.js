@@ -2,6 +2,9 @@
     'use strict';
 
     $(function() {
+        generateDropdownOptions('employee options');
+        generateDropdownOptions('customer options');
+
         displayDetails('get user account details');
 
         if($('#user-account-form').length){
@@ -130,6 +133,124 @@
                                 else if (response.notExist) {
                                     setNotification(response.title, response.message, response.messageType);
                                     roleList();
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
+        $(document).on('click','#verify-registration',function() {
+            const user_account_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'verify registration';
+    
+            Swal.fire({
+                title: 'Confirm User Account Registration Verification',
+                text: 'Are you sure you want to verify the registration of this user account?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Verify',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-success mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/user-account/controller/user-account-controller.php',
+                        dataType: 'json',
+                        data: {
+                            user_account_id : user_account_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                setNotification(response.title, response.message, response.messageType);
+                                window.location.reload();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
+        $(document).on('click','#resend-verification',function() {
+            const user_account_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'resend registration verification';
+    
+            Swal.fire({
+                title: 'Confirm Registration Verification Link Resend',
+                text: 'Are you sure you want to resend the registration verification link of this user account?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Resend',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-success mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/authentication/controller/authentication-controller.php',
+                        dataType: 'json',
+                        data: {
+                            user_account_id : user_account_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                setNotification(response.title, response.message, response.messageType);
+                                window.location.reload();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
                                 }
                                 else {
                                     showNotification(response.title, response.message, response.messageType);
@@ -865,6 +986,7 @@ function displayDetails(transaction){
 
                         document.getElementById('active_summary').innerHTML = response.activeBadge;
                         document.getElementById('locked_summary').innerHTML = response.lockedBadge;
+                        document.getElementById('user_verified_summary').innerHTML = response.userVerifiedBadge;
                         
                         $('#file_as_summary').text(response.fileAs);
                         $('#email_summary').text(response.email);
@@ -873,6 +995,8 @@ function displayDetails(transaction){
                         $('#last_connection_date_summary').text(response.lastConnectionDate);
                         $('#last_password_reset_summary').text(response.lastPasswordReset);
                         $('#account_lock_duration_summary').text(response.accountLockDuration);
+                        $('#registration_date_summary').text(response.registrationDate);
+                        $('#registration_verification_date_summary').text(response.registrationVerificationDate);
 
                         document.getElementById('user_account_profile_picture').src = response.profilePicture;
 
@@ -948,6 +1072,63 @@ function generateDropdownOptions(type){
 
                         initializeDualListBoxIcon();
                     }
+                }
+            });
+            break;
+    }
+}
+
+function generateDropdownOptions(type){
+    switch (type) {
+        case 'employee options':
+            
+            $.ajax({
+                url: 'components/employee/view/_employee_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#employee_id').select2({
+                        dropdownParent: $('#link-user-account-to-employee-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'customer options':
+            
+            $.ajax({
+                url: 'components/customer/view/_customer_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type
+                },
+                success: function(response) {
+                    $('#customer_id').select2({
+                        dropdownParent: $('#link-user-account-to-customer-modal'),
+                        data: response
+                    }).on('change', function (e) {
+                        $(this).valid();
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
                 }
             });
             break;

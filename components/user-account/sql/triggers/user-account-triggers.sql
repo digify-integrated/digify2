@@ -61,6 +61,22 @@ BEGIN
     IF NEW.multiple_session <> OLD.multiple_session THEN
         SET audit_log = CONCAT(audit_log, "Multiple Session: ", OLD.multiple_session, " -> ", NEW.multiple_session, "<br/>");
     END IF;
+
+    IF NEW.user_type <> OLD.user_type THEN
+        SET audit_log = CONCAT(audit_log, "User Type: ", OLD.user_type, " -> ", NEW.user_type, "<br/>");
+    END IF;
+
+    IF NEW.user_verified <> OLD.user_verified THEN
+        SET audit_log = CONCAT(audit_log, "User Verified: ", OLD.user_verified, " -> ", NEW.user_verified, "<br/>");
+    END IF;
+
+    IF NEW.registration_date <> OLD.registration_date THEN
+        SET audit_log = CONCAT(audit_log, "Registration Date: ", OLD.registration_date, " -> ", NEW.registration_date, "<br/>");
+    END IF;
+
+    IF NEW.registration_verification_date <> OLD.registration_verification_date THEN
+        SET audit_log = CONCAT(audit_log, "Registration Verification Date: ", OLD.registration_verification_date, " -> ", NEW.registration_verification_date, "<br/>");
+    END IF;
     
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
@@ -128,6 +144,22 @@ BEGIN
 
     IF NEW.multiple_session <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Multiple Session: ", NEW.multiple_session);
+    END IF;
+
+    IF NEW.user_type <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>User Type: ", NEW.user_type);
+    END IF;
+
+    IF NEW.user_verified <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>User Verified: ", NEW.user_verified);
+    END IF;
+
+    IF NEW.registration_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Registration Date: ", NEW.registration_date);
+    END IF;
+
+    IF NEW.registration_verification_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Registration Verification Date: ", NEW.registration_verification_date);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 

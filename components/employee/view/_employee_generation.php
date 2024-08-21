@@ -869,14 +869,16 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
         # -------------------------------------------------------------
         case 'employee options':
             $employeeID = isset($_POST['employee_id']) ? htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8') : null;
-            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeOptions(:employeeID)');
+            $generationType = isset($_POST['generation_type']) ? htmlspecialchars($_POST['generation_type'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeOptions(:employeeID, :generationType)');
             $sql->bindValue(':employeeID', $employeeID, PDO::PARAM_INT);
+            $sql->bindValue(':generationType', $generationType, PDO::PARAM_STR);
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();
 
             $response[] = [
-                'id' => '0',
+                'id' => '',
                 'text' => '--'
             ];
 

@@ -283,7 +283,33 @@ class AuthenticationModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
-    #   Inser exist methods
+    #   Verify exist methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: verifyUserAccount
+    # Description: Updates the password details for a user.
+    #
+    # Parameters:
+    # - $p_user_account_id (int): The user account ID.
+    # - $registration_verification_token_expiry_date (datetime): The registration verification token expiry date ID.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function verifyUserAccount($p_user_account_id, $registration_verification_token_expiry_date, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL verifyUserAccount(:p_user_account_id, :registration_verification_token_expiry_date, :p_last_log_by)');
+        $stmt->bindValue(':p_user_account_id', $p_user_account_id, PDO::PARAM_INT);
+        $stmt->bindValue(':registration_verification_token_expiry_date', $registration_verification_token_expiry_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Insert exist methods
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------

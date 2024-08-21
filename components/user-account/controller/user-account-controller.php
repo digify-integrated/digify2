@@ -190,6 +190,9 @@ class UserAccountController {
                 case 'delete multiple user account':
                     $this->deleteMultipleUserAccount();
                     break;
+                case 'verify registration':
+                    $this->verifyRegistration();
+                    break;
                 default:
                     $response = [
                         'success' => false,
@@ -1415,6 +1418,73 @@ class UserAccountController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #   Verify methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: verifyRegistration
+    # Description: 
+    # Verify the user account registration; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function verifyRegistration() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['user_account_id']) && !empty($_POST['user_account_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $userAccountID = htmlspecialchars($_POST['user_account_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkUserAccountExist = $this->userAccountModel->checkUserAccountExist($userAccountID);
+            $total = $checkUserAccountExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'User Account Registration Verification Error',
+                    'message' => 'The user account does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $registrationVerificationTokenExpiryDate = date('Y-m-d H:i:s', strtotime('-1 year'));
+            $this->authenticationModel->verifyUserAccount($userAccountID, $registrationVerificationTokenExpiryDate, 1);
+            
+            $response = [
+                'success' => true,
+                'title' => 'User Account Registration Verification Success',
+                'message' => 'The user account registration has been verified successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -1701,6 +1771,7 @@ class UserAccountController {
             $userAccountDetails = $this->userAccountModel->getUserAccount($userAccountID, null);
             $active = $userAccountDetails['active'] ?? null;
             $locked = $userAccountDetails['locked'] ?? null;
+            $userVerified = $userAccountDetails['user_verified'] ?? null;
             $accountLockDuration = $userAccountDetails['account_lock_duration'] ?? 0;
             $twoFactorAuthentication = $userAccountDetails['two_factor_auth'] ?? 'Yes';
             $multipleSession = $userAccountDetails['multiple_session'] ?? 'No';
@@ -1708,10 +1779,13 @@ class UserAccountController {
             $passwordExpiryDate = date('F d, Y', strtotime($userAccountDetails['password_expiry_date']));
             $lastPasswordReset = (!empty($userAccountDetails['last_password_reset'])) ? date('F d, Y h:i:s a', strtotime($userAccountDetails['last_password_reset'])) : 'Never Reset';
             $lastConnectionDate = (!empty($userAccountDetails['last_connection_date'])) ? date('F d, Y h:i:s a', strtotime($userAccountDetails['last_connection_date'])) : 'Never Connected';
+            $registrationDate = (!empty($userAccountDetails['registration_date'])) ? date('F d, Y h:i:s a', strtotime($userAccountDetails['registration_date'])) : 'Never Registered';
+            $registrationVerificationDate = (!empty($userAccountDetails['registration_verification_date'])) ? date('F d, Y h:i:s a', strtotime($userAccountDetails['registration_verification_date'])) : 'Never Verified';
             $lastFailedLoginAttempt = (!empty($userAccountDetails['last_failed_login_attempt'])) ? date('F d, Y h:i:s a', strtotime($userAccountDetails['last_failed_login_attempt'])) : '--';
 
             $activeBadge = $active == 'Yes' ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
             $lockedBadge = $locked == 'Yes' ? '<span class="badge bg-danger">Yes</span>' : '<span class="badge bg-success">No</span>';
+            $userVerifiedBadge = $userVerified == 'Yes' ? '<span class="badge bg-success">Yes</span>' : '<span class="badge bg-danger">No</span>';
 
             $accountLockDuration = ($accountLockDuration > 0) ? 'Locked for ' . implode(", ", $this->formatDuration($accountLockDuration)) : '--';
 
@@ -1729,7 +1803,10 @@ class UserAccountController {
                 'twoFactorAuthentication' => $twoFactorAuthentication,
                 'multipleSession' => $multipleSession,
                 'activeBadge' => $activeBadge,
-                'lockedBadge' => $lockedBadge
+                'lockedBadge' => $lockedBadge,
+                'userVerifiedBadge' => $userVerifiedBadge,
+                'registrationDate' => $registrationDate,
+                'registrationVerificationDate' => $registrationVerificationDate
             ];
 
             echo json_encode($response);

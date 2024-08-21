@@ -1,2 +1,2 @@
 To finish adding default registration verification link
-Test registration
+Test registration 

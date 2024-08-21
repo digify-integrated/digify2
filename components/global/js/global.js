@@ -69,6 +69,12 @@
             }
         });
 
+        if($('.password-addon').length){
+            document.querySelectorAll('.password-addon').forEach(button => {
+                button.tabIndex = -1;
+            });
+        }        
+
         $(document).on('click','#datatable-checkbox',function() {
             var status = $(this).is(':checked') ? true : false;
             $('.datatable-checkbox-children').prop('checked',status);

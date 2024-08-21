@@ -402,7 +402,7 @@ class CustomerModel {
     #
     # -------------------------------------------------------------
     public function insertCustomerSignUp($p_full_name, $p_first_name, $p_middle_name, $p_last_name, $p_suffix, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertCustomer(:p_full_name, :p_first_name, :p_middle_name, :p_last_name, :p_suffix, :p_last_log_by, @p_customer_id)');
+        $stmt = $this->db->getConnection()->prepare('CALL insertCustomerSignUp(:p_full_name, :p_first_name, :p_middle_name, :p_last_name, :p_suffix, :p_last_log_by, @p_customer_id)');
         $stmt->bindValue(':p_full_name', $p_full_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_first_name', $p_first_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_middle_name', $p_middle_name, PDO::PARAM_STR);

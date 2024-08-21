@@ -93,6 +93,9 @@ class AuthenticationController {
                 case 'resend otp':
                     $this->resendOTP();
                     break; 
+                case 'resend registration verification':
+                    $this->resendRegistrationVerification();
+                    break; 
                 default:
                     $response = [
                         'success' => false,
@@ -374,13 +377,12 @@ class AuthenticationController {
         }
 
         if (isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['middle_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['suffix']) && isset($_POST['username']) && !empty($_POST['username']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['password']) && !empty($_POST['password'])) {
-            $userID = $_SESSION['user_account_id'];
-            $firstName = htmlspecialchars($_POST['first_name'], ENT_QUOTES, 'UTF-8');
-            $middleName = htmlspecialchars($_POST['middle_name'], ENT_QUOTES, 'UTF-8');
-            $lastName = htmlspecialchars($_POST['last_name'], ENT_QUOTES, 'UTF-8');
-            $suffix = htmlspecialchars($_POST['suffix'], ENT_QUOTES, 'UTF-8');
+            $firstName = ucwords($_POST['first_name']);
+            $middleName = ucwords($_POST['middle_name']);
+            $lastName = ucwords($_POST['last_name']);
+            $suffix = ucwords($_POST['suffix']);
             $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
-            $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
+            $email = $_POST['email'];
             $password = $this->securityModel->encryptData($_POST['password']);
 
             $fullNameParts = array_filter([$firstName, $middleName, $lastName]);
@@ -433,10 +435,9 @@ class AuthenticationController {
             $encryptedRegistrationVerificationToken = $this->securityModel->encryptData($registrationVerificationToken);
             $registrationVerificationTokenExpiryDate = date('Y-m-d H:i:s', strtotime('+'. $registrationVerificationTokenDuration .' minutes'));
         
-            $customerID = $this->customerModel->insertCustomerSignUp($fullName, $firstName, $middleName, $lastName, $suffix, 1);
-            $userAccountID = $this->userAccountModel->insertUserAccountSignUp($fullName, $firstName, $middleName, $lastName, $suffix, $email, $username, $password, $passwordExpiryDate, $lastPasswordChange, 'Customer', $customerID, $encryptedRegistrationVerificationToken, $registrationVerificationTokenExpiryDate, 1);
+            $customerID = $this->customerModel->insertCustomerSignUp($fullName, $firstName, $middleName, $lastName, $suffix, '1');
+            $userAccountID = $this->userAccountModel->insertUserAccountSignUp($fullName, $email, $username, $password, $passwordExpiryDate, $lastPasswordChange, 'Customer', $customerID, $encryptedRegistrationVerificationToken, $registrationVerificationTokenExpiryDate, '1');
             $this->authenticationModel->insertPasswordHistory($userAccountID, $password, $lastPasswordChange);
-
             
             $encryptedUserID = $this->securityModel->encryptData($userAccountID);
 
@@ -445,8 +446,8 @@ class AuthenticationController {
             $response = [
                 'success' => true,
                 'userAccountID' => $this->securityModel->encryptData($userAccountID),
-                'title' => 'Insert User Account Success',
-                'message' => 'The user account has been inserted successfully.',
+                'title' => 'User Account Sign Up Success',
+                'message' => "We've sent a user account verification link to your registered email address. Please check your inbox and follow the provided instructions to verify your user account. If you don't receive the email within a few minutes, please also check your spam folder.",
                 'messageType' => 'success'
             ];
             
@@ -685,16 +686,16 @@ class AuthenticationController {
 
     # -------------------------------------------------------------
     #
-    # Function: resendOTP
+    # Function: resendRegistrationVerification
     # Description: 
-    # Handles the resending OTP code.
+    # Handles the resending registration verification.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function resendOTP() {
+    public function resendRegistrationVerification() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
@@ -708,7 +709,7 @@ class AuthenticationController {
             $response = [
                 'success' => false,
                 'notExist' => true,
-                'title' => 'Authentication Error',
+                'title' => 'Resend Registration Verification Link Error',
                 'message' => 'The user account specified does not exist. Please contact the administrator for assistance.',
                 'messageType' => 'error'
             ];
@@ -719,28 +720,14 @@ class AuthenticationController {
 
         $loginCredentialsDetails = $this->authenticationModel->getLoginCredentials($userAccountID, null);
         $email = $loginCredentialsDetails['email'];
-        $active = $loginCredentialsDetails['active'];
-        $locked = $loginCredentialsDetails['locked'];
+        $userVerified = $loginCredentialsDetails['user_verified'];
     
-        if ($active === 'No') {
+        if ($userVerified === 'Yes') {
             $response = [
                 'success' => false,
-                'notActive' => true,
-                'title' => 'Authentication Error',
-                'message' => 'Your account is currently inactive. Kindly reach out to the administrator for further assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-    
-        if ($locked === 'Yes') {
-            $response = [
-                'success' => false,
-                'locked' => true,
-                'title' => 'Authentication Error',
-                'message' => 'Your account is currently locked. Kindly reach out to the administrator for assistance in unlocking it.',
+                'userVerified' => true,
+                'title' => 'Account Verification Notice',
+                'message' => 'It seems that you have already verified your user account.',
                 'messageType' => 'error'
             ];
             
@@ -748,10 +735,23 @@ class AuthenticationController {
             exit;
         }
 
-        $this->resendOTPCode($userAccountID, $email);
+        $securitySettingDetails = $this->securitySettingModel->getSecuritySetting(8);
+        $registrationVerificationTokenDuration = $securitySettingDetails['value'] ?? REGISTRATION_VERIFICATION_TOKEN_DURATION;
+
+        $registrationVerificationToken = $this->generateRegistrationToken();
+        $encryptedRegistrationVerificationToken = $this->securityModel->encryptData($registrationVerificationToken);
+        $registrationVerificationTokenExpiryDate = date('Y-m-d H:i:s', strtotime('+'. $registrationVerificationTokenDuration .' minutes'));
+        
+        $encryptedUserID = $this->securityModel->encryptData($userAccountID);
+            
+        $this->userAccountModel->updateRegistrationVerification($userAccountID, $encryptedRegistrationVerificationToken, $registrationVerificationTokenExpiryDate, '1');
+        $this->sendRegistrationVerification($email, $encryptedUserID, $encryptedRegistrationVerificationToken, $registrationVerificationTokenDuration);
 
         $response = [
-            'success' => true
+            'success' => true,
+            'title' => 'Resend Registration Verification Link Success',
+            'message' => "We've resend a user account verification link to your registered email address. Please check your inbox and follow the provided instructions to verify your user account. If you don't receive the email within a few minutes, please also check your spam folder.",
+            'messageType' => 'success'
         ];
         
         echo json_encode($response);
@@ -1275,7 +1275,7 @@ class AuthenticationController {
         $notificationSettingDetails = $this->notificationSettingModel->getEmailNotificationTemplate(3);
         $emailSubject = $notificationSettingDetails['email_notification_subject'] ?? null;
         $emailBody = $notificationSettingDetails['email_notification_body'] ?? null;
-        $emailBody = str_replace('#{REGISTRATION_VERIFICATION_LINK}', $defaultRegistrationVerificationLink . $userAccountID .'&token=' . $registrationVerificationToken, $emailBody);
+        $emailBody = str_replace('#{REGISTRATION_VERIFICATION_LINK}', 'http://localhost/digify2/registration-verification.php?id=' . $userAccountID .'&token=' . $registrationVerificationToken, $emailBody);
         $emailBody = str_replace('#{REGISTRATION_VERIFICATION_VALIDITY}', ($registrationVerificationTokenDuration / 60) . ' hours', $emailBody);
 
         $message = file_get_contents('../../notification-setting/template/default-email.html');

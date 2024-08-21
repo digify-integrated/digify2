@@ -102,10 +102,10 @@
                                         </div>
                                     </div>
                                     <!--<div class="cf-turnstile" data-sitekey="0x4AAAAAAAhqvvs5v4iAXvh7"></div>-->
-                                    <button id="signin" type="submit" class="btn btn-dark w-100 py-8 mb-4 rounded-1">Sign Up</button>
+                                    <button id="sign-up" type="submit" class="btn btn-dark w-100 py-8 mb-4 rounded-1">Sign Up</button>
                                     <div class="d-flex align-items-center">
                                         <p class="fs-4 mb-0 text-dark">Already have an Account?</p>
-                                        <a class="text-primary fs-4 fw-medium ms-2" href="index.php" id="sign-up">Sign In</a>
+                                        <a class="text-primary fs-4 fw-medium ms-2" href="index.php">Sign In</a>
                                     </div>                                
                                 </form>
                             </div>

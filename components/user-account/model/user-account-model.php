@@ -178,6 +178,30 @@ class UserAccountModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: updateRegistrationVerification
+    # Description: Updates the user account registration verification.
+    #
+    # Parameters:
+    # - $p_user_account_id (int): The user account ID.
+    # - $p_registration_verification_token (string): The registration verification token.
+    # - $p_registration_verification_token_expiry_date (int): The registration verification token expiry date.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: String
+    #
+    # -------------------------------------------------------------
+    public function updateRegistrationVerification($p_user_account_id, $p_registration_verification_token, $p_registration_verification_token_expiry_date, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateRegistrationVerification(:p_user_account_id, :p_registration_verification_token, :p_registration_verification_token_expiry_date, :p_last_log_by)');
+        $stmt->bindValue(':p_user_account_id', $p_user_account_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_registration_verification_token', $p_registration_verification_token, PDO::PARAM_STR);
+        $stmt->bindValue(':p_registration_verification_token_expiry_date', $p_registration_verification_token_expiry_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Insert methods
     # -------------------------------------------------------------
 
@@ -237,7 +261,7 @@ class UserAccountModel {
     # Returns: String
     #
     # -------------------------------------------------------------
-    public function insertUserAccountSignUp($p_file_as, $p_email, $p_username, $p_password, $p_password_expiry_date, $p_last_password_change, $p_user_type, $p_linked_id, $p_last_log_by) {
+    public function insertUserAccountSignUp($p_file_as, $p_email, $p_username, $p_password, $p_password_expiry_date, $p_last_password_change, $p_user_type, $p_linked_id, $p_registration_verification_token, $p_registration_verification_token_expiry_date, $p_last_log_by) {
         $stmt = $this->db->getConnection()->prepare('CALL insertUserAccountSignUp(:p_file_as, :p_email, :p_username, :p_password, :p_password_expiry_date, :p_last_password_change, :p_user_type, :p_linked_id, :p_registration_verification_token, :p_registration_verification_token_expiry_date, :p_last_log_by, @p_user_account_id)');
         $stmt->bindValue(':p_file_as', $p_file_as, PDO::PARAM_STR);
         $stmt->bindValue(':p_email', $p_email, PDO::PARAM_STR);

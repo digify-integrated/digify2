@@ -8,11 +8,17 @@
     $lockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 5);
     $unlockUserAccount = $globalModel->checkSystemActionAccessRights($userID, 6);
     $addRoleUserAccount  = $globalModel->checkSystemActionAccessRights($userID, 7);
+    $resendRegistrationVerificationLink  = $globalModel->checkSystemActionAccessRights($userID, 24);
+    $verifyUserRegistration  = $globalModel->checkSystemActionAccessRights($userID, 25);
+    $linkUserAccount  = $globalModel->checkSystemActionAccessRights($userID, 26);
+    $unlinkUserAccount  = $globalModel->checkSystemActionAccessRights($userID, 27);
 
     if(isset($_GET['id'])){
         $userAccountDetails = $userAccountModel->getUserAccount($detailID, null);
         $userAccountActive = $userAccountDetails['active'];
         $userAccountLocked = $userAccountDetails['locked'];
+        $userVerified = $userAccountDetails['user_verified'];
+        $linkedID = $userAccountDetails['linked_id'];
     }
 ?>
 
@@ -32,6 +38,23 @@
                         $action .= $writeAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" data-bs-toggle="modal" id="change-password" data-bs-target="#change-password-modal">Change Password</button></li>' : '';
                                                         
                         $action .= $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create User Account</a></li>' : '';
+
+                        if(empty($linkedID) && $linkUserAccount['total'] > 0){
+                            $action .= '<li><button class="dropdown-item" type="button" id="link-user-account-to-customer" data-bs-toggle="modal" data-bs-target="#link-user-account-to-customer-modal">Link User Account To Customer</button></li>
+                            <li><button class="dropdown-item" type="button" id="link-user-account-to-employee" data-bs-toggle="modal" data-bs-target="#link-user-account-to-employee-modal">Link User Account To Employee</button></li>';
+                        }
+
+                        if(!empty($linkedID) && $unlinkUserAccount['total'] > 0){
+                            $action .= '<li><button class="dropdown-item" type="button" id="unlink-user-account">Unlink User Account</button></li>';
+                        }
+
+                        if($userVerified == 'No' && $verifyUserRegistration['total'] > 0){
+                            $action .= '<li><button class="dropdown-item" type="button" id="verify-registration">Verify User Registration</button></li>';
+                        }
+
+                        if($userVerified == 'No' && $resendRegistrationVerificationLink['total'] > 0){
+                            $action .= '<li><button class="dropdown-item" type="button" id="resend-verification">Resend Verification Link</button></li>';
+                        }
         
                         if($userAccountActive == 'Yes' && $deactivateUserAccount['total'] > 0){
                             $action .= '<li><button class="dropdown-item" type="button" id="deactivate-user-account">Deactivate User Account</button></li>';
@@ -63,93 +86,53 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Display Name:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="file_as_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="file_as_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Username:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="username_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Username</p>
+                        <h6 class="fw-semibold mb-0" id="username_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Email Address:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="email_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Email Address</p>
+                        <h6 class="fw-semibold mb-0" id="email_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">User Account Status:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="active_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">User Account Status</p>
+                        <h6 class="fw-semibold mb-0" id="active_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Lock Status:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="locked_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">User Verified</p>
+                        <h6 class="fw-semibold mb-0" id="user_verified_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Password Expiry Date:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="password_expiry_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Lock Status</p>
+                        <h6 class="fw-semibold mb-0" id="locked_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Last Connection Date:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="last_connection_date_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Password Expiry Date</p>
+                        <h6 class="fw-semibold mb-0" id="password_expiry_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Last Password Reset Date:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="last_password_reset_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Last Connection Date</p>
+                        <h6 class="fw-semibold mb-0" id="last_connection_date_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Account Locked Duration:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="account_lock_duration_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Last Password Reset Date</p>
+                        <h6 class="fw-semibold mb-0" id="last_password_reset_summary">--</h6>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Registration Date</p>
+                        <h6 class="fw-semibold mb-0" id="registration_date_summary">--</h6>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Registration Verification Date</p>
+                        <h6 class="fw-semibold mb-0" id="registration_verification_date_summary">--</h6>
+                    </div>
+                    <div class="col-lg-6 mb-0">
+                        <p class="mb-1 fs-2">Account Locked Duration</p>
+                        <h6 class="fw-semibold mb-0" id="account_lock_duration_summary">--</h6>
                     </div>
                 </div>
             </div>
@@ -229,6 +212,60 @@
                 ?>
             </div>
             <div class="card-body p-4" id="role-list"></div>
+        </div>
+    </div>
+</div>
+
+<div id="link-user-account-to-customer-modal" class="modal fade" tabindex="-1" aria-labelledby="link-user-account-to-customer-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-8" id="link-user-account-to-customer-title">Link User Account To Customer</h5>
+                <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="link-user-account-to-customer-form" method="post" action="#">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="customer_id" class="form-label">Customer <span class="text-danger">*</span></label>
+                            <div class="mb-3">
+                                <select id="customer_id" name="customer_id" class="select2 form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="link-user-account-to-customer-form" class="btn btn-success" id="submit-link-user-account-to-customer-data">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="link-user-account-to-employee-modal" class="modal fade" tabindex="-1" aria-labelledby="link-user-account-to-employee-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-8" id="link-user-account-to-employee-title">Link User Account To Employee</h5>
+                <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="link-user-account-to-employee-form" method="post" action="#">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <label for="employee_id" class="form-label">Employee <span class="text-danger">*</span></label>
+                            <div class="mb-3">
+                                <select id="employee_id" name="employee_id" class="select2 form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="link-user-account-to-employee-form" class="btn btn-success" id="submit-link-user-account-to-employee-data">Save changes</button>
+            </div>
         </div>
     </div>
 </div>

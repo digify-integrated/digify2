@@ -27,93 +27,45 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Display Name:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="file_as_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="file_as_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Username:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="username_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Username</p>
+                        <h6 class="fw-semibold mb-0" id="username_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Email Address:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="email_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Email Address</p>
+                        <h6 class="fw-semibold mb-0" id="email_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">User Account Status:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="active_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">User Account Status</p>
+                        <h6 class="fw-semibold mb-0" id="active_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Lock Status:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="locked_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">User Verified</p>
+                        <h6 class="fw-semibold mb-0" id="user_verified_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Password Expiry Date:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="password_expiry_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Lock Status</p>
+                        <h6 class="fw-semibold mb-0" id="locked_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Last Connection Date:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="last_connection_date_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Password Expiry Date</p>
+                        <h6 class="fw-semibold mb-0" id="password_expiry_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Last Password Reset Date:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="last_password_reset_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Last Connection Date</p>
+                        <h6 class="fw-semibold mb-0" id="last_connection_date_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Account Locked Duration:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="account_lock_duration_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Last Password Reset Date</p>
+                        <h6 class="fw-semibold mb-0" id="last_password_reset_summary">--</h6>
+                    </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Account Locked Duration</p>
+                        <h6 class="fw-semibold mb-0" id="account_lock_duration_summary">--</h6>
                     </div>
                 </div>
             </div>

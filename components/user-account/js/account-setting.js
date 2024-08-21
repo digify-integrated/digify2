@@ -372,6 +372,7 @@ function displayDetails(transaction){
 
                         document.getElementById('active_summary').innerHTML = response.activeBadge;
                         document.getElementById('locked_summary').innerHTML = response.lockedBadge;
+                        document.getElementById('user_verified_summary').innerHTML = response.userVerifiedBadge;
                         
                         $('#file_as_summary').text(response.fileAs);
                         $('#email_summary').text(response.email);

@@ -19,7 +19,7 @@ $(document).ready(function () {
             },
             confirm_password: {
                 required: true,
-                equalTo: '#new_password'
+                equalTo: '#password'
             }
         },
         messages: {

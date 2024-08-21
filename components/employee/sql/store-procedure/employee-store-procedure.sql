@@ -651,7 +651,7 @@ BEGIN
 	WHERE employee_id = p_employee_id;
 END //
 
-CREATE PROCEDURE generateEmployeeOptions(IN p_employee_id INT)
+CREATE PROCEDURE generateEmployeeOptions(IN p_employee_id INT, IN p_generation_type VARCHAR(100))
 BEGIN
     IF p_employee_id IS NOT NULL AND p_employee_id != '' THEN
         SELECT employee_id, employee_name 
@@ -659,9 +659,21 @@ BEGIN
         WHERE employee_id != p_employee_id
         ORDER BY employee_name;
     ELSE
-        SELECT employee_id, employee_name 
-        FROM employee 
-        ORDER BY employee_name;
+        IF p_generation_type = 'Active' THEN
+            SELECT employee_id, employee_name 
+            FROM employee 
+            WHERE employment_status = 'Active'
+            ORDER BY employee_name;
+        ELSEIF p_generation_type = 'Archive' THEN
+            SELECT employee_id, employee_name 
+            FROM employee 
+            WHERE employment_status = 'Archived'
+            ORDER BY employee_name;
+        ELSE
+            SELECT employee_id, employee_name 
+            FROM employee 
+            ORDER BY employee_name;
+        END IF;
     END IF;
 END //
 
