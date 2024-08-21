@@ -475,21 +475,23 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
         # -------------------------------------------------------------
         case 'customer options':
             $customerID = isset($_POST['customer_id']) ? htmlspecialchars($_POST['customer_id'], ENT_QUOTES, 'UTF-8') : null;
-            $sql = $databaseModel->getConnection()->prepare('CALL generateCustomerOptions(:customerID)');
+            $generationType = isset($_POST['generation_type']) ? htmlspecialchars($_POST['generation_type'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateCustomerOptions(:customerID, :generationType)');
             $sql->bindValue(':customerID', $customerID, PDO::PARAM_INT);
+            $sql->bindValue(':generationType', $generationType, PDO::PARAM_STR);
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();
 
             $response[] = [
-                'id' => '0',
+                'id' => '',
                 'text' => '--'
             ];
 
             foreach ($options as $row) {
                 $response[] = [
                     'id' => $row['customer_id'],
-                    'text' => $row['customer_name']
+                    'text' => $row['full_name']
                 ];
             }
 

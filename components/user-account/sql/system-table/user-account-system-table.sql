@@ -25,7 +25,7 @@ CREATE TABLE user_account (
     last_password_reset DATETIME,
     multiple_session VARCHAR(5) DEFAULT 'Yes',
     session_token VARCHAR(255),
-    user_type VARCHAR(20) DEFAULT 'Guest',
+    user_type VARCHAR(20) DEFAULT 'User',
     user_verified VARCHAR(20) DEFAULT 'No',
     linked_id INT UNSIGNED,
     registration_date DATETIME,

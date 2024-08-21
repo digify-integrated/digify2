@@ -185,7 +185,7 @@ class UserAccountModel {
     # Parameters:
     # - $p_user_account_id (int): The user account ID.
     # - $p_registration_verification_token (string): The registration verification token.
-    # - $p_registration_verification_token_expiry_date (int): The registration verification token expiry date.
+    # - $p_registration_verification_token_expiry_date (datetime): The registration verification token expiry date.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: String
@@ -196,6 +196,30 @@ class UserAccountModel {
         $stmt->bindValue(':p_user_account_id', $p_user_account_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_registration_verification_token', $p_registration_verification_token, PDO::PARAM_STR);
         $stmt->bindValue(':p_registration_verification_token_expiry_date', $p_registration_verification_token_expiry_date, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateUserAccountLinkedAccount
+    # Description: Updates the user account registration verification.
+    #
+    # Parameters:
+    # - $p_user_account_id (int): The user account ID.
+    # - $p_user_type (string): The user type.
+    # - $p_linked_id (int): The linked ID.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: String
+    #
+    # -------------------------------------------------------------
+    public function updateUserAccountLinkedAccount($p_user_account_id, $p_user_type, $p_linked_id, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateUserAccountLinkedAccount(:p_user_account_id, :p_user_type, :p_linked_id, :p_last_log_by)');
+        $stmt->bindValue(':p_user_account_id', $p_user_account_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_user_type', $p_user_type, PDO::PARAM_STR);
+        $stmt->bindValue(':p_linked_id', $p_linked_id, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }

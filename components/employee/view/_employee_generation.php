@@ -885,7 +885,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
             foreach ($options as $row) {
                 $response[] = [
                     'id' => $row['employee_id'],
-                    'text' => $row['employee_name']
+                    'text' => $row['full_name']
                 ];
             }
 

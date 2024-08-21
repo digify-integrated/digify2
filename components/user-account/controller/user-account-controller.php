@@ -193,6 +193,15 @@ class UserAccountController {
                 case 'verify registration':
                     $this->verifyRegistration();
                     break;
+                case 'link user account to customer':
+                    $this->linkUserAccountToCustomer();
+                    break;
+                case 'link user account to employee':
+                    $this->linkUserAccountToEmployee();
+                    break;
+                case 'unlink user account':
+                    $this->unlinkUserAccount();
+                    break;
                 default:
                     $response = [
                         'success' => false,
@@ -1458,12 +1467,208 @@ class UserAccountController {
             }
 
             $registrationVerificationTokenExpiryDate = date('Y-m-d H:i:s', strtotime('-1 year'));
-            $this->authenticationModel->verifyUserAccount($userAccountID, $registrationVerificationTokenExpiryDate, 1);
+            $this->authenticationModel->verifyUserAccount($userAccountID, $registrationVerificationTokenExpiryDate, $userID);
             
             $response = [
                 'success' => true,
                 'title' => 'User Account Registration Verification Success',
                 'message' => 'The user account registration has been verified successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Link methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: linkUserAccountToCustomer
+    # Description: 
+    # Link the user account to customer; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function linkUserAccountToCustomer() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['user_account_id']) && !empty($_POST['user_account_id']) && isset($_POST['customer_id']) && !empty($_POST['customer_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $userAccountID = htmlspecialchars($_POST['user_account_id'], ENT_QUOTES, 'UTF-8');
+            $customerID = htmlspecialchars($_POST['customer_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkUserAccountExist = $this->userAccountModel->checkUserAccountExist($userAccountID);
+            $total = $checkUserAccountExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Link User Account To Customer Error',
+                    'message' => 'The user account does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->userAccountModel->updateUserAccountLinkedAccount($userAccountID, 'Customer', $customerID, $userID);
+            
+            $response = [
+                'success' => true,
+                'title' => 'Link User Account To Customer Success',
+                'message' => 'The user account has been linked to customer successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: linkUserAccountToEmployee
+    # Description: 
+    # Link the user account to employee; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function linkUserAccountToEmployee() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['user_account_id']) && !empty($_POST['user_account_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $userAccountID = htmlspecialchars($_POST['user_account_id'], ENT_QUOTES, 'UTF-8');
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkUserAccountExist = $this->userAccountModel->checkUserAccountExist($userAccountID);
+            $total = $checkUserAccountExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Link User Account To Employee Error',
+                    'message' => 'The user account does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->authenticationModel->updateUserAccountLinkedAccount($userAccountID, 'Employee', $employeeID, $userID);
+            
+            $response = [
+                'success' => true,
+                'title' => 'Link User Account To Employee Success',
+                'message' => 'The user account has been linked to employee successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Unlink methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: unlinkUserAccount
+    # Description: 
+    # Link the user account; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function unlinkUserAccount() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['user_account_id']) && !empty($_POST['user_account_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $userAccountID = htmlspecialchars($_POST['user_account_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkUserAccountExist = $this->userAccountModel->checkUserAccountExist($userAccountID);
+            $total = $checkUserAccountExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Unlink User Account Error',
+                    'message' => 'The user account does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->userAccountModel->updateUserAccountLinkedAccount($userAccountID, 'User', '', $userID);
+            
+            $response = [
+                'success' => true,
+                'title' => 'Unlink User Account Success',
+                'message' => 'The user account has been unlinked successfully.',
                 'messageType' => 'success'
             ];
             

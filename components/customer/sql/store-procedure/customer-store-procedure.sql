@@ -442,17 +442,43 @@ BEGIN
 	WHERE customer_id = p_customer_id;
 END //
 
-CREATE PROCEDURE generateCustomerOptions(IN p_customer_id INT)
+CREATE PROCEDURE generateCustomerOptions(IN p_customer_id INT, IN p_generation_type VARCHAR(100))
 BEGIN
     IF p_customer_id IS NOT NULL AND p_customer_id != '' THEN
-        SELECT customer_id, customer_status 
-        FROM customer 
-        WHERE customer_id != p_customer_id
-        ORDER BY customer_status;
+        IF p_generation_type = 'Active' THEN
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_id != p_customer_id
+            AND customer_status = 'Active'
+            ORDER BY full_name;
+        ELSEIF p_generation_type = 'Archived' THEN
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_id != p_customer_id
+            AND customer_status = 'Archived'
+            ORDER BY full_name;
+        ELSE
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_id != p_customer_id
+            ORDER BY full_name;
+        END IF;
     ELSE
-        SELECT customer_id, customer_status 
-        FROM customer 
-        ORDER BY customer_status;
+        IF p_generation_type = 'Active' THEN
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_status = 'Active'
+            ORDER BY full_name;
+        ELSEIF p_generation_type = 'Archived' THEN
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_status = 'Archived'
+            ORDER BY full_name;
+        ELSE
+            SELECT customer_id, full_name 
+            FROM customer 
+            ORDER BY full_name;
+        END IF;
     END IF;
 END //
 

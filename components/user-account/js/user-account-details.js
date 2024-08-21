@@ -23,6 +23,14 @@
             updateUserAccountProfilPictureForm();
         }
 
+        if($('#link-user-account-to-customer-form').length){
+            linkUserAccountToCustomerForm();
+        }
+
+        if($('#link-user-account-to-employee-form').length){
+            linkUserAccountToEmployeeForm();
+        }
+
         $(document).on('click','#edit-details',function() {
             displayDetails('get user account details');
         });
@@ -600,6 +608,65 @@
             generateDropdownOptions('user account role dual listbox options');
         });
 
+        $(document).on('click','#unlink-user-account',function() {
+            const user_account_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'unlink user account';
+    
+            Swal.fire({
+                title: 'Confirm User Account Unlink',
+                text: 'Are you sure you want to unlink this user account?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Unlink',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-warning mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/user-account/controller/user-account-controller.php',
+                        dataType: 'json',
+                        data: {
+                            user_account_id : user_account_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                setNotification(response.title, response.message, response.messageType);
+                                window.location.reload();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
         if($('#role-list').length){
             roleList();
         }
@@ -790,6 +857,154 @@ function changePasswordForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-change-password');
+                }
+            });
+    
+            return false;
+        }
+    });
+}
+
+function linkUserAccountToCustomerForm(){
+    $('#link-user-account-to-customer-form').validate({
+        rules: {
+            customer_id: {
+                required: true
+            }
+        },
+        messages: {
+            customer_id: {
+                required: 'Choose the customer'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const user_account_id = $('#details-id').text();
+            const transaction = 'link user account to customer';
+    
+            $.ajax({
+                type: 'POST',
+                url: 'components/user-account/controller/user-account-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction +'&user_account_id=' + user_account_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-link-user-account-to-customer-data');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        setNotification(response.title, response.message, response.messageType);
+                        $('#link-user-account-to-customer-modal').modal('hide');
+                        window.location.reload();
+                    }
+                    else {
+                        if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    handleSystemError(xhr, status, error);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-link-user-account-to-customer-data');
+                }
+            });
+    
+            return false;
+        }
+    });
+}
+
+function linkUserAccountToEmployeeForm(){
+    $('#link-user-account-to-employee-form').validate({
+        rules: {
+            employee_id: {
+                required: true
+            }
+          },
+        messages: {
+            employee_id: {
+                required: 'Choose the employee'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const user_account_id = $('#details-id').text();
+            const transaction = 'link user account to employee';
+    
+            $.ajax({
+                type: 'POST',
+                url: 'components/user-account/controller/user-account-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction +'&user_account_id=' + user_account_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-link-user-account-to-employee-data');
+                },
+                success: function(response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        $('#link-user-account-to-employee-modal').modal('hide');       
+                        window.location.reload();                 
+                    }
+                    else {
+                        if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    handleSystemError(xhr, status, error);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-link-user-account-to-employee-data');
                 }
             });
     
@@ -1075,11 +1290,6 @@ function generateDropdownOptions(type){
                 }
             });
             break;
-    }
-}
-
-function generateDropdownOptions(type){
-    switch (type) {
         case 'employee options':
             
             $.ajax({
@@ -1087,7 +1297,8 @@ function generateDropdownOptions(type){
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    type : type
+                    type : type,
+                    generation_type : 'All'
                 },
                 success: function(response) {
                     $('#employee_id').select2({
@@ -1113,7 +1324,8 @@ function generateDropdownOptions(type){
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    type : type
+                    type : type,
+                    generation_type : 'All'
                 },
                 success: function(response) {
                     $('#customer_id').select2({

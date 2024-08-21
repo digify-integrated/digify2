@@ -149,6 +149,15 @@ BEGIN
     WHERE user_account_id = p_user_account_id;
 END //
 
+CREATE PROCEDURE updateUserAccountLinkedAccount(IN p_user_account_id INT, IN p_user_type VARCHAR(20), IN p_linked_id INT, IN p_last_log_by INT)
+BEGIN
+    UPDATE user_account
+    SET user_type = p_user_type,
+        linked_id = p_linked_id,
+        last_log_by = p_last_log_by
+    WHERE user_account_id = p_user_account_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Delete Stored Procedures */

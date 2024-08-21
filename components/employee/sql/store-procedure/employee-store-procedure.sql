@@ -654,25 +654,39 @@ END //
 CREATE PROCEDURE generateEmployeeOptions(IN p_employee_id INT, IN p_generation_type VARCHAR(100))
 BEGIN
     IF p_employee_id IS NOT NULL AND p_employee_id != '' THEN
-        SELECT employee_id, employee_name 
-        FROM employee 
-        WHERE employee_id != p_employee_id
-        ORDER BY employee_name;
+        IF p_generation_type = 'Active' THEN
+            SELECT employee_id, full_name 
+            FROM employee 
+            WHERE employee_id != p_employee_id
+            AND employment_status = 'Active'
+            ORDER BY full_name;
+        ELSEIF p_generation_type = 'Archived' THEN
+            SELECT employee_id, full_name 
+            FROM employee 
+            WHERE employee_id != p_employee_id
+            AND employment_status = 'Archived'
+            ORDER BY full_name;
+        ELSE
+            SELECT employee_id, full_name 
+            FROM employee 
+            WHERE employee_id != p_employee_id
+            ORDER BY full_name;
+        END IF;
     ELSE
         IF p_generation_type = 'Active' THEN
-            SELECT employee_id, employee_name 
+            SELECT employee_id, full_name 
             FROM employee 
             WHERE employment_status = 'Active'
-            ORDER BY employee_name;
-        ELSEIF p_generation_type = 'Archive' THEN
-            SELECT employee_id, employee_name 
+            ORDER BY full_name;
+        ELSEIF p_generation_type = 'Archived' THEN
+            SELECT employee_id, full_name 
             FROM employee 
             WHERE employment_status = 'Archived'
-            ORDER BY employee_name;
+            ORDER BY full_name;
         ELSE
-            SELECT employee_id, employee_name 
+            SELECT employee_id, full_name 
             FROM employee 
-            ORDER BY employee_name;
+            ORDER BY full_name;
         END IF;
     END IF;
 END //

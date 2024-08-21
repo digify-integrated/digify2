@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 21, 2024 at 11:34 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 21, 2024 at 02:52 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1283,16 +1283,42 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerIDRecord` (IN `p_cu
 END$$
 
 DROP PROCEDURE IF EXISTS `generateCustomerOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerOptions` (IN `p_customer_id` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCustomerOptions` (IN `p_customer_id` INT, IN `p_generation_type` VARCHAR(100))   BEGIN
     IF p_customer_id IS NOT NULL AND p_customer_id != '' THEN
-        SELECT customer_id, customer_status 
-        FROM customer 
-        WHERE customer_id != p_customer_id
-        ORDER BY customer_status;
+        IF p_generation_type = 'Active' THEN
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_id != p_customer_id
+            AND customer_status = 'Active'
+            ORDER BY full_name;
+        ELSEIF p_generation_type = 'Archived' THEN
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_id != p_customer_id
+            AND customer_status = 'Archived'
+            ORDER BY full_name;
+        ELSE
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_id != p_customer_id
+            ORDER BY full_name;
+        END IF;
     ELSE
-        SELECT customer_id, customer_status 
-        FROM customer 
-        ORDER BY customer_status;
+        IF p_generation_type = 'Active' THEN
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_status = 'Active'
+            ORDER BY full_name;
+        ELSEIF p_generation_type = 'Archived' THEN
+            SELECT customer_id, full_name 
+            FROM customer 
+            WHERE customer_status = 'Archived'
+            ORDER BY full_name;
+        ELSE
+            SELECT customer_id, full_name 
+            FROM customer 
+            ORDER BY full_name;
+        END IF;
     END IF;
 END$$
 
@@ -1458,6 +1484,46 @@ DROP PROCEDURE IF EXISTS `generateEmployeeLicense`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeLicense` (IN `p_employee_id` INT)   BEGIN
 	SELECT * FROM employee_license
 	WHERE employee_id = p_employee_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateEmployeeOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateEmployeeOptions` (IN `p_employee_id` INT, IN `p_generation_type` VARCHAR(100))   BEGIN
+    IF p_employee_id IS NOT NULL AND p_employee_id != '' THEN
+        IF p_generation_type = 'Active' THEN
+            SELECT employee_id, full_name 
+            FROM employee 
+            WHERE employee_id != p_employee_id
+            AND employment_status = 'Active'
+            ORDER BY full_name;
+        ELSEIF p_generation_type = 'Archived' THEN
+            SELECT employee_id, full_name 
+            FROM employee 
+            WHERE employee_id != p_employee_id
+            AND employment_status = 'Archived'
+            ORDER BY full_name;
+        ELSE
+            SELECT employee_id, full_name 
+            FROM employee 
+            WHERE employee_id != p_employee_id
+            ORDER BY full_name;
+        END IF;
+    ELSE
+        IF p_generation_type = 'Active' THEN
+            SELECT employee_id, full_name 
+            FROM employee 
+            WHERE employment_status = 'Active'
+            ORDER BY full_name;
+        ELSEIF p_generation_type = 'Archived' THEN
+            SELECT employee_id, full_name 
+            FROM employee 
+            WHERE employment_status = 'Archived'
+            ORDER BY full_name;
+        ELSE
+            SELECT employee_id, full_name 
+            FROM employee 
+            ORDER BY full_name;
+        END IF;
+    END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateEmploymentLocationTypeOptions`$$
@@ -4444,6 +4510,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccount` (IN `p_user_acco
     WHERE user_account_id = p_user_account_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateUserAccountLinkedAccount`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserAccountLinkedAccount` (IN `p_user_account_id` INT, IN `p_user_type` VARCHAR(20), IN `p_linked_id` INT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE user_account
+    SET user_type = p_user_type,
+        linked_id = p_linked_id,
+        last_log_by = p_last_log_by
+    WHERE user_account_id = p_user_account_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateUserAccountLock`$$
@@ -8235,7 +8310,13 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3472, 'role_system_action_permission', 26, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Link User Account<br/>Date Assigned: 2024-08-21 16:50:05', 2, '2024-08-21 16:50:05', '2024-08-21 16:50:05'),
 (3473, 'role_system_action_permission', 26, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-21 16:50:06', '2024-08-21 16:50:06'),
 (3474, 'system_action', 27, 'System action created. <br/><br/>System Action Name: Unlink User Account<br/>System Action Description: Access to unlink the user account to an employee or customer.', 2, '2024-08-21 16:51:44', '2024-08-21 16:51:44'),
-(3475, 'user_account', 11, 'User Verified: No -> Yes<br/>', 1, '2024-08-21 16:58:36', '2024-08-21 16:58:36');
+(3475, 'user_account', 11, 'User Verified: No -> Yes<br/>', 1, '2024-08-21 16:58:36', '2024-08-21 16:58:36'),
+(3476, 'user_account', 2, 'Last Connection Date: 2024-08-21 16:48:05 -> 2024-08-21 19:39:43<br/>', 1, '2024-08-21 19:39:43', '2024-08-21 19:39:43'),
+(3477, 'user_account', 2, 'User Type: Administrator -> Customer<br/>', 2, '2024-08-21 20:48:05', '2024-08-21 20:48:05'),
+(3478, 'role_system_action_permission', 27, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Unlink User Account<br/>Date Assigned: 2024-08-21 20:50:04', 2, '2024-08-21 20:50:04', '2024-08-21 20:50:04'),
+(3479, 'role_system_action_permission', 27, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-21 20:50:05', '2024-08-21 20:50:05'),
+(3480, 'user_account', 2, 'User Type: Customer -> User<br/>', 2, '2024-08-21 20:51:33', '2024-08-21 20:51:33'),
+(3481, 'user_account', 2, 'User Type: User -> Customer<br/>', 2, '2024-08-21 20:51:49', '2024-08-21 20:51:49');
 
 -- --------------------------------------------------------
 
@@ -14670,7 +14751,8 @@ INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`,
 (23, 1, 'Administrator', 23, 'Unarchive Customer', 1, '2024-08-20 13:39:39', '2024-08-20 13:39:39', 2),
 (24, 1, 'Administrator', 24, 'Send Registration Verification Link', 1, '2024-08-21 15:07:43', '2024-08-21 15:07:43', 2),
 (25, 1, 'Administrator', 25, 'Verify User Registration', 1, '2024-08-21 15:20:26', '2024-08-21 15:20:26', 2),
-(26, 1, 'Administrator', 26, 'Link User Account', 1, '2024-08-21 16:50:05', '2024-08-21 16:50:05', 2);
+(26, 1, 'Administrator', 26, 'Link User Account', 1, '2024-08-21 16:50:05', '2024-08-21 16:50:05', 2),
+(27, 1, 'Administrator', 27, 'Unlink User Account', 1, '2024-08-21 20:50:04', '2024-08-21 20:50:04', 2);
 
 --
 -- Triggers `role_system_action_permission`
@@ -15410,7 +15492,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 16:48:05', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'VhDUynEU1WPnCWjEaIrXA24l7Y4ytVM%2BhHlXMCAosgI%3D', 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 19:39:43', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'aNQs49KjNM7xxiEwJdT%2B6QaJmP5qM53TD4O5kLCklSw%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-21 16:04:38', '2024-08-21 16:04:38', '2024-08-21 14:34:24', 1),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1);
@@ -16493,7 +16575,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3476;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3482;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -16793,7 +16875,7 @@ ALTER TABLE `role_permission`
 -- AUTO_INCREMENT for table `role_system_action_permission`
 --
 ALTER TABLE `role_system_action_permission`
-  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `role_user_account`
@@ -17181,128 +17263,10 @@ ALTER TABLE `notification_setting_system_template`
   ADD CONSTRAINT `notification_setting_system_template_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
--- Constraints for table `password_history`
---
-ALTER TABLE `password_history`
-  ADD CONSTRAINT `password_history_ibfk_1` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`user_account_id`);
-
---
 -- Constraints for table `relation`
 --
 ALTER TABLE `relation`
   ADD CONSTRAINT `relation_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `religion`
---
-ALTER TABLE `religion`
-  ADD CONSTRAINT `religion_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `role`
---
-ALTER TABLE `role`
-  ADD CONSTRAINT `role_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `role_permission`
---
-ALTER TABLE `role_permission`
-  ADD CONSTRAINT `role_permission_ibfk_1` FOREIGN KEY (`menu_item_id`) REFERENCES `menu_item` (`menu_item_id`),
-  ADD CONSTRAINT `role_permission_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
-  ADD CONSTRAINT `role_permission_ibfk_3` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `role_system_action_permission`
---
-ALTER TABLE `role_system_action_permission`
-  ADD CONSTRAINT `role_system_action_permission_ibfk_1` FOREIGN KEY (`system_action_id`) REFERENCES `system_action` (`system_action_id`),
-  ADD CONSTRAINT `role_system_action_permission_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
-  ADD CONSTRAINT `role_system_action_permission_ibfk_3` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `role_user_account`
---
-ALTER TABLE `role_user_account`
-  ADD CONSTRAINT `role_user_account_ibfk_1` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`user_account_id`),
-  ADD CONSTRAINT `role_user_account_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`),
-  ADD CONSTRAINT `role_user_account_ibfk_3` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `schedule_type`
---
-ALTER TABLE `schedule_type`
-  ADD CONSTRAINT `schedule_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `security_setting`
---
-ALTER TABLE `security_setting`
-  ADD CONSTRAINT `security_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `state`
---
-ALTER TABLE `state`
-  ADD CONSTRAINT `state_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `country` (`country_id`),
-  ADD CONSTRAINT `state_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `system_action`
---
-ALTER TABLE `system_action`
-  ADD CONSTRAINT `system_action_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `system_setting`
---
-ALTER TABLE `system_setting`
-  ADD CONSTRAINT `system_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `ui_customization_setting`
---
-ALTER TABLE `ui_customization_setting`
-  ADD CONSTRAINT `ui_customization_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
-  ADD CONSTRAINT `ui_customization_setting_ibfk_2` FOREIGN KEY (`user_account_id`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `upload_setting`
---
-ALTER TABLE `upload_setting`
-  ADD CONSTRAINT `upload_setting_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `upload_setting_file_extension`
---
-ALTER TABLE `upload_setting_file_extension`
-  ADD CONSTRAINT `upload_setting_file_extension_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `user_account`
---
-ALTER TABLE `user_account`
-  ADD CONSTRAINT `user_account_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `work_hours`
---
-ALTER TABLE `work_hours`
-  ADD CONSTRAINT `work_hours_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
-  ADD CONSTRAINT `work_hours_ibfk_2` FOREIGN KEY (`work_schedule_id`) REFERENCES `work_schedule` (`work_schedule_id`);
-
---
--- Constraints for table `work_location`
---
-ALTER TABLE `work_location`
-  ADD CONSTRAINT `work_location_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `work_schedule`
---
-ALTER TABLE `work_schedule`
-  ADD CONSTRAINT `work_schedule_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`),
-  ADD CONSTRAINT `work_schedule_ibfk_2` FOREIGN KEY (`schedule_type_id`) REFERENCES `schedule_type` (`schedule_type_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
