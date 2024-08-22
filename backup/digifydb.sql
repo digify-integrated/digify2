@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 21, 2024 at 02:52 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Aug 22, 2024 at 11:32 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -4638,13 +4638,26 @@ END$$
 
 DROP PROCEDURE IF EXISTS `verifyUserAccount`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyUserAccount` (IN `p_user_account_id` INT, IN `p_registration_verification_token_expiry_date` DATETIME, IN `p_last_log_by` INT)   BEGIN
-	UPDATE user_account 
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    INSERT INTO role_user_account (role_id, role_name, user_account_id, file_as, last_log_by) 
+	VALUES(2, 'Customer', p_user_account_id, (SELECT file_as FROM user_account WHERE user_account_id = p_user_account_id), p_last_log_by);
+
+    UPDATE user_account 
     SET user_verified = 'Yes',
         active = 'Yes',
         registration_verification_token_expiry_date = p_registration_verification_token_expiry_date,
         registration_verification_date = NOW(),
         last_log_by = p_last_log_by
     WHERE user_account_id = p_user_account_id;
+
+    COMMIT;
 END$$
 
 DELIMITER ;
@@ -8316,7 +8329,72 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3478, 'role_system_action_permission', 27, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Unlink User Account<br/>Date Assigned: 2024-08-21 20:50:04', 2, '2024-08-21 20:50:04', '2024-08-21 20:50:04'),
 (3479, 'role_system_action_permission', 27, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-21 20:50:05', '2024-08-21 20:50:05'),
 (3480, 'user_account', 2, 'User Type: Customer -> User<br/>', 2, '2024-08-21 20:51:33', '2024-08-21 20:51:33'),
-(3481, 'user_account', 2, 'User Type: User -> Customer<br/>', 2, '2024-08-21 20:51:49', '2024-08-21 20:51:49');
+(3481, 'user_account', 2, 'User Type: User -> Customer<br/>', 2, '2024-08-21 20:51:49', '2024-08-21 20:51:49'),
+(3482, 'customer', 11, 'Customer created. <br/><br/>Full Name: Asd Asd<br/>First Name: Asd<br/>Last Name: Asd<br/>About: No about found.<br/>Customer Status: Active', 1, '2024-08-22 10:49:09', '2024-08-22 10:49:09'),
+(3483, 'user_account', 12, 'User account created. <br/><br/>File As: Asd Asd<br/>Email: asd@gmail.com<br/>Username: asd<br/>Locked: No<br/>Active: No<br/>Password Expiry Date: 2025-02-18<br/>Receive Notification: Yes<br/>Two-Factor Authentication: Yes<br/>Last Password Change: 2024-08-22 10:49:09<br/>Multiple Session: Yes<br/>User Type: Customer<br/>User Verified: No<br/>Registration Date: 2024-08-22 10:49:09', 1, '2024-08-22 10:49:09', '2024-08-22 10:49:09'),
+(3484, 'user_account', 2, 'Last Connection Date: 2024-08-21 19:39:43 -> 2024-08-22 11:05:44<br/>', 2, '2024-08-22 11:05:44', '2024-08-22 11:05:44'),
+(3485, 'role', 2, 'Role created. <br/><br/>Role Name: Customer<br/>Role Description: Customized access to system features and data, designed to meet the unique requirements and privileges of the Customer role', 2, '2024-08-22 11:14:34', '2024-08-22 11:14:34'),
+(3486, 'role_permission', 54, 'Role permission created. <br/><br/>Role Name: Customer<br/>Menu Item Name: Account Setting<br/>Date Assigned: 2024-08-22 11:14:55', 2, '2024-08-22 11:14:55', '2024-08-22 11:14:55'),
+(3487, 'role_permission', 55, 'Role permission created. <br/><br/>Role Name: Customer<br/>Menu Item Name: Addresses<br/>Date Assigned: 2024-08-22 11:14:55', 2, '2024-08-22 11:14:55', '2024-08-22 11:14:55'),
+(3488, 'role_permission', 56, 'Role permission created. <br/><br/>Role Name: Customer<br/>Menu Item Name: Banks & Cards<br/>Date Assigned: 2024-08-22 11:14:55', 2, '2024-08-22 11:14:55', '2024-08-22 11:14:55'),
+(3489, 'role_permission', 54, 'Read Access: 0 -> 1<br/>', 2, '2024-08-22 11:14:56', '2024-08-22 11:14:56'),
+(3490, 'role_permission', 55, 'Read Access: 0 -> 1<br/>', 2, '2024-08-22 11:14:57', '2024-08-22 11:14:57'),
+(3491, 'role_permission', 56, 'Read Access: 0 -> 1<br/>', 2, '2024-08-22 11:14:57', '2024-08-22 11:14:57'),
+(3492, 'role_permission', 54, 'Create Access: 0 -> 1<br/>', 2, '2024-08-22 11:14:58', '2024-08-22 11:14:58'),
+(3493, 'role_permission', 55, 'Create Access: 0 -> 1<br/>', 2, '2024-08-22 11:14:58', '2024-08-22 11:14:58'),
+(3494, 'role_permission', 56, 'Create Access: 0 -> 1<br/>', 2, '2024-08-22 11:14:58', '2024-08-22 11:14:58'),
+(3495, 'role_permission', 54, 'Write Access: 0 -> 1<br/>', 2, '2024-08-22 11:14:59', '2024-08-22 11:14:59'),
+(3496, 'role_permission', 55, 'Write Access: 0 -> 1<br/>', 2, '2024-08-22 11:15:00', '2024-08-22 11:15:00'),
+(3497, 'role_permission', 56, 'Write Access: 0 -> 1<br/>', 2, '2024-08-22 11:15:00', '2024-08-22 11:15:00'),
+(3498, 'role_permission', 54, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-22 11:15:01', '2024-08-22 11:15:01'),
+(3499, 'role_permission', 55, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-22 11:15:02', '2024-08-22 11:15:02'),
+(3500, 'role_permission', 56, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-22 11:15:03', '2024-08-22 11:15:03'),
+(3501, 'user_account', 10, 'User Verified: Yes -> No<br/>', 1, '2024-08-22 11:51:32', '2024-08-22 11:51:32'),
+(3502, 'user_account', 10, 'User Verified: No -> Yes<br/>Registration Verification Date: 2024-08-21 16:04:38 -> 2024-08-22 11:52:25<br/>', 2, '2024-08-22 11:52:25', '2024-08-22 11:52:25'),
+(3503, 'user_account', 10, 'User Verified: Yes -> No<br/>', 2, '2024-08-22 11:58:41', '2024-08-22 11:58:41'),
+(3504, 'role_user_account', 2, 'Role user account created. <br/><br/>Role Name: Customer<br/>User Account Name: maricris agulto<br/>Date Assigned: 2024-08-22 11:58:52', 2, '2024-08-22 11:58:52', '2024-08-22 11:58:52'),
+(3505, 'user_account', 10, 'User Verified: No -> Yes<br/>Registration Verification Date: 2024-08-22 11:52:25 -> 2024-08-22 11:58:52<br/>', 2, '2024-08-22 11:58:52', '2024-08-22 11:58:52'),
+(3506, 'user_account', 2, 'Last Connection Date: 2024-08-22 11:05:44 -> 2024-08-22 15:16:50<br/>', 2, '2024-08-22 15:16:50', '2024-08-22 15:16:50'),
+(3507, 'role_permission', 52, 'Menu Item: Addresses -> Customer Address<br/>', 2, '2024-08-22 16:38:08', '2024-08-22 16:38:08'),
+(3508, 'role_permission', 55, 'Menu Item: Addresses -> Customer Address<br/>', 2, '2024-08-22 16:38:08', '2024-08-22 16:38:08'),
+(3509, 'menu_item', 51, 'Menu Item Name: Addresses -> Customer Address<br/>', 2, '2024-08-22 16:38:08', '2024-08-22 16:38:08'),
+(3510, 'menu_item', 53, 'Menu Item created. <br/><br/>Menu Item Name:  Banks & Cards<br/>Menu Item URL: banks-and-cards.php<br/>Menu Item Icon: ti ti-credit-card<br/>Menu Group Name: Profile<br/>App Module: Settings<br/>Order Sequence: 2', 2, '2024-08-22 16:38:33', '2024-08-22 16:38:33'),
+(3511, 'role_permission', 53, 'Menu Item: Banks & Cards -> Employee Address<br/>', 2, '2024-08-22 16:39:02', '2024-08-22 16:39:02'),
+(3512, 'role_permission', 56, 'Menu Item: Banks & Cards -> Employee Address<br/>', 2, '2024-08-22 16:39:02', '2024-08-22 16:39:02'),
+(3513, 'menu_item', 52, 'Menu Item Name: Banks & Cards -> Employee Address<br/>Menu Item URL: banks-and-cards.php -> employee-address.php<br/>Menu Item Icon: ti ti-credit-card ->  ti ti-map-pin<br/>', 2, '2024-08-22 16:39:02', '2024-08-22 16:39:02'),
+(3514, 'menu_item', 51, 'Menu Item URL: addresses.php -> customer-address.php<br/>', 2, '2024-08-22 16:39:04', '2024-08-22 16:39:04'),
+(3515, 'role_permission', 57, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name:  Banks & Cards<br/>Date Assigned: 2024-08-22 16:39:16', 2, '2024-08-22 16:39:16', '2024-08-22 16:39:16'),
+(3516, 'role_permission', 58, 'Role permission created. <br/><br/>Role Name: Customer<br/>Menu Item Name:  Banks & Cards<br/>Date Assigned: 2024-08-22 16:39:16', 2, '2024-08-22 16:39:16', '2024-08-22 16:39:16'),
+(3517, 'role_permission', 57, 'Read Access: 0 -> 1<br/>', 2, '2024-08-22 16:39:19', '2024-08-22 16:39:19'),
+(3518, 'role_permission', 58, 'Read Access: 0 -> 1<br/>', 2, '2024-08-22 16:39:20', '2024-08-22 16:39:20'),
+(3519, 'role_permission', 57, 'Create Access: 0 -> 1<br/>', 2, '2024-08-22 16:39:21', '2024-08-22 16:39:21'),
+(3520, 'role_permission', 58, 'Write Access: 0 -> 1<br/>', 2, '2024-08-22 16:39:22', '2024-08-22 16:39:22'),
+(3521, 'role_permission', 57, 'Write Access: 0 -> 1<br/>', 2, '2024-08-22 16:39:22', '2024-08-22 16:39:22'),
+(3522, 'role_permission', 57, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-22 16:39:23', '2024-08-22 16:39:23'),
+(3523, 'role_permission', 58, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-22 16:39:24', '2024-08-22 16:39:24'),
+(3524, 'role_permission', 58, 'Create Access: 0 -> 1<br/>', 2, '2024-08-22 16:39:25', '2024-08-22 16:39:25'),
+(3525, 'menu_item', 52, 'Order Sequence: 2 -> 5<br/>', 2, '2024-08-22 16:39:39', '2024-08-22 16:39:39'),
+(3526, 'customer_address', 1, 'Mobile: 123123123123 -> 123123123<br/>', 2, '2024-08-22 16:56:29', '2024-08-22 16:56:29'),
+(3527, 'customer_address', 2, 'Customer address created. <br/><br/>Address Type Name: Billing Address<br/>Address: asdas<br/>City Name: Abra De Ilog<br/>State Name: Occidental Mindoro<br/>Country Name: Philippines<br/>Mobile: dasdasd<br/>Default Address: Alternate', 2, '2024-08-22 16:57:36', '2024-08-22 16:57:36'),
+(3528, 'customer_address', 1, 'Default Address: Primary -> Alternate<br/>', 2, '2024-08-22 16:58:11', '2024-08-22 16:58:11'),
+(3529, 'customer_address', 2, 'Default Address: Alternate -> Primary<br/>', 2, '2024-08-22 16:58:11', '2024-08-22 16:58:11'),
+(3530, 'customer_address', 2, 'Default Address: Primary -> Alternate<br/>', 2, '2024-08-22 16:58:14', '2024-08-22 16:58:14'),
+(3531, 'customer_address', 1, 'Default Address: Alternate -> Primary<br/>', 2, '2024-08-22 16:58:14', '2024-08-22 16:58:14'),
+(3532, 'customer_address', 1, 'Default Address: Primary -> Alternate<br/>', 2, '2024-08-22 16:58:18', '2024-08-22 16:58:18'),
+(3533, 'customer_address', 2, 'Default Address: Alternate -> Primary<br/>', 2, '2024-08-22 16:58:18', '2024-08-22 16:58:18'),
+(3534, 'user_account', 2, 'User Type: Customer -> User<br/>', 2, '2024-08-22 17:02:58', '2024-08-22 17:02:58'),
+(3535, 'user_account', 2, 'User Type: User -> Employee<br/>', 2, '2024-08-22 17:03:27', '2024-08-22 17:03:27'),
+(3536, 'user_account', 2, 'Last Connection Date: 2024-08-22 15:16:50 -> 2024-08-22 17:03:51<br/>', 2, '2024-08-22 17:03:51', '2024-08-22 17:03:51'),
+(3537, 'user_account', 2, 'User Type: Employee -> User<br/>', 2, '2024-08-22 17:06:25', '2024-08-22 17:06:25'),
+(3538, 'user_account', 2, 'User Type: User -> Employee<br/>', 2, '2024-08-22 17:06:30', '2024-08-22 17:06:30'),
+(3539, 'user_account', 2, 'Last Connection Date: 2024-08-22 17:03:51 -> 2024-08-22 17:06:37<br/>', 2, '2024-08-22 17:06:37', '2024-08-22 17:06:37'),
+(3540, 'employee_address', 3, 'Default Address: Primary -> Alternate<br/>', 2, '2024-08-22 17:08:44', '2024-08-22 17:08:44'),
+(3541, 'employee_address', 2, 'Default Address: Alternate -> Primary<br/>', 2, '2024-08-22 17:08:44', '2024-08-22 17:08:44'),
+(3542, 'employee_address', 2, 'Default Address: Primary -> Alternate<br/>', 2, '2024-08-22 17:08:47', '2024-08-22 17:08:47'),
+(3543, 'employee_address', 3, 'Default Address: Alternate -> Primary<br/>', 2, '2024-08-22 17:08:47', '2024-08-22 17:08:47'),
+(3544, 'role_permission', 52, 'Menu Item: Customer Address -> My Addresses<br/>', 2, '2024-08-22 17:16:56', '2024-08-22 17:16:56'),
+(3545, 'role_permission', 55, 'Menu Item: Customer Address -> My Addresses<br/>', 2, '2024-08-22 17:16:56', '2024-08-22 17:16:56'),
+(3546, 'menu_item', 51, 'Menu Item Name: Customer Address -> My Addresses<br/>Order Sequence: 2 -> 13<br/>', 2, '2024-08-22 17:16:56', '2024-08-22 17:16:56');
 
 -- --------------------------------------------------------
 
@@ -10985,7 +11063,8 @@ CREATE TABLE `customer` (
 INSERT INTO `customer` (`customer_id`, `customer_image`, `customer_digital_signature`, `full_name`, `first_name`, `middle_name`, `last_name`, `suffix`, `about`, `nickname`, `civil_status_id`, `civil_status_name`, `gender_id`, `gender_name`, `birthday`, `birth_place`, `customer_status`, `archive_date`, `created_date`, `last_log_by`) VALUES
 (1, './components/customer/image/1/profile/V3Xn.png', NULL, 'Lawrence Agulto', 'Lawrence', '', 'Agulto', '', 'No about found.', 'nickname', 2, 'Engaged', 1, 'Male', '2024-08-20', 'test', 'Active', '2024-08-20', '2024-08-20 13:36:10', 2),
 (9, NULL, NULL, 'lawrence agulto', 'lawrence', '', 'agulto', '', 'No about found.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', NULL, '2024-08-21 10:18:07', 1),
-(10, NULL, NULL, 'maricris agulto', 'maricris', '', 'agulto', '', 'No about found.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', NULL, '2024-08-21 14:34:24', 1);
+(10, NULL, NULL, 'maricris agulto', 'maricris', '', 'agulto', '', 'No about found.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', NULL, '2024-08-21 14:34:24', 1),
+(11, NULL, NULL, 'Asd Asd', 'Asd', '', 'Asd', '', 'No about found.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Active', NULL, '2024-08-22 10:49:09', 1);
 
 --
 -- Triggers `customer`
@@ -11141,7 +11220,8 @@ CREATE TABLE `customer_address` (
 --
 
 INSERT INTO `customer_address` (`customer_address_id`, `customer_id`, `address_type_id`, `address_type_name`, `address`, `city_id`, `city_name`, `state_id`, `state_name`, `country_id`, `country_name`, `telephone`, `mobile`, `email`, `default_address`, `created_date`, `last_log_by`) VALUES
-(1, 1, 2, 'Billing Address', 'asdasd', 523, 'Aborlan', 26, 'Palawan', 174, 'Philippines', '', '123123123123', '', 'Primary', '2024-08-20 16:42:42', 2);
+(1, 1, 2, 'Billing Address', 'asdasd', 523, 'Aborlan', 26, 'Palawan', 174, 'Philippines', '', '123123123', '', 'Alternate', '2024-08-20 16:42:42', 2),
+(2, 1, 2, 'Billing Address', 'asdas', 497, 'Abra De Ilog', 24, 'Occidental Mindoro', 174, 'Philippines', '', 'dasdasd', '', 'Primary', '2024-08-22 16:57:36', 2);
 
 --
 -- Triggers `customer_address`
@@ -13968,8 +14048,9 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (48, 'Banking Configuration', '', ' ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, '2024-07-09 09:04:13', 2),
 (49, 'Employment Location Type', 'employment-location-type.php', 'ti ti-map-2', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 5, '2024-07-31 09:01:33', 2),
 (50, 'Customer', 'customer.php', ' ti ti-users', 7, 'Customers', 3, 'Customer', 0, NULL, 3, '2024-08-19 10:30:06', 2),
-(51, 'Addresses', 'addresses.php', 'ti ti-map-pin', 4, 'Profile', 1, 'Settings', 0, NULL, 2, '2024-08-20 17:00:09', 2),
-(52, 'Banks & Cards', 'banks-and-cards.php', 'ti ti-credit-card', 4, 'Profile', 1, 'Settings', 0, NULL, 2, '2024-08-20 17:06:28', 2);
+(51, 'My Addresses', 'customer-address.php', 'ti ti-map-pin', 4, 'Profile', 1, 'Settings', NULL, NULL, 13, '2024-08-20 17:00:09', 2),
+(52, 'Employee Address', 'employee-address.php', ' ti ti-map-pin', 4, 'Profile', 1, 'Settings', 0, NULL, 5, '2024-08-20 17:06:28', 2),
+(53, ' Banks & Cards', 'banks-and-cards.php', 'ti ti-credit-card', 4, 'Profile', 1, 'Settings', 0, NULL, 2, '2024-08-22 16:38:33', 2);
 
 --
 -- Triggers `menu_item`
@@ -14343,7 +14424,8 @@ INSERT INTO `password_history` (`password_history_id`, `user_account_id`, `passw
 (1, 8, 'lOfoIcheblgd%2FFe%2FVcWDpKDn6pKmO8PtH4%2F8Jc%2FUxR8%3D', '2024-08-21 10:05:59', '2024-08-21 10:05:59'),
 (2, 9, 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', '2024-08-21 10:18:07', '2024-08-21 10:18:07'),
 (3, 10, 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', '2024-08-21 14:34:24', '2024-08-21 14:34:24'),
-(4, 11, '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', '2024-08-21 16:48:18', '2024-08-21 16:48:18');
+(4, 11, '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', '2024-08-21 16:48:18', '2024-08-21 16:48:18'),
+(5, 12, '8yxzquTHrvtqWG82aM98iU%2BCanoOa%2Fzu4bqCJyZ70qA%3D', '2024-08-22 10:49:09', '2024-08-22 10:49:09');
 
 -- --------------------------------------------------------
 
@@ -14500,7 +14582,8 @@ CREATE TABLE `role` (
 --
 
 INSERT INTO `role` (`role_id`, `role_name`, `role_description`, `created_date`, `last_log_by`) VALUES
-(1, 'Administrator', 'Full access to all features and data within the system. This role have similar access levels to the Admin but is not as powerful as the Super Admin.', '2024-06-26 14:31:00', 1);
+(1, 'Administrator', 'Full access to all features and data within the system. This role have similar access levels to the Admin but is not as powerful as the Super Admin.', '2024-06-26 14:31:00', 1),
+(2, 'Customer', 'Customized access to system features and data, designed to meet the unique requirements and privileges of the Customer role', '2024-08-22 11:14:34', 2);
 
 --
 -- Triggers `role`
@@ -14621,8 +14704,13 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (49, 1, 'Administrator', 48, 'Banking Configuration', 1, 0, 0, 0, '2024-07-09 09:04:17', '2024-07-09 09:04:17', 2),
 (50, 1, 'Administrator', 49, 'Employment Location Type', 1, 1, 1, 1, '2024-07-31 09:01:37', '2024-07-31 09:01:37', 2),
 (51, 1, 'Administrator', 50, 'Customer', 1, 1, 1, 1, '2024-08-19 10:32:57', '2024-08-19 10:32:57', 2),
-(52, 1, 'Administrator', 51, 'Addresses', 1, 1, 1, 1, '2024-08-20 17:00:14', '2024-08-20 17:00:14', 2),
-(53, 1, 'Administrator', 52, 'Banks & Cards', 1, 1, 1, 1, '2024-08-20 17:06:32', '2024-08-20 17:06:32', 2);
+(52, 1, 'Administrator', 51, 'My Addresses', 1, 1, 1, 1, '2024-08-20 17:00:14', '2024-08-20 17:00:14', 2),
+(53, 1, 'Administrator', 52, 'Employee Address', 1, 1, 1, 1, '2024-08-20 17:06:32', '2024-08-20 17:06:32', 2),
+(54, 2, 'Customer', 22, 'Account Setting', 1, 1, 1, 1, '2024-08-22 11:14:55', '2024-08-22 11:14:55', 2),
+(55, 2, 'Customer', 51, 'My Addresses', 1, 1, 1, 1, '2024-08-22 11:14:55', '2024-08-22 11:14:55', 2),
+(56, 2, 'Customer', 52, 'Employee Address', 1, 1, 1, 1, '2024-08-22 11:14:55', '2024-08-22 11:14:55', 2),
+(57, 1, 'Administrator', 53, ' Banks & Cards', 1, 1, 1, 1, '2024-08-22 16:39:16', '2024-08-22 16:39:16', 2),
+(58, 2, 'Customer', 53, ' Banks & Cards', 1, 1, 1, 1, '2024-08-22 16:39:16', '2024-08-22 16:39:16', 2);
 
 --
 -- Triggers `role_permission`
@@ -14831,7 +14919,8 @@ CREATE TABLE `role_user_account` (
 --
 
 INSERT INTO `role_user_account` (`role_user_account_id`, `role_id`, `role_name`, `user_account_id`, `file_as`, `date_assigned`, `created_date`, `last_log_by`) VALUES
-(1, 1, 'Administrator', 2, 'Administrator', '2024-06-26 15:18:35', '2024-06-26 15:18:35', 2);
+(1, 1, 'Administrator', 2, 'Administrator', '2024-06-26 15:18:35', '2024-06-26 15:18:35', 2),
+(2, 2, 'Customer', 10, 'maricris agulto', '2024-08-22 11:58:52', '2024-08-22 11:58:52', 2);
 
 --
 -- Triggers `role_user_account`
@@ -15290,7 +15379,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'dark', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -15492,10 +15581,11 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 19:39:43', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'aNQs49KjNM7xxiEwJdT%2B6QaJmP5qM53TD4O5kLCklSw%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-22 17:06:37', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'mJ96Soy%2Bhraczoe%2BWN3X1RRmdlYFfPeek4N0Y5QPAHc%3D', 'Employee', 'Yes', 2, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
-(10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-21 16:04:38', '2024-08-21 16:04:38', '2024-08-21 14:34:24', 1),
-(11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1);
+(10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
+(11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
+(12, 'Asd Asd', 'asd@gmail.com', 'asd', '8yxzquTHrvtqWG82aM98iU%2BCanoOa%2Fzu4bqCJyZ70qA%3D', NULL, 'No', 'No', NULL, 0, NULL, '2025-02-18', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-22 10:49:09', 0, NULL, 'Yes', NULL, 'Customer', 'No', 11, '2024-08-22 10:49:09', 'dqPajbSY%2BYCHWHD3R%2F1hg4QynUBv18%2Fd48bT%2Bw371vE%3D', '2024-08-22 13:49:09', NULL, '2024-08-22 10:49:09', 1);
 
 --
 -- Triggers `user_account`
@@ -16575,7 +16665,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3482;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3547;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -16635,13 +16725,13 @@ ALTER TABLE `currency`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `customer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `customer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `customer_address`
 --
 ALTER TABLE `customer_address`
-  MODIFY `customer_address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `customer_address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `customer_bank_account`
@@ -16815,7 +16905,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -16845,7 +16935,7 @@ ALTER TABLE `notification_setting_system_template`
 -- AUTO_INCREMENT for table `password_history`
 --
 ALTER TABLE `password_history`
-  MODIFY `password_history_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `password_history_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `relation`
@@ -16863,13 +16953,13 @@ ALTER TABLE `religion`
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -16881,7 +16971,7 @@ ALTER TABLE `role_system_action_permission`
 -- AUTO_INCREMENT for table `role_user_account`
 --
 ALTER TABLE `role_user_account`
-  MODIFY `role_user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `role_user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `schedule_type`
@@ -16935,7 +17025,7 @@ ALTER TABLE `upload_setting_file_extension`
 -- AUTO_INCREMENT for table `user_account`
 --
 ALTER TABLE `user_account`
-  MODIFY `user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `work_hours`

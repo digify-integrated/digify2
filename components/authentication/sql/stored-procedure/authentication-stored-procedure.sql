@@ -114,13 +114,26 @@ END //
 
 CREATE PROCEDURE verifyUserAccount(IN p_user_account_id INT, IN p_registration_verification_token_expiry_date DATETIME, IN p_last_log_by INT)
 BEGIN
-	UPDATE user_account 
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    INSERT INTO role_user_account (role_id, role_name, user_account_id, file_as, last_log_by) 
+	VALUES(2, 'Customer', p_user_account_id, (SELECT file_as FROM user_account WHERE user_account_id = p_user_account_id), p_last_log_by);
+
+    UPDATE user_account 
     SET user_verified = 'Yes',
         active = 'Yes',
         registration_verification_token_expiry_date = p_registration_verification_token_expiry_date,
         registration_verification_date = NOW(),
         last_log_by = p_last_log_by
     WHERE user_account_id = p_user_account_id;
+
+    COMMIT;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

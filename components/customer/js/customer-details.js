@@ -1837,7 +1837,6 @@ function generateDropdownOptions(type){
                 }
             });
             break;
-            break;
         case 'address type options':
             
             $.ajax({

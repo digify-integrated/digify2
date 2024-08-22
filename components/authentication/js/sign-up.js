@@ -76,10 +76,8 @@ $(document).ready(function () {
                     disableFormSubmitButton('sign-up');
                 },
                 success: function(response) {
-                    if (response.success) {
-                        setNotification(response.title, response.message, response.messageType);
-                        
-                        window.location.href = 'index.php';
+                    if (response.success) {                        
+                        window.location.href = 'registration-success.php';
                     } 
                     else {
                         showNotification(response.title, response.message, response.messageType);

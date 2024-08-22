@@ -109,6 +109,210 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
         # -------------------------------------------------------------
         #
+        # Type: customer address list
+        # Description:
+        # Generates the customer address list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'customer address list':
+            $linkedID = $_SESSION['linked_id'];
+
+            $sql = $databaseModel->getConnection()->prepare('CALL generateCustomerAddress(:linkedID)');
+            $sql->bindValue(':linkedID', $linkedID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($options); 
+            $sql->closeCursor();
+
+            $list = '';
+
+            if($count > 0){
+                $customerWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+            
+                $i = 0;
+                $totalIterations = count($options);
+            
+                foreach ($options as $row) {
+                    $customerAddressID = $row['customer_address_id'];
+                    $addressTypeName = $row['address_type_name'];
+                    $address = $row['address'];
+                    $cityName = $row['city_name'];
+                    $stateName = $row['state_name'];
+                    $countryName = $row['country_name'];
+                    $defaultAddress = $row['default_address'];
+                    $telephone = $row['telephone'];
+                    $mobile = $row['mobile'];
+                    $email = $row['email'];
+                   
+                    $fullAddress = implode(', ', [$address, $cityName, $stateName, $countryName]);
+            
+                    $badgeClass = $defaultAddress == 'Primary' ? 'bg-success' : 'bg-info';
+                    $getDefaultAddress = '<span class="badge ' . $badgeClass . '">' . $defaultAddress . '</span>';
+                
+                    $updateButton = '';
+                    $deleteButton = '';
+                    $setDefaultButton = '';
+                    if($customerWriteAccess['total'] > 0){
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-address-details" data-bs-toggle="modal" data-bs-target="#address-modal" data-customer-address-id="' . $customerAddressID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-address-details" data-customer-address-id="' . $customerAddressID . '">Delete</button>';
+
+                        if($defaultAddress != 'Primary'){
+                            $setDefaultButton = '<button type="button" class="btn btn-sm btn-outline-success mb-0 set-address-as-default" data-customer-address-id="' . $customerAddressID . '">
+                            Set As Default
+                            </button>';
+                        }
+                    }
+
+                    $telephone = !empty($telephone) ? $telephone . '<br/>' : $telephone ?? '';
+                    $mobile = !empty($mobile) ? $mobile . '<br/>' : $mobile ?? '';
+                    $email = !empty($email) ? $email . '<br/>' : $email ?? '';
+                    
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h6 class="fw-semibold mb-0">'. $addressTypeName .'</h6>
+                                        '. $getDefaultAddress .'
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mt-2 mb-2">
+                                    '. $fullAddress .'<br/>
+                                    '. $telephone .'
+                                    '. $mobile .'
+                                    '. $email .'
+                                </div>
+                                <div class="d-flex gap-2">
+                                    '. $updateButton .'
+                                    '. $setDefaultButton .'
+                                    '. $deleteButton .'
+                                </div>
+                            </div>';
+            
+                    $i++;
+                }
+            }
+            else{
+                $list = 'No address found.';
+            }
+            
+
+            $response[] = [
+                'ADDRESS_LIST' => $list
+            ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: employee address list
+        # Description:
+        # Generates the employee address list.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'employee address list':
+            $linkedID = $_SESSION['linked_id'];
+
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeAddress(:linkedID)');
+            $sql->bindValue(':linkedID', $linkedID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $count = count($options); 
+            $sql->closeCursor();
+
+            $list = '';
+
+            if($count > 0){
+                $employeeWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+            
+                $i = 0;
+                $totalIterations = count($options);
+            
+                foreach ($options as $row) {
+                    $employeeAddressID = $row['employee_address_id'];
+                    $addressTypeName = $row['address_type_name'];
+                    $address = $row['address'];
+                    $cityName = $row['city_name'];
+                    $stateName = $row['state_name'];
+                    $countryName = $row['country_name'];
+                    $defaultAddress = $row['default_address'];
+                    $telephone = $row['telephone'];
+                    $mobile = $row['mobile'];
+                    $email = $row['email'];
+                   
+                    $fullAddress = implode(', ', [$address, $cityName, $stateName, $countryName]);
+            
+                    $badgeClass = $defaultAddress == 'Primary' ? 'bg-success' : 'bg-info';
+                    $getDefaultAddress = '<span class="badge ' . $badgeClass . '">' . $defaultAddress . '</span>';
+                
+                    $updateButton = '';
+                    $deleteButton = '';
+                    $setDefaultButton = '';
+                    if($employeeWriteAccess['total'] > 0){
+                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-address-details" data-bs-toggle="modal" data-bs-target="#address-modal" data-employee-address-id="' . $employeeAddressID . '">Edit</button>';
+                        $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-address-details" data-employee-address-id="' . $employeeAddressID . '">Delete</button>';
+
+                        if($defaultAddress != 'Primary'){
+                            $setDefaultButton = '<button type="button" class="btn btn-sm btn-outline-success mb-0 set-address-as-default" data-employee-address-id="' . $employeeAddressID . '">
+                            Set As Default
+                            </button>';
+                        }
+                    }
+
+                    $telephone = !empty($telephone) ? $telephone . '<br/>' : $telephone ?? '';
+                    $mobile = !empty($mobile) ? $mobile . '<br/>' : $mobile ?? '';
+                    $email = !empty($email) ? $email . '<br/>' : $email ?? '';
+                    
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+            
+                    $list .= '<div class="row ' . $mbClass . '">
+                                <div class="col-md-12">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h6 class="fw-semibold mb-0">'. $addressTypeName .'</h6>
+                                        '. $getDefaultAddress .'
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 mt-2 mb-2">
+                                    '. $fullAddress .'<br/>
+                                    '. $telephone .'
+                                    '. $mobile .'
+                                    '. $email .'
+                                </div>
+                                <div class="d-flex gap-2">
+                                    '. $updateButton .'
+                                    '. $setDefaultButton .'
+                                    '. $deleteButton .'
+                                </div>
+                            </div>';
+            
+                    $i++;
+                }
+            }
+            else{
+                $list = 'No address found.';
+            }
+            
+
+            $response[] = [
+                'ADDRESS_LIST' => $list
+            ];
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
         # Type: all user account options
         # Description:
         # Generates the active user account options.

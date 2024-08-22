@@ -200,8 +200,14 @@ class AuthenticationController {
 
         $this->authenticationModel->updateLastConnection($userAccountID, $encryptedSessionToken, date('Y-m-d H:i:s'));
 
+        $loginCredentialsDetails = $this->authenticationModel->getLoginCredentials($userAccountID, null);
+        $linkedID = $loginCredentialsDetails['linked_id'] ?? null;
+        $userType = $loginCredentialsDetails['user_type'] ?? null;
+        
         $_SESSION['user_account_id'] = $userAccountID;
         $_SESSION['session_token'] = $sessionToken;
+        $_SESSION['linked_id'] = $linkedID;
+        $_SESSION['user_type'] = $userType;
 
         $response = [
             'success' => true,
@@ -342,7 +348,8 @@ class AuthenticationController {
         $encryptedSessionToken = $this->securityModel->encryptData($sessionToken);
 
         $this->authenticationModel->updateLastConnection($userAccountID, $encryptedSessionToken, date('Y-m-d H:i:s'));
-
+        
+        
         $_SESSION['user_account_id'] = $userAccountID;
         $_SESSION['session_token'] = $sessionToken;
 

@@ -12,6 +12,7 @@ CREATE TABLE role(
 CREATE INDEX role_index_role_id ON role(role_id);
 
 INSERT INTO role (role_name, role_description, last_log_by) VALUES ('Administrator', 'Full access to all features and data within the system. This role have similar access levels to the Admin but is not as powerful as the Super Admin.', 1);
+INSERT INTO role (role_name, role_description, last_log_by) VALUES ('Customer', 'Customized access to system features and data, designed to meet the unique requirements and privileges of the Customer role.', 1);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 

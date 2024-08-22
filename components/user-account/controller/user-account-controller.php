@@ -1597,7 +1597,7 @@ class UserAccountController {
                 exit;
             }
 
-            $this->authenticationModel->updateUserAccountLinkedAccount($userAccountID, 'Employee', $employeeID, $userID);
+            $this->userAccountModel->updateUserAccountLinkedAccount($userAccountID, 'Employee', $employeeID, $userID);
             
             $response = [
                 'success' => true,
