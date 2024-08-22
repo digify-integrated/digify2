@@ -169,6 +169,9 @@ class CustomerController {
                 case 'set customer address as default':
                     $this->updateCustomerAddressDefault();
                     break;
+                case 'set customer bank card as default':
+                    $this->updateCustomerBankCardDefault();
+                    break;
                 case 'update customer image':
                     $this->updateCustomerImage();
                     break;
@@ -529,6 +532,85 @@ class CustomerController {
                 'success' => true,
                 'title' => 'Tagging Address To Default Success',
                 'message' => 'The address has been tagged as default successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: updateCustomerBankCardDefault
+    # Description: 
+    # Updates the customer bank card default if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function updateCustomerBankCardDefault() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['customer_id']) && !empty($_POST['customer_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $customerID = htmlspecialchars($_POST['customer_id'], ENT_QUOTES, 'UTF-8');
+            $customerBankCardID = htmlspecialchars($_POST['customer_bank_card_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkCustomerExist = $this->customerModel->checkCustomerExist($customerID);
+            $total = $checkCustomerExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Tagging Bank Card As Default Error',
+                    'message' => 'The customer does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkCustomerBankCardExist = $this->customerModel->checkCustomerBankCardExist($customerBankCardID);
+            $total = $checkCustomerBankCardExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Tagging Bank Card As Default Error',
+                    'message' => 'The bank card does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->customerModel->updateCustomerBankCardDefault($customerBankCardID, $customerID, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Tagging Bank Card To Default Success',
+                'message' => 'The bank card has been tagged as default successfully.',
                 'messageType' => 'success'
             ];
             

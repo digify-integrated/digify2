@@ -264,10 +264,10 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                         $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-bank-account-details" data-customer-bank-account-id="' . $customerBankAccountID . '">Delete</button>';
                     }
                     
-                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3 border-bottom' : 'mb-0';
             
                     $list .= '<div class="row ' . $mbClass . '">
-                                <div class="col-md-12">
+                                <div class="col-md-12 mb-3">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
                                             <div>
@@ -276,14 +276,11 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                                 <p class="mb-1 fs-2">'. $accountNumber .'</p>
                                             </div>
                                         </div>
+                                        <div class="d-flex gap-2">
+                                            '. $updateButton .'
+                                            '. $deleteButton .'
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="d-flex gap-2 mt-2">
-                                    '. $updateButton .'                                 
-                                    <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-customer-bank-account-log-notes" data-customer-bank-account-id="' . $customerBankAccountID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
-                                    Log Notes
-                                    </button>
-                                    '. $deleteButton .'
                                 </div>
                             </div>';
 
@@ -335,28 +332,42 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     $customerBankCardID = $row['customer_bank_card_id'];
                     $nameOnCard = $securityModel->decryptData($row['name_on_card']);
                     $cardNumber = $securityModel->obscureCardNumber($securityModel->decryptData($row['card_number']));
+                    $defaultCard = $row['default_card'];
     
                     $updateButton = '';
                     $deleteButton = '';
+                    $setDefaultButton = '';
                     if($customerWriteAccess['total'] > 0){
-                        $updateButton = ' <button type="button" class="btn btn-sm btn-outline-info mb-0 edit-bank-card-details" data-bs-toggle="modal" data-bs-target="#bank-card-modal" data-customer-bank-card-id="' . $customerBankCardID . '">Edit</button>';
                         $deleteButton = ' <button type="button" class="btn btn-sm btn-outline-danger mb-0 delete-bank-card-details" data-customer-bank-card-id="' . $customerBankCardID . '">Delete</button>';
+
+                        if($defaultCard != 'Primary'){
+                            $setDefaultButton = '<button type="button" class="btn btn-sm btn-outline-success mb-0 set-bank-card-as-default" data-customer-bank-card-id="' . $customerBankCardID . '">
+                            Set As Default
+                            </button>';
+                        }
                     }
                     
-                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
-            
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3 border-bottom' : 'mb-0';
+                    $mbClass2 = ($i < $totalIterations - 1) ? 'mb-4' : 'mb-0';
+                    
+                    $badgeClass = $defaultCard == 'Primary' ? 'bg-success' : 'bg-info';
+                    $getDefaultCard = '<span class="badge ' . $badgeClass . ' '. $mbClass2 .'">' . $defaultCard . '</span>';
+                              
                     $list .= '<div class="row ' . $mbClass . '">
                                 <div class="col-md-12">
-                                    <img src="./assets/images/default/bank-card-placeholder.png" alt="bank-card-img" class="card-img w-100 object-fit-cover mb-2 edit-bank-card-image-details" data-customer-bank-card-id="' . $customerBankCardID . '" height="100">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
-                                           <h6 class="fw-semibold mb-2">'. $nameOnCard .'</h6>
+                                            <div>
+                                                <p class="mb-1 fs-2">'. $nameOnCard .'</p>
+                                                <h6 class="fw-semibold">'. $cardNumber .'</h6>
+                                                '. $getDefaultCard .'
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            '. $setDefaultButton .'
+                                            '. $deleteButton .'
                                         </div>
                                     </div>
-                                </div>
-                                <p class="fs-2 mb-0">'. $cardNumber .'</p>
-                                <div class="d-flex gap-2 mt-2">
-                                    '. $deleteButton .'
                                 </div>
                             </div>';
 
@@ -437,7 +448,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                 <p class="fs-2 mb-0">Issued on: '. $issueDate .'</p>
                                 <p class="fs-2 mb-0">Expires on: '. $idExpirationDate .'</p>
                                 <p class="fs-2 mb-0">Issuing Authority on: '. $issuingAuthority .'</p>
-                                <div class="d-flex gap-2 mt-2">
+                                <div class="d-flex gap-2 mt-3">
                                     '. $updateButton .'                                 
                                     <button type="button" class="btn btn-sm btn-outline-warning mb-0 view-customer-id-record-log-notes" data-customer-id-record-id="' . $customerIDRecordID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas">
                                     Log Notes

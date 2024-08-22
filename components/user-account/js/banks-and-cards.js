@@ -163,6 +163,67 @@
             });
         });
 
+        $(document).on('click','.set-bank-card-as-default',function() {
+            var customer_id = $('#linked_id').val();
+            const customer_bank_card_id = $(this).data('customer-bank-card-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'set customer bank card as default';
+    
+            Swal.fire({
+                title: 'Confirm Bank Card Tagging As Default',
+                text: 'Are you sure you want to tag this bank card as default?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Set To Draft',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-success mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/customer/controller/customer-controller.php',
+                        dataType: 'json',
+                        data: {
+                            customer_id : customer_id, 
+                            customer_bank_card_id : customer_bank_card_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                bankCardList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
         if($('#bank-account-container').length){
             bankAccountList();
         }
@@ -412,7 +473,7 @@ function bankCardList(){
 function displayDetails(transaction){
     switch (transaction) {
         case 'get customer bank account details':
-            var customer_id = $('#details-id').text();
+            var customer_id = $('#linked_id').val()
             var customer_bank_account_id = sessionStorage.getItem('customer_bank_account_id');
             var page_link = document.getElementById('page-link').getAttribute('href');
             
@@ -450,60 +511,6 @@ function displayDetails(transaction){
                             $('#bank-account-modal').modal('hide');
                             bankAccountList();
                             resetModalForm('bank-account-form');
-                        }
-                        else {
-                            showNotification(response.title, response.message, response.messageType);
-                        }
-                    }
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                }
-            });
-            break;
-        case 'get customer bank card details':
-            var customer_id = $('#details-id').text();
-            var customer_bank_card_id = sessionStorage.getItem('customer_bank_card_id');
-            var page_link = document.getElementById('page-link').getAttribute('href');
-            
-            $.ajax({
-                url: 'components/customer/controller/customer-controller.php',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    customer_id : customer_id, 
-                    customer_bank_card_id : customer_bank_card_id, 
-                    transaction : transaction
-                },
-                beforeSend: function(){
-                    resetModalForm('bank-card-form');
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $('#customer_bank_card_id').val(customer_bank_card_id);
-                        $('#account_number').val(response.accountNumber);
-
-                        $('#bank_id').val(response.bankID).trigger('change');
-                        $('#bank_card_type_id').val(response.bankCardTypeID).trigger('change');
-                    } 
-                    else {
-                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = page_link;
-                        }
-                        else if (response.detailsNotExist) {
-                            showNotification(response.title, response.message, response.messageType);
-                            $('#bank-card-modal').modal('hide');
-                            bankCardList();
-                            resetModalForm('bank-card-form');
                         }
                         else {
                             showNotification(response.title, response.message, response.messageType);

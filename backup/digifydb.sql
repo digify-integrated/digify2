@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 22, 2024 at 11:32 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 22, 2024 at 03:06 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -2554,8 +2554,21 @@ END$$
 
 DROP PROCEDURE IF EXISTS `insertCustomerBankCard`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCustomerBankCard` (IN `p_customer_id` INT, IN `p_name_on_card` VARCHAR(255), IN `p_card_number` VARCHAR(255), IN `p_expiry_date` VARCHAR(255), IN `p_cvv` VARCHAR(255), IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO customer_bank_card (customer_id, name_on_card, card_number, expiry_date, cvv, last_log_by) 
-	VALUES(p_customer_id, p_name_on_card, p_card_number, p_expiry_date, p_cvv, p_last_log_by);
+    DECLARE existing_bank_card_count INT;
+    DECLARE p_default_card VARCHAR(10);
+
+    SELECT COUNT(*) INTO existing_bank_card_count
+    FROM customer_bank_card
+    WHERE customer_id = p_customer_id AND default_address = 'Primary';
+
+    IF existing_bank_card_count = 0 THEN
+        SET p_default_card = 'Primary';
+    ELSE
+        SET p_default_card = 'Alternate';
+    END IF;
+
+    INSERT INTO customer_bank_card (customer_id, name_on_card, card_number, expiry_date, cvv, default_card, last_log_by) 
+	VALUES(p_customer_id, p_name_on_card, p_card_number, p_expiry_date, p_cvv, p_default_card, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertCustomerIDRecord`$$
@@ -4748,7 +4761,8 @@ CREATE TABLE `app_module` (
 INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_description`, `app_logo`, `app_version`, `menu_item_id`, `menu_item_name`, `order_sequence`, `created_date`, `last_log_by`) VALUES
 (1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 22, 'Account Setting', 100, '2024-06-26 13:43:48', 2),
 (2, 'Employees', 'Centralize employee information', './components/app-module/image/logo/2/kwDc.png', '1.0.0', 23, 'Inventory Overview', 1, '2024-06-27 15:30:44', 2),
-(3, 'Customer', 'Bring all your customer information into one easy-to-access location', './components/app-module/image/logo/3/rL4r.png', '1.0.0', 50, 'Customer', 3, '2024-08-19 10:28:21', 2);
+(3, 'Customer', 'Bring all your customer information into one easy-to-access location', './components/app-module/image/logo/3/rL4r.png', '1.0.0', 50, 'Customer', 3, '2024-08-19 10:28:21', 2),
+(4, 'Al Thabitah', 'Create and customize your website', './components/app-module/image/logo/4/TnX0.png', '1.0.0', 53, ' Banks & Cards', 1, '2024-08-22 20:54:37', 2);
 
 --
 -- Triggers `app_module`
@@ -8394,7 +8408,16 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3543, 'employee_address', 3, 'Default Address: Alternate -> Primary<br/>', 2, '2024-08-22 17:08:47', '2024-08-22 17:08:47'),
 (3544, 'role_permission', 52, 'Menu Item: Customer Address -> My Addresses<br/>', 2, '2024-08-22 17:16:56', '2024-08-22 17:16:56'),
 (3545, 'role_permission', 55, 'Menu Item: Customer Address -> My Addresses<br/>', 2, '2024-08-22 17:16:56', '2024-08-22 17:16:56'),
-(3546, 'menu_item', 51, 'Menu Item Name: Customer Address -> My Addresses<br/>Order Sequence: 2 -> 13<br/>', 2, '2024-08-22 17:16:56', '2024-08-22 17:16:56');
+(3546, 'menu_item', 51, 'Menu Item Name: Customer Address -> My Addresses<br/>Order Sequence: 2 -> 13<br/>', 2, '2024-08-22 17:16:56', '2024-08-22 17:16:56'),
+(3547, 'user_account', 2, 'Last Connection Date: 2024-08-22 17:06:37 -> 2024-08-22 19:39:43<br/>', 2, '2024-08-22 19:39:43', '2024-08-22 19:39:43'),
+(3548, 'user_account', 2, 'User Type: Employee -> User<br/>', 2, '2024-08-22 19:45:54', '2024-08-22 19:45:54'),
+(3549, 'user_account', 2, 'User Type: User -> Customer<br/>', 2, '2024-08-22 19:46:04', '2024-08-22 19:46:04'),
+(3550, 'user_account', 2, 'Last Connection Date: 2024-08-22 19:39:43 -> 2024-08-22 19:46:12<br/>', 2, '2024-08-22 19:46:12', '2024-08-22 19:46:12'),
+(3551, 'customer_bank_account', 2, 'Employee bank created. <br/><br/>Bank Name: Banco de Oro (BDO)<br/>Bank Account Type Name: Checking Account<br/>Account Number: wq123123', 2, '2024-08-22 19:48:07', '2024-08-22 19:48:07'),
+(3552, 'customer_bank_account', 3, 'Employee bank created. <br/><br/>Bank Name: Banco de Oro (BDO)<br/>Bank Account Type Name: Checking Account<br/>Account Number: 123123123123', 2, '2024-08-22 20:06:34', '2024-08-22 20:06:34'),
+(3553, 'customer_address', 2, 'Telephone:  -> 123123123<br/>Mobile: dasdasd -> 123123123<br/>Email:  -> 123123@gmail.com<br/>', 2, '2024-08-22 20:13:33', '2024-08-22 20:13:33'),
+(3554, 'customer_bank_account', 4, 'Employee bank created. <br/><br/>Bank Name: Banco de Oro (BDO)<br/>Bank Account Type Name: Checking Account<br/>Account Number: 12312312542643', 2, '2024-08-22 20:21:03', '2024-08-22 20:21:03'),
+(3555, 'app_module', 4, 'App module created. <br/><br/>App Module Name: Al Thabitah<br/>App Module Description: Create and customize your website<br/>App Version: 1.0.0<br/>Menu Item Name:  Banks & Cards<br/>Order Sequence: 1', 2, '2024-08-22 20:54:37', '2024-08-22 20:54:37');
 
 -- --------------------------------------------------------
 
@@ -11221,7 +11244,7 @@ CREATE TABLE `customer_address` (
 
 INSERT INTO `customer_address` (`customer_address_id`, `customer_id`, `address_type_id`, `address_type_name`, `address`, `city_id`, `city_name`, `state_id`, `state_name`, `country_id`, `country_name`, `telephone`, `mobile`, `email`, `default_address`, `created_date`, `last_log_by`) VALUES
 (1, 1, 2, 'Billing Address', 'asdasd', 523, 'Aborlan', 26, 'Palawan', 174, 'Philippines', '', '123123123', '', 'Alternate', '2024-08-20 16:42:42', 2),
-(2, 1, 2, 'Billing Address', 'asdas', 497, 'Abra De Ilog', 24, 'Occidental Mindoro', 174, 'Philippines', '', 'dasdasd', '', 'Primary', '2024-08-22 16:57:36', 2);
+(2, 1, 2, 'Billing Address', 'asdas', 497, 'Abra De Ilog', 24, 'Occidental Mindoro', 174, 'Philippines', '123123123', '123123123', '123123@gmail.com', 'Primary', '2024-08-22 16:57:36', 2);
 
 --
 -- Triggers `customer_address`
@@ -11341,6 +11364,14 @@ CREATE TABLE `customer_bank_account` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `customer_bank_account`
+--
+
+INSERT INTO `customer_bank_account` (`customer_bank_account_id`, `customer_id`, `bank_id`, `bank_name`, `bank_account_type_id`, `bank_account_type_name`, `account_number`, `created_date`, `last_log_by`) VALUES
+(3, 1, 1, 'Banco de Oro (BDO)', 1, 'Checking Account', '123123123123', '2024-08-22 20:06:34', 2),
+(4, 1, 1, 'Banco de Oro (BDO)', 1, 'Checking Account', '12312312542643', '2024-08-22 20:21:03', 2);
+
+--
 -- Triggers `customer_bank_account`
 --
 DROP TRIGGER IF EXISTS `customer_bank_account_trigger_insert`;
@@ -11408,6 +11439,14 @@ CREATE TABLE `customer_bank_card` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `customer_bank_card`
+--
+
+INSERT INTO `customer_bank_card` (`customer_bank_card_id`, `customer_id`, `name_on_card`, `card_number`, `expiry_date`, `cvv`, `default_card`, `created_date`, `last_log_by`) VALUES
+(5, 1, 'SITKq7mkEJbNvkBq0k6tUh%2B%2B5NTPk2fWCBjvNn2OQOY%3D', 'htwoXrEuTh%2F1%2FJU0C6mHphTeZZeCIHZjFDdGt63ATZPxsCIQEdezQaJE9ENvUaBq', 'k%2BLsoLe4kx6UCIknMHkAEXcn%2F50IYaQUFCf2II%2Fk%2Fho%3D', 'r%2BfJZaIF295%2BJ8XMq5U8JEYb4XF76cuRr9b9XG2ES7k%3D', 'Primary', '2024-08-22 20:06:27', 2),
+(7, 1, 'sr%2BHMBkoA3HffKADq5wACHNkmZ7LX1vNobS0KQeA1Y4%3D', 'KNO%2BO8iMPO%2FDwsEd28H0OZwk%2BUURcfqChb2HPQ8JHuTFqOycPPm%2B9sJkaCvyKCvg', 'xscOOYTpZTwMyqu%2Fow%2BRncqTlji2zJ1DSu5jhI54ZO8%3D', '5x7ot%2B0j%2FQEYaQ1xCk%2BnZYLYO2pxlWb%2BmpSLZT8M%2B8w%3D', 'Alternate', '2024-08-22 20:24:41', 2);
 
 -- --------------------------------------------------------
 
@@ -15581,7 +15620,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-22 17:06:37', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'mJ96Soy%2Bhraczoe%2BWN3X1RRmdlYFfPeek4N0Y5QPAHc%3D', 'Employee', 'Yes', 2, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-22 19:46:12', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '%2BgkfpzMYXI6rvmn7vP30dVF8nGV6QXQfECFH8lMqdS0%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -16659,13 +16698,13 @@ ALTER TABLE `address_type`
 -- AUTO_INCREMENT for table `app_module`
 --
 ALTER TABLE `app_module`
-  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3547;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3556;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -16737,13 +16776,13 @@ ALTER TABLE `customer_address`
 -- AUTO_INCREMENT for table `customer_bank_account`
 --
 ALTER TABLE `customer_bank_account`
-  MODIFY `customer_bank_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `customer_bank_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `customer_bank_card`
 --
 ALTER TABLE `customer_bank_card`
-  MODIFY `customer_bank_card_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `customer_bank_card_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `customer_id_record`

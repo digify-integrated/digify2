@@ -35,6 +35,7 @@
   <script src="./assets/libs/max-length/bootstrap-maxlength.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
+    <script src="./assets/libs/inputmask/dist/jquery.inputmask.min.js"></script>
   <script src="./components/user-account/js/banks-and-cards.js?v=<?php echo rand(); ?>"></script>
 </body>
 

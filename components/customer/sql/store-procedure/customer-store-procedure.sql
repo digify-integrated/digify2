@@ -84,8 +84,21 @@ END //
 
 CREATE PROCEDURE insertCustomerBankCard(IN p_customer_id INT, IN p_name_on_card VARCHAR(255), IN p_card_number VARCHAR(255), IN p_expiry_date VARCHAR(255), IN p_cvv VARCHAR(255), IN p_last_log_by INT)
 BEGIN
-    INSERT INTO customer_bank_card (customer_id, name_on_card, card_number, expiry_date, cvv, last_log_by) 
-	VALUES(p_customer_id, p_name_on_card, p_card_number, p_expiry_date, p_cvv, p_last_log_by);
+    DECLARE existing_bank_card_count INT;
+    DECLARE p_default_card VARCHAR(10);
+
+    SELECT COUNT(*) INTO existing_bank_card_count
+    FROM customer_bank_card
+    WHERE customer_id = p_customer_id AND default_address = 'Primary';
+
+    IF existing_bank_card_count = 0 THEN
+        SET p_default_card = 'Primary';
+    ELSE
+        SET p_default_card = 'Alternate';
+    END IF;
+
+    INSERT INTO customer_bank_card (customer_id, name_on_card, card_number, expiry_date, cvv, default_card, last_log_by) 
+	VALUES(p_customer_id, p_name_on_card, p_card_number, p_expiry_date, p_cvv, p_default_card, p_last_log_by);
 END //
 
 CREATE PROCEDURE insertCustomerIDRecord(IN p_customer_id INT, IN p_id_type_id INT, IN p_id_type_name VARCHAR(100), IN p_id_number VARCHAR(100), IN p_issue_date DATE, IN p_expiration_date DATE, IN p_issuing_authority VARCHAR(100), IN p_last_log_by INT)

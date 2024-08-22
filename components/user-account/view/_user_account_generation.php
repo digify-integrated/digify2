@@ -171,22 +171,22 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                     $mobile = !empty($mobile) ? $mobile . '<br/>' : $mobile ?? '';
                     $email = !empty($email) ? $email . '<br/>' : $email ?? '';
                     
-                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3' : 'mb-0';
+                    $mbClass = ($i < $totalIterations - 1) ? 'mb-3 border-bottom' : 'mb-0';
             
-                    $list .= '<div class="row ' . $mbClass . '">
+                    $list .= '<div class="row ' . $mbClass .'">
                                 <div class="col-md-12">
                                     <div class="d-flex align-items-center justify-content-between">
                                         <h6 class="fw-semibold mb-0">'. $addressTypeName .'</h6>
                                         '. $getDefaultAddress .'
                                     </div>
                                 </div>
-                                <div class="col-lg-12 mt-2 mb-2">
+                                <div class="col-lg-12 mt-2 mb-3">
                                     '. $fullAddress .'<br/>
                                     '. $telephone .'
                                     '. $mobile .'
                                     '. $email .'
                                 </div>
-                                <div class="d-flex gap-2">
+                                <div class="d-flex gap-2 mb-3">
                                     '. $updateButton .'
                                     '. $setDefaultButton .'
                                     '. $deleteButton .'

@@ -149,32 +149,6 @@
             <div class="card-body" id="id-record-container"></div>
             <input type="file" class="form-control d-none" id="id_image" name="id_image">
         </div>
-
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Bank Card</h5>
-                <?php
-                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-card-modal" id="add-bank-card-details"></i></a>
-                                                        </div>' : '';
-                ?>
-            </div>
-            <hr class="m-0" />
-            <div class="card-body" id="bank-card-container"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Bank Account</h5>
-                <?php
-                    echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-account-modal" id="add-bank-account-details"></i></a>
-                                                        </div>' : '';
-                ?>
-            </div>
-            <hr class="m-0" />
-            <div class="card-body" id="bank-account-container"></div>
-        </div>
     </div>
 </div>
 

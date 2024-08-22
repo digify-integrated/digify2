@@ -7,8 +7,6 @@
         generateDropdownOptions('address type options');
         generateDropdownOptions('city options');
         generateDropdownOptions('id type options');
-        generateDropdownOptions('bank options');
-        generateDropdownOptions('bank account type options');
         
         displayDetails('get about details');
         displayDetails('get customer image details');
@@ -24,14 +22,6 @@
 
         if($('#address-form').length){
             addressForm();
-        }
-
-        if($('#bank-account-form').length){
-            bankAccountForm();
-        }
-
-        if($('#bank-card-form').length){
-            bankCardForm();
         }
 
         if($('#id-record-form').length){
@@ -272,156 +262,6 @@
                             if (response.success) {
                                 showNotification(response.title, response.message, response.messageType);
                                 addressList();
-                            }
-                            else {
-                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                                    setNotification(response.title, response.message, response.messageType);
-                                    window.location = 'logout.php?logout';
-                                }
-                                else if (response.notExist) {
-                                    setNotification(response.title, response.message, response.messageType);
-                                    window.location = page_link;
-                                }
-                                else {
-                                    showNotification(response.title, response.message, response.messageType);
-                                }
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                            if (xhr.responseText) {
-                                fullErrorMessage += `, Response: ${xhr.responseText}`;
-                            }
-                            showErrorDialog(fullErrorMessage);
-                        }
-                    });
-                    return false;
-                }
-            });
-        });
-
-        $(document).on('click','#add-bank-account-details',function() {
-            $('#bank-account-title').text('Add Bank Account');
-            resetModalForm('bank-account-form');
-        });
-
-        $(document).on('click','.edit-bank-account-details',function() {
-            const customer_bank_account_id = $(this).data('customer-bank-account-id');
-            sessionStorage.setItem('customer_bank_account_id', customer_bank_account_id);
-
-            $('#bank-account-title').text('Edit Bank Account');
-
-            displayDetails('get customer bank account details');
-        });
-
-        $(document).on('click','.delete-bank-account-details',function() {
-            const customer_id = $('#details-id').text();
-            const customer_bank_account_id = $(this).data('customer-bank-account-id');
-            const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete customer bank account';
-    
-            Swal.fire({
-                title: 'Confirm Bank Account Deletion',
-                text: 'Are you sure you want to delete this bank account?',
-                icon: 'warning',
-                showCancelButton: !0,
-                confirmButtonText: 'Delete',
-                cancelButtonText: 'Cancel',
-                customClass: {
-                    confirmButton: 'btn btn-danger mt-2',
-                    cancelButton: 'btn btn-secondary ms-2 mt-2'
-                },
-                buttonsStyling: !1
-            }).then(function(result) {
-                if (result.value) {
-                    $.ajax({
-                        type: 'POST',
-                        url: 'components/customer/controller/customer-controller.php',
-                        dataType: 'json',
-                        data: {
-                            customer_id : customer_id, 
-                            customer_bank_account_id : customer_bank_account_id, 
-                            transaction : transaction
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                showNotification(response.title, response.message, response.messageType);
-                                bankAccountList();
-                            }
-                            else {
-                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                                    setNotification(response.title, response.message, response.messageType);
-                                    window.location = 'logout.php?logout';
-                                }
-                                else if (response.notExist) {
-                                    setNotification(response.title, response.message, response.messageType);
-                                    window.location = page_link;
-                                }
-                                else {
-                                    showNotification(response.title, response.message, response.messageType);
-                                }
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                            if (xhr.responseText) {
-                                fullErrorMessage += `, Response: ${xhr.responseText}`;
-                            }
-                            showErrorDialog(fullErrorMessage);
-                        }
-                    });
-                    return false;
-                }
-            });
-        });
-
-        $(document).on('click','#add-bank-card-details',function() {
-            $('#bank-card-title').text('Add Bank Account');
-            resetModalForm('bank-card-form');
-        });
-
-        $(document).on('click','.edit-bank-card-details',function() {
-            const customer_bank_card_id = $(this).data('customer-bank-card-id');
-            sessionStorage.setItem('customer_bank_card_id', customer_bank_card_id);
-
-            $('#bank-card-title').text('Edit Bank Account');
-
-            displayDetails('get customer bank card details');
-        });
-
-        $(document).on('click','.delete-bank-card-details',function() {
-            const customer_id = $('#details-id').text();
-            const customer_bank_card_id = $(this).data('customer-bank-card-id');
-            const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete customer bank card';
-    
-            Swal.fire({
-                title: 'Confirm Bank Account Deletion',
-                text: 'Are you sure you want to delete this bank card?',
-                icon: 'warning',
-                showCancelButton: !0,
-                confirmButtonText: 'Delete',
-                cancelButtonText: 'Cancel',
-                customClass: {
-                    confirmButton: 'btn btn-danger mt-2',
-                    cancelButton: 'btn btn-secondary ms-2 mt-2'
-                },
-                buttonsStyling: !1
-            }).then(function(result) {
-                if (result.value) {
-                    $.ajax({
-                        type: 'POST',
-                        url: 'components/customer/controller/customer-controller.php',
-                        dataType: 'json',
-                        data: {
-                            customer_id : customer_id, 
-                            customer_bank_card_id : customer_bank_card_id, 
-                            transaction : transaction
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                showNotification(response.title, response.message, response.messageType);
-                                bankCardList();
                             }
                             else {
                                 if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {

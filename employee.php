@@ -48,7 +48,6 @@
     <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
-    <script src="./assets/libs/jquery-steps/build/jquery.steps.min.js"></script>
     <script src="./assets/js/extra-libs/moment/moment.min.js"></script>
     <script src="./assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
