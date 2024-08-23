@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 22, 2024 at 03:06 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Aug 23, 2024 at 11:26 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -130,6 +130,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBloodTypeExist` (IN `p_blood_t
     WHERE blood_type_id = p_blood_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkCarouselExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselExist` (IN `p_carousel_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM carousel
+    WHERE carousel_id = p_carousel_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkCityExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCityExist` (IN `p_city_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -149,6 +156,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCompanyExist` (IN `p_company_i
 	SELECT COUNT(*) AS total
     FROM company
     WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkContactInformationTypeExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContactInformationTypeExist` (IN `p_contact_information_type_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM contact_information_type
+    WHERE contact_information_type_id = p_contact_information_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkCountryExist`$$
@@ -529,6 +543,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUserAccountUsernameUpdateExist
     WHERE username = p_username AND user_account_id != p_user_account_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkWebsiteExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWebsiteExist` (IN `p_website_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM website
+    WHERE website_id = p_website_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkWorkHoursExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkHoursExist` (IN `p_work_hours_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -593,6 +614,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBloodType` (IN `p_blood_type_
     DELETE FROM blood_type WHERE blood_type_id = p_blood_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCarousel` (IN `p_carousel_id` INT)   BEGIN
+    DELETE FROM carousel WHERE carousel_id = p_carousel_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCity` (IN `p_city_id` INT)   BEGIN
     DELETE FROM city WHERE city_id = p_city_id;
@@ -606,6 +632,11 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompany` (IN `p_company_id` INT)   BEGIN
     DELETE FROM company WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteContactInformationType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteContactInformationType` (IN `p_contact_information_type_id` INT)   BEGIN
+    DELETE FROM contact_information_type WHERE contact_information_type_id = p_contact_information_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteCountry`$$
@@ -1015,6 +1046,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUserAccount` (IN `p_user_acco
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteWebsite`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWebsite` (IN `p_website_id` INT)   BEGIN
+    DELETE FROM website WHERE website_id = p_website_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteWorkHours`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkHours` (IN `p_work_hours_id` INT)   BEGIN
     DELETE FROM work_hours WHERE work_hours_id = p_work_hours_id;
@@ -1110,6 +1146,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBloodTypeTable` ()   BEGIN
     ORDER BY blood_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCarouselOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselOptions` ()   BEGIN
+	SELECT carousel_id, carousel_name 
+    FROM carousel 
+    ORDER BY carousel_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCarouselTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselTable` ()   BEGIN
+	SELECT carousel_id, carousel_name, description
+    FROM carousel 
+    ORDER BY carousel_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateCityOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCityOptions` ()   BEGIN
 	SELECT city_id, city_name, state_name, country_name 
@@ -1188,6 +1238,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyTable` (IN `p_filter
     PREPARE stmt FROM query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateContactInformationTypeOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContactInformationTypeOptions` ()   BEGIN
+	SELECT contact_information_type_id, contact_information_type_name 
+    FROM contact_information_type 
+    ORDER BY contact_information_type_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateContactInformationTypeTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContactInformationTypeTable` ()   BEGIN
+	SELECT contact_information_type_id, contact_information_type_name 
+    FROM contact_information_type 
+    ORDER BY contact_information_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateCountryOptions`$$
@@ -2005,6 +2069,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUserAccountTable` (IN `p_fi
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateWebsiteOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWebsiteOptions` ()   BEGIN
+	SELECT website_id, website_name 
+    FROM website 
+    ORDER BY website_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateWebsiteTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWebsiteTable` ()   BEGIN
+	SELECT website_id, website_name, description, url
+    FROM website 
+    ORDER BY website_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateWorkHoursTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkHoursTable` (IN `p_work_schedule_id` INT)   BEGIN
     SELECT work_hours_id, day_of_week, day_period, start_time, end_time, notes
@@ -2103,6 +2181,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getBloodType` (IN `p_blood_type_id`
 	WHERE blood_type_id = p_blood_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarousel` (IN `p_carousel_id` INT)   BEGIN
+	SELECT * FROM carousel
+	WHERE carousel_id = p_carousel_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCity` (IN `p_city_id` INT)   BEGIN
 	SELECT * FROM city
@@ -2119,6 +2203,12 @@ DROP PROCEDURE IF EXISTS `getCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompany` (IN `p_company_id` INT)   BEGIN
 	SELECT * FROM company
 	WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getContactInformationType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getContactInformationType` (IN `p_contact_information_type_id` INT)   BEGIN
+	SELECT * FROM contact_information_type
+	WHERE contact_information_type_id = p_contact_information_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getCountry`$$
@@ -2421,6 +2511,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getUserAccount` (IN `p_user_account
     WHERE user_account_id = p_user_account_id OR email = p_email;
 END$$
 
+DROP PROCEDURE IF EXISTS `getWebsite`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getWebsite` (IN `p_website_id` INT)   BEGIN
+	SELECT * FROM website
+	WHERE website_id = p_website_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getWorkHours`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getWorkHours` (IN `p_work_hours_id` INT)   BEGIN
 	SELECT * FROM work_hours
@@ -2479,6 +2575,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBloodType` (IN `p_blood_type_
     SET p_blood_type_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarousel` (IN `p_carousel_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_carousel_id` INT)   BEGIN
+    INSERT INTO carousel (carousel_name, description, last_log_by) 
+	VALUES(p_carousel_name, p_description, p_last_log_by);
+	
+    SET p_carousel_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCity` (IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_city_id` INT)   BEGIN
     INSERT INTO city (city_name, state_id, state_name, country_id, country_name, last_log_by) 
@@ -2501,6 +2605,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCompany` (IN `p_company_name`
 	VALUES(p_company_name, p_legal_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_currency_id, p_currency_name, p_currency_symbol, p_tax_id, p_phone, p_mobile, p_email, p_website, p_last_log_by);
 	
     SET p_company_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertContactInformationType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContactInformationType` (IN `p_contact_information_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_contact_information_type_id` INT)   BEGIN
+    INSERT INTO contact_information_type (contact_information_type_name, last_log_by) 
+	VALUES(p_contact_information_type_name, p_last_log_by);
+	
+    SET p_contact_information_type_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertCountry`$$
@@ -2936,6 +3048,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUserAccountSignUp` (IN `p_fil
     SET p_user_account_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertWebsite`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWebsite` (IN `p_website_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_url` VARCHAR(255), IN `p_last_log_by` INT, OUT `p_website_id` INT)   BEGIN
+    INSERT INTO website (website_name, description, url, last_log_by) 
+	VALUES(p_website_name, p_description, p_url, p_last_log_by);
+	
+    SET p_website_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertWorkHours`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkHours` (IN `p_work_schedule_id` INT, IN `p_day_of_week` VARCHAR(20), IN `p_day_period` VARCHAR(20), IN `p_start_time` TIME, IN `p_end_time` TIME, IN `p_notes` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO work_hours (work_schedule_id, day_of_week, day_period, start_time, end_time, notes, last_log_by) 
@@ -3093,6 +3213,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBloodType` (IN `p_blood_type_
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarousel` (IN `p_carousel_id` INT, IN `p_carousel_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    UPDATE carousel
+    SET carousel_name = p_carousel_name,
+        description = p_description,
+        last_log_by = p_last_log_by
+    WHERE carousel_id = p_carousel_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCity` (IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3206,6 +3335,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyLogo` (IN `p_company_i
     SET company_logo = p_company_logo,
         last_log_by = p_last_log_by
     WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateContactInformationType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContactInformationType` (IN `p_contact_information_type_id` INT, IN `p_contact_information_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE contact_information_type
+    SET contact_information_type_name = p_contact_information_type_name,
+        last_log_by = p_last_log_by
+    WHERE contact_information_type_id = p_contact_information_type_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateCountry`$$
@@ -4580,6 +4717,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateUserPassword` (IN `p_user_acc
     WHERE p_user_account_id = user_account_id OR username = p_credentials OR email = BINARY p_credentials;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateWebsite`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWebsite` (IN `p_website_id` INT, IN `p_website_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_url` VARCHAR(255), IN `p_last_log_by` INT)   BEGIN
+    UPDATE website
+    SET website_name = p_website_name,
+        description = p_description,
+        url = p_url,
+        last_log_by = p_last_log_by
+    WHERE website_id = p_website_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateWorkHours`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateWorkHours` (IN `p_work_hours_id` INT, IN `p_work_schedule_id` INT, IN `p_day_of_week` VARCHAR(20), IN `p_day_period` VARCHAR(20), IN `p_start_time` TIME, IN `p_end_time` TIME, IN `p_notes` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     UPDATE work_hours
@@ -4762,7 +4909,7 @@ INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_descri
 (1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 22, 'Account Setting', 100, '2024-06-26 13:43:48', 2),
 (2, 'Employees', 'Centralize employee information', './components/app-module/image/logo/2/kwDc.png', '1.0.0', 23, 'Inventory Overview', 1, '2024-06-27 15:30:44', 2),
 (3, 'Customer', 'Bring all your customer information into one easy-to-access location', './components/app-module/image/logo/3/rL4r.png', '1.0.0', 50, 'Customer', 3, '2024-08-19 10:28:21', 2),
-(4, 'Al Thabitah', 'Create and customize your website', './components/app-module/image/logo/4/TnX0.png', '1.0.0', 53, ' Banks & Cards', 1, '2024-08-22 20:54:37', 2);
+(4, 'Website Studio', 'Create and customize your website', './components/app-module/image/logo/4/TnX0.png', '1.0.0', 54, 'Websites', 1, '2024-08-22 20:54:37', 2);
 
 --
 -- Triggers `app_module`
@@ -8417,7 +8564,33 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3552, 'customer_bank_account', 3, 'Employee bank created. <br/><br/>Bank Name: Banco de Oro (BDO)<br/>Bank Account Type Name: Checking Account<br/>Account Number: 123123123123', 2, '2024-08-22 20:06:34', '2024-08-22 20:06:34'),
 (3553, 'customer_address', 2, 'Telephone:  -> 123123123<br/>Mobile: dasdasd -> 123123123<br/>Email:  -> 123123@gmail.com<br/>', 2, '2024-08-22 20:13:33', '2024-08-22 20:13:33'),
 (3554, 'customer_bank_account', 4, 'Employee bank created. <br/><br/>Bank Name: Banco de Oro (BDO)<br/>Bank Account Type Name: Checking Account<br/>Account Number: 12312312542643', 2, '2024-08-22 20:21:03', '2024-08-22 20:21:03'),
-(3555, 'app_module', 4, 'App module created. <br/><br/>App Module Name: Al Thabitah<br/>App Module Description: Create and customize your website<br/>App Version: 1.0.0<br/>Menu Item Name:  Banks & Cards<br/>Order Sequence: 1', 2, '2024-08-22 20:54:37', '2024-08-22 20:54:37');
+(3555, 'app_module', 4, 'App module created. <br/><br/>App Module Name: Al Thabitah<br/>App Module Description: Create and customize your website<br/>App Version: 1.0.0<br/>Menu Item Name:  Banks & Cards<br/>Order Sequence: 1', 2, '2024-08-22 20:54:37', '2024-08-22 20:54:37'),
+(3556, 'user_account', 2, 'Last Connection Date: 2024-08-22 19:46:12 -> 2024-08-23 14:18:53<br/>', 2, '2024-08-23 14:18:53', '2024-08-23 14:18:53'),
+(3557, 'app_module', 4, 'App Module Name: Al Thabitah -> Website Studio<br/>', 2, '2024-08-23 14:19:11', '2024-08-23 14:19:11'),
+(3558, 'menu_group', 8, 'Menu group created. <br/><br/>Menu Group Name: Website<br/>App Module: Website Studio<br/>Order Sequence: 23', 2, '2024-08-23 14:36:06', '2024-08-23 14:36:06'),
+(3559, 'menu_item', 54, 'Menu Item created. <br/><br/>Menu Item Name: Websites<br/>Menu Item URL: websites.php<br/>Menu Item Icon: ti ti-world<br/>Menu Group Name: Website<br/>App Module: Website Studio<br/>Order Sequence: 13', 2, '2024-08-23 14:40:00', '2024-08-23 14:40:00'),
+(3560, 'role_permission', 59, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Websites<br/>Date Assigned: 2024-08-23 14:40:26', 2, '2024-08-23 14:40:26', '2024-08-23 14:40:26'),
+(3561, 'role_permission', 59, 'Read Access: 0 -> 1<br/>', 2, '2024-08-23 14:40:27', '2024-08-23 14:40:27'),
+(3562, 'role_permission', 59, 'Create Access: 0 -> 1<br/>', 2, '2024-08-23 14:40:27', '2024-08-23 14:40:27'),
+(3563, 'role_permission', 59, 'Write Access: 0 -> 1<br/>', 2, '2024-08-23 14:40:28', '2024-08-23 14:40:28'),
+(3564, 'role_permission', 59, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-23 14:40:28', '2024-08-23 14:40:28'),
+(3565, 'app_module', 4, 'Menu Item Name:  Banks & Cards -> Websites<br/>', 2, '2024-08-23 14:40:54', '2024-08-23 14:40:54'),
+(3566, 'role_permission', 59, 'Menu Item: Websites -> Website<br/>', 2, '2024-08-23 15:33:46', '2024-08-23 15:33:46'),
+(3567, 'menu_item', 54, 'Menu Item Name: Websites -> Website<br/>Menu Item URL: websites.php -> website.php<br/>', 2, '2024-08-23 15:33:46', '2024-08-23 15:33:46'),
+(3568, 'menu_item', 54, 'Menu Group Name: Website -> Websites<br/>', 2, '2024-08-23 15:33:57', '2024-08-23 15:33:57'),
+(3569, 'menu_group', 8, 'Menu Group Name: Website -> Websites<br/>', 2, '2024-08-23 15:33:57', '2024-08-23 15:33:57'),
+(3570, 'website', 1, 'Website created. <br/><br/>Website Name: Al Thabitah<br/>URL: https://althabitah.com', 2, '2024-08-23 15:41:46', '2024-08-23 15:41:46'),
+(3571, 'website', 1, 'Description:  -> Test<br/>', 2, '2024-08-23 15:43:12', '2024-08-23 15:43:12'),
+(3572, 'website', 1, 'Description: Test -> Testasd<br/>', 2, '2024-08-23 16:12:03', '2024-08-23 16:12:03'),
+(3573, 'menu_group', 9, 'Menu group created. <br/><br/>Menu Group Name: Blocks<br/>App Module: Website Studio<br/>Order Sequence: 2', 2, '2024-08-23 16:25:19', '2024-08-23 16:25:19'),
+(3574, 'menu_item', 55, 'Menu Item created. <br/><br/>Menu Item Name: Carousel<br/>Menu Item URL: carousel.php<br/>Menu Group Name: Blocks<br/>App Module: Website Studio<br/>Order Sequence: 3', 2, '2024-08-23 16:29:33', '2024-08-23 16:29:33'),
+(3575, 'role_permission', 60, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Carousel<br/>Date Assigned: 2024-08-23 16:29:39', 2, '2024-08-23 16:29:39', '2024-08-23 16:29:39'),
+(3576, 'role_permission', 60, 'Read Access: 0 -> 1<br/>', 2, '2024-08-23 16:29:40', '2024-08-23 16:29:40'),
+(3577, 'role_permission', 60, 'Create Access: 0 -> 1<br/>', 2, '2024-08-23 16:29:40', '2024-08-23 16:29:40'),
+(3578, 'role_permission', 60, 'Write Access: 0 -> 1<br/>', 2, '2024-08-23 16:29:41', '2024-08-23 16:29:41'),
+(3579, 'role_permission', 60, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-23 16:29:41', '2024-08-23 16:29:41'),
+(3580, 'menu_item', 55, 'Menu Item Icon:  -> ti ti-table-import <br/>', 2, '2024-08-23 16:31:08', '2024-08-23 16:31:08'),
+(3581, 'carousel', 1, 'Carousel created. <br/><br/>Carousel Name: test', 2, '2024-08-23 17:08:46', '2024-08-23 17:08:46');
 
 -- --------------------------------------------------------
 
@@ -8611,6 +8784,86 @@ CREATE TRIGGER `blood_type_trigger_update` AFTER UPDATE ON `blood_type` FOR EACH
 END
 $$
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `carousel`
+--
+
+DROP TABLE IF EXISTS `carousel`;
+CREATE TABLE `carousel` (
+  `carousel_id` int(10) UNSIGNED NOT NULL,
+  `carousel_name` varchar(100) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `carousel`
+--
+
+INSERT INTO `carousel` (`carousel_id`, `carousel_name`, `description`, `created_date`, `last_log_by`) VALUES
+(1, 'test', '', '2024-08-23 17:08:46', 2);
+
+--
+-- Triggers `carousel`
+--
+DROP TRIGGER IF EXISTS `carousel_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `carousel_trigger_insert` AFTER INSERT ON `carousel` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Carousel created. <br/>';
+
+    IF NEW.carousel_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Carousel Name: ", NEW.carousel_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('carousel', NEW.carousel_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `carousel_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `carousel_trigger_update` AFTER UPDATE ON `carousel` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.carousel_name <> OLD.carousel_name THEN
+        SET audit_log = CONCAT(audit_log, "Carousel Name: ", OLD.carousel_name, " -> ", NEW.carousel_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('carousel', NEW.carousel_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `carousel_image`
+--
+
+DROP TABLE IF EXISTS `carousel_image`;
+CREATE TABLE `carousel_image` (
+  `carousel_image_id` int(10) UNSIGNED NOT NULL,
+  `carousel_id` int(10) UNSIGNED NOT NULL,
+  `carousel_image` varchar(500) NOT NULL,
+  `order_sequence` varchar(500) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -13957,7 +14210,9 @@ INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `
 (4, 'Profile', 1, 'Settings', 1, '2024-06-27 14:49:24', 2),
 (5, 'Employees', 2, 'Employees', 1, '2024-06-27 15:29:15', 2),
 (6, 'Employee Configurations', 2, 'Employees', 23, '2024-06-27 17:17:10', 2),
-(7, 'Customers', 3, 'Customer', 3, '2024-08-19 10:29:11', 2);
+(7, 'Customers', 3, 'Customer', 3, '2024-08-19 10:29:11', 2),
+(8, 'Websites', 4, 'Website Studio', 23, '2024-08-23 14:36:06', 2),
+(9, 'Blocks', 4, 'Website Studio', 2, '2024-08-23 16:25:19', 2);
 
 --
 -- Triggers `menu_group`
@@ -14089,7 +14344,9 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (50, 'Customer', 'customer.php', ' ti ti-users', 7, 'Customers', 3, 'Customer', 0, NULL, 3, '2024-08-19 10:30:06', 2),
 (51, 'My Addresses', 'customer-address.php', 'ti ti-map-pin', 4, 'Profile', 1, 'Settings', NULL, NULL, 13, '2024-08-20 17:00:09', 2),
 (52, 'Employee Address', 'employee-address.php', ' ti ti-map-pin', 4, 'Profile', 1, 'Settings', 0, NULL, 5, '2024-08-20 17:06:28', 2),
-(53, ' Banks & Cards', 'banks-and-cards.php', 'ti ti-credit-card', 4, 'Profile', 1, 'Settings', 0, NULL, 2, '2024-08-22 16:38:33', 2);
+(53, ' Banks & Cards', 'banks-and-cards.php', 'ti ti-credit-card', 4, 'Profile', 1, 'Settings', 0, NULL, 2, '2024-08-22 16:38:33', 2),
+(54, 'Website', 'website.php', 'ti ti-world', 8, 'Websites', 4, 'Website Studio', NULL, NULL, 13, '2024-08-23 14:40:00', 2),
+(55, 'Carousel', 'carousel.php', 'ti ti-table-import ', 9, 'Blocks', 4, 'Website Studio', NULL, NULL, 3, '2024-08-23 16:29:33', 2);
 
 --
 -- Triggers `menu_item`
@@ -14749,7 +15006,9 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (55, 2, 'Customer', 51, 'My Addresses', 1, 1, 1, 1, '2024-08-22 11:14:55', '2024-08-22 11:14:55', 2),
 (56, 2, 'Customer', 52, 'Employee Address', 1, 1, 1, 1, '2024-08-22 11:14:55', '2024-08-22 11:14:55', 2),
 (57, 1, 'Administrator', 53, ' Banks & Cards', 1, 1, 1, 1, '2024-08-22 16:39:16', '2024-08-22 16:39:16', 2),
-(58, 2, 'Customer', 53, ' Banks & Cards', 1, 1, 1, 1, '2024-08-22 16:39:16', '2024-08-22 16:39:16', 2);
+(58, 2, 'Customer', 53, ' Banks & Cards', 1, 1, 1, 1, '2024-08-22 16:39:16', '2024-08-22 16:39:16', 2),
+(59, 1, 'Administrator', 54, 'Website', 1, 1, 1, 1, '2024-08-23 14:40:26', '2024-08-23 14:40:26', 2),
+(60, 1, 'Administrator', 55, 'Carousel', 1, 1, 1, 1, '2024-08-23 16:29:39', '2024-08-23 16:29:39', 2);
 
 --
 -- Triggers `role_permission`
@@ -15620,7 +15879,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-22 19:46:12', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '%2BgkfpzMYXI6rvmn7vP30dVF8nGV6QXQfECFH8lMqdS0%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-23 14:18:53', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'ogIStNyjQx%2BwA%2BA0yCNGMNB8fYBH1hwvFQ0gBRF0rA8%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -15791,6 +16050,79 @@ CREATE TRIGGER `user_account_trigger_update` AFTER UPDATE ON `user_account` FOR 
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('user_account', NEW.user_account_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `website`
+--
+
+DROP TABLE IF EXISTS `website`;
+CREATE TABLE `website` (
+  `website_id` int(10) UNSIGNED NOT NULL,
+  `website_name` varchar(100) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `url` varchar(255) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `website`
+--
+
+INSERT INTO `website` (`website_id`, `website_name`, `description`, `url`, `created_date`, `last_log_by`) VALUES
+(1, 'Al Thabitah', 'Testasd', 'https://althabitah.com', '2024-08-23 15:41:46', 2);
+
+--
+-- Triggers `website`
+--
+DROP TRIGGER IF EXISTS `website_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `website_trigger_insert` AFTER INSERT ON `website` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Website created. <br/>';
+
+    IF NEW.website_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Website Name: ", NEW.website_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.url <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>URL: ", NEW.url);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('website', NEW.website_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `website_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `website_trigger_update` AFTER UPDATE ON `website` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.website_name <> OLD.website_name THEN
+        SET audit_log = CONCAT(audit_log, "Website Name: ", OLD.website_name, " -> ", NEW.website_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.url <> OLD.url THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.url, " -> ", NEW.url, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('website', NEW.website_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -16121,6 +16453,23 @@ ALTER TABLE `blood_type`
   ADD PRIMARY KEY (`blood_type_id`),
   ADD KEY `last_log_by` (`last_log_by`),
   ADD KEY `blood_type_index_blood_type_id` (`blood_type_id`);
+
+--
+-- Indexes for table `carousel`
+--
+ALTER TABLE `carousel`
+  ADD PRIMARY KEY (`carousel_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `carousel_index_carousel_id` (`carousel_id`);
+
+--
+-- Indexes for table `carousel_image`
+--
+ALTER TABLE `carousel_image`
+  ADD PRIMARY KEY (`carousel_image_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `carousel_image_index_carousel_image_id` (`carousel_image_id`),
+  ADD KEY `carousel_image_index_carousel_id` (`carousel_id`);
 
 --
 -- Indexes for table `city`
@@ -16656,6 +17005,14 @@ ALTER TABLE `user_account`
   ADD KEY `user_account_index_email` (`email`);
 
 --
+-- Indexes for table `website`
+--
+ALTER TABLE `website`
+  ADD PRIMARY KEY (`website_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `website_index_website_id` (`website_id`);
+
+--
 -- Indexes for table `work_hours`
 --
 ALTER TABLE `work_hours`
@@ -16704,7 +17061,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3556;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3582;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -16723,6 +17080,18 @@ ALTER TABLE `bank_account_type`
 --
 ALTER TABLE `blood_type`
   MODIFY `blood_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `carousel`
+--
+ALTER TABLE `carousel`
+  MODIFY `carousel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `carousel_image`
+--
+ALTER TABLE `carousel_image`
+  MODIFY `carousel_image_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -16938,13 +17307,13 @@ ALTER TABLE `language_proficiency`
 -- AUTO_INCREMENT for table `menu_group`
 --
 ALTER TABLE `menu_group`
-  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -16998,7 +17367,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -17067,6 +17436,12 @@ ALTER TABLE `user_account`
   MODIFY `user_account_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `website`
+--
+ALTER TABLE `website`
+  MODIFY `website_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `work_hours`
 --
 ALTER TABLE `work_hours`
@@ -17123,6 +17498,19 @@ ALTER TABLE `bank_account_type`
 --
 ALTER TABLE `blood_type`
   ADD CONSTRAINT `blood_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `carousel`
+--
+ALTER TABLE `carousel`
+  ADD CONSTRAINT `carousel_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `carousel_image`
+--
+ALTER TABLE `carousel_image`
+  ADD CONSTRAINT `carousel_image_ibfk_1` FOREIGN KEY (`carousel_id`) REFERENCES `carousel` (`carousel_id`),
+  ADD CONSTRAINT `carousel_image_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `city`
@@ -17396,6 +17784,12 @@ ALTER TABLE `notification_setting_system_template`
 --
 ALTER TABLE `relation`
   ADD CONSTRAINT `relation_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `website`
+--
+ALTER TABLE `website`
+  ADD CONSTRAINT `website_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

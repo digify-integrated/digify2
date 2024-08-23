@@ -26,23 +26,13 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-3">Display Name:</label>
-                            <div class="col-md-9">
-                                <p class="form-control-static" id="role_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-12 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="role_name_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-3">Description:</label>
-                            <div class="col-md-9">
-                                <p class="form-control-static" id="role_description_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-12 mb-0">
+                        <p class="mb-1 fs-2">Description</p>
+                        <h6 class="fw-semibold mb-0" id="role_description_summary">--</h6>
                     </div>
                 </div>
             </div>

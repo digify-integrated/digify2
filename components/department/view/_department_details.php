@@ -20,33 +20,17 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-3">Display Name:</label>
-                            <div class="col-md-9">
-                                <p class="form-control-static" id="department_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="department_name_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-3">Parent Department:</label>
-                            <div class="col-md-9">
-                                <p class="form-control-static" id="parent_department_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Parent Department</p>
+                        <h6 class="fw-semibold mb-0" id="parent_department_name_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-3">Manager:</label>
-                            <div class="col-md-9">
-                                <p class="form-control-static" id="manager_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-12 mb-0">
+                        <p class="mb-1 fs-2">Manager</p>
+                        <h6 class="fw-semibold mb-0" id="manager_name_summary">--</h6>
                     </div>
                 </div>
             </div>

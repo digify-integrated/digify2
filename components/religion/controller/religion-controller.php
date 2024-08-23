@@ -433,7 +433,7 @@ class ReligionController {
 
             $response = [
                 'success' => true,
-                'religionName' => $religionDetails['religion_name'] ?? null,
+                'religionName' => $religionDetails['religion_name'] ?? null
             ];
 
             echo json_encode($response);

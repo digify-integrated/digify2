@@ -193,7 +193,7 @@
                 <h5 class="card-title mb-0">Address</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#address-modal" id="add-address-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto" data-bs-toggle="modal" data-bs-target="#address-modal" id="add-address-details"><i class="ti ti-plus fs-6"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
@@ -219,7 +219,7 @@
                 <h5 class="card-title mb-0">Education</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#education-modal" id="add-education-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto" data-bs-toggle="modal" data-bs-target="#education-modal" id="add-education-details"><i class="ti ti-plus fs-6"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
@@ -234,7 +234,7 @@
                 <h5 class="card-title mb-0">HR Settings</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-pencil fs-6" data-bs-toggle="modal" data-bs-target="#hr-settings-modal" id="edit-hr-settings-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto" data-bs-toggle="modal" data-bs-target="#hr-settings-modal" id="edit-hr-settings-details"><i class="ti ti-pencil fs-6"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
@@ -278,7 +278,7 @@
                 <h5 class="card-title mb-0">Work Permit</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-pencil fs-6" data-bs-toggle="modal" data-bs-target="#work-permit-modal" id="edit-work-permit-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto" data-bs-toggle="modal" data-bs-target="#work-permit-modal" id="edit-work-permit-details"><i class="ti ti-pencil fs-6"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
@@ -310,7 +310,7 @@
                 <h5 class="card-title mb-0">ID Records</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#id-record-modal" id="add-id-record-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto" data-bs-toggle="modal" data-bs-target="#id-record-modal" id="add-id-record-details"><i class="ti ti-plus fs-6"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
@@ -324,7 +324,7 @@
                 <h5 class="card-title mb-0">Licenses</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#license-modal" id="add-license-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto" data-bs-toggle="modal" data-bs-target="#license-modal" id="add-license-details"><i class="ti ti-plus fs-6"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
@@ -337,7 +337,7 @@
                 <h5 class="card-title mb-0">Emergency Contact</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#emergency-contact-modal" id="add-emergency-contact-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto" data-bs-toggle="modal" data-bs-target="#emergency-contact-modal" id="add-emergency-contact-details"><i class="ti ti-plus fs-6"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
@@ -350,7 +350,7 @@
                 <h5 class="card-title mb-0">Bank Account</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#bank-account-modal" id="add-bank-account-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto" data-bs-toggle="modal" data-bs-target="#bank-account-modal" id="add-bank-account-details"><i class="ti ti-plus fs-6"></i></a>
                                                         </div>' : '';
                 ?>
             </div>
@@ -363,7 +363,7 @@
                 <h5 class="card-title mb-0">Languages</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions ms-auto d-flex button-group">
-                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto"><i class="ti ti-plus fs-6" data-bs-toggle="modal" data-bs-target="#language-modal" id="add-language-details"></i></a>
+                                                            <a href="javascript:void(0)" class="link text-dark fw-medium py-1 px-2 ms-auto" data-bs-toggle="modal" data-bs-target="#language-modal" id="add-language-details"><i class="ti ti-plus fs-6"></i></a>
                                                         </div>' : '';
                 ?>
             </div>

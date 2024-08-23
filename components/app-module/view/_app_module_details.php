@@ -20,53 +20,25 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">Display Name:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="app_module_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="app_module_name_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">Description:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="app_module_description_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Description</p>
+                        <h6 class="fw-semibold mb-0" id="app_module_description_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">Default Page:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="menu_item_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Default Page</p>
+                        <h6 class="fw-semibold mb-0" id="menu_item_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">App Version:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="app_version_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">App Version</p>
+                        <h6 class="fw-semibold mb-0" id="app_version_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">Order Sequence:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="order_sequence_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-0">
+                        <p class="mb-1 fs-2">Order Sequence</p>
+                        <h6 class="fw-semibold mb-0" id="order_sequence_summary">--</h6>
                     </div>
                 </div>
             </div>

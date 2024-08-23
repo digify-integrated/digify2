@@ -20,93 +20,41 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Display Name:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="email_setting_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="email_setting_name_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Description:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="email_setting_description_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Description</p>
+                        <h6 class="fw-semibold mb-0" id="email_setting_description_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Host:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="mail_host_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Host</p>
+                        <h6 class="fw-semibold mb-0" id="mail_host_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Port:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="port_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Port</p>
+                        <h6 class="fw-semibold mb-0" id="port_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Username:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="mail_username_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Username</p>
+                        <h6 class="fw-semibold mb-0" id="mail_username_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Mail From Name:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="mail_from_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Mail From Name</p>
+                        <h6 class="fw-semibold mb-0" id="mail_from_name_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Mail From Email:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="mail_from_email_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Mail Encryption</p>
+                        <h6 class="fw-semibold mb-0" id="mail_encryption_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Mail Encryption:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="mail_encryption_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">SMTP Authentication</p>
+                        <h6 class="fw-semibold mb-0" id="smtp_auth_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">SMTP Authentication:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="smtp_auth_summary">--</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">SMTP Auto TLS:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="smtp_auto_tls_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-0">
+                        <p class="mb-1 fs-2">SMTP Auto TLS</p>
+                        <h6 class="fw-semibold mb-0" id="smtp_auto_tls_summary">--</h6>
                     </div>
                 </div>
             </div>

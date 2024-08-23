@@ -20,63 +20,29 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">Display Name:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="work_location_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="work_location_name_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">Address:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="address_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Address</p>
+                        <h6 class="fw-semibold mb-0" id="address_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">City:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="city_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">City</p>
+                        <h6 class="fw-semibold mb-0" id="city_name_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">Phone:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="phone_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Phone</p>
+                        <h6 class="fw-semibold mb-0" id="phone_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">Mobile:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="mobile_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Mobile</p>
+                        <h6 class="fw-semibold mb-0" id="mobile_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group row">
-                            <label class="form-label col-md-4">Email:</label>
-                            <div class="col-md-8">
-                                <p class="form-control-static" id="email_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Email</p>
+                        <h6 class="fw-semibold mb-0" id="email_summary">--</h6>
                     </div>
                 </div>
             </div>

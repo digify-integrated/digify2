@@ -24,31 +24,17 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Display Name:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="upload_setting_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="upload_setting_name_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Max File Size:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="max_file_size_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Max File Size</p>
+                        <h6 class="fw-semibold mb-0" id="max_file_size_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Description:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="upload_setting_description_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-12 mb-0">
+                        <p class="mb-1 fs-2">Description</p>
+                        <h6 class="fw-semibold mb-0" id="upload_setting_description_summary">--</h6>
                     </div>
                 </div>
             </div>

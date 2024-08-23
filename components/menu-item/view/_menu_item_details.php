@@ -24,57 +24,29 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Display Name:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="menu_item_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="menu_item_name_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Menu Group:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="menu_group_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Menu Group</p>
+                        <h6 class="fw-semibold mb-0" id="menu_group_name_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Order Sequence:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="order_sequence_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Order Sequence</p>
+                        <h6 class="fw-semibold mb-0" id="order_sequence_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Parent Menu Item:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="parent_menu_item_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Parent Menu Item</p>
+                        <h6 class="fw-semibold mb-0" id="parent_menu_item_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Icon:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="menu_item_icon_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Icon</p>
+                        <h6 class="fw-semibold mb-0" id="menu_item_icon_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">URL:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="menu_item_url_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">URL</p>
+                        <h6 class="fw-semibold mb-0" id="menu_item_url_summary">--</h6>
                     </div>
                 </div>
             </div>

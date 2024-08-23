@@ -20,39 +20,21 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Display Name:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="currency_name_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Display Name</p>
+                        <h6 class="fw-semibold mb-0" id="currency_name_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Symbol:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="currency_symbol_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Symbol</p>
+                        <h6 class="fw-semibold mb-0" id="currency_symbol_summary">--</h6>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Currency Code:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="currency_code_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Currency Code</p>
+                        <h6 class="fw-semibold mb-0" id="currency_code_summary">--</h6>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="form-label col-md-5">Exchange Rate:</label>
-                            <div class="col-md-7">
-                                <p class="form-control-static" id="exchange_rate_summary">--</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-6 mb-3">
+                        <p class="mb-1 fs-2">Exchange Rate</p>
+                        <h6 class="fw-semibold mb-0" id="exchange_rate_summary">--</h6>
                     </div>
                 </div>
             </div>
