@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 23, 2024 at 11:26 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 26, 2024 at 02:21 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -95,6 +95,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccessRights` (IN `p_user_acco
     END IF;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkAccordionContainerExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccordionContainerExist` (IN `p_accordion_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM accordion_container
+    WHERE accordion_style_id = p_accordion_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkAccordionItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccordionItemExist` (IN `p_accordion_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM accordion_item
+    WHERE accordion_style_id = p_accordion_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkAccordionStyleExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccordionStyleExist` (IN `p_accordion_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM accordion_style
+    WHERE accordion_style_id = p_accordion_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkAddressTypeExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAddressTypeExist` (IN `p_address_type_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -123,6 +144,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBankExist` (IN `p_bank_id` INT
     WHERE bank_id = p_bank_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkBlockContainerExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBlockContainerExist` (IN `p_block_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM block_container
+    WHERE block_style_id = p_block_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkBlockItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBlockItemExist` (IN `p_block_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM block_item
+    WHERE block_style_id = p_block_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkBlockStyleExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBlockStyleExist` (IN `p_block_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM block_style
+    WHERE block_style_id = p_block_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkBlockTypeExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBlockTypeExist` (IN `p_block_type_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM block_type
+    WHERE block_type_id = p_block_type_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkBloodTypeExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBloodTypeExist` (IN `p_blood_type_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -130,11 +179,32 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBloodTypeExist` (IN `p_blood_t
     WHERE blood_type_id = p_blood_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkCarouselContainerExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselContainerExist` (IN `p_carousel_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM carousel_container
+    WHERE carousel_style_id = p_carousel_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkCarouselExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselExist` (IN `p_carousel_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM carousel
     WHERE carousel_id = p_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCarouselSliderExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselSliderExist` (IN `p_carousel_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM carousel_slider
+    WHERE carousel_style_id = p_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCarouselStyleExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselStyleExist` (IN `p_carousel_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM carousel_style
+    WHERE carousel_style_id = p_carousel_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkCityExist`$$
@@ -151,6 +221,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCivilStatusExist` (IN `p_civil
     WHERE civil_status_id = p_civil_status_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkClientContainerExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkClientContainerExist` (IN `p_client_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM client_container
+    WHERE client_style_id = p_client_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkClientItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkClientItemExist` (IN `p_client_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM client_item
+    WHERE client_style_id = p_client_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkClientStyleExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkClientStyleExist` (IN `p_client_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM client_style
+    WHERE client_style_id = p_client_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkCompanyExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCompanyExist` (IN `p_company_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -163,6 +254,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContactInformationTypeExist` (
 	SELECT COUNT(*) AS total
     FROM contact_information_type
     WHERE contact_information_type_id = p_contact_information_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkContentCarouselContainerExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContentCarouselContainerExist` (IN `p_content_carousel_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM content_carousel_container
+    WHERE content_carousel_style_id = p_content_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkContentCarouselSliderExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContentCarouselSliderExist` (IN `p_content_carousel_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM content_carousel_slider
+    WHERE content_carousel_style_id = p_content_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkContentCarouselStyleExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContentCarouselStyleExist` (IN `p_content_carousel_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM content_carousel_style
+    WHERE content_carousel_style_id = p_content_carousel_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkCountryExist`$$
@@ -487,6 +599,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSystemNotificationTemplateExis
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkTestimonialContainerExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkTestimonialContainerExist` (IN `p_testimonial_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM testimonial_container
+    WHERE testimonial_style_id = p_testimonial_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkTestimonialItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkTestimonialItemExist` (IN `p_testimonial_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM testimonial_item
+    WHERE testimonial_style_id = p_testimonial_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkTestimonialStyleExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkTestimonialStyleExist` (IN `p_testimonial_style_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM testimonial_style
+    WHERE testimonial_style_id = p_testimonial_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkUICustomizationSettingExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUICustomizationSettingExist` (IN `p_user_account__id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -589,6 +722,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkScheduleExist` (IN `p_work
     WHERE work_schedule_id = p_work_schedule_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteAccordionStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAccordionStyle` (IN `p_accordion_style_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM accordion_container WHERE accordion_style_id = p_accordion_style_id;
+    DELETE FROM accordion_item WHERE accordion_style_id = p_accordion_style_id;
+    DELETE FROM accordion_style WHERE accordion_style_id = p_accordion_style_id;
+
+    COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteAddressType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAddressType` (IN `p_address_type_id` INT)   BEGIN
     DELETE FROM address_type WHERE address_type_id = p_address_type_id;
@@ -609,6 +758,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBankAccountType` (IN `p_bank_
     DELETE FROM bank_account_type WHERE bank_account_type_id = p_bank_account_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteBlockStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBlockStyle` (IN `p_block_style_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM block_container WHERE block_style_id = p_block_style_id;
+    DELETE FROM block_item WHERE block_style_id = p_block_style_id;
+    DELETE FROM block_style WHERE block_style_id = p_block_style_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteBlockType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBlockType` (IN `p_block_type_id` INT)   BEGIN
+    DELETE FROM block_type WHERE block_type_id = p_block_type_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteBloodType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBloodType` (IN `p_blood_type_id` INT)   BEGIN
     DELETE FROM blood_type WHERE blood_type_id = p_blood_type_id;
@@ -617,6 +787,22 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteCarousel`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCarousel` (IN `p_carousel_id` INT)   BEGIN
     DELETE FROM carousel WHERE carousel_id = p_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCarouselStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCarouselStyle` (IN `p_carousel_style_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM carousel_container WHERE carousel_style_id = p_carousel_style_id;
+    DELETE FROM carousel_slider WHERE carousel_style_id = p_carousel_style_id;
+    DELETE FROM carousel_style WHERE carousel_style_id = p_carousel_style_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteCity`$$
@@ -629,6 +815,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCivilStatus` (IN `p_civil_sta
     DELETE FROM civil_status WHERE civil_status_id = p_civil_status_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteClientStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteClientStyle` (IN `p_client_style_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM client_container WHERE client_style_id = p_client_style_id;
+    DELETE FROM client_item WHERE client_style_id = p_client_style_id;
+    DELETE FROM client_style WHERE client_style_id = p_client_style_id;
+
+    COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompany` (IN `p_company_id` INT)   BEGIN
     DELETE FROM company WHERE company_id = p_company_id;
@@ -637,6 +839,22 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteContactInformationType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteContactInformationType` (IN `p_contact_information_type_id` INT)   BEGIN
     DELETE FROM contact_information_type WHERE contact_information_type_id = p_contact_information_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteContentCarouselStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteContentCarouselStyle` (IN `p_content_carousel_style_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM content_carousel_container WHERE content_carousel_style_id = p_content_carousel_style_id;
+    DELETE FROM content_carousel_slider WHERE content_carousel_style_id = p_content_carousel_style_id;
+    DELETE FROM content_carousel_style WHERE content_carousel_style_id = p_content_carousel_style_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteCountry`$$
@@ -1010,6 +1228,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSystemAction` (IN `p_system_a
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteTestimonialStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteTestimonialStyle` (IN `p_testimonial_style_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM testimonial_container WHERE testimonial_style_id = p_testimonial_style_id;
+    DELETE FROM testimonial_item WHERE testimonial_style_id = p_testimonial_style_id;
+    DELETE FROM testimonial_style WHERE testimonial_style_id = p_testimonial_style_id;
+
+    COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteUploadSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUploadSetting` (IN `p_upload_setting_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1076,6 +1310,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkSchedule` (IN `p_work_sch
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateAccordionStyleOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAccordionStyleOptions` ()   BEGIN
+	SELECT accordion_style_id, accordion_style_name 
+    FROM accordion_style 
+    ORDER BY accordion_style_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateAccordionStyleTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAccordionStyleTable` ()   BEGIN
+	SELECT accordion_style_id, accordion_style_name, description
+    FROM accordion_style 
+    ORDER BY accordion_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateAddressTypeOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAddressTypeOptions` ()   BEGIN
 	SELECT address_type_id, address_type_name 
@@ -1132,6 +1380,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBankTable` ()   BEGIN
     ORDER BY bank_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateBlockStyleOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBlockStyleOptions` ()   BEGIN
+	SELECT block_style_id, block_style_name 
+    FROM block_style 
+    ORDER BY block_style_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateBlockStyleTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBlockStyleTable` ()   BEGIN
+	SELECT block_style_id, block_style_name, description
+    FROM block_style 
+    ORDER BY block_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateBlockTypeOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBlockTypeOptions` ()   BEGIN
+	SELECT block_type_id, block_type_name 
+    FROM block_type 
+    ORDER BY block_type_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateBlockTypeTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBlockTypeTable` ()   BEGIN
+	SELECT block_type_id, block_type_name 
+    FROM block_type 
+    ORDER BY block_type_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateBloodTypeOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBloodTypeOptions` ()   BEGIN
 	SELECT blood_type_id, blood_type_name 
@@ -1151,6 +1427,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselOptions` ()   BEGIN
 	SELECT carousel_id, carousel_name 
     FROM carousel 
     ORDER BY carousel_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCarouselStyleOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselStyleOptions` ()   BEGIN
+	SELECT carousel_style_id, carousel_style_name 
+    FROM carousel_style 
+    ORDER BY carousel_style_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCarouselStyleTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselStyleTable` ()   BEGIN
+	SELECT carousel_style_id, carousel_style_name, description
+    FROM carousel_style 
+    ORDER BY carousel_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateCarouselTable`$$
@@ -1205,6 +1495,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCivilStatusTable` ()   BEGI
     ORDER BY civil_status_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateClientStyleOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateClientStyleOptions` ()   BEGIN
+	SELECT client_style_id, client_style_name 
+    FROM client_style 
+    ORDER BY client_style_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateClientStyleTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateClientStyleTable` ()   BEGIN
+	SELECT client_style_id, client_style_name, description
+    FROM client_style 
+    ORDER BY client_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateCompanyOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyOptions` ()   BEGIN
 	SELECT company_id, company_name 
@@ -1252,6 +1556,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContactInformationTypeTable
 	SELECT contact_information_type_id, contact_information_type_name 
     FROM contact_information_type 
     ORDER BY contact_information_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateContentCarouselStyleOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContentCarouselStyleOptions` ()   BEGIN
+	SELECT content_carousel_style_id, content_carousel_style_name 
+    FROM content_carousel_style 
+    ORDER BY content_carousel_style_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateContentCarouselStyleTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContentCarouselStyleTable` ()   BEGIN
+	SELECT content_carousel_style_id, content_carousel_style_name, description
+    FROM content_carousel_style 
+    ORDER BY content_carousel_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateCountryOptions`$$
@@ -1987,6 +2305,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionTable` ()   BEG
     ORDER BY system_action_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateTestimonialStyleOptions`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateTestimonialStyleOptions` ()   BEGIN
+	SELECT testimonial_style_id, testimonial_style_name 
+    FROM testimonial_style 
+    ORDER BY testimonial_style_name;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateTestimonialStyleTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateTestimonialStyleTable` ()   BEGIN
+	SELECT testimonial_style_id, testimonial_style_name, description
+    FROM testimonial_style 
+    ORDER BY testimonial_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateUploadSettingFileExtensionTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUploadSettingFileExtensionTable` (IN `p_upload_setting_id` INT)   BEGIN
     SELECT upload_setting_file_extension_id, file_extension_name, file_extension 
@@ -2151,6 +2483,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkScheduleTable` (IN `p_f
     DEALLOCATE PREPARE stmt;
 END$$
 
+DROP PROCEDURE IF EXISTS `getAccordionContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAccordionContainer` (IN `p_accordion_style_id` INT)   BEGIN
+	SELECT * FROM accordion_container
+	WHERE accordion_style_id = p_accordion_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getAccordionItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAccordionItem` (IN `p_accordion_style_id` INT)   BEGIN
+	SELECT * FROM accordion_item
+	WHERE accordion_style_id = p_accordion_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getAccordionStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAccordionStyle` (IN `p_accordion_style_id` INT)   BEGIN
+	SELECT * FROM accordion_style
+	WHERE accordion_style_id = p_accordion_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getAddressType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAddressType` (IN `p_address_type_id` INT)   BEGIN
 	SELECT * FROM address_type
@@ -2175,6 +2525,30 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getBankAccountType` (IN `p_bank_acc
 	WHERE bank_account_type_id = p_bank_account_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getBlockContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBlockContainer` (IN `p_block_style_id` INT)   BEGIN
+	SELECT * FROM block_container
+	WHERE block_style_id = p_block_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getBlockItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBlockItem` (IN `p_block_style_id` INT)   BEGIN
+	SELECT * FROM block_item
+	WHERE block_style_id = p_block_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getBlockStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBlockStyle` (IN `p_block_style_id` INT)   BEGIN
+	SELECT * FROM block_style
+	WHERE block_style_id = p_block_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getBlockType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBlockType` (IN `p_block_type_id` INT)   BEGIN
+	SELECT * FROM block_type
+	WHERE block_type_id = p_block_type_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getBloodType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getBloodType` (IN `p_blood_type_id` INT)   BEGIN
 	SELECT * FROM blood_type
@@ -2185,6 +2559,24 @@ DROP PROCEDURE IF EXISTS `getCarousel`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarousel` (IN `p_carousel_id` INT)   BEGIN
 	SELECT * FROM carousel
 	WHERE carousel_id = p_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCarouselContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarouselContainer` (IN `p_carousel_style_id` INT)   BEGIN
+	SELECT * FROM carousel_container
+	WHERE carousel_style_id = p_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCarouselSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarouselSlider` (IN `p_carousel_style_id` INT)   BEGIN
+	SELECT * FROM carousel_slider
+	WHERE carousel_style_id = p_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCarouselStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarouselStyle` (IN `p_carousel_style_id` INT)   BEGIN
+	SELECT * FROM carousel_style
+	WHERE carousel_style_id = p_carousel_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getCity`$$
@@ -2199,6 +2591,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getCivilStatus` (IN `p_civil_status
 	WHERE civil_status_id = p_civil_status_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getClientContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getClientContainer` (IN `p_client_style_id` INT)   BEGIN
+	SELECT * FROM client_container
+	WHERE client_style_id = p_client_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getClientItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getClientItem` (IN `p_client_style_id` INT)   BEGIN
+	SELECT * FROM client_item
+	WHERE client_style_id = p_client_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getClientStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getClientStyle` (IN `p_client_style_id` INT)   BEGIN
+	SELECT * FROM client_style
+	WHERE client_style_id = p_client_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompany` (IN `p_company_id` INT)   BEGIN
 	SELECT * FROM company
@@ -2209,6 +2619,24 @@ DROP PROCEDURE IF EXISTS `getContactInformationType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getContactInformationType` (IN `p_contact_information_type_id` INT)   BEGIN
 	SELECT * FROM contact_information_type
 	WHERE contact_information_type_id = p_contact_information_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getContentCarouselContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getContentCarouselContainer` (IN `p_content_carousel_style_id` INT)   BEGIN
+	SELECT * FROM content_carousel_container
+	WHERE content_carousel_style_id = p_content_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getContentCarouselSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getContentCarouselSlider` (IN `p_content_carousel_style_id` INT)   BEGIN
+	SELECT * FROM content_carousel_slider
+	WHERE content_carousel_style_id = p_content_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getContentCarouselStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getContentCarouselStyle` (IN `p_content_carousel_style_id` INT)   BEGIN
+	SELECT * FROM content_carousel_style
+	WHERE content_carousel_style_id = p_content_carousel_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getCountry`$$
@@ -2487,6 +2915,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getSystemSetting` (IN `p_system_set
 	WHERE system_setting_id = p_system_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getTestimonialContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTestimonialContainer` (IN `p_testimonial_style_id` INT)   BEGIN
+	SELECT * FROM testimonial_container
+	WHERE testimonial_style_id = p_testimonial_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getTestimonialItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTestimonialItem` (IN `p_testimonial_style_id` INT)   BEGIN
+	SELECT * FROM testimonial_item
+	WHERE testimonial_style_id = p_testimonial_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getTestimonialStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTestimonialStyle` (IN `p_testimonial_style_id` INT)   BEGIN
+	SELECT * FROM testimonial_style
+	WHERE testimonial_style_id = p_testimonial_style_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getUICustomizationSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUICustomizationSetting` (IN `p_user_account__id` INT)   BEGIN
 	SELECT * FROM ui_customization_setting
@@ -2535,6 +2981,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getWorkSchedule` (IN `p_work_schedu
 	WHERE work_schedule_id = p_work_schedule_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `insertAccordionContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAccordionContainer` (IN `p_accordion_style_id` INT, IN `p_accordion_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO accordion_container (accordion_style_id, accordion_container, last_log_by) 
+	VALUES(p_accordion_style_id, p_accordion_container, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertAccordionItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAccordionItem` (IN `p_accordion_style_id` INT, IN `p_accordion_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO accordion_item (accordion_style_id, accordion_item, last_log_by) 
+	VALUES(p_accordion_style_id, p_accordion_item, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertAccordionStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAccordionStyle` (IN `p_accordion_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_accordion_style_id` INT)   BEGIN
+    INSERT INTO accordion_style (accordion_style_name, description, last_log_by) 
+	VALUES(p_accordion_style_name, p_description, p_last_log_by);
+	
+    SET p_accordion_style_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertAddressType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAddressType` (IN `p_address_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_address_type_id` INT)   BEGIN
     INSERT INTO address_type (address_type_name, last_log_by) 
@@ -2567,6 +3033,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBankAccountType` (IN `p_bank_
     SET p_bank_account_type_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertBlockContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBlockContainer` (IN `p_block_style_id` INT, IN `p_block_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO block_container (block_style_id, block_container, last_log_by) 
+	VALUES(p_block_style_id, p_block_container, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertBlockItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBlockItem` (IN `p_block_style_id` INT, IN `p_block_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO block_item (block_style_id, block_item, last_log_by) 
+	VALUES(p_block_style_id, p_block_item, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertBlockStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBlockStyle` (IN `p_block_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_block_type_id` INT, IN `p_block_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_block_style_id` INT)   BEGIN
+    INSERT INTO block_style (block_style_name, description, block_type_id, block_type_name, last_log_by) 
+	VALUES(p_block_style_name, p_description, p_block_type_id, p_block_type_name, p_last_log_by);
+	
+    SET p_block_style_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertBlockType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBlockType` (IN `p_block_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_block_type_id` INT)   BEGIN
+    INSERT INTO block_type (block_type_name, last_log_by) 
+	VALUES(p_block_type_name, p_last_log_by);
+	
+    SET p_block_type_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertBloodType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBloodType` (IN `p_blood_type_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_blood_type_id` INT)   BEGIN
     INSERT INTO blood_type (blood_type_name, last_log_by) 
@@ -2581,6 +3075,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarousel` (IN `p_carousel_nam
 	VALUES(p_carousel_name, p_description, p_last_log_by);
 	
     SET p_carousel_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCarouselContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarouselContainer` (IN `p_carousel_style_id` INT, IN `p_carousel_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO carousel_container (carousel_style_id, carousel_container, last_log_by) 
+	VALUES(p_carousel_style_id, p_carousel_container, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCarouselSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarouselSlider` (IN `p_carousel_style_id` INT, IN `p_carousel_slider` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO carousel_slider (carousel_style_id, carousel_slider, last_log_by) 
+	VALUES(p_carousel_style_id, p_carousel_slider, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCarouselStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarouselStyle` (IN `p_carousel_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_carousel_style_id` INT)   BEGIN
+    INSERT INTO carousel_style (carousel_style_name, description, last_log_by) 
+	VALUES(p_carousel_style_name, p_description, p_last_log_by);
+	
+    SET p_carousel_style_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertCity`$$
@@ -2599,6 +3113,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCivilStatus` (IN `p_civil_sta
     SET p_civil_status_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertClientContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertClientContainer` (IN `p_client_style_id` INT, IN `p_client_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO client_container (client_style_id, client_container, last_log_by) 
+	VALUES(p_client_style_id, p_client_container, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertClientItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertClientItem` (IN `p_client_style_id` INT, IN `p_client_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO client_item (client_style_id, client_item, last_log_by) 
+	VALUES(p_client_style_id, p_client_item, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertClientStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertClientStyle` (IN `p_client_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_client_style_id` INT)   BEGIN
+    INSERT INTO client_style (client_style_name, description, last_log_by) 
+	VALUES(p_client_style_name, p_description, p_last_log_by);
+	
+    SET p_client_style_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCompany` (IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_company_id` INT)   BEGIN
     INSERT INTO company (company_name, legal_name, address, city_id, city_name, state_id, state_name, country_id, country_name, currency_id, currency_name, currency_symbol, tax_id, phone, mobile, email, website, last_log_by) 
@@ -2613,6 +3147,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContactInformationType` (IN `
 	VALUES(p_contact_information_type_name, p_last_log_by);
 	
     SET p_contact_information_type_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertContentCarouselContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContentCarouselContainer` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO content_carousel_container (content_carousel_style_id, content_carousel_container, last_log_by) 
+	VALUES(p_content_carousel_style_id, p_content_carousel_container, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertContentCarouselSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContentCarouselSlider` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_slider` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO content_carousel_slider (content_carousel_style_id, content_carousel_slider, last_log_by) 
+	VALUES(p_content_carousel_style_id, p_content_carousel_slider, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertContentCarouselStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContentCarouselStyle` (IN `p_content_carousel_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_content_carousel_style_id` INT)   BEGIN
+    INSERT INTO content_carousel_style (content_carousel_style_name, description, last_log_by) 
+	VALUES(p_content_carousel_style_name, p_description, p_last_log_by);
+	
+    SET p_content_carousel_style_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertCountry`$$
@@ -2998,6 +3552,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSystemNotificationTemplate` (
 	VALUES(p_notification_setting_id, p_system_notification_title, p_system_notification_message, p_last_log_by);
 END$$
 
+DROP PROCEDURE IF EXISTS `insertTestimonialContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTestimonialContainer` (IN `p_testimonial_style_id` INT, IN `p_testimonial_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO testimonial_container (testimonial_style_id, testimonial_container, last_log_by) 
+	VALUES(p_testimonial_style_id, p_testimonial_container, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertTestimonialItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTestimonialItem` (IN `p_testimonial_style_id` INT, IN `p_testimonial_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO testimonial_item (testimonial_style_id, testimonial_item, last_log_by) 
+	VALUES(p_testimonial_style_id, p_testimonial_item, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertTestimonialStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTestimonialStyle` (IN `p_testimonial_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_testimonial_style_id` INT)   BEGIN
+    INSERT INTO testimonial_style (testimonial_style_name, description, last_log_by) 
+	VALUES(p_testimonial_style_name, p_description, p_last_log_by);
+	
+    SET p_testimonial_style_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertUICustomizationSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUICustomizationSetting` (IN `p_user_account__id` INT, IN `p_type` VARCHAR(30), IN `p_customization_value` VARCHAR(20), IN `p_last_log_by` INT)   BEGIN
 	IF p_type = 'sidebar type' THEN
@@ -3076,6 +3650,40 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkSchedule` (IN `p_work_sch
 	VALUES(p_work_schedule_name, p_schedule_type_id, p_schedule_type_name, p_last_log_by);
 	
     SET p_work_schedule_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `updateAccordionContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordionContainer` (IN `p_accordion_style_id` INT, IN `p_accordion_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE accordion_container
+    SET accordion_container = p_accordion_container,
+        last_log_by = p_last_log_by
+    WHERE accordion_style_id = p_accordion_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateAccordionItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordionItem` (IN `p_accordion_style_id` INT, IN `p_accordion_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE accordion_item
+    SET accordion_item = p_accordion_item,
+        last_log_by = p_last_log_by
+    WHERE accordion_style_id = p_accordion_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateAccordionStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordionStyle` (IN `p_accordion_style_id` INT, IN `p_accordion_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE accordion_style
+    SET accordion_style_name = p_accordion_style_name,
+        description = p_description,
+        last_log_by = p_last_log_by
+    WHERE accordion_style_id = p_accordion_style_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateAccountLock`$$
@@ -3191,6 +3799,64 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBankAccountType` (IN `p_bank_
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateBlockContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBlockContainer` (IN `p_block_style_id` INT, IN `p_block_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE block_container
+    SET block_container = p_block_container,
+        last_log_by = p_last_log_by
+    WHERE block_style_id = p_block_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateBlockItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBlockItem` (IN `p_block_style_id` INT, IN `p_block_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE block_item
+    SET block_item = p_block_item,
+        last_log_by = p_last_log_by
+    WHERE block_style_id = p_block_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateBlockStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBlockStyle` (IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_block_type_id` INT, IN `p_block_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE block_style
+    SET block_style_name = p_block_style_name,
+        description = p_description,
+        block_type_id = p_block_type_id,
+        block_type_name = p_block_type_name,
+        last_log_by = p_last_log_by
+    WHERE block_style_id = p_block_style_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateBlockType`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBlockType` (IN `p_block_type_id` INT, IN `p_block_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE block_style
+    SET block_type_name = p_block_type_name,
+        last_log_by = p_last_log_by
+    WHERE block_type_id = p_block_type_id;
+
+    UPDATE block_type
+    SET block_type_name = p_block_type_name,
+        last_log_by = p_last_log_by
+    WHERE block_type_id = p_block_type_id;
+
+    COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateBloodType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBloodType` (IN `p_blood_type_id` INT, IN `p_blood_type_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3220,6 +3886,40 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarousel` (IN `p_carousel_id`
         description = p_description,
         last_log_by = p_last_log_by
     WHERE carousel_id = p_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCarouselContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarouselContainer` (IN `p_carousel_style_id` INT, IN `p_carousel_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE carousel_container
+    SET carousel_container = p_carousel_container,
+        last_log_by = p_last_log_by
+    WHERE carousel_style_id = p_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCarouselSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarouselSlider` (IN `p_carousel_style_id` INT, IN `p_carousel_slider` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE carousel_slider
+    SET carousel_slider = p_carousel_slider,
+        last_log_by = p_last_log_by
+    WHERE carousel_style_id = p_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCarouselStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarouselStyle` (IN `p_carousel_style_id` INT, IN `p_carousel_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE carousel_style
+    SET carousel_style_name = p_carousel_style_name,
+        description = p_description,
+        last_log_by = p_last_log_by
+    WHERE carousel_style_id = p_carousel_style_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateCity`$$
@@ -3292,6 +3992,40 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCivilStatus` (IN `p_civil_sta
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateClientContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateClientContainer` (IN `p_client_style_id` INT, IN `p_client_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE client_container
+    SET client_container = p_client_container,
+        last_log_by = p_last_log_by
+    WHERE client_style_id = p_client_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateClientItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateClientItem` (IN `p_client_style_id` INT, IN `p_client_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE client_item
+    SET client_item = p_client_item,
+        last_log_by = p_last_log_by
+    WHERE client_style_id = p_client_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateClientStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateClientStyle` (IN `p_client_style_id` INT, IN `p_client_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE client_style
+    SET client_style_name = p_client_style_name,
+        description = p_description,
+        last_log_by = p_last_log_by
+    WHERE client_style_id = p_client_style_id;
+
+    COMMIT;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompany` (IN `p_company_id` INT, IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3343,6 +4077,40 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContactInformationType` (IN `
     SET contact_information_type_name = p_contact_information_type_name,
         last_log_by = p_last_log_by
     WHERE contact_information_type_id = p_contact_information_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateContentCarouselContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContentCarouselContainer` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE content_carousel_container
+    SET content_carousel_container = p_content_carousel_container,
+        last_log_by = p_last_log_by
+    WHERE content_carousel_style_id = p_content_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateContentCarouselSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContentCarouselSlider` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_slider` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE content_carousel_slider
+    SET content_carousel_slider = p_content_carousel_slider,
+        last_log_by = p_last_log_by
+    WHERE content_carousel_style_id = p_content_carousel_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateContentCarouselStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContentCarouselStyle` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE content_carousel_style
+    SET content_carousel_style_name = p_content_carousel_style_name,
+        description = p_description,
+        last_log_by = p_last_log_by
+    WHERE content_carousel_style_id = p_content_carousel_style_id;
+
+    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateCountry`$$
@@ -4567,6 +5335,40 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemSetting` (IN `p_allow_r
     SET value = p_allow_registration,
         last_log_by = p_last_log_by
     WHERE system_setting_id = 1;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateTestimonialContainer`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTestimonialContainer` (IN `p_testimonial_style_id` INT, IN `p_testimonial_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE testimonial_container
+    SET testimonial_container = p_testimonial_container,
+        last_log_by = p_last_log_by
+    WHERE testimonial_style_id = p_testimonial_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateTestimonialItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTestimonialItem` (IN `p_testimonial_style_id` INT, IN `p_testimonial_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE testimonial_item
+    SET testimonial_item = p_testimonial_item,
+        last_log_by = p_last_log_by
+    WHERE testimonial_style_id = p_testimonial_style_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateTestimonialStyle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTestimonialStyle` (IN `p_testimonial_style_id` INT, IN `p_testimonial_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    UPDATE testimonial_style
+    SET testimonial_style_name = p_testimonial_style_name,
+        description = p_description,
+        last_log_by = p_last_log_by
+    WHERE testimonial_style_id = p_testimonial_style_id;
 
     COMMIT;
 END$$
@@ -8590,7 +9392,172 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3578, 'role_permission', 60, 'Write Access: 0 -> 1<br/>', 2, '2024-08-23 16:29:41', '2024-08-23 16:29:41'),
 (3579, 'role_permission', 60, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-23 16:29:41', '2024-08-23 16:29:41'),
 (3580, 'menu_item', 55, 'Menu Item Icon:  -> ti ti-table-import <br/>', 2, '2024-08-23 16:31:08', '2024-08-23 16:31:08'),
-(3581, 'carousel', 1, 'Carousel created. <br/><br/>Carousel Name: test', 2, '2024-08-23 17:08:46', '2024-08-23 17:08:46');
+(3581, 'carousel', 1, 'Carousel created. <br/><br/>Carousel Name: test', 2, '2024-08-23 17:08:46', '2024-08-23 17:08:46'),
+(3582, 'user_account', 2, 'Last Connection Date: 2024-08-23 14:18:53 -> 2024-08-24 11:13:14<br/>', 2, '2024-08-24 11:13:14', '2024-08-24 11:13:14'),
+(3583, 'menu_item', 55, 'Menu Group Name: Blocks -> Configurations<br/>', 2, '2024-08-24 11:15:25', '2024-08-24 11:15:25'),
+(3584, 'menu_group', 9, 'Menu Group Name: Blocks -> Configurations<br/>', 2, '2024-08-24 11:15:25', '2024-08-24 11:15:25'),
+(3585, 'menu_group', 9, 'Order Sequence: 2 -> 3<br/>', 2, '2024-08-24 11:15:29', '2024-08-24 11:15:29'),
+(3586, 'menu_item', 55, 'Menu Group Name: Configurations -> Website Configurations<br/>', 2, '2024-08-24 11:15:42', '2024-08-24 11:15:42'),
+(3587, 'menu_group', 9, 'Menu Group Name: Configurations -> Website Configurations<br/>', 2, '2024-08-24 11:15:42', '2024-08-24 11:15:42'),
+(3588, 'role_permission', 60, 'Menu Item: Carousel -> Carousel Style<br/>', 2, '2024-08-24 11:18:10', '2024-08-24 11:18:10'),
+(3589, 'menu_item', 55, 'Menu Item Name: Carousel -> Carousel Style<br/>Menu Item URL: carousel.php -> carousel-style.php<br/>', 2, '2024-08-24 11:18:10', '2024-08-24 11:18:10'),
+(3590, 'menu_group', 9, 'Order Sequence: 3 -> 22<br/>', 2, '2024-08-24 11:18:37', '2024-08-24 11:18:37'),
+(3591, 'menu_group', 9, 'Order Sequence: 22 -> 23<br/>', 2, '2024-08-24 11:18:41', '2024-08-24 11:18:41'),
+(3592, 'carousel_style', 1, 'Description: teste -> asdasdasd<br/>', 2, '2024-08-24 11:48:51', '2024-08-24 11:48:51');
+INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `changed_by`, `changed_at`, `created_date`) VALUES
+(3593, 'carousel_style', 2, 'Carousel style created. <br/><br/>Carousel Style Name: test<br/>Description: test', 2, '2024-08-24 12:06:10', '2024-08-24 12:06:10'),
+(3594, 'carousel_container', 1, 'Carousel container created. <br/><br/>Carousel Container: asdadasdasd', 2, '2024-08-24 14:22:09', '2024-08-24 14:22:09'),
+(3595, 'carousel_slider', 1, 'Carousel slider created. <br/><br/>Carousel Slider: asdasdasda', 2, '2024-08-24 14:22:22', '2024-08-24 14:22:22'),
+(3596, 'carousel_container', 1, 'Carousel Container: asdadasdasd -> asdadasdasdsadasdasdasd<br/>', 2, '2024-08-24 14:24:21', '2024-08-24 14:24:21'),
+(3597, 'carousel_slider', 1, 'Carousel Slider: asdasdasda -> asdasdasdaasdasdasdas<br/>', 2, '2024-08-24 14:24:24', '2024-08-24 14:24:24'),
+(3598, 'carousel_container', 1, 'Carousel Container: asdadasdasdsadasdasdasd -> <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n                        <a class=\"navbar-brand\" href=\"index.html\">\r\n                            <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n                            <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n                            <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n                        </a>\r\n                    </div><br/>', 2, '2024-08-24 14:24:34', '2024-08-24 14:24:34'),
+(3599, 'user_account', 2, 'Last Connection Date: 2024-08-24 11:13:14 -> 2024-08-24 17:10:31<br/>', 2, '2024-08-24 17:10:31', '2024-08-24 17:10:31'),
+(3600, 'menu_group', 9, 'Order Sequence: 23 -> 90<br/>', 2, '2024-08-24 17:22:21', '2024-08-24 17:22:21'),
+(3601, 'carousel_container', 1, 'Carousel Container: <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n                        <a class=\"navbar-brand\" href=\"index.html\">\r\n                            <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n                            <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n                            <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n                        </a>\r\n                    </div> -> <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n        <a class=\"navbar-brand\" href=\"index.html\">\r\n         <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n           <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n      </a>\r\n</div><br/>', 2, '2024-08-24 18:08:34', '2024-08-24 18:08:34'),
+(3602, 'carousel_container', 1, 'Carousel Container: <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n        <a class=\"navbar-brand\" href=\"index.html\">\r\n         <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n           <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n      </a>\r\n</div> -> <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n\r\n        <a class=\"navbar-brand\" href=\"index.html\">\r\n         <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n           <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n      </a>\r\n</div><br/>', 2, '2024-08-24 18:15:07', '2024-08-24 18:15:07'),
+(3603, 'carousel_container', 1, 'Carousel Container: <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n\r\n        <a class=\"navbar-brand\" href=\"index.html\">\r\n         <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n           <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n      </a>\r\n</div> -> <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n <a class=\"navbar-brand\" href=\"index.html\">\r\n         <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n</a>\r\n</div><br/>', 2, '2024-08-24 18:15:22', '2024-08-24 18:15:22'),
+(3604, 'carousel_container', 1, 'Carousel Container: <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n <a class=\"navbar-brand\" href=\"index.html\">\r\n         <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n</a>\r\n</div> -> <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n<a class=\"navbar-brand\" href=\"index.html\">\r\n         <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n</a>\r\n</div><br/>', 2, '2024-08-24 18:15:27', '2024-08-24 18:15:27'),
+(3605, 'carousel_container', 1, 'Carousel Container: <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n<a class=\"navbar-brand\" href=\"index.html\">\r\n         <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n          <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n</a>\r\n</div> -> <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n<a class=\"navbar-brand\" href=\"index.html\">\r\n<img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n<img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n</a>\r\n</div><br/>', 2, '2024-08-24 18:23:39', '2024-08-24 18:23:39'),
+(3606, 'carousel_container', 1, 'Carousel Container: <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n<a class=\"navbar-brand\" href=\"index.html\">\r\n<img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n<img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n <img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n</a>\r\n</div> -> <div class=\"col-auto col-lg-2 me-lg-0 me-auto\">\r\n<a class=\"navbar-brand\" href=\"index.html\">\r\n<img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"default-logo\">\r\n<img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"alt-logo\">\r\n<img src=\"images/logo-black.png\" data-at2x=\"images/logo-black@2x.png\" alt=\"\" class=\"mobile-logo\">\r\n</a>\r\n</div><br/>', 2, '2024-08-24 18:23:46', '2024-08-24 18:23:46'),
+(3607, 'menu_item', 56, 'Menu Item created. <br/><br/>Menu Item Name: Accordion Style<br/>Menu Item URL: accordion-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Order Sequence: 1', 2, '2024-08-24 19:41:28', '2024-08-24 19:41:28'),
+(3608, 'menu_item', 56, 'Menu Item Icon:  -> ti ti-layout-rows<br/>', 2, '2024-08-24 19:42:43', '2024-08-24 19:42:43'),
+(3609, 'role_permission', 61, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Accordion Style<br/>Date Assigned: 2024-08-24 19:42:48', 2, '2024-08-24 19:42:48', '2024-08-24 19:42:48'),
+(3610, 'role_permission', 61, 'Read Access: 0 -> 1<br/>', 2, '2024-08-24 19:42:49', '2024-08-24 19:42:49'),
+(3611, 'role_permission', 61, 'Create Access: 0 -> 1<br/>', 2, '2024-08-24 19:42:50', '2024-08-24 19:42:50'),
+(3612, 'role_permission', 61, 'Write Access: 0 -> 1<br/>', 2, '2024-08-24 19:42:50', '2024-08-24 19:42:50'),
+(3613, 'role_permission', 61, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-24 19:42:52', '2024-08-24 19:42:52'),
+(3614, 'accordion_style', 1, 'Accordion style created. <br/><br/>Accordion Style Name: test<br/>Description: test', 2, '2024-08-24 19:46:53', '2024-08-24 19:46:53'),
+(3615, 'accordion_container', 1, 'Accordion container created. <br/><br/>Accordion Container: asdadasdasd', 2, '2024-08-24 19:47:58', '2024-08-24 19:47:58'),
+(3616, 'accordion_item', 1, 'Accordion item created. <br/><br/>Accordion Item: asdasdasd', 2, '2024-08-24 19:48:00', '2024-08-24 19:48:00'),
+(3617, 'role_permission', 60, 'Menu Item: Carousel Style -> Block Styles<br/>', 2, '2024-08-24 19:51:37', '2024-08-24 19:51:37'),
+(3618, 'menu_item', 55, 'Menu Item Name: Carousel Style -> Block Styles<br/>Menu Item URL: carousel-style.php -> <br/>Menu Item Icon: ti ti-table-import  -> ti ti-puzzle<br/>Order Sequence: 3 -> 2<br/>', 2, '2024-08-24 19:51:37', '2024-08-24 19:51:37'),
+(3619, 'role_permission', 61, 'Menu Item: Accordion Style -> Carousel Style<br/>', 2, '2024-08-24 19:52:09', '2024-08-24 19:52:09'),
+(3620, 'menu_item', 56, 'Menu Item Name: Accordion Style -> Carousel Style<br/>Menu Item URL: accordion-style.php -> carousel-style.php<br/>Menu Item Icon: ti ti-layout-rows -> <br/>Order Sequence: 1 -> 3<br/>', 2, '2024-08-24 19:52:09', '2024-08-24 19:52:09'),
+(3621, 'role_permission', 60, 'Create Access: 1 -> 0<br/>', 2, '2024-08-24 19:52:26', '2024-08-24 19:52:26'),
+(3622, 'role_permission', 60, 'Write Access: 1 -> 0<br/>', 2, '2024-08-24 19:52:27', '2024-08-24 19:52:27'),
+(3623, 'role_permission', 60, 'Delete Access: 1 -> 0<br/>', 2, '2024-08-24 19:52:27', '2024-08-24 19:52:27'),
+(3624, 'menu_item', 57, 'Menu Item created. <br/><br/>Menu Item Name: Accordion Style<br/>Menu Item URL: accordion-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 1', 2, '2024-08-24 19:52:46', '2024-08-24 19:52:46'),
+(3625, 'role_permission', 62, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Accordion Style<br/>Date Assigned: 2024-08-24 19:52:52', 2, '2024-08-24 19:52:52', '2024-08-24 19:52:52'),
+(3626, 'role_permission', 62, 'Read Access: 0 -> 1<br/>', 2, '2024-08-24 19:52:53', '2024-08-24 19:52:53'),
+(3627, 'role_permission', 62, 'Create Access: 0 -> 1<br/>', 2, '2024-08-24 19:52:54', '2024-08-24 19:52:54'),
+(3628, 'role_permission', 62, 'Write Access: 0 -> 1<br/>', 2, '2024-08-24 19:52:55', '2024-08-24 19:52:55'),
+(3629, 'role_permission', 62, 'Write Access: 1 -> 0<br/>', 2, '2024-08-24 19:52:55', '2024-08-24 19:52:55'),
+(3630, 'role_permission', 62, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-24 19:52:56', '2024-08-24 19:52:56'),
+(3631, 'role_permission', 62, 'Write Access: 0 -> 1<br/>', 2, '2024-08-24 19:52:57', '2024-08-24 19:52:57'),
+(3632, 'menu_item', 58, 'Menu Item created. <br/><br/>Menu Item Name: Testimonial Style<br/>Menu Item URL: testimonial-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 20', 2, '2024-08-24 20:09:47', '2024-08-24 20:09:47'),
+(3633, 'role_permission', 63, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Testimonial Style<br/>Date Assigned: 2024-08-24 20:09:51', 2, '2024-08-24 20:09:51', '2024-08-24 20:09:51'),
+(3634, 'role_permission', 63, 'Read Access: 0 -> 1<br/>', 2, '2024-08-24 20:09:52', '2024-08-24 20:09:52'),
+(3635, 'role_permission', 63, 'Create Access: 0 -> 1<br/>', 2, '2024-08-24 20:09:53', '2024-08-24 20:09:53'),
+(3636, 'role_permission', 63, 'Write Access: 0 -> 1<br/>', 2, '2024-08-24 20:09:54', '2024-08-24 20:09:54'),
+(3637, 'role_permission', 63, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-24 20:09:54', '2024-08-24 20:09:54'),
+(3638, 'menu_item', 59, 'Menu Item created. <br/><br/>Menu Item Name: Client Style<br/>Menu Item URL: client-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 3', 2, '2024-08-24 20:16:10', '2024-08-24 20:16:10'),
+(3639, 'role_permission', 64, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Client Style<br/>Date Assigned: 2024-08-24 20:16:17', 2, '2024-08-24 20:16:17', '2024-08-24 20:16:17'),
+(3640, 'role_permission', 64, 'Read Access: 0 -> 1<br/>', 2, '2024-08-24 20:16:19', '2024-08-24 20:16:19'),
+(3641, 'role_permission', 64, 'Create Access: 0 -> 1<br/>', 2, '2024-08-24 20:16:19', '2024-08-24 20:16:19'),
+(3642, 'role_permission', 64, 'Write Access: 0 -> 1<br/>', 2, '2024-08-24 20:16:20', '2024-08-24 20:16:20'),
+(3643, 'role_permission', 64, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-24 20:16:21', '2024-08-24 20:16:21'),
+(3644, 'menu_item', 60, 'Menu Item created. <br/><br/>Menu Item Name: Content Carousel Style<br/>Menu Item URL: content-crousel-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 3', 2, '2024-08-24 21:40:59', '2024-08-24 21:40:59'),
+(3645, 'role_permission', 65, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Content Carousel Style<br/>Date Assigned: 2024-08-24 21:41:04', 2, '2024-08-24 21:41:04', '2024-08-24 21:41:04'),
+(3646, 'role_permission', 65, 'Read Access: 0 -> 1<br/>', 2, '2024-08-24 21:41:06', '2024-08-24 21:41:06'),
+(3647, 'role_permission', 65, 'Create Access: 0 -> 1<br/>', 2, '2024-08-24 21:41:07', '2024-08-24 21:41:07'),
+(3648, 'role_permission', 65, 'Write Access: 0 -> 1<br/>', 2, '2024-08-24 21:41:08', '2024-08-24 21:41:08'),
+(3649, 'role_permission', 65, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-24 21:41:09', '2024-08-24 21:41:09'),
+(3650, 'user_account', 2, 'Last Connection Date: 2024-08-24 17:10:31 -> 2024-08-25 08:09:48<br/>', 2, '2024-08-25 08:09:48', '2024-08-25 08:09:48'),
+(3651, 'user_account', 2, 'Last Connection Date: 2024-08-25 08:09:48 -> 2024-08-25 11:36:12<br/>', 2, '2024-08-25 11:36:12', '2024-08-25 11:36:12'),
+(3652, 'menu_item', 60, 'Menu Item URL: content-crousel-style.php -> content-carousel-style.php<br/>', 2, '2024-08-25 12:00:49', '2024-08-25 12:00:49'),
+(3653, 'user_account', 2, 'Last Connection Date: 2024-08-25 11:36:12 -> 2024-08-25 12:02:04<br/>', 2, '2024-08-25 12:02:04', '2024-08-25 12:02:04'),
+(3654, 'content_carousel_style', 1, 'Carousel style created. <br/><br/>Content Carousel Style Name: eeat<br/>Description: eataet', 2, '2024-08-25 12:03:29', '2024-08-25 12:03:29'),
+(3655, 'content_carousel_container', 1, 'Content carousel container created. <br/><br/>Content Carousel Container: asdasd', 2, '2024-08-25 12:46:01', '2024-08-25 12:46:01'),
+(3656, 'content_carousel_slider', 1, 'Content carousel slider created. <br/><br/>Content Carousel Slider: adasdasd', 2, '2024-08-25 12:47:22', '2024-08-25 12:47:22'),
+(3657, 'content_carousel_slider', 1, 'Content Carousel Slider: adasdasd -> adasdasdasdasdasd<br/>', 2, '2024-08-25 12:47:26', '2024-08-25 12:47:26'),
+(3658, 'content_carousel_container', 1, 'Content Carousel Container: asdasd -> asdasddasdasdasd<br/>', 2, '2024-08-25 12:47:29', '2024-08-25 12:47:29'),
+(3659, 'content_carousel_style', 1, 'Content Carousel Style Name: eeat -> eeatasdasd<br/>Description: eataet -> eataetasdasd<br/>', 2, '2024-08-25 12:47:32', '2024-08-25 12:47:32'),
+(3660, 'menu_item', 61, 'Menu Item created. <br/><br/>Menu Item Name: Service Box<br/>Menu Item URL: service-box.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 19', 2, '2024-08-25 13:38:09', '2024-08-25 13:38:09'),
+(3661, 'role_permission', 66, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Service Box<br/>Date Assigned: 2024-08-25 13:38:16', 2, '2024-08-25 13:38:16', '2024-08-25 13:38:16'),
+(3662, 'role_permission', 66, 'Read Access: 0 -> 1<br/>', 2, '2024-08-25 13:38:17', '2024-08-25 13:38:17'),
+(3663, 'role_permission', 66, 'Create Access: 0 -> 1<br/>', 2, '2024-08-25 13:38:18', '2024-08-25 13:38:18'),
+(3664, 'role_permission', 66, 'Write Access: 0 -> 1<br/>', 2, '2024-08-25 13:38:19', '2024-08-25 13:38:19'),
+(3665, 'role_permission', 66, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-25 13:38:20', '2024-08-25 13:38:20'),
+(3666, 'role_permission', 66, 'Menu Item: Service Box -> Service Box Style<br/>', 2, '2024-08-25 13:38:30', '2024-08-25 13:38:30'),
+(3667, 'menu_item', 61, 'Menu Item Name: Service Box -> Service Box Style<br/>', 2, '2024-08-25 13:38:30', '2024-08-25 13:38:30'),
+(3668, 'user_account', 2, 'Last Connection Date: 2024-08-25 12:02:04 -> 2024-08-25 17:28:35<br/>', 2, '2024-08-25 17:28:35', '2024-08-25 17:28:35'),
+(3669, 'user_account', 2, 'Last Connection Date: 2024-08-25 17:28:35 -> 2024-08-26 05:30:03<br/>', 2, '2024-08-26 05:30:03', '2024-08-26 05:30:03'),
+(3670, 'menu_item', 62, 'Menu Item created. <br/><br/>Menu Item Name: Pricing Table Style<br/>Menu Item URL: pricing-table-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 16', 2, '2024-08-26 06:17:30', '2024-08-26 06:17:30'),
+(3671, 'role_permission', 67, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Pricing Table Style<br/>Date Assigned: 2024-08-26 06:17:35', 2, '2024-08-26 06:17:35', '2024-08-26 06:17:35'),
+(3672, 'role_permission', 67, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 06:17:36', '2024-08-26 06:17:36'),
+(3673, 'role_permission', 67, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 06:17:37', '2024-08-26 06:17:37'),
+(3674, 'role_permission', 67, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 06:17:37', '2024-08-26 06:17:37'),
+(3675, 'role_permission', 67, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 06:17:38', '2024-08-26 06:17:38'),
+(3676, 'menu_item', 63, 'Menu Item created. <br/><br/>Menu Item Name: Contact Form Style<br/>Menu Item URL: contact-form-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 3', 2, '2024-08-26 06:18:41', '2024-08-26 06:18:41'),
+(3677, 'menu_item', 64, 'Menu Item created. <br/><br/>Menu Item Name: Image Gallery Style<br/>Menu Item URL: image-gallery-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Order Sequence: 9', 2, '2024-08-26 06:24:43', '2024-08-26 06:24:43'),
+(3678, 'role_permission', 68, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Image Gallery Style<br/>Date Assigned: 2024-08-26 06:25:01', 2, '2024-08-26 06:25:01', '2024-08-26 06:25:01'),
+(3679, 'role_permission', 68, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 06:25:02', '2024-08-26 06:25:02'),
+(3680, 'role_permission', 68, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 06:25:03', '2024-08-26 06:25:03'),
+(3681, 'role_permission', 68, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 06:25:04', '2024-08-26 06:25:04'),
+(3682, 'role_permission', 68, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 06:25:05', '2024-08-26 06:25:05'),
+(3683, 'role_permission', 69, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Contact Form Style<br/>Date Assigned: 2024-08-26 06:25:10', 2, '2024-08-26 06:25:10', '2024-08-26 06:25:10'),
+(3684, 'role_permission', 69, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 06:25:11', '2024-08-26 06:25:11'),
+(3685, 'role_permission', 69, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 06:25:11', '2024-08-26 06:25:11'),
+(3686, 'role_permission', 69, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 06:25:12', '2024-08-26 06:25:12'),
+(3687, 'role_permission', 69, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 06:25:13', '2024-08-26 06:25:13'),
+(3688, 'menu_item', 65, 'Menu Item created. <br/><br/>Menu Item Name: Process Step Style<br/>Menu Item URL: process-step-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 16', 2, '2024-08-26 06:30:46', '2024-08-26 06:30:46'),
+(3689, 'role_permission', 70, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Process Step Style<br/>Date Assigned: 2024-08-26 06:31:40', 2, '2024-08-26 06:31:40', '2024-08-26 06:31:40'),
+(3690, 'role_permission', 70, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 06:31:41', '2024-08-26 06:31:41'),
+(3691, 'role_permission', 70, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 06:31:42', '2024-08-26 06:31:42'),
+(3692, 'role_permission', 70, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 06:31:42', '2024-08-26 06:31:42'),
+(3693, 'role_permission', 70, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 06:31:43', '2024-08-26 06:31:43'),
+(3694, 'menu_item', 66, 'Menu Item created. <br/><br/>Menu Item Name: Slider Style<br/>Menu Item URL: slider-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 19', 2, '2024-08-26 06:32:14', '2024-08-26 06:32:14'),
+(3695, 'role_permission', 71, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Slider Style<br/>Date Assigned: 2024-08-26 06:32:18', 2, '2024-08-26 06:32:18', '2024-08-26 06:32:18'),
+(3696, 'role_permission', 71, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 06:32:19', '2024-08-26 06:32:19'),
+(3697, 'role_permission', 71, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 06:32:20', '2024-08-26 06:32:20'),
+(3698, 'role_permission', 71, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 06:32:21', '2024-08-26 06:32:21'),
+(3699, 'role_permission', 71, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 06:32:22', '2024-08-26 06:32:22'),
+(3700, 'menu_item', 67, 'Menu Item created. <br/><br/>Menu Item Name: Header Style<br/>Menu Item URL: header-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 8', 2, '2024-08-26 06:35:03', '2024-08-26 06:35:03'),
+(3701, 'role_permission', 72, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Header Style<br/>Date Assigned: 2024-08-26 06:35:08', 2, '2024-08-26 06:35:08', '2024-08-26 06:35:08'),
+(3702, 'role_permission', 72, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 06:35:09', '2024-08-26 06:35:09'),
+(3703, 'role_permission', 72, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 06:35:10', '2024-08-26 06:35:10'),
+(3704, 'role_permission', 72, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 06:35:11', '2024-08-26 06:35:11'),
+(3705, 'role_permission', 72, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 06:35:12', '2024-08-26 06:35:12'),
+(3706, 'menu_item', 68, 'Menu Item created. <br/><br/>Menu Item Name: Footer Style<br/>Menu Item URL: footer-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 6', 2, '2024-08-26 06:36:00', '2024-08-26 06:36:00'),
+(3707, 'role_permission', 73, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Footer Style<br/>Date Assigned: 2024-08-26 06:36:04', 2, '2024-08-26 06:36:04', '2024-08-26 06:36:04'),
+(3708, 'role_permission', 73, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 06:36:05', '2024-08-26 06:36:05'),
+(3709, 'role_permission', 73, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 06:36:06', '2024-08-26 06:36:06'),
+(3710, 'role_permission', 73, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 06:36:07', '2024-08-26 06:36:07'),
+(3711, 'role_permission', 73, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 06:36:08', '2024-08-26 06:36:08'),
+(3712, 'menu_item', 69, 'Menu Item created. <br/><br/>Menu Item Name: Page Title Style<br/>Menu Item URL: page-title-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 16', 2, '2024-08-26 06:37:31', '2024-08-26 06:37:31'),
+(3713, 'role_permission', 74, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Page Title Style<br/>Date Assigned: 2024-08-26 06:37:34', 2, '2024-08-26 06:37:34', '2024-08-26 06:37:34'),
+(3714, 'role_permission', 74, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 06:37:35', '2024-08-26 06:37:35'),
+(3715, 'role_permission', 74, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 06:37:36', '2024-08-26 06:37:36'),
+(3716, 'role_permission', 74, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 06:37:37', '2024-08-26 06:37:37'),
+(3717, 'role_permission', 74, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 06:37:37', '2024-08-26 06:37:37'),
+(3718, 'role_permission', 66, 'Menu Item: Service Box Style -> Services Box Style<br/>', 2, '2024-08-26 11:22:32', '2024-08-26 11:22:32'),
+(3719, 'menu_item', 61, 'Menu Item Name: Service Box Style -> Services Box Style<br/>Menu Item URL: service-box.php -> services-box.php<br/>', 2, '2024-08-26 11:22:32', '2024-08-26 11:22:32'),
+(3720, 'menu_item', 61, 'Menu Item URL: services-box.php -> services-box-style.php<br/>', 2, '2024-08-26 11:22:49', '2024-08-26 11:22:49'),
+(3721, 'menu_item', 70, 'Menu Item created. <br/><br/>Menu Item Name: Call To Action Style<br/>Menu Item URL: call-to-action-style.php<br/>Menu Group Name: Website Configurations<br/>App Module: Website Studio<br/>Parent: Block Styles<br/>Order Sequence: 3', 2, '2024-08-26 11:30:56', '2024-08-26 11:30:56'),
+(3722, 'role_permission', 75, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Call To Action Style<br/>Date Assigned: 2024-08-26 11:31:00', 2, '2024-08-26 11:31:00', '2024-08-26 11:31:00'),
+(3723, 'role_permission', 75, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 11:31:00', '2024-08-26 11:31:00'),
+(3724, 'role_permission', 75, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 11:31:01', '2024-08-26 11:31:01'),
+(3725, 'role_permission', 75, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 11:31:02', '2024-08-26 11:31:02'),
+(3726, 'role_permission', 75, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 11:31:03', '2024-08-26 11:31:03'),
+(3727, 'role_permission', 60, 'Menu Item: Block Styles -> Block Type<br/>', 2, '2024-08-26 11:56:39', '2024-08-26 11:56:39'),
+(3728, 'menu_item', 55, 'Menu Item Name: Block Styles -> Block Type<br/>Menu Item URL:  -> block-type.php<br/>', 2, '2024-08-26 11:56:39', '2024-08-26 11:56:39'),
+(3729, 'role_permission', 61, 'Menu Item: Carousel Style -> Block Style<br/>', 2, '2024-08-26 11:57:44', '2024-08-26 11:57:44'),
+(3730, 'menu_item', 56, 'Menu Item Name: Carousel Style -> Block Style<br/>Menu Item URL: carousel-style.php -> block-style.php<br/>Order Sequence: 3 -> 2<br/>', 2, '2024-08-26 11:57:44', '2024-08-26 11:57:44'),
+(3731, 'menu_item', 56, 'Menu Item Icon:  -> ti ti-tools<br/>', 2, '2024-08-26 11:58:51', '2024-08-26 11:58:51'),
+(3732, 'menu_group', 10, 'Menu group created. <br/><br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 2', 2, '2024-08-26 11:59:34', '2024-08-26 11:59:34'),
+(3733, 'user_account', 2, 'Last Connection Date: 2024-08-26 05:30:03 -> 2024-08-26 18:19:07<br/>', 2, '2024-08-26 18:19:07', '2024-08-26 18:19:07'),
+(3734, 'role_permission', 60, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 19:00:48', '2024-08-26 19:00:48'),
+(3735, 'role_permission', 60, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 19:00:49', '2024-08-26 19:00:49'),
+(3736, 'role_permission', 60, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 19:00:50', '2024-08-26 19:00:50'),
+(3737, 'block_type', 1, 'Block type created. <br/><br/>Block Type Name: test', 2, '2024-08-26 19:00:56', '2024-08-26 19:00:56'),
+(3738, 'block_type', 1, 'Block Type Name: test -> testasdasd<br/>', 2, '2024-08-26 19:00:59', '2024-08-26 19:00:59'),
+(3739, 'block_type', 2, 'Block type created. <br/><br/>Block Type Name: test', 2, '2024-08-26 19:17:27', '2024-08-26 19:17:27'),
+(3740, 'block_style', 1, 'Block style created. <br/><br/>Block Style Name: asdasd<br/>Description: test<br/>Block Type Name: test', 2, '2024-08-26 19:45:26', '2024-08-26 19:45:26'),
+(3741, 'block_style', 1, 'Description: test -> testasdasdasd<br/>', 2, '2024-08-26 19:47:31', '2024-08-26 19:47:31'),
+(3742, 'block_style', 1, 'Block Style Name: asdasd -> asdasdasdasdasdas<br/>Description: testasdasdasd -> testasdasdasddasdasdasd<br/>', 2, '2024-08-26 19:47:39', '2024-08-26 19:47:39'),
+(3743, 'block_container', 1, 'Block container created. <br/><br/>Block Container: asdasd', 2, '2024-08-26 19:47:44', '2024-08-26 19:47:44'),
+(3744, 'block_item', 1, 'Block item created. <br/><br/>Block Item: asdasd', 2, '2024-08-26 19:47:46', '2024-08-26 19:47:46'),
+(3745, 'block_type', 2, 'Block Type Name: test -> testasdasdad<br/>', 2, '2024-08-26 19:48:32', '2024-08-26 19:48:32');
 
 -- --------------------------------------------------------
 
@@ -8726,6 +9693,226 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `block_container`
+--
+
+DROP TABLE IF EXISTS `block_container`;
+CREATE TABLE `block_container` (
+  `block_container_id` int(10) UNSIGNED NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_container` longtext NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `block_container`
+--
+DROP TRIGGER IF EXISTS `block_container_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `block_container_trigger_insert` AFTER INSERT ON `block_container` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Block container created. <br/>';
+
+    IF NEW.block_container <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Container: ", NEW.block_container);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('block_container', NEW.block_container_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `block_container_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `block_container_trigger_update` AFTER UPDATE ON `block_container` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.block_container <> OLD.block_container THEN
+        SET audit_log = CONCAT(audit_log, "Block Container: ", OLD.block_container, " -> ", NEW.block_container, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('block_container', NEW.block_container_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `block_item`
+--
+
+DROP TABLE IF EXISTS `block_item`;
+CREATE TABLE `block_item` (
+  `block_item_id` int(10) UNSIGNED NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_item` longtext NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `block_item`
+--
+DROP TRIGGER IF EXISTS `block_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `block_item_trigger_insert` AFTER INSERT ON `block_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Block item created. <br/>';
+
+    IF NEW.block_item <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Item: ", NEW.block_item);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('block_item', NEW.block_item_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `block_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `block_item_trigger_update` AFTER UPDATE ON `block_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.block_item <> OLD.block_item THEN
+        SET audit_log = CONCAT(audit_log, "Block Item: ", OLD.block_item, " -> ", NEW.block_item, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('block_item', NEW.block_item_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `block_style`
+--
+
+DROP TABLE IF EXISTS `block_style`;
+CREATE TABLE `block_style` (
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `block_type_id` int(10) UNSIGNED NOT NULL,
+  `block_type_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `block_style`
+--
+DROP TRIGGER IF EXISTS `block_style_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `block_style_trigger_insert` AFTER INSERT ON `block_style` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Block style created. <br/>';
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Type Name: ", NEW.block_type_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('block_style', NEW.block_style_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `block_style_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `block_style_trigger_update` AFTER UPDATE ON `block_style` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_type_name <> OLD.block_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Type Name: ", OLD.block_type_name, " -> ", NEW.block_type_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('block_style', NEW.block_style_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `block_type`
+--
+
+DROP TABLE IF EXISTS `block_type`;
+CREATE TABLE `block_type` (
+  `block_type_id` int(10) UNSIGNED NOT NULL,
+  `block_type_name` varchar(100) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `block_type`
+--
+
+INSERT INTO `block_type` (`block_type_id`, `block_type_name`, `created_date`, `last_log_by`) VALUES
+(2, 'testasdasdad', '2024-08-26 19:17:27', 2);
+
+--
+-- Triggers `block_type`
+--
+DROP TRIGGER IF EXISTS `block_type_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `block_type_trigger_insert` AFTER INSERT ON `block_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Block type created. <br/>';
+
+    IF NEW.block_type_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Type Name: ", NEW.block_type_name);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('block_type', NEW.block_type_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `block_type_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `block_type_trigger_update` AFTER UPDATE ON `block_type` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.block_type_name <> OLD.block_type_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Type Name: ", OLD.block_type_name, " -> ", NEW.block_type_name, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('block_type', NEW.block_type_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `blood_type`
 --
 
@@ -8784,86 +9971,6 @@ CREATE TRIGGER `blood_type_trigger_update` AFTER UPDATE ON `blood_type` FOR EACH
 END
 $$
 DELIMITER ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `carousel`
---
-
-DROP TABLE IF EXISTS `carousel`;
-CREATE TABLE `carousel` (
-  `carousel_id` int(10) UNSIGNED NOT NULL,
-  `carousel_name` varchar(100) NOT NULL,
-  `description` varchar(500) DEFAULT NULL,
-  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `last_log_by` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `carousel`
---
-
-INSERT INTO `carousel` (`carousel_id`, `carousel_name`, `description`, `created_date`, `last_log_by`) VALUES
-(1, 'test', '', '2024-08-23 17:08:46', 2);
-
---
--- Triggers `carousel`
---
-DROP TRIGGER IF EXISTS `carousel_trigger_insert`;
-DELIMITER $$
-CREATE TRIGGER `carousel_trigger_insert` AFTER INSERT ON `carousel` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Carousel created. <br/>';
-
-    IF NEW.carousel_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Carousel Name: ", NEW.carousel_name);
-    END IF;
-
-    IF NEW.description <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
-    END IF;
-
-    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('carousel', NEW.carousel_id, audit_log, NEW.last_log_by, NOW());
-END
-$$
-DELIMITER ;
-DROP TRIGGER IF EXISTS `carousel_trigger_update`;
-DELIMITER $$
-CREATE TRIGGER `carousel_trigger_update` AFTER UPDATE ON `carousel` FOR EACH ROW BEGIN
-    DECLARE audit_log TEXT DEFAULT '';
-
-    IF NEW.carousel_name <> OLD.carousel_name THEN
-        SET audit_log = CONCAT(audit_log, "Carousel Name: ", OLD.carousel_name, " -> ", NEW.carousel_name, "<br/>");
-    END IF;
-
-    IF NEW.description <> OLD.description THEN
-        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
-    END IF;
-    
-    IF LENGTH(audit_log) > 0 THEN
-        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('carousel', NEW.carousel_id, audit_log, NEW.last_log_by, NOW());
-    END IF;
-END
-$$
-DELIMITER ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `carousel_image`
---
-
-DROP TABLE IF EXISTS `carousel_image`;
-CREATE TABLE `carousel_image` (
-  `carousel_image_id` int(10) UNSIGNED NOT NULL,
-  `carousel_id` int(10) UNSIGNED NOT NULL,
-  `carousel_image` varchar(500) NOT NULL,
-  `order_sequence` varchar(500) NOT NULL,
-  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
-  `last_log_by` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -10631,6 +11738,161 @@ CREATE TRIGGER `civil_status_trigger_update` AFTER UPDATE ON `civil_status` FOR 
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('civil_status', NEW.civil_status_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `client_container`
+--
+
+DROP TABLE IF EXISTS `client_container`;
+CREATE TABLE `client_container` (
+  `client_container_id` int(10) UNSIGNED NOT NULL,
+  `client_style_id` int(10) UNSIGNED NOT NULL,
+  `client_container` longtext NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `client_container`
+--
+DROP TRIGGER IF EXISTS `client_container_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `client_container_trigger_insert` AFTER INSERT ON `client_container` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Client container created. <br/>';
+
+    IF NEW.client_container <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Client Container: ", NEW.client_container);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('client_container', NEW.client_container_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `client_container_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `client_container_trigger_update` AFTER UPDATE ON `client_container` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.client_container <> OLD.client_container THEN
+        SET audit_log = CONCAT(audit_log, "Client Container: ", OLD.client_container, " -> ", NEW.client_container, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('client_container', NEW.client_container_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `client_item`
+--
+
+DROP TABLE IF EXISTS `client_item`;
+CREATE TABLE `client_item` (
+  `client_item_id` int(10) UNSIGNED NOT NULL,
+  `client_style_id` int(10) UNSIGNED NOT NULL,
+  `client_item` longtext NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `client_item`
+--
+DROP TRIGGER IF EXISTS `client_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `client_item_trigger_insert` AFTER INSERT ON `client_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Client item created. <br/>';
+
+    IF NEW.client_item <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Client Item: ", NEW.client_item);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('client_item', NEW.client_item_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `client_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `client_item_trigger_update` AFTER UPDATE ON `client_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.client_item <> OLD.client_item THEN
+        SET audit_log = CONCAT(audit_log, "Client Item: ", OLD.client_item, " -> ", NEW.client_item, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('client_item', NEW.client_item_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `client_style`
+--
+
+DROP TABLE IF EXISTS `client_style`;
+CREATE TABLE `client_style` (
+  `client_style_id` int(10) UNSIGNED NOT NULL,
+  `client_style_name` varchar(100) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `client_style`
+--
+DROP TRIGGER IF EXISTS `client_style_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `client_style_trigger_insert` AFTER INSERT ON `client_style` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Client style created. <br/>';
+
+    IF NEW.client_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Client Style Name: ", NEW.client_style_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('client_style', NEW.client_style_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `client_style_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `client_style_trigger_update` AFTER UPDATE ON `client_style` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.client_style_name <> OLD.client_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Client Style Name: ", OLD.client_style_name, " -> ", NEW.client_style_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('client_style', NEW.client_style_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -14212,7 +15474,8 @@ INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `
 (6, 'Employee Configurations', 2, 'Employees', 23, '2024-06-27 17:17:10', 2),
 (7, 'Customers', 3, 'Customer', 3, '2024-08-19 10:29:11', 2),
 (8, 'Websites', 4, 'Website Studio', 23, '2024-08-23 14:36:06', 2),
-(9, 'Blocks', 4, 'Website Studio', 2, '2024-08-23 16:25:19', 2);
+(9, 'Website Configurations', 4, 'Website Studio', 90, '2024-08-23 16:25:19', 2),
+(10, 'Website Elements', 4, 'Website Studio', 2, '2024-08-26 11:59:34', 2);
 
 --
 -- Triggers `menu_group`
@@ -14346,7 +15609,8 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (52, 'Employee Address', 'employee-address.php', ' ti ti-map-pin', 4, 'Profile', 1, 'Settings', 0, NULL, 5, '2024-08-20 17:06:28', 2),
 (53, ' Banks & Cards', 'banks-and-cards.php', 'ti ti-credit-card', 4, 'Profile', 1, 'Settings', 0, NULL, 2, '2024-08-22 16:38:33', 2),
 (54, 'Website', 'website.php', 'ti ti-world', 8, 'Websites', 4, 'Website Studio', NULL, NULL, 13, '2024-08-23 14:40:00', 2),
-(55, 'Carousel', 'carousel.php', 'ti ti-table-import ', 9, 'Blocks', 4, 'Website Studio', NULL, NULL, 3, '2024-08-23 16:29:33', 2);
+(55, 'Block Type', 'block-type.php', 'ti ti-puzzle', 9, 'Website Configurations', 4, 'Website Studio', 0, NULL, 2, '2024-08-23 16:29:33', 2),
+(56, 'Block Style', 'block-style.php', 'ti ti-tools', 9, 'Website Configurations', 4, 'Website Studio', NULL, NULL, 2, '2024-08-24 19:41:28', 2);
 
 --
 -- Triggers `menu_item`
@@ -15008,7 +16272,22 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (57, 1, 'Administrator', 53, ' Banks & Cards', 1, 1, 1, 1, '2024-08-22 16:39:16', '2024-08-22 16:39:16', 2),
 (58, 2, 'Customer', 53, ' Banks & Cards', 1, 1, 1, 1, '2024-08-22 16:39:16', '2024-08-22 16:39:16', 2),
 (59, 1, 'Administrator', 54, 'Website', 1, 1, 1, 1, '2024-08-23 14:40:26', '2024-08-23 14:40:26', 2),
-(60, 1, 'Administrator', 55, 'Carousel', 1, 1, 1, 1, '2024-08-23 16:29:39', '2024-08-23 16:29:39', 2);
+(60, 1, 'Administrator', 55, 'Block Type', 1, 1, 1, 1, '2024-08-23 16:29:39', '2024-08-23 16:29:39', 2),
+(61, 1, 'Administrator', 56, 'Block Style', 1, 1, 1, 1, '2024-08-24 19:42:48', '2024-08-24 19:42:48', 2),
+(62, 1, 'Administrator', 57, 'Accordion Style', 1, 1, 1, 1, '2024-08-24 19:52:52', '2024-08-24 19:52:52', 2),
+(63, 1, 'Administrator', 58, 'Testimonial Style', 1, 1, 1, 1, '2024-08-24 20:09:51', '2024-08-24 20:09:51', 2),
+(64, 1, 'Administrator', 59, 'Client Style', 1, 1, 1, 1, '2024-08-24 20:16:17', '2024-08-24 20:16:17', 2),
+(65, 1, 'Administrator', 60, 'Content Carousel Style', 1, 1, 1, 1, '2024-08-24 21:41:04', '2024-08-24 21:41:04', 2),
+(66, 1, 'Administrator', 61, 'Services Box Style', 1, 1, 1, 1, '2024-08-25 13:38:16', '2024-08-25 13:38:16', 2),
+(67, 1, 'Administrator', 62, 'Pricing Table Style', 1, 1, 1, 1, '2024-08-26 06:17:35', '2024-08-26 06:17:35', 2),
+(68, 1, 'Administrator', 64, 'Image Gallery Style', 1, 1, 1, 1, '2024-08-26 06:25:01', '2024-08-26 06:25:01', 2),
+(69, 1, 'Administrator', 63, 'Contact Form Style', 1, 1, 1, 1, '2024-08-26 06:25:10', '2024-08-26 06:25:10', 2),
+(70, 1, 'Administrator', 65, 'Process Step Style', 1, 1, 1, 1, '2024-08-26 06:31:40', '2024-08-26 06:31:40', 2),
+(71, 1, 'Administrator', 66, 'Slider Style', 1, 1, 1, 1, '2024-08-26 06:32:18', '2024-08-26 06:32:18', 2),
+(72, 1, 'Administrator', 67, 'Header Style', 1, 1, 1, 1, '2024-08-26 06:35:08', '2024-08-26 06:35:08', 2),
+(73, 1, 'Administrator', 68, 'Footer Style', 1, 1, 1, 1, '2024-08-26 06:36:04', '2024-08-26 06:36:04', 2),
+(74, 1, 'Administrator', 69, 'Page Title Style', 1, 1, 1, 1, '2024-08-26 06:37:34', '2024-08-26 06:37:34', 2),
+(75, 1, 'Administrator', 70, 'Call To Action Style', 1, 1, 1, 1, '2024-08-26 11:31:00', '2024-08-26 11:31:00', 2);
 
 --
 -- Triggers `role_permission`
@@ -15677,7 +16956,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'dark', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -15879,7 +17158,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-23 14:18:53', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'ogIStNyjQx%2BwA%2BA0yCNGMNB8fYBH1hwvFQ0gBRF0rA8%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-26 18:19:07', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'gT9zD46OPvysE7zZ6Ab395Ta2vL0uxLQbp5ru%2FTBW%2Fw%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -16447,29 +17726,46 @@ ALTER TABLE `bank_account_type`
   ADD KEY `bank_account_type_index_bank_account_type_id` (`bank_account_type_id`);
 
 --
+-- Indexes for table `block_container`
+--
+ALTER TABLE `block_container`
+  ADD PRIMARY KEY (`block_container_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `block_container_index_block_container_id` (`block_container_id`),
+  ADD KEY `block_container_index_block_style_id` (`block_style_id`);
+
+--
+-- Indexes for table `block_item`
+--
+ALTER TABLE `block_item`
+  ADD PRIMARY KEY (`block_item_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `block_item_index_block_item_id` (`block_item_id`),
+  ADD KEY `block_item_index_block_style_id` (`block_style_id`);
+
+--
+-- Indexes for table `block_style`
+--
+ALTER TABLE `block_style`
+  ADD PRIMARY KEY (`block_style_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `block_style_index_block_style_id` (`block_style_id`);
+
+--
+-- Indexes for table `block_type`
+--
+ALTER TABLE `block_type`
+  ADD PRIMARY KEY (`block_type_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `block_type_index_block_type_id` (`block_type_id`);
+
+--
 -- Indexes for table `blood_type`
 --
 ALTER TABLE `blood_type`
   ADD PRIMARY KEY (`blood_type_id`),
   ADD KEY `last_log_by` (`last_log_by`),
   ADD KEY `blood_type_index_blood_type_id` (`blood_type_id`);
-
---
--- Indexes for table `carousel`
---
-ALTER TABLE `carousel`
-  ADD PRIMARY KEY (`carousel_id`),
-  ADD KEY `last_log_by` (`last_log_by`),
-  ADD KEY `carousel_index_carousel_id` (`carousel_id`);
-
---
--- Indexes for table `carousel_image`
---
-ALTER TABLE `carousel_image`
-  ADD PRIMARY KEY (`carousel_image_id`),
-  ADD KEY `last_log_by` (`last_log_by`),
-  ADD KEY `carousel_image_index_carousel_image_id` (`carousel_image_id`),
-  ADD KEY `carousel_image_index_carousel_id` (`carousel_id`);
 
 --
 -- Indexes for table `city`
@@ -16488,6 +17784,32 @@ ALTER TABLE `civil_status`
   ADD PRIMARY KEY (`civil_status_id`),
   ADD KEY `last_log_by` (`last_log_by`),
   ADD KEY `civil_status_index_civil_status_id` (`civil_status_id`);
+
+--
+-- Indexes for table `client_container`
+--
+ALTER TABLE `client_container`
+  ADD PRIMARY KEY (`client_container_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `client_container_index_client_container_id` (`client_container_id`),
+  ADD KEY `client_container_index_client_style_id` (`client_style_id`);
+
+--
+-- Indexes for table `client_item`
+--
+ALTER TABLE `client_item`
+  ADD PRIMARY KEY (`client_item_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `client_item_index_client_item_id` (`client_item_id`),
+  ADD KEY `client_item_index_client_style_id` (`client_style_id`);
+
+--
+-- Indexes for table `client_style`
+--
+ALTER TABLE `client_style`
+  ADD PRIMARY KEY (`client_style_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `client_style_index_client_style_id` (`client_style_id`);
 
 --
 -- Indexes for table `company`
@@ -17061,7 +18383,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3582;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3746;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -17076,22 +18398,34 @@ ALTER TABLE `bank_account_type`
   MODIFY `bank_account_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `block_container`
+--
+ALTER TABLE `block_container`
+  MODIFY `block_container_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `block_item`
+--
+ALTER TABLE `block_item`
+  MODIFY `block_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `block_style`
+--
+ALTER TABLE `block_style`
+  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `block_type`
+--
+ALTER TABLE `block_type`
+  MODIFY `block_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `blood_type`
 --
 ALTER TABLE `blood_type`
   MODIFY `blood_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `carousel`
---
-ALTER TABLE `carousel`
-  MODIFY `carousel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `carousel_image`
---
-ALTER TABLE `carousel_image`
-  MODIFY `carousel_image_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -17104,6 +18438,24 @@ ALTER TABLE `city`
 --
 ALTER TABLE `civil_status`
   MODIFY `civil_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `client_container`
+--
+ALTER TABLE `client_container`
+  MODIFY `client_container_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `client_item`
+--
+ALTER TABLE `client_item`
+  MODIFY `client_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `client_style`
+--
+ALTER TABLE `client_style`
+  MODIFY `client_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `company`
@@ -17307,13 +18659,13 @@ ALTER TABLE `language_proficiency`
 -- AUTO_INCREMENT for table `menu_group`
 --
 ALTER TABLE `menu_group`
-  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -17367,7 +18719,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -17494,23 +18846,36 @@ ALTER TABLE `bank_account_type`
   ADD CONSTRAINT `bank_account_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `block_container`
+--
+ALTER TABLE `block_container`
+  ADD CONSTRAINT `block_container_ibfk_1` FOREIGN KEY (`block_style_id`) REFERENCES `block_style` (`block_style_id`),
+  ADD CONSTRAINT `block_container_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `block_item`
+--
+ALTER TABLE `block_item`
+  ADD CONSTRAINT `block_item_ibfk_1` FOREIGN KEY (`block_style_id`) REFERENCES `block_style` (`block_style_id`),
+  ADD CONSTRAINT `block_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `block_style`
+--
+ALTER TABLE `block_style`
+  ADD CONSTRAINT `block_style_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `block_type`
+--
+ALTER TABLE `block_type`
+  ADD CONSTRAINT `block_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `blood_type`
 --
 ALTER TABLE `blood_type`
   ADD CONSTRAINT `blood_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `carousel`
---
-ALTER TABLE `carousel`
-  ADD CONSTRAINT `carousel_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
-
---
--- Constraints for table `carousel_image`
---
-ALTER TABLE `carousel_image`
-  ADD CONSTRAINT `carousel_image_ibfk_1` FOREIGN KEY (`carousel_id`) REFERENCES `carousel` (`carousel_id`),
-  ADD CONSTRAINT `carousel_image_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `city`
@@ -17525,6 +18890,26 @@ ALTER TABLE `city`
 --
 ALTER TABLE `civil_status`
   ADD CONSTRAINT `civil_status_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `client_container`
+--
+ALTER TABLE `client_container`
+  ADD CONSTRAINT `client_container_ibfk_1` FOREIGN KEY (`client_style_id`) REFERENCES `client_style` (`client_style_id`),
+  ADD CONSTRAINT `client_container_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `client_item`
+--
+ALTER TABLE `client_item`
+  ADD CONSTRAINT `client_item_ibfk_1` FOREIGN KEY (`client_style_id`) REFERENCES `client_style` (`client_style_id`),
+  ADD CONSTRAINT `client_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `client_style`
+--
+ALTER TABLE `client_style`
+  ADD CONSTRAINT `client_style_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `company`
