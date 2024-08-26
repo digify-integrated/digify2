@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 26, 2024 at 02:21 PM
+-- Generation Time: Aug 26, 2024 at 04:31 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -9557,7 +9557,47 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3742, 'block_style', 1, 'Block Style Name: asdasd -> asdasdasdasdasdas<br/>Description: testasdasdasd -> testasdasdasddasdasdasd<br/>', 2, '2024-08-26 19:47:39', '2024-08-26 19:47:39'),
 (3743, 'block_container', 1, 'Block container created. <br/><br/>Block Container: asdasd', 2, '2024-08-26 19:47:44', '2024-08-26 19:47:44'),
 (3744, 'block_item', 1, 'Block item created. <br/><br/>Block Item: asdasd', 2, '2024-08-26 19:47:46', '2024-08-26 19:47:46'),
-(3745, 'block_type', 2, 'Block Type Name: test -> testasdasdad<br/>', 2, '2024-08-26 19:48:32', '2024-08-26 19:48:32');
+(3745, 'block_type', 2, 'Block Type Name: test -> testasdasdad<br/>', 2, '2024-08-26 19:48:32', '2024-08-26 19:48:32'),
+(3746, 'block_type', 1, 'Block type created. <br/><br/>Block Type Name: Accordion', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3747, 'block_type', 2, 'Block type created. <br/><br/>Block Type Name: Call To Action', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3748, 'block_type', 3, 'Block type created. <br/><br/>Block Type Name: Carousel', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3749, 'block_type', 4, 'Block type created. <br/><br/>Block Type Name: Client', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3750, 'block_type', 5, 'Block type created. <br/><br/>Block Type Name: Contact Form', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3751, 'block_type', 6, 'Block type created. <br/><br/>Block Type Name: Content Carousel', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3752, 'block_type', 7, 'Block type created. <br/><br/>Block Type Name: Footer', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3753, 'block_type', 8, 'Block type created. <br/><br/>Block Type Name: Header', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3754, 'block_type', 9, 'Block type created. <br/><br/>Block Type Name: Image Gallery', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3755, 'block_type', 10, 'Block type created. <br/><br/>Block Type Name: Page Title', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3756, 'block_type', 11, 'Block type created. <br/><br/>Block Type Name: Pricing Table', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3757, 'block_type', 12, 'Block type created. <br/><br/>Block Type Name: Process Step', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3758, 'block_type', 13, 'Block type created. <br/><br/>Block Type Name: Services Box', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3759, 'block_type', 14, 'Block type created. <br/><br/>Block Type Name: Slider', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3760, 'block_type', 15, 'Block type created. <br/><br/>Block Type Name: Testimonial', 1, '2024-08-26 21:40:20', '2024-08-26 21:40:20'),
+(3761, 'menu_item', 57, 'Menu Item created. <br/><br/>Menu Item Name: Accordion<br/>Menu Item URL: accordion.php<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 1', 2, '2024-08-26 21:47:05', '2024-08-26 21:47:05'),
+(3762, 'role_permission', 62, 'Menu Item: Accordion Style -> Accordion<br/>', 2, '2024-08-26 21:48:39', '2024-08-26 21:48:39'),
+(3763, 'menu_item', 57, 'Menu Item Icon:  -> ti ti-layout-navbar<br/>', 2, '2024-08-26 21:48:39', '2024-08-26 21:48:39'),
+(3764, 'menu_item', 58, 'Menu Item created. <br/><br/>Menu Item Name: Call to Action<br/>Menu Item URL: call-to-action.php<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 3', 2, '2024-08-26 21:51:51', '2024-08-26 21:51:51'),
+(3765, 'role_permission', 63, 'Menu Item: Testimonial Style -> Call to Action<br/>', 2, '2024-08-26 22:01:10', '2024-08-26 22:01:10'),
+(3766, 'menu_item', 58, 'Menu Item Icon:  -> ti ti-confetti<br/>', 2, '2024-08-26 22:01:10', '2024-08-26 22:01:10'),
+(3767, 'menu_item', 59, 'Menu Item created. <br/><br/>Menu Item Name: Carousel<br/>Menu Item URL: carousel.php<br/>Menu Item Icon: ti ti-layout-sidebar<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 3', 2, '2024-08-26 22:02:00', '2024-08-26 22:02:00'),
+(3768, 'menu_item', 60, 'Menu Item created. <br/><br/>Menu Item Name: Clients<br/>Menu Item URL: clients.php<br/>Menu Item Icon: ti ti-users<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 3', 2, '2024-08-26 22:13:37', '2024-08-26 22:13:37'),
+(3769, 'menu_item', 61, 'Menu Item created. <br/><br/>Menu Item Name: Contact Form<br/>Menu Item URL: contact-form.php<br/>Menu Item Icon: ti ti-forms<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 3', 2, '2024-08-26 22:14:17', '2024-08-26 22:14:17'),
+(3770, 'menu_item', 62, 'Menu Item created. <br/><br/>Menu Item Name: Content Carousel<br/>Menu Item URL: content-carousel.php<br/>Menu Item Icon: ti ti-layout-align-right<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 3', 2, '2024-08-26 22:15:30', '2024-08-26 22:15:30'),
+(3771, 'menu_item', 63, 'Menu Item created. <br/><br/>Menu Item Name: Footer<br/>Menu Item URL: footer.php<br/>Menu Item Icon: ti ti-layout-bottombar<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 6', 2, '2024-08-26 22:16:21', '2024-08-26 22:16:21'),
+(3772, 'menu_item', 64, 'Menu Item created. <br/><br/>Menu Item Name: Header<br/>Menu Item URL: header.php<br/>Menu Item Icon: ti ti-layout-navbar<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 8', 2, '2024-08-26 22:17:09', '2024-08-26 22:17:09'),
+(3773, 'menu_item', 65, 'Menu Item created. <br/><br/>Menu Item Name: Image Gallery<br/>Menu Item URL: image-gallery.php<br/>Menu Item Icon: ti ti-photo<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 9', 2, '2024-08-26 22:18:52', '2024-08-26 22:18:52'),
+(3774, 'menu_item', 66, 'Menu Item created. <br/><br/>Menu Item Name: Page Title<br/>Menu Item URL: page-title.php<br/>Menu Item Icon: ti ti-browser<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 16', 2, '2024-08-26 22:22:31', '2024-08-26 22:22:31'),
+(3775, 'menu_item', 67, 'Menu Item created. <br/><br/>Menu Item Name: Pricing Table<br/>Menu Item URL: pricing-table.php<br/>Menu Item Icon: ti ti-ad-2<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 16', 2, '2024-08-26 22:23:37', '2024-08-26 22:23:37'),
+(3776, 'menu_item', 68, 'Menu Item created. <br/><br/>Menu Item Name: Process Step<br/>Menu Item URL: process-step.php<br/>Menu Item Icon: ti ti-step-into<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 16', 2, '2024-08-26 22:24:28', '2024-08-26 22:24:28'),
+(3777, 'menu_item', 58, 'Menu Item Icon: ti ti-confetti -> ti ti-speakerphone<br/>', 2, '2024-08-26 22:26:15', '2024-08-26 22:26:15'),
+(3778, 'menu_item', 69, 'Menu Item created. <br/><br/>Menu Item Name: Services Box<br/>Menu Item URL: services-box.php<br/>Menu Item Icon: ti ti-subtask<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 19', 2, '2024-08-26 22:26:40', '2024-08-26 22:26:40'),
+(3779, 'menu_item', 70, 'Menu Item created. <br/><br/>Menu Item Name: Slider<br/>Menu Item URL: slider.php<br/>Menu Item Icon: ti ti-slideshow<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 19', 2, '2024-08-26 22:27:17', '2024-08-26 22:27:17'),
+(3780, 'menu_item', 71, 'Menu Item created. <br/><br/>Menu Item Name: Testimonial<br/>Menu Item URL: testimonial.php<br/>Menu Item Icon: ti ti-message-dots<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 20', 2, '2024-08-26 22:29:36', '2024-08-26 22:29:36'),
+(3781, 'role_permission', 76, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Testimonial<br/>Date Assigned: 2024-08-26 22:29:42', 2, '2024-08-26 22:29:42', '2024-08-26 22:29:42'),
+(3782, 'role_permission', 76, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 22:29:43', '2024-08-26 22:29:43'),
+(3783, 'role_permission', 76, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 22:29:44', '2024-08-26 22:29:44'),
+(3784, 'role_permission', 76, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 22:29:45', '2024-08-26 22:29:45'),
+(3785, 'role_permission', 76, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 22:29:46', '2024-08-26 22:29:46');
 
 -- --------------------------------------------------------
 
@@ -9874,7 +9914,21 @@ CREATE TABLE `block_type` (
 --
 
 INSERT INTO `block_type` (`block_type_id`, `block_type_name`, `created_date`, `last_log_by`) VALUES
-(2, 'testasdasdad', '2024-08-26 19:17:27', 2);
+(1, 'Accordion', '2024-08-26 21:40:20', 1),
+(2, 'Call To Action', '2024-08-26 21:40:20', 1),
+(3, 'Carousel', '2024-08-26 21:40:20', 1),
+(4, 'Client', '2024-08-26 21:40:20', 1),
+(5, 'Contact Form', '2024-08-26 21:40:20', 1),
+(6, 'Content Carousel', '2024-08-26 21:40:20', 1),
+(7, 'Footer', '2024-08-26 21:40:20', 1),
+(8, 'Header', '2024-08-26 21:40:20', 1),
+(9, 'Image Gallery', '2024-08-26 21:40:20', 1),
+(10, 'Page Title', '2024-08-26 21:40:20', 1),
+(11, 'Pricing Table', '2024-08-26 21:40:20', 1),
+(12, 'Process Step', '2024-08-26 21:40:20', 1),
+(13, 'Services Box', '2024-08-26 21:40:20', 1),
+(14, 'Slider', '2024-08-26 21:40:20', 1),
+(15, 'Testimonial', '2024-08-26 21:40:20', 1);
 
 --
 -- Triggers `block_type`
@@ -15610,7 +15664,22 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (53, ' Banks & Cards', 'banks-and-cards.php', 'ti ti-credit-card', 4, 'Profile', 1, 'Settings', 0, NULL, 2, '2024-08-22 16:38:33', 2),
 (54, 'Website', 'website.php', 'ti ti-world', 8, 'Websites', 4, 'Website Studio', NULL, NULL, 13, '2024-08-23 14:40:00', 2),
 (55, 'Block Type', 'block-type.php', 'ti ti-puzzle', 9, 'Website Configurations', 4, 'Website Studio', 0, NULL, 2, '2024-08-23 16:29:33', 2),
-(56, 'Block Style', 'block-style.php', 'ti ti-tools', 9, 'Website Configurations', 4, 'Website Studio', NULL, NULL, 2, '2024-08-24 19:41:28', 2);
+(56, 'Block Style', 'block-style.php', 'ti ti-tools', 9, 'Website Configurations', 4, 'Website Studio', NULL, NULL, 2, '2024-08-24 19:41:28', 2),
+(57, 'Accordion', 'accordion.php', 'ti ti-layout-navbar', 10, 'Website Elements', 4, 'Website Studio', NULL, NULL, 1, '2024-08-26 21:47:05', 2),
+(58, 'Call to Action', 'call-to-action.php', 'ti ti-speakerphone', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 21:51:51', 2),
+(59, 'Carousel', 'carousel.php', 'ti ti-layout-sidebar', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 22:02:00', 2),
+(60, 'Clients', 'clients.php', 'ti ti-users', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 22:13:37', 2),
+(61, 'Contact Form', 'contact-form.php', 'ti ti-forms', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 22:14:17', 2),
+(62, 'Content Carousel', 'content-carousel.php', 'ti ti-layout-align-right', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 22:15:30', 2),
+(63, 'Footer', 'footer.php', 'ti ti-layout-bottombar', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 6, '2024-08-26 22:16:21', 2),
+(64, 'Header', 'header.php', 'ti ti-layout-navbar', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 8, '2024-08-26 22:17:09', 2),
+(65, 'Image Gallery', 'image-gallery.php', 'ti ti-photo', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 9, '2024-08-26 22:18:52', 2),
+(66, 'Page Title', 'page-title.php', 'ti ti-browser', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 16, '2024-08-26 22:22:31', 2),
+(67, 'Pricing Table', 'pricing-table.php', 'ti ti-ad-2', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 16, '2024-08-26 22:23:37', 2),
+(68, 'Process Step', 'process-step.php', 'ti ti-step-into', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 16, '2024-08-26 22:24:28', 2),
+(69, 'Services Box', 'services-box.php', 'ti ti-subtask', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 19, '2024-08-26 22:26:40', 2),
+(70, 'Slider', 'slider.php', 'ti ti-slideshow', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 19, '2024-08-26 22:27:17', 2),
+(71, 'Testimonial', 'testimonial.php', 'ti ti-message-dots', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 20, '2024-08-26 22:29:36', 2);
 
 --
 -- Triggers `menu_item`
@@ -16274,8 +16343,8 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (59, 1, 'Administrator', 54, 'Website', 1, 1, 1, 1, '2024-08-23 14:40:26', '2024-08-23 14:40:26', 2),
 (60, 1, 'Administrator', 55, 'Block Type', 1, 1, 1, 1, '2024-08-23 16:29:39', '2024-08-23 16:29:39', 2),
 (61, 1, 'Administrator', 56, 'Block Style', 1, 1, 1, 1, '2024-08-24 19:42:48', '2024-08-24 19:42:48', 2),
-(62, 1, 'Administrator', 57, 'Accordion Style', 1, 1, 1, 1, '2024-08-24 19:52:52', '2024-08-24 19:52:52', 2),
-(63, 1, 'Administrator', 58, 'Testimonial Style', 1, 1, 1, 1, '2024-08-24 20:09:51', '2024-08-24 20:09:51', 2),
+(62, 1, 'Administrator', 57, 'Accordion', 1, 1, 1, 1, '2024-08-24 19:52:52', '2024-08-24 19:52:52', 2),
+(63, 1, 'Administrator', 58, 'Call to Action', 1, 1, 1, 1, '2024-08-24 20:09:51', '2024-08-24 20:09:51', 2),
 (64, 1, 'Administrator', 59, 'Client Style', 1, 1, 1, 1, '2024-08-24 20:16:17', '2024-08-24 20:16:17', 2),
 (65, 1, 'Administrator', 60, 'Content Carousel Style', 1, 1, 1, 1, '2024-08-24 21:41:04', '2024-08-24 21:41:04', 2),
 (66, 1, 'Administrator', 61, 'Services Box Style', 1, 1, 1, 1, '2024-08-25 13:38:16', '2024-08-25 13:38:16', 2),
@@ -16287,7 +16356,8 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (72, 1, 'Administrator', 67, 'Header Style', 1, 1, 1, 1, '2024-08-26 06:35:08', '2024-08-26 06:35:08', 2),
 (73, 1, 'Administrator', 68, 'Footer Style', 1, 1, 1, 1, '2024-08-26 06:36:04', '2024-08-26 06:36:04', 2),
 (74, 1, 'Administrator', 69, 'Page Title Style', 1, 1, 1, 1, '2024-08-26 06:37:34', '2024-08-26 06:37:34', 2),
-(75, 1, 'Administrator', 70, 'Call To Action Style', 1, 1, 1, 1, '2024-08-26 11:31:00', '2024-08-26 11:31:00', 2);
+(75, 1, 'Administrator', 70, 'Call To Action Style', 1, 1, 1, 1, '2024-08-26 11:31:00', '2024-08-26 11:31:00', 2),
+(76, 1, 'Administrator', 71, 'Testimonial', 1, 1, 1, 1, '2024-08-26 22:29:42', '2024-08-26 22:29:42', 2);
 
 --
 -- Triggers `role_permission`
@@ -18383,7 +18453,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3746;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3786;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -18419,7 +18489,7 @@ ALTER TABLE `block_style`
 -- AUTO_INCREMENT for table `block_type`
 --
 ALTER TABLE `block_type`
-  MODIFY `block_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `block_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `blood_type`
@@ -18665,7 +18735,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -18719,7 +18789,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
