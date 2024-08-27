@@ -3194,7 +3194,7 @@ function displayDetails(transaction){
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('id-record-form');
+                    resetModalForm('license-form');
                 },
                 success: function(response) {
                     if (response.success) {
@@ -3249,7 +3249,7 @@ function displayDetails(transaction){
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('id-record-form');
+                    resetModalForm('emergency-contact-form');
                 },
                 success: function(response) {
                     if (response.success) {
@@ -3305,7 +3305,7 @@ function displayDetails(transaction){
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('id-record-form');
+                    resetModalForm('language-form');
                 },
                 success: function(response) {
                     if (response.success) {

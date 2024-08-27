@@ -130,11 +130,26 @@ class AccordionController {
                 case 'update accordion':
                     $this->updateAccordion();
                     break;
+                case 'save accordion item':
+                    $this->saveAccordionItem();
+                    break;
                 case 'get accordion details':
                     $this->getAccordionDetails();
                     break;
+                case 'get accordion item details':
+                    $this->getAccordionItemDetails();
+                    break;
+                case 'publish accordion':
+                    $this->publishAccordion();
+                    break;
+                case 'unpublish accordion':
+                    $this->unpublishAccordion();
+                    break;
                 case 'delete accordion':
                     $this->deleteAccordion();
+                    break;
+                case 'delete accordion item':
+                    $this->deleteAccordionItem();
                     break;
                 case 'delete multiple accordion':
                     $this->deleteMultipleAccordion();
@@ -283,6 +298,226 @@ class AccordionController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #   Save methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: saveAccordionItem
+    # Description: 
+    # Updates the accordion if it exists; otherwise, insert.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function saveAccordionItem() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+        
+        if (isset($_POST['accordion_item_id']) && isset($_POST['accordion_id']) && !empty($_POST['accordion_id']) && isset($_POST['accordion_header']) && !empty($_POST['accordion_header']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence']) && isset($_POST['accordion_body']) && !empty($_POST['accordion_body'])) {
+            $userID = $_SESSION['user_account_id'];
+            $accordionItemID = htmlspecialchars($_POST['accordion_item_id'], ENT_QUOTES, 'UTF-8');
+            $accordionID = htmlspecialchars($_POST['accordion_id'], ENT_QUOTES, 'UTF-8');
+            $accordionHeader = $_POST['accordion_header'];
+            $orderSequence = $_POST['order_sequence'];
+            $accordionBody = $_POST['accordion_body'];
+        
+            $checkAccordionExist = $this->accordionModel->checkAccordionExist($accordionID);
+            $total = $checkAccordionExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Save Accordion Item Error',
+                    'message' => 'The accordion does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $checkAccordionItemExist = $this->accordionModel->checkAccordionItemExist($accordionItemID);
+            $total = $checkAccordionItemExist['total'] ?? 0;
+
+            if($total > 0){
+                $this->accordionModel->updateAccordionItem($accordionItemID, $accordionID, $accordionHeader, $accordionBody, $orderSequence, $userID);
+
+                $response = [
+                    'success' => true,
+                    'title' => 'Update Accordion Item Success',
+                    'message' => 'The accordion item has been updated successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $this->accordionModel->insertAccordionItem($accordionID, $accordionHeader, $accordionBody, $orderSequence, $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'Insert Accordion Item Success',
+                    'message' => 'The accordion item has been inserted successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Publish methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: publishAccordion
+    # Description: 
+    # Publish the accordion if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function publishAccordion() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['accordion_id']) && !empty($_POST['accordion_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $accordionID = htmlspecialchars($_POST['accordion_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkAccordionExist = $this->accordionModel->checkAccordionExist($accordionID);
+            $total = $checkAccordionExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Publish Accordion Error',
+                    'message' => 'The accordion does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->accordionModel->updateAccordionPublishStatus($accordionID, 'Yes', $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Publish Accordion Success',
+                'message' => 'The accordion has been published successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Publish methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: unpublishAccordion
+    # Description: 
+    # Publish the accordion if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function unpublishAccordion() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['accordion_id']) && !empty($_POST['accordion_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $accordionID = htmlspecialchars($_POST['accordion_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkAccordionExist = $this->accordionModel->checkAccordionExist($accordionID);
+            $total = $checkAccordionExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Unpublish Accordion Error',
+                    'message' => 'The accordion does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->accordionModel->updateAccordionPublishStatus($accordionID, 'No', $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Unpublish Accordion Success',
+                'message' => 'The accordion has been unpublished successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -327,6 +562,67 @@ class AccordionController {
                 'success' => true,
                 'title' => 'Delete Accordion Success',
                 'message' => 'The accordion has been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteAccordionItem
+    # Description: 
+    # Delete the accordion if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function deleteAccordionItem() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['accordion_item_id']) && !empty($_POST['accordion_item_id'])) {
+            $accordionItemID = htmlspecialchars($_POST['accordion_item_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkAccordionItemExist = $this->accordionModel->checkAccordionItemExist($accordionItemID);
+            $total = $checkAccordionItemExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Delete Accordion Item Error',
+                    'message' => 'The accordion item does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->accordionModel->deleteAccordionItem($accordionItemID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Delete Accordion Item Success',
+                'message' => 'The accordion item has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -447,6 +743,67 @@ class AccordionController {
                 'description' => $accordionDetails['description'] ?? null,
                 'blockStyleID' => $accordionDetails['block_style_id'] ?? '',
                 'blockStyleName' => $accordionDetails['block_style_name'] ?? ''
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getAccordionItemDetails
+    # Description: 
+    # Handles the retrieval of accordion item details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getAccordionItemDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['accordion_item_id']) && !empty($_POST['accordion_item_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $accordionItemID = htmlspecialchars($_POST['accordion_item_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkAccordionItemExist = $this->accordionModel->checkAccordionItemExist($accordionItemID);
+            $total = $checkAccordionItemExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'title' => 'Get Accordion Item Details Error',
+                    'message' => 'The accordion item does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+    
+            $accordionItemDetails = $this->accordionModel->getAccordionItem($accordionItemID);
+
+            $response = [
+                'success' => true,
+                'accordionHeader' => $accordionItemDetails['accordion_header'] ?? null,
+                'accordionBody' => $accordionItemDetails['accordion_body'] ?? null,
+                'orderSequence' => $accordionItemDetails['order_sequence'] ?? null
             ];
 
             echo json_encode($response);

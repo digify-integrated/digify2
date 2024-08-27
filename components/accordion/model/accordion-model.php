@@ -72,6 +72,28 @@ class AccordionModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: updateAccordionPublishStatus
+    # Description: Updates the accordion publish status.
+    #
+    # Parameters:
+    # - $p_accordion_item_id (int): The accordion item ID.
+    # - $p_publish_status (string): The publish status.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateAccordionPublishStatus($p_accordion_id, $p_publish_status, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateAccordionPublishStatus(:p_accordion_id, :p_publish_status, :p_last_log_by)');
+        $stmt->bindValue(':p_accordion_id', $p_accordion_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_publish_status', $p_publish_status, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Insert methods
     # -------------------------------------------------------------
 

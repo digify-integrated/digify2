@@ -83,6 +83,65 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
         # -------------------------------------------------------------
         #
+        # Type: accordion item table
+        # Description:
+        # Generates the accordion item table.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'accordion item table':
+            $accordionID = isset($_POST['accordion_id']) ? htmlspecialchars($_POST['accordion_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateAccordionItemTable(:accordionID)');
+            $sql->bindValue(':accordionID', $accordionID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $sql->closeCursor();
+
+            $accordionWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+
+            $accordionDetails = $accordionModel->getAccordion($accordionID, null);
+            $publishStatus = $accordionDetails['publish_status'] ?? 'No';
+
+            foreach ($options as $row) {
+                $accordionItemID = $row['accordion_item_id'];
+                $accordionHeader = $row['accordion_header'];
+                $accordionBody = $row['accordion_body'];
+                $orderSequence = $row['order_sequence'];
+
+                $updateButton = '';
+                $deleteButton = '';
+                if($publishStatus == 'No' && $accordionWriteAccess['total'] > 0){
+                    $updateButton = '<a href="javascript:void(0);" class="text-info ms-3 edit-accordion-item" data-bs-toggle="modal" data-bs-target="#accordion-item-modal" data-accordion-item-id="' . $accordionItemID . '" title="Edit Accordion Item">
+                                            <i class="ti ti-pencil fs-5"></i>
+                                        </a>';
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-accordion-item" data-accordion-item-id="' . $accordionItemID . '" title="Delete Accordion Item">
+                                            <i class="ti ti-trash fs-5"></i>
+                                        </a>';
+                }
+
+                $response[] = [
+                    'ACCORDION_HEADER' => $accordionHeader,
+                    'ACCORDION_BODY' => $accordionBody,
+                    'ORDER_SEQUENCE' => $orderSequence,
+                    'ACTION' => '<div class="action-btn">
+                                    '. $updateButton .'
+                                   <a href="javascript:void(0);" class="text-warning ms-3 view-accordion-item-log-notes" data-accordion-item-id="' . $accordionItemID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
+                                        <i class="ti ti-file-text fs-5"></i>
+                                    </a>
+                                    '. $deleteButton .'
+                                </div>'
+                ];
+            }
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
         # Type: accordion options
         # Description:
         # Generates the accordion options.

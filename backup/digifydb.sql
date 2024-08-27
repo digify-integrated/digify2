@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2024 at 10:35 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 27, 2024 at 04:21 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -3282,6 +3282,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordionItem` (IN `p_accordi
     WHERE accordion_item_id = p_accordion_item_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateAccordionPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordionPublishStatus` (IN `p_accordion_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE accordion
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE accordion_id = p_accordion_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateAccountLock`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccountLock` (IN `p_user_account_id` INT, IN `p_locked` VARCHAR(5), IN `p_account_lock_duration` INT)   BEGIN
 	UPDATE user_account 
@@ -5196,7 +5204,7 @@ CREATE TRIGGER `accordion_item_trigger_insert` AFTER INSERT ON `accordion_item` 
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('accordion_item', NEW.accordion_id, audit_log, NEW.last_log_by, NOW());
+    VALUES ('accordion_item', NEW.accordion_item_id, audit_log, NEW.last_log_by, NOW());
 END
 $$
 DELIMITER ;
@@ -5219,7 +5227,7 @@ CREATE TRIGGER `accordion_item_trigger_update` AFTER UPDATE ON `accordion_item` 
     
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('accordion_item', NEW.accordion_id, audit_log, NEW.last_log_by, NOW());
+        VALUES ('accordion_item', NEW.accordion_item_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -9204,7 +9212,24 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3788, 'accordion', 1, 'Accordion created. <br/><br/>Accordion Name: asd<br/>Description: asd<br/>Block Style Name: Accordion<br/>Publish Status: No', 2, '2024-08-27 14:38:18', '2024-08-27 14:38:18'),
 (3789, 'accordion', 1, 'Accordion Name: asd -> asdasdasd<br/>Description: asd -> asdasdasd<br/>', 2, '2024-08-27 14:44:11', '2024-08-27 14:44:11'),
 (3790, 'accordion', 2, 'Accordion created. <br/><br/>Accordion Name: test<br/>Description: test<br/>Block Style Name: Accordion<br/>Publish Status: No', 2, '2024-08-27 14:47:38', '2024-08-27 14:47:38'),
-(3791, 'accordion', 3, 'Accordion created. <br/><br/>Accordion Name: test<br/>Description: test<br/>Block Style Name: Accordion<br/>Publish Status: No', 2, '2024-08-27 14:57:30', '2024-08-27 14:57:30');
+(3791, 'accordion', 3, 'Accordion created. <br/><br/>Accordion Name: test<br/>Description: test<br/>Block Style Name: Accordion<br/>Publish Status: No', 2, '2024-08-27 14:57:30', '2024-08-27 14:57:30'),
+(3792, 'user_account', 2, 'Last Connection Date: 2024-08-27 09:54:34 -> 2024-08-27 21:00:23<br/>', 2, '2024-08-27 21:00:23', '2024-08-27 21:00:23'),
+(3793, 'accordion_item', 3, 'Accordion item created. <br/><br/>Accordion Header: asd<br/>Accordion Body: asd<br/>Order Sequence: 12', 2, '2024-08-27 21:55:37', '2024-08-27 21:55:37'),
+(3794, 'accordion_item', 3, 'Accordion Header: asd -> asdasdasd<br/>Accordion Body: asd -> asdasdas<br/>Order Sequence: 12 -> 123<br/>', 2, '2024-08-27 21:59:55', '2024-08-27 21:59:55'),
+(3795, 'accordion_item', 1, 'Accordion Header: asdasdasd -> asdasdasdasdasdas<br/>Accordion Body: asdasdas -> asdasdasasdasd<br/>Order Sequence: 123 -> 12123213<br/>', 2, '2024-08-27 22:01:28', '2024-08-27 22:01:28'),
+(3796, 'accordion_item', 2, 'Accordion item created. <br/><br/>Accordion Header: sadasd<br/>Accordion Body: asda<br/>Order Sequence: 123', 2, '2024-08-27 22:03:17', '2024-08-27 22:03:17'),
+(3797, 'system_action', 28, 'System action created. <br/><br/>System Action Name: Publish Website Element<br/>System Action Description: Access to publish the website element.', 2, '2024-08-27 22:04:11', '2024-08-27 22:04:11'),
+(3798, 'role_system_action_permission', 28, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Publish Website Element<br/>Date Assigned: 2024-08-27 22:04:16', 2, '2024-08-27 22:04:16', '2024-08-27 22:04:16'),
+(3799, 'role_system_action_permission', 28, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-27 22:04:17', '2024-08-27 22:04:17'),
+(3800, 'system_action', 29, 'System action created. <br/><br/>System Action Name: Unpublish Website Element<br/>System Action Description: Access to unpublish the website element.', 2, '2024-08-27 22:04:39', '2024-08-27 22:04:39'),
+(3801, 'role_system_action_permission', 29, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Unpublish Website Element<br/>Date Assigned: 2024-08-27 22:04:47', 2, '2024-08-27 22:04:47', '2024-08-27 22:04:47'),
+(3802, 'role_system_action_permission', 29, 'System Action Access: 0 -> 1<br/>', 2, '2024-08-27 22:04:49', '2024-08-27 22:04:49'),
+(3803, 'accordion', 3, 'Publish Status: No -> Yes<br/>', 2, '2024-08-27 22:18:09', '2024-08-27 22:18:09'),
+(3804, 'accordion', 3, 'Publish Status: Yes -> No<br/>', 2, '2024-08-27 22:18:15', '2024-08-27 22:18:15'),
+(3805, 'accordion', 3, 'Publish Status: No -> Yes<br/>', 2, '2024-08-27 22:18:55', '2024-08-27 22:18:55'),
+(3806, 'accordion', 3, 'Publish Status: Yes -> No<br/>', 2, '2024-08-27 22:20:06', '2024-08-27 22:20:06'),
+(3807, 'accordion', 3, 'Publish Status: No -> Yes<br/>', 2, '2024-08-27 22:20:42', '2024-08-27 22:20:42'),
+(3808, 'accordion', 3, 'Publish Status: Yes -> No<br/>', 2, '2024-08-27 22:20:54', '2024-08-27 22:20:54');
 
 -- --------------------------------------------------------
 
@@ -16101,7 +16126,9 @@ INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`,
 (24, 1, 'Administrator', 24, 'Send Registration Verification Link', 1, '2024-08-21 15:07:43', '2024-08-21 15:07:43', 2),
 (25, 1, 'Administrator', 25, 'Verify User Registration', 1, '2024-08-21 15:20:26', '2024-08-21 15:20:26', 2),
 (26, 1, 'Administrator', 26, 'Link User Account', 1, '2024-08-21 16:50:05', '2024-08-21 16:50:05', 2),
-(27, 1, 'Administrator', 27, 'Unlink User Account', 1, '2024-08-21 20:50:04', '2024-08-21 20:50:04', 2);
+(27, 1, 'Administrator', 27, 'Unlink User Account', 1, '2024-08-21 20:50:04', '2024-08-21 20:50:04', 2),
+(28, 1, 'Administrator', 28, 'Publish Website Element', 1, '2024-08-27 22:04:16', '2024-08-27 22:04:16', 2),
+(29, 1, 'Administrator', 29, 'Unpublish Website Element', 1, '2024-08-27 22:04:47', '2024-08-27 22:04:47', 2);
 
 --
 -- Triggers `role_system_action_permission`
@@ -16549,7 +16576,9 @@ INSERT INTO `system_action` (`system_action_id`, `system_action_name`, `system_a
 (24, 'Send Registration Verification Link', 'Access to send the registration verification link to unverified users.', '2024-08-21 15:07:39', 2),
 (25, 'Verify User Registration', 'Access to verify unverified users registration.', '2024-08-21 15:20:18', 2),
 (26, 'Link User Account', 'Access to link the user account to an employee or customer.', '2024-08-21 16:49:59', 2),
-(27, 'Unlink User Account', 'Access to unlink the user account to an employee or customer.', '2024-08-21 16:51:44', 2);
+(27, 'Unlink User Account', 'Access to unlink the user account to an employee or customer.', '2024-08-21 16:51:44', 2),
+(28, 'Publish Website Element', 'Access to publish the website element.', '2024-08-27 22:04:11', 2),
+(29, 'Unpublish Website Element', 'Access to unpublish the website element.', '2024-08-27 22:04:39', 2);
 
 --
 -- Triggers `system_action`
@@ -16842,7 +16871,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-27 09:54:34', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'mveC1Z9W61jp%2BcRfU24Gu7f9hGfYj%2FkZPcLT57ZtWbI%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-27 21:00:23', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'qmAqAvcZHFS2Wwp5ebERRjvtKfgaOE%2F2c3gZTEIjiY4%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -18078,7 +18107,7 @@ ALTER TABLE `accordion`
 -- AUTO_INCREMENT for table `accordion_item`
 --
 ALTER TABLE `accordion_item`
-  MODIFY `accordion_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `accordion_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `address_type`
@@ -18096,7 +18125,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3792;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3809;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -18438,7 +18467,7 @@ ALTER TABLE `role_permission`
 -- AUTO_INCREMENT for table `role_system_action_permission`
 --
 ALTER TABLE `role_system_action_permission`
-  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `role_user_account`
@@ -18468,7 +18497,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `system_action`
 --
 ALTER TABLE `system_action`
-  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `system_setting`

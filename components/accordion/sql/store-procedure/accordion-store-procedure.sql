@@ -49,6 +49,14 @@ BEGIN
     WHERE accordion_id = p_accordion_id;
 END //
 
+CREATE PROCEDURE updateAccordionPublishStatus(IN p_accordion_id INT, IN p_publish_status VARCHAR(5), IN p_last_log_by INT)
+BEGIN
+    UPDATE accordion
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE accordion_id = p_accordion_id;
+END //
+
 CREATE PROCEDURE updateAccordionItem(IN p_accordion_item_id INT, IN p_accordion_id INT, IN p_accordion_header VARCHAR(500), IN p_accordion_body LONGTEXT, IN p_order_sequence INT, IN p_last_log_by INT)
 BEGIN
     UPDATE accordion_item
