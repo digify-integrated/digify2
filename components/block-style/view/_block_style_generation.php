@@ -82,7 +82,9 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
         #
         # -------------------------------------------------------------
         case 'block style options':
-            $sql = $databaseModel->getConnection()->prepare('CALL generateBlockStyleOptions()');
+            $blockTypeID = htmlspecialchars($_POST['block_type_id'], ENT_QUOTES, 'UTF-8');
+            $sql = $databaseModel->getConnection()->prepare('CALL generateBlockStyleOptions(:blockTypeID)');
+            $sql->bindValue(':blockTypeID', $blockTypeID, PDO::PARAM_INT);
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 26, 2024 at 04:31 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Aug 27, 2024 at 10:35 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -95,25 +95,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccessRights` (IN `p_user_acco
     END IF;
 END$$
 
-DROP PROCEDURE IF EXISTS `checkAccordionContainerExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccordionContainerExist` (IN `p_accordion_style_id` INT)   BEGIN
+DROP PROCEDURE IF EXISTS `checkAccordionExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccordionExist` (IN `p_accordion_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
-    FROM accordion_container
-    WHERE accordion_style_id = p_accordion_style_id;
+    FROM accordion
+    WHERE accordion_id = p_accordion_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkAccordionItemExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccordionItemExist` (IN `p_accordion_style_id` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccordionItemExist` (IN `p_accordion_item_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM accordion_item
-    WHERE accordion_style_id = p_accordion_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkAccordionStyleExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkAccordionStyleExist` (IN `p_accordion_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM accordion_style
-    WHERE accordion_style_id = p_accordion_style_id;
+    WHERE accordion_item_id = p_accordion_item_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkAddressTypeExist`$$
@@ -179,34 +172,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBloodTypeExist` (IN `p_blood_t
     WHERE blood_type_id = p_blood_type_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `checkCarouselContainerExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselContainerExist` (IN `p_carousel_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM carousel_container
-    WHERE carousel_style_id = p_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkCarouselExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselExist` (IN `p_carousel_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM carousel
-    WHERE carousel_id = p_carousel_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkCarouselSliderExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselSliderExist` (IN `p_carousel_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM carousel_slider
-    WHERE carousel_style_id = p_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkCarouselStyleExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselStyleExist` (IN `p_carousel_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM carousel_style
-    WHERE carousel_style_id = p_carousel_style_id;
-END$$
-
 DROP PROCEDURE IF EXISTS `checkCityExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCityExist` (IN `p_city_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -221,24 +186,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCivilStatusExist` (IN `p_civil
     WHERE civil_status_id = p_civil_status_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `checkClientContainerExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkClientContainerExist` (IN `p_client_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM client_container
-    WHERE client_style_id = p_client_style_id;
-END$$
-
 DROP PROCEDURE IF EXISTS `checkClientItemExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkClientItemExist` (IN `p_client_style_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM client_item
-    WHERE client_style_id = p_client_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkClientStyleExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkClientStyleExist` (IN `p_client_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM client_style
     WHERE client_style_id = p_client_style_id;
 END$$
 
@@ -254,27 +205,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContactInformationTypeExist` (
 	SELECT COUNT(*) AS total
     FROM contact_information_type
     WHERE contact_information_type_id = p_contact_information_type_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkContentCarouselContainerExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContentCarouselContainerExist` (IN `p_content_carousel_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM content_carousel_container
-    WHERE content_carousel_style_id = p_content_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkContentCarouselSliderExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContentCarouselSliderExist` (IN `p_content_carousel_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM content_carousel_slider
-    WHERE content_carousel_style_id = p_content_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkContentCarouselStyleExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContentCarouselStyleExist` (IN `p_content_carousel_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM content_carousel_style
-    WHERE content_carousel_style_id = p_content_carousel_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkCountryExist`$$
@@ -599,27 +529,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSystemNotificationTemplateExis
     WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `checkTestimonialContainerExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkTestimonialContainerExist` (IN `p_testimonial_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM testimonial_container
-    WHERE testimonial_style_id = p_testimonial_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkTestimonialItemExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkTestimonialItemExist` (IN `p_testimonial_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM testimonial_item
-    WHERE testimonial_style_id = p_testimonial_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `checkTestimonialStyleExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkTestimonialStyleExist` (IN `p_testimonial_style_id` INT)   BEGIN
-	SELECT COUNT(*) AS total
-    FROM testimonial_style
-    WHERE testimonial_style_id = p_testimonial_style_id;
-END$$
-
 DROP PROCEDURE IF EXISTS `checkUICustomizationSettingExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkUICustomizationSettingExist` (IN `p_user_account__id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -722,8 +631,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkWorkScheduleExist` (IN `p_work
     WHERE work_schedule_id = p_work_schedule_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `deleteAccordionStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAccordionStyle` (IN `p_accordion_style_id` INT)   BEGIN
+DROP PROCEDURE IF EXISTS `deleteAccordion`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAccordion` (IN `p_accordion_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -731,11 +640,15 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAccordionStyle` (IN `p_accord
 
     START TRANSACTION;
 
-    DELETE FROM accordion_container WHERE accordion_style_id = p_accordion_style_id;
-    DELETE FROM accordion_item WHERE accordion_style_id = p_accordion_style_id;
-    DELETE FROM accordion_style WHERE accordion_style_id = p_accordion_style_id;
+    DELETE FROM accordion_item WHERE accordion_id = p_accordion_id;
+    DELETE FROM accordion WHERE accordion_id = p_accordion_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteAccordionItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAccordionItem` (IN `p_accordion_item_id` INT)   BEGIN
+   DELETE FROM accordion_item WHERE accordion_item_id = p_accordion_item_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteAddressType`$$
@@ -784,27 +697,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBloodType` (IN `p_blood_type_
     DELETE FROM blood_type WHERE blood_type_id = p_blood_type_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `deleteCarousel`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCarousel` (IN `p_carousel_id` INT)   BEGIN
-    DELETE FROM carousel WHERE carousel_id = p_carousel_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `deleteCarouselStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCarouselStyle` (IN `p_carousel_style_id` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    DELETE FROM carousel_container WHERE carousel_style_id = p_carousel_style_id;
-    DELETE FROM carousel_slider WHERE carousel_style_id = p_carousel_style_id;
-    DELETE FROM carousel_style WHERE carousel_style_id = p_carousel_style_id;
-
-    COMMIT;
-END$$
-
 DROP PROCEDURE IF EXISTS `deleteCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCity` (IN `p_city_id` INT)   BEGIN
     DELETE FROM city WHERE city_id = p_city_id;
@@ -815,22 +707,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCivilStatus` (IN `p_civil_sta
     DELETE FROM civil_status WHERE civil_status_id = p_civil_status_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `deleteClientStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteClientStyle` (IN `p_client_style_id` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    DELETE FROM client_container WHERE client_style_id = p_client_style_id;
-    DELETE FROM client_item WHERE client_style_id = p_client_style_id;
-    DELETE FROM client_style WHERE client_style_id = p_client_style_id;
-
-    COMMIT;
-END$$
-
 DROP PROCEDURE IF EXISTS `deleteCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompany` (IN `p_company_id` INT)   BEGIN
     DELETE FROM company WHERE company_id = p_company_id;
@@ -839,22 +715,6 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteContactInformationType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteContactInformationType` (IN `p_contact_information_type_id` INT)   BEGIN
     DELETE FROM contact_information_type WHERE contact_information_type_id = p_contact_information_type_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `deleteContentCarouselStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteContentCarouselStyle` (IN `p_content_carousel_style_id` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    DELETE FROM content_carousel_container WHERE content_carousel_style_id = p_content_carousel_style_id;
-    DELETE FROM content_carousel_slider WHERE content_carousel_style_id = p_content_carousel_style_id;
-    DELETE FROM content_carousel_style WHERE content_carousel_style_id = p_content_carousel_style_id;
-
-    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteCountry`$$
@@ -1228,22 +1088,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSystemAction` (IN `p_system_a
     COMMIT;
 END$$
 
-DROP PROCEDURE IF EXISTS `deleteTestimonialStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteTestimonialStyle` (IN `p_testimonial_style_id` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    DELETE FROM testimonial_container WHERE testimonial_style_id = p_testimonial_style_id;
-    DELETE FROM testimonial_item WHERE testimonial_style_id = p_testimonial_style_id;
-    DELETE FROM testimonial_style WHERE testimonial_style_id = p_testimonial_style_id;
-
-    COMMIT;
-END$$
-
 DROP PROCEDURE IF EXISTS `deleteUploadSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteUploadSetting` (IN `p_upload_setting_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1310,18 +1154,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteWorkSchedule` (IN `p_work_sch
     COMMIT;
 END$$
 
-DROP PROCEDURE IF EXISTS `generateAccordionStyleOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAccordionStyleOptions` ()   BEGIN
-	SELECT accordion_style_id, accordion_style_name 
-    FROM accordion_style 
-    ORDER BY accordion_style_name;
+DROP PROCEDURE IF EXISTS `generateAccordionItemTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAccordionItemTable` (IN `p_accordion_id` INT)   BEGIN
+    SELECT accordion_item_id, accordion_header, accordion_body, order_sequence 
+    FROM accordion_item
+    WHERE accordion_id = p_accordion_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `generateAccordionStyleTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAccordionStyleTable` ()   BEGIN
-	SELECT accordion_style_id, accordion_style_name, description
-    FROM accordion_style 
-    ORDER BY accordion_style_id;
+DROP PROCEDURE IF EXISTS `generateAccordionTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateAccordionTable` ()   BEGIN
+    SELECT accordion_id, accordion_name, description, publish_status
+    FROM accordion;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateAddressTypeOptions`$$
@@ -1381,9 +1224,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBankTable` ()   BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `generateBlockStyleOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBlockStyleOptions` ()   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBlockStyleOptions` (IN `p_block_type_id` INT)   BEGIN
 	SELECT block_style_id, block_style_name 
-    FROM block_style 
+    FROM block_style
+    WHERE block_type_id = p_block_type_id
     ORDER BY block_style_name;
 END$$
 
@@ -1420,34 +1264,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBloodTypeTable` ()   BEGIN
 	SELECT blood_type_id, blood_type_name 
     FROM blood_type 
     ORDER BY blood_type_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `generateCarouselOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselOptions` ()   BEGIN
-	SELECT carousel_id, carousel_name 
-    FROM carousel 
-    ORDER BY carousel_name;
-END$$
-
-DROP PROCEDURE IF EXISTS `generateCarouselStyleOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselStyleOptions` ()   BEGIN
-	SELECT carousel_style_id, carousel_style_name 
-    FROM carousel_style 
-    ORDER BY carousel_style_name;
-END$$
-
-DROP PROCEDURE IF EXISTS `generateCarouselStyleTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselStyleTable` ()   BEGIN
-	SELECT carousel_style_id, carousel_style_name, description
-    FROM carousel_style 
-    ORDER BY carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `generateCarouselTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselTable` ()   BEGIN
-	SELECT carousel_id, carousel_name, description
-    FROM carousel 
-    ORDER BY carousel_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateCityOptions`$$
@@ -1493,20 +1309,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCivilStatusTable` ()   BEGI
 	SELECT civil_status_id, civil_status_name 
     FROM civil_status 
     ORDER BY civil_status_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `generateClientStyleOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateClientStyleOptions` ()   BEGIN
-	SELECT client_style_id, client_style_name 
-    FROM client_style 
-    ORDER BY client_style_name;
-END$$
-
-DROP PROCEDURE IF EXISTS `generateClientStyleTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateClientStyleTable` ()   BEGIN
-	SELECT client_style_id, client_style_name, description
-    FROM client_style 
-    ORDER BY client_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateCompanyOptions`$$
@@ -1556,20 +1358,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContactInformationTypeTable
 	SELECT contact_information_type_id, contact_information_type_name 
     FROM contact_information_type 
     ORDER BY contact_information_type_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `generateContentCarouselStyleOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContentCarouselStyleOptions` ()   BEGIN
-	SELECT content_carousel_style_id, content_carousel_style_name 
-    FROM content_carousel_style 
-    ORDER BY content_carousel_style_name;
-END$$
-
-DROP PROCEDURE IF EXISTS `generateContentCarouselStyleTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContentCarouselStyleTable` ()   BEGIN
-	SELECT content_carousel_style_id, content_carousel_style_name, description
-    FROM content_carousel_style 
-    ORDER BY content_carousel_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateCountryOptions`$$
@@ -2305,20 +2093,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionTable` ()   BEG
     ORDER BY system_action_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `generateTestimonialStyleOptions`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateTestimonialStyleOptions` ()   BEGIN
-	SELECT testimonial_style_id, testimonial_style_name 
-    FROM testimonial_style 
-    ORDER BY testimonial_style_name;
-END$$
-
-DROP PROCEDURE IF EXISTS `generateTestimonialStyleTable`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `generateTestimonialStyleTable` ()   BEGIN
-	SELECT testimonial_style_id, testimonial_style_name, description
-    FROM testimonial_style 
-    ORDER BY testimonial_style_id;
-END$$
-
 DROP PROCEDURE IF EXISTS `generateUploadSettingFileExtensionTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateUploadSettingFileExtensionTable` (IN `p_upload_setting_id` INT)   BEGIN
     SELECT upload_setting_file_extension_id, file_extension_name, file_extension 
@@ -2483,22 +2257,16 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateWorkScheduleTable` (IN `p_f
     DEALLOCATE PREPARE stmt;
 END$$
 
-DROP PROCEDURE IF EXISTS `getAccordionContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAccordionContainer` (IN `p_accordion_style_id` INT)   BEGIN
-	SELECT * FROM accordion_container
-	WHERE accordion_style_id = p_accordion_style_id;
+DROP PROCEDURE IF EXISTS `getAccordion`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAccordion` (IN `p_accordion_id` INT)   BEGIN
+	SELECT * FROM accordion
+	WHERE accordion_id = p_accordion_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getAccordionItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAccordionItem` (IN `p_accordion_style_id` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAccordionItem` (IN `p_accordion_item_id` INT)   BEGIN
 	SELECT * FROM accordion_item
-	WHERE accordion_style_id = p_accordion_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `getAccordionStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAccordionStyle` (IN `p_accordion_style_id` INT)   BEGIN
-	SELECT * FROM accordion_style
-	WHERE accordion_style_id = p_accordion_style_id;
+	WHERE accordion_item_id = p_accordion_item_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getAddressType`$$
@@ -2555,30 +2323,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getBloodType` (IN `p_blood_type_id`
 	WHERE blood_type_id = p_blood_type_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `getCarousel`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarousel` (IN `p_carousel_id` INT)   BEGIN
-	SELECT * FROM carousel
-	WHERE carousel_id = p_carousel_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `getCarouselContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarouselContainer` (IN `p_carousel_style_id` INT)   BEGIN
-	SELECT * FROM carousel_container
-	WHERE carousel_style_id = p_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `getCarouselSlider`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarouselSlider` (IN `p_carousel_style_id` INT)   BEGIN
-	SELECT * FROM carousel_slider
-	WHERE carousel_style_id = p_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `getCarouselStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarouselStyle` (IN `p_carousel_style_id` INT)   BEGIN
-	SELECT * FROM carousel_style
-	WHERE carousel_style_id = p_carousel_style_id;
-END$$
-
 DROP PROCEDURE IF EXISTS `getCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCity` (IN `p_city_id` INT)   BEGIN
 	SELECT * FROM city
@@ -2603,12 +2347,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getClientItem` (IN `p_client_style_
 	WHERE client_style_id = p_client_style_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `getClientStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getClientStyle` (IN `p_client_style_id` INT)   BEGIN
-	SELECT * FROM client_style
-	WHERE client_style_id = p_client_style_id;
-END$$
-
 DROP PROCEDURE IF EXISTS `getCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompany` (IN `p_company_id` INT)   BEGIN
 	SELECT * FROM company
@@ -2619,24 +2357,6 @@ DROP PROCEDURE IF EXISTS `getContactInformationType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getContactInformationType` (IN `p_contact_information_type_id` INT)   BEGIN
 	SELECT * FROM contact_information_type
 	WHERE contact_information_type_id = p_contact_information_type_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `getContentCarouselContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getContentCarouselContainer` (IN `p_content_carousel_style_id` INT)   BEGIN
-	SELECT * FROM content_carousel_container
-	WHERE content_carousel_style_id = p_content_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `getContentCarouselSlider`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getContentCarouselSlider` (IN `p_content_carousel_style_id` INT)   BEGIN
-	SELECT * FROM content_carousel_slider
-	WHERE content_carousel_style_id = p_content_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `getContentCarouselStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getContentCarouselStyle` (IN `p_content_carousel_style_id` INT)   BEGIN
-	SELECT * FROM content_carousel_style
-	WHERE content_carousel_style_id = p_content_carousel_style_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getCountry`$$
@@ -2915,24 +2635,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getSystemSetting` (IN `p_system_set
 	WHERE system_setting_id = p_system_setting_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `getTestimonialContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getTestimonialContainer` (IN `p_testimonial_style_id` INT)   BEGIN
-	SELECT * FROM testimonial_container
-	WHERE testimonial_style_id = p_testimonial_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `getTestimonialItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getTestimonialItem` (IN `p_testimonial_style_id` INT)   BEGIN
-	SELECT * FROM testimonial_item
-	WHERE testimonial_style_id = p_testimonial_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `getTestimonialStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getTestimonialStyle` (IN `p_testimonial_style_id` INT)   BEGIN
-	SELECT * FROM testimonial_style
-	WHERE testimonial_style_id = p_testimonial_style_id;
-END$$
-
 DROP PROCEDURE IF EXISTS `getUICustomizationSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getUICustomizationSetting` (IN `p_user_account__id` INT)   BEGIN
 	SELECT * FROM ui_customization_setting
@@ -2981,24 +2683,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getWorkSchedule` (IN `p_work_schedu
 	WHERE work_schedule_id = p_work_schedule_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `insertAccordionContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAccordionContainer` (IN `p_accordion_style_id` INT, IN `p_accordion_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO accordion_container (accordion_style_id, accordion_container, last_log_by) 
-	VALUES(p_accordion_style_id, p_accordion_container, p_last_log_by);
+DROP PROCEDURE IF EXISTS `insertAccordion`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAccordion` (IN `p_accordion_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_accordion_id` INT)   BEGIN
+    INSERT INTO accordion (accordion_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_accordion_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_accordion_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertAccordionItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAccordionItem` (IN `p_accordion_style_id` INT, IN `p_accordion_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO accordion_item (accordion_style_id, accordion_item, last_log_by) 
-	VALUES(p_accordion_style_id, p_accordion_item, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertAccordionStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAccordionStyle` (IN `p_accordion_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_accordion_style_id` INT)   BEGIN
-    INSERT INTO accordion_style (accordion_style_name, description, last_log_by) 
-	VALUES(p_accordion_style_name, p_description, p_last_log_by);
-	
-    SET p_accordion_style_id = LAST_INSERT_ID();
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertAccordionItem` (IN `p_accordion_id` INT, IN `p_accordion_header` VARCHAR(500), IN `p_accordion_body` LONGTEXT, IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO accordion_item (accordion_id, accordion_header, accordion_body, order_sequence, last_log_by) 
+	VALUES(p_accordion_id, p_accordion_header, p_accordion_body, p_order_sequence, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertAddressType`$$
@@ -3069,34 +2765,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBloodType` (IN `p_blood_type_
     SET p_blood_type_id = LAST_INSERT_ID();
 END$$
 
-DROP PROCEDURE IF EXISTS `insertCarousel`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarousel` (IN `p_carousel_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_carousel_id` INT)   BEGIN
-    INSERT INTO carousel (carousel_name, description, last_log_by) 
-	VALUES(p_carousel_name, p_description, p_last_log_by);
-	
-    SET p_carousel_id = LAST_INSERT_ID();
-END$$
-
-DROP PROCEDURE IF EXISTS `insertCarouselContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarouselContainer` (IN `p_carousel_style_id` INT, IN `p_carousel_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO carousel_container (carousel_style_id, carousel_container, last_log_by) 
-	VALUES(p_carousel_style_id, p_carousel_container, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertCarouselSlider`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarouselSlider` (IN `p_carousel_style_id` INT, IN `p_carousel_slider` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO carousel_slider (carousel_style_id, carousel_slider, last_log_by) 
-	VALUES(p_carousel_style_id, p_carousel_slider, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertCarouselStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarouselStyle` (IN `p_carousel_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_carousel_style_id` INT)   BEGIN
-    INSERT INTO carousel_style (carousel_style_name, description, last_log_by) 
-	VALUES(p_carousel_style_name, p_description, p_last_log_by);
-	
-    SET p_carousel_style_id = LAST_INSERT_ID();
-END$$
-
 DROP PROCEDURE IF EXISTS `insertCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCity` (IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_city_id` INT)   BEGIN
     INSERT INTO city (city_name, state_id, state_name, country_id, country_name, last_log_by) 
@@ -3113,26 +2781,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCivilStatus` (IN `p_civil_sta
     SET p_civil_status_id = LAST_INSERT_ID();
 END$$
 
-DROP PROCEDURE IF EXISTS `insertClientContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertClientContainer` (IN `p_client_style_id` INT, IN `p_client_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO client_container (client_style_id, client_container, last_log_by) 
-	VALUES(p_client_style_id, p_client_container, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertClientItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertClientItem` (IN `p_client_style_id` INT, IN `p_client_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO client_item (client_style_id, client_item, last_log_by) 
-	VALUES(p_client_style_id, p_client_item, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertClientStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertClientStyle` (IN `p_client_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_client_style_id` INT)   BEGIN
-    INSERT INTO client_style (client_style_name, description, last_log_by) 
-	VALUES(p_client_style_name, p_description, p_last_log_by);
-	
-    SET p_client_style_id = LAST_INSERT_ID();
-END$$
-
 DROP PROCEDURE IF EXISTS `insertCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCompany` (IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_company_id` INT)   BEGIN
     INSERT INTO company (company_name, legal_name, address, city_id, city_name, state_id, state_name, country_id, country_name, currency_id, currency_name, currency_symbol, tax_id, phone, mobile, email, website, last_log_by) 
@@ -3147,26 +2795,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContactInformationType` (IN `
 	VALUES(p_contact_information_type_name, p_last_log_by);
 	
     SET p_contact_information_type_id = LAST_INSERT_ID();
-END$$
-
-DROP PROCEDURE IF EXISTS `insertContentCarouselContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContentCarouselContainer` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO content_carousel_container (content_carousel_style_id, content_carousel_container, last_log_by) 
-	VALUES(p_content_carousel_style_id, p_content_carousel_container, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertContentCarouselSlider`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContentCarouselSlider` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_slider` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO content_carousel_slider (content_carousel_style_id, content_carousel_slider, last_log_by) 
-	VALUES(p_content_carousel_style_id, p_content_carousel_slider, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertContentCarouselStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContentCarouselStyle` (IN `p_content_carousel_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_content_carousel_style_id` INT)   BEGIN
-    INSERT INTO content_carousel_style (content_carousel_style_name, description, last_log_by) 
-	VALUES(p_content_carousel_style_name, p_description, p_last_log_by);
-	
-    SET p_content_carousel_style_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertCountry`$$
@@ -3552,26 +3180,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSystemNotificationTemplate` (
 	VALUES(p_notification_setting_id, p_system_notification_title, p_system_notification_message, p_last_log_by);
 END$$
 
-DROP PROCEDURE IF EXISTS `insertTestimonialContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTestimonialContainer` (IN `p_testimonial_style_id` INT, IN `p_testimonial_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO testimonial_container (testimonial_style_id, testimonial_container, last_log_by) 
-	VALUES(p_testimonial_style_id, p_testimonial_container, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertTestimonialItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTestimonialItem` (IN `p_testimonial_style_id` INT, IN `p_testimonial_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    INSERT INTO testimonial_item (testimonial_style_id, testimonial_item, last_log_by) 
-	VALUES(p_testimonial_style_id, p_testimonial_item, p_last_log_by);
-END$$
-
-DROP PROCEDURE IF EXISTS `insertTestimonialStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTestimonialStyle` (IN `p_testimonial_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_testimonial_style_id` INT)   BEGIN
-    INSERT INTO testimonial_style (testimonial_style_name, description, last_log_by) 
-	VALUES(p_testimonial_style_name, p_description, p_last_log_by);
-	
-    SET p_testimonial_style_id = LAST_INSERT_ID();
-END$$
-
 DROP PROCEDURE IF EXISTS `insertUICustomizationSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertUICustomizationSetting` (IN `p_user_account__id` INT, IN `p_type` VARCHAR(30), IN `p_customization_value` VARCHAR(20), IN `p_last_log_by` INT)   BEGIN
 	IF p_type = 'sidebar type' THEN
@@ -3652,38 +3260,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertWorkSchedule` (IN `p_work_sch
     SET p_work_schedule_id = LAST_INSERT_ID();
 END$$
 
-DROP PROCEDURE IF EXISTS `updateAccordionContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordionContainer` (IN `p_accordion_style_id` INT, IN `p_accordion_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    UPDATE accordion_container
-    SET accordion_container = p_accordion_container,
+DROP PROCEDURE IF EXISTS `updateAccordion`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordion` (IN `p_accordion_id` INT, IN `p_accordion_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE accordion
+    SET accordion_name = p_accordion_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
         last_log_by = p_last_log_by
-    WHERE accordion_style_id = p_accordion_style_id;
+    WHERE accordion_id = p_accordion_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateAccordionItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordionItem` (IN `p_accordion_style_id` INT, IN `p_accordion_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordionItem` (IN `p_accordion_item_id` INT, IN `p_accordion_id` INT, IN `p_accordion_header` VARCHAR(500), IN `p_accordion_body` LONGTEXT, IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
     UPDATE accordion_item
-    SET accordion_item = p_accordion_item,
+    SET accordion_id = p_accordion_id,
+        accordion_header = p_accordion_header,
+        accordion_body = p_accordion_body,
+        order_sequence = p_order_sequence,
         last_log_by = p_last_log_by
-    WHERE accordion_style_id = p_accordion_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateAccordionStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAccordionStyle` (IN `p_accordion_style_id` INT, IN `p_accordion_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    UPDATE accordion_style
-    SET accordion_style_name = p_accordion_style_name,
-        description = p_description,
-        last_log_by = p_last_log_by
-    WHERE accordion_style_id = p_accordion_style_id;
-
-    COMMIT;
+    WHERE accordion_item_id = p_accordion_item_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateAccountLock`$$
@@ -3879,49 +3475,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBloodType` (IN `p_blood_type_
     COMMIT;
 END$$
 
-DROP PROCEDURE IF EXISTS `updateCarousel`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarousel` (IN `p_carousel_id` INT, IN `p_carousel_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
-    UPDATE carousel
-    SET carousel_name = p_carousel_name,
-        description = p_description,
-        last_log_by = p_last_log_by
-    WHERE carousel_id = p_carousel_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateCarouselContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarouselContainer` (IN `p_carousel_style_id` INT, IN `p_carousel_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    UPDATE carousel_container
-    SET carousel_container = p_carousel_container,
-        last_log_by = p_last_log_by
-    WHERE carousel_style_id = p_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateCarouselSlider`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarouselSlider` (IN `p_carousel_style_id` INT, IN `p_carousel_slider` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    UPDATE carousel_slider
-    SET carousel_slider = p_carousel_slider,
-        last_log_by = p_last_log_by
-    WHERE carousel_style_id = p_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateCarouselStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarouselStyle` (IN `p_carousel_style_id` INT, IN `p_carousel_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    UPDATE carousel_style
-    SET carousel_style_name = p_carousel_style_name,
-        description = p_description,
-        last_log_by = p_last_log_by
-    WHERE carousel_style_id = p_carousel_style_id;
-
-    COMMIT;
-END$$
-
 DROP PROCEDURE IF EXISTS `updateCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCity` (IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3992,40 +3545,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCivilStatus` (IN `p_civil_sta
     COMMIT;
 END$$
 
-DROP PROCEDURE IF EXISTS `updateClientContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateClientContainer` (IN `p_client_style_id` INT, IN `p_client_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    UPDATE client_container
-    SET client_container = p_client_container,
-        last_log_by = p_last_log_by
-    WHERE client_style_id = p_client_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateClientItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateClientItem` (IN `p_client_style_id` INT, IN `p_client_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    UPDATE client_item
-    SET client_item = p_client_item,
-        last_log_by = p_last_log_by
-    WHERE client_style_id = p_client_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateClientStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateClientStyle` (IN `p_client_style_id` INT, IN `p_client_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    UPDATE client_style
-    SET client_style_name = p_client_style_name,
-        description = p_description,
-        last_log_by = p_last_log_by
-    WHERE client_style_id = p_client_style_id;
-
-    COMMIT;
-END$$
-
 DROP PROCEDURE IF EXISTS `updateCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompany` (IN `p_company_id` INT, IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -4077,40 +3596,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContactInformationType` (IN `
     SET contact_information_type_name = p_contact_information_type_name,
         last_log_by = p_last_log_by
     WHERE contact_information_type_id = p_contact_information_type_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateContentCarouselContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContentCarouselContainer` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    UPDATE content_carousel_container
-    SET content_carousel_container = p_content_carousel_container,
-        last_log_by = p_last_log_by
-    WHERE content_carousel_style_id = p_content_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateContentCarouselSlider`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContentCarouselSlider` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_slider` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    UPDATE content_carousel_slider
-    SET content_carousel_slider = p_content_carousel_slider,
-        last_log_by = p_last_log_by
-    WHERE content_carousel_style_id = p_content_carousel_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateContentCarouselStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContentCarouselStyle` (IN `p_content_carousel_style_id` INT, IN `p_content_carousel_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    UPDATE content_carousel_style
-    SET content_carousel_style_name = p_content_carousel_style_name,
-        description = p_description,
-        last_log_by = p_last_log_by
-    WHERE content_carousel_style_id = p_content_carousel_style_id;
-
-    COMMIT;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateCountry`$$
@@ -5339,40 +4824,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemSetting` (IN `p_allow_r
     COMMIT;
 END$$
 
-DROP PROCEDURE IF EXISTS `updateTestimonialContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTestimonialContainer` (IN `p_testimonial_style_id` INT, IN `p_testimonial_container` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    UPDATE testimonial_container
-    SET testimonial_container = p_testimonial_container,
-        last_log_by = p_last_log_by
-    WHERE testimonial_style_id = p_testimonial_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateTestimonialItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTestimonialItem` (IN `p_testimonial_style_id` INT, IN `p_testimonial_item` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
-    UPDATE testimonial_item
-    SET testimonial_item = p_testimonial_item,
-        last_log_by = p_last_log_by
-    WHERE testimonial_style_id = p_testimonial_style_id;
-END$$
-
-DROP PROCEDURE IF EXISTS `updateTestimonialStyle`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTestimonialStyle` (IN `p_testimonial_style_id` INT, IN `p_testimonial_style_name` VARCHAR(100), IN `p_description` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    UPDATE testimonial_style
-    SET testimonial_style_name = p_testimonial_style_name,
-        description = p_description,
-        last_log_by = p_last_log_by
-    WHERE testimonial_style_id = p_testimonial_style_id;
-
-    COMMIT;
-END$$
-
 DROP PROCEDURE IF EXISTS `updateTwoFactorAuthenticationStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTwoFactorAuthenticationStatus` (IN `p_user_account_id` INT, IN `p_two_factor_auth` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
     UPDATE user_account
@@ -5622,6 +5073,156 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `verifyUserAccount` (IN `p_user_acco
     COMMIT;
 END$$
 
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accordion`
+--
+
+DROP TABLE IF EXISTS `accordion`;
+CREATE TABLE `accordion` (
+  `accordion_id` int(10) UNSIGNED NOT NULL,
+  `accordion_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `accordion`
+--
+
+INSERT INTO `accordion` (`accordion_id`, `accordion_name`, `description`, `block_style_id`, `block_style_name`, `publish_status`, `created_date`, `last_log_by`) VALUES
+(3, 'test', 'test', 2, 'Accordion', 'No', '2024-08-27 14:57:30', 2);
+
+--
+-- Triggers `accordion`
+--
+DROP TRIGGER IF EXISTS `accordion_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `accordion_trigger_insert` AFTER INSERT ON `accordion` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Accordion created. <br/>';
+
+    IF NEW.accordion_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Accordion Name: ", NEW.accordion_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('accordion', NEW.accordion_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `accordion_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `accordion_trigger_update` AFTER UPDATE ON `accordion` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.accordion_name <> OLD.accordion_name THEN
+        SET audit_log = CONCAT(audit_log, "Accordion Name: ", OLD.accordion_name, " -> ", NEW.accordion_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('accordion', NEW.accordion_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accordion_item`
+--
+
+DROP TABLE IF EXISTS `accordion_item`;
+CREATE TABLE `accordion_item` (
+  `accordion_item_id` int(10) UNSIGNED NOT NULL,
+  `accordion_id` int(10) UNSIGNED NOT NULL,
+  `accordion_header` varchar(500) NOT NULL,
+  `accordion_body` longtext NOT NULL,
+  `order_sequence` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `accordion_item`
+--
+DROP TRIGGER IF EXISTS `accordion_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `accordion_item_trigger_insert` AFTER INSERT ON `accordion_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Accordion item created. <br/>';
+
+    IF NEW.accordion_header <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Accordion Header: ", NEW.accordion_header);
+    END IF;
+
+    IF NEW.accordion_body <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Accordion Body: ", NEW.accordion_body);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('accordion_item', NEW.accordion_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `accordion_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `accordion_item_trigger_update` AFTER UPDATE ON `accordion_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.accordion_header <> OLD.accordion_header THEN
+        SET audit_log = CONCAT(audit_log, "Accordion Header: ", OLD.accordion_header, " -> ", NEW.accordion_header, "<br/>");
+    END IF;
+
+    IF NEW.accordion_body <> OLD.accordion_body THEN
+        SET audit_log = CONCAT(audit_log, "Accordion Body: ", OLD.accordion_body, " -> ", NEW.accordion_body, "<br/>");
+    END IF;
+    
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('accordion_item', NEW.accordion_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -9597,7 +9198,13 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3782, 'role_permission', 76, 'Read Access: 0 -> 1<br/>', 2, '2024-08-26 22:29:43', '2024-08-26 22:29:43'),
 (3783, 'role_permission', 76, 'Create Access: 0 -> 1<br/>', 2, '2024-08-26 22:29:44', '2024-08-26 22:29:44'),
 (3784, 'role_permission', 76, 'Write Access: 0 -> 1<br/>', 2, '2024-08-26 22:29:45', '2024-08-26 22:29:45'),
-(3785, 'role_permission', 76, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 22:29:46', '2024-08-26 22:29:46');
+(3785, 'role_permission', 76, 'Delete Access: 0 -> 1<br/>', 2, '2024-08-26 22:29:46', '2024-08-26 22:29:46'),
+(3786, 'user_account', 2, 'Last Connection Date: 2024-08-26 18:19:07 -> 2024-08-27 09:54:34<br/>', 2, '2024-08-27 09:54:34', '2024-08-27 09:54:34'),
+(3787, 'block_style', 2, 'Block style created. <br/><br/>Block Style Name: Accordion<br/>Description: Accordion<br/>Block Type Name: Accordion', 2, '2024-08-27 14:20:20', '2024-08-27 14:20:20'),
+(3788, 'accordion', 1, 'Accordion created. <br/><br/>Accordion Name: asd<br/>Description: asd<br/>Block Style Name: Accordion<br/>Publish Status: No', 2, '2024-08-27 14:38:18', '2024-08-27 14:38:18'),
+(3789, 'accordion', 1, 'Accordion Name: asd -> asdasdasd<br/>Description: asd -> asdasdasd<br/>', 2, '2024-08-27 14:44:11', '2024-08-27 14:44:11'),
+(3790, 'accordion', 2, 'Accordion created. <br/><br/>Accordion Name: test<br/>Description: test<br/>Block Style Name: Accordion<br/>Publish Status: No', 2, '2024-08-27 14:47:38', '2024-08-27 14:47:38'),
+(3791, 'accordion', 3, 'Accordion created. <br/><br/>Accordion Name: test<br/>Description: test<br/>Block Style Name: Accordion<br/>Publish Status: No', 2, '2024-08-27 14:57:30', '2024-08-27 14:57:30');
 
 -- --------------------------------------------------------
 
@@ -9844,6 +9451,13 @@ CREATE TABLE `block_style` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `block_style`
+--
+
+INSERT INTO `block_style` (`block_style_id`, `block_style_name`, `description`, `block_type_id`, `block_type_name`, `created_date`, `last_log_by`) VALUES
+(2, 'Accordion', 'Accordion', 1, 'Accordion', '2024-08-27 14:20:20', 2);
 
 --
 -- Triggers `block_style`
@@ -17228,7 +16842,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-26 18:19:07', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'gT9zD46OPvysE7zZ6Ab395Ta2vL0uxLQbp5ru%2FTBW%2Fw%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-27 09:54:34', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'mveC1Z9W61jp%2BcRfU24Gu7f9hGfYj%2FkZPcLT57ZtWbI%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -17751,6 +17365,23 @@ DELIMITER ;
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `accordion`
+--
+ALTER TABLE `accordion`
+  ADD PRIMARY KEY (`accordion_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `accordion_index_accordion_id` (`accordion_id`);
+
+--
+-- Indexes for table `accordion_item`
+--
+ALTER TABLE `accordion_item`
+  ADD PRIMARY KEY (`accordion_item_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `accordion_item_index_accordion_item_id` (`accordion_item_id`),
+  ADD KEY `accordion_item_index_accordion_id` (`accordion_id`);
 
 --
 -- Indexes for table `address_type`
@@ -18438,6 +18069,18 @@ ALTER TABLE `work_schedule`
 --
 
 --
+-- AUTO_INCREMENT for table `accordion`
+--
+ALTER TABLE `accordion`
+  MODIFY `accordion_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `accordion_item`
+--
+ALTER TABLE `accordion_item`
+  MODIFY `accordion_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `address_type`
 --
 ALTER TABLE `address_type`
@@ -18453,7 +18096,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3786;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3792;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -18483,7 +18126,7 @@ ALTER TABLE `block_item`
 -- AUTO_INCREMENT for table `block_style`
 --
 ALTER TABLE `block_style`
-  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `block_type`
@@ -18884,6 +18527,19 @@ ALTER TABLE `work_schedule`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `accordion`
+--
+ALTER TABLE `accordion`
+  ADD CONSTRAINT `accordion_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `accordion_item`
+--
+ALTER TABLE `accordion_item`
+  ADD CONSTRAINT `accordion_item_ibfk_1` FOREIGN KEY (`accordion_id`) REFERENCES `accordion` (`accordion_id`),
+  ADD CONSTRAINT `accordion_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `address_type`

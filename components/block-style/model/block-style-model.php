@@ -327,13 +327,14 @@ class BlockStyleModel {
     # Function: generateBlockStyleOptions
     # Description: Generates the block style options.
     #
-    # Parameters:None
+    # Parameters:
+    # - $p_block_type_id (int): The block type ID.
     #
     # Returns: String.
     #
     # -------------------------------------------------------------
-    public function generateBlockStyleOptions() {
-        $stmt = $this->db->getConnection()->prepare('CALL generateBlockStyleOptions()');
+    public function generateBlockStyleOptions($p_block_type_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL generateBlockStyleOptions(:p_block_type_id)');
         $stmt->execute();
         $options = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

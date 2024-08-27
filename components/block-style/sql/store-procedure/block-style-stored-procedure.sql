@@ -60,6 +60,11 @@ BEGIN
 
     START TRANSACTION;
 
+    UPDATE accordion
+    SET block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE block_style_id = p_block_style_id;
+
     UPDATE block_style
     SET block_style_name = p_block_style_name,
         description = p_description,
@@ -140,10 +145,11 @@ BEGIN
     ORDER BY block_style_id;
 END //
 
-CREATE PROCEDURE generateBlockStyleOptions()
+CREATE PROCEDURE generateBlockStyleOptions(IN p_block_type_id INT)
 BEGIN
 	SELECT block_style_id, block_style_name 
-    FROM block_style 
+    FROM block_style
+    WHERE block_type_id = p_block_type_id
     ORDER BY block_style_name;
 END //
 
