@@ -163,7 +163,7 @@
     
             Swal.fire({
                 title: 'Confirm Accordion Unpublish',
-                text: 'Are you sure you want to unpublish this accordio?',
+                text: 'Are you sure you want to unpublish this accordion?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Unpublish',
@@ -222,7 +222,7 @@
     
             Swal.fire({
                 title: 'Confirm Accordion Publish',
-                text: 'Are you sure you want to unpublish this accordio?',
+                text: 'Are you sure you want to unpublish this accordion?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Publish',

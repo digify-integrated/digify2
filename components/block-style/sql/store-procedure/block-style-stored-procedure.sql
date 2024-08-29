@@ -140,7 +140,7 @@ END //
 
 CREATE PROCEDURE generateBlockStyleTable()
 BEGIN
-	SELECT block_style_id, block_style_name, description
+	SELECT block_style_id, block_style_name, description, block_type_name
     FROM block_style 
     ORDER BY block_style_id;
 END //

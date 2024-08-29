@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 27, 2024 at 04:21 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Aug 29, 2024 at 11:34 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -170,6 +170,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBloodTypeExist` (IN `p_blood_t
 	SELECT COUNT(*) AS total
     FROM blood_type
     WHERE blood_type_id = p_blood_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCallToActionExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCallToActionExist` (IN `p_call_to_action_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM call_to_action
+    WHERE call_to_action_id = p_call_to_action_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkCityExist`$$
@@ -695,6 +702,11 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteBloodType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBloodType` (IN `p_blood_type_id` INT)   BEGIN
     DELETE FROM blood_type WHERE blood_type_id = p_blood_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCallToAction`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCallToAction` (IN `p_call_to_action_id` INT)   BEGIN
+   DELETE FROM call_to_action WHERE call_to_action_id = p_call_to_action_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteCity`$$
@@ -1233,7 +1245,7 @@ END$$
 
 DROP PROCEDURE IF EXISTS `generateBlockStyleTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBlockStyleTable` ()   BEGIN
-	SELECT block_style_id, block_style_name, description
+	SELECT block_style_id, block_style_name, description, block_type_name
     FROM block_style 
     ORDER BY block_style_id;
 END$$
@@ -1264,6 +1276,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBloodTypeTable` ()   BEGIN
 	SELECT blood_type_id, blood_type_name 
     FROM blood_type 
     ORDER BY blood_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCallToActionTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCallToActionTable` ()   BEGIN
+    SELECT call_to_action_id, call_to_action_name, description, publish_status
+    FROM call_to_action;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateCityOptions`$$
@@ -1792,6 +1810,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateIDTypeTable` ()   BEGIN
 	SELECT id_type_id, id_type_name 
     FROM id_type 
     ORDER BY id_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateIncomingSalesProposalTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateIncomingSalesProposalTable` ()   BEGIN
+   SELECT * FROM sales_proposal WHERE sales_proposal_status IN ('Draft', 'For Review', 'For Initial Approval', 'For Final Approval') AND product_type NOT IN ('Refinancing', 'Fuel', 'Parts', 'Brand New');
 END$$
 
 DROP PROCEDURE IF EXISTS `generateInternalNotes`$$
@@ -2323,6 +2346,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getBloodType` (IN `p_blood_type_id`
 	WHERE blood_type_id = p_blood_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCallToAction`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCallToAction` (IN `p_call_to_action_id` INT)   BEGIN
+	SELECT * FROM call_to_action
+	WHERE call_to_action_id = p_call_to_action_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCity` (IN `p_city_id` INT)   BEGIN
 	SELECT * FROM city
@@ -2763,6 +2792,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBloodType` (IN `p_blood_type_
 	VALUES(p_blood_type_name, p_last_log_by);
 	
     SET p_blood_type_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCallToAction`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCallToAction` (IN `p_call_to_action_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_call_to_action_header` VARCHAR(500), IN `p_call_to_action_body` LONGTEXT, IN `p_last_log_by` INT, OUT `p_call_to_action_id` INT)   BEGIN
+    INSERT INTO call_to_action (call_to_action_name, description, block_style_id, block_style_name, call_to_action_header, call_to_action_body, last_log_by) 
+	VALUES(p_call_to_action_name, p_description, p_block_style_id, p_block_style_name, p_call_to_action_header, p_call_to_action_body, p_last_log_by);
+	
+    SET p_call_to_action_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertCity`$$
@@ -3481,6 +3518,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBloodType` (IN `p_blood_type_
     WHERE blood_type_id = p_blood_type_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCallToAction`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCallToAction` (IN `p_call_to_action_id` INT, IN `p_call_to_action_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_call_to_action_header` VARCHAR(500), IN `p_call_to_action_body` LONGTEXT, IN `p_last_log_by` INT)   BEGIN
+    UPDATE call_to_action
+    SET call_to_action_name = p_call_to_action_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        call_to_action_header = p_call_to_action_header,
+        call_to_action_body = p_call_to_action_body,
+        last_log_by = p_last_log_by
+    WHERE call_to_action_id = p_call_to_action_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCallToActionPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCallToActionPublishStatus` (IN `p_call_to_action_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE call_to_action
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE call_to_action_id = p_call_to_action_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateCity`$$
@@ -9229,7 +9287,20 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3805, 'accordion', 3, 'Publish Status: No -> Yes<br/>', 2, '2024-08-27 22:18:55', '2024-08-27 22:18:55'),
 (3806, 'accordion', 3, 'Publish Status: Yes -> No<br/>', 2, '2024-08-27 22:20:06', '2024-08-27 22:20:06'),
 (3807, 'accordion', 3, 'Publish Status: No -> Yes<br/>', 2, '2024-08-27 22:20:42', '2024-08-27 22:20:42'),
-(3808, 'accordion', 3, 'Publish Status: Yes -> No<br/>', 2, '2024-08-27 22:20:54', '2024-08-27 22:20:54');
+(3808, 'accordion', 3, 'Publish Status: Yes -> No<br/>', 2, '2024-08-27 22:20:54', '2024-08-27 22:20:54'),
+(3809, 'accordion_item', 3, 'Accordion item created. <br/><br/>Accordion Header: te<br/>Accordion Body: et<br/>Order Sequence: 1', 2, '2024-08-29 08:58:44', '2024-08-29 08:58:44'),
+(3810, 'accordion_item', 3, 'Accordion Body: et -> etasd<br/>', 2, '2024-08-29 08:58:51', '2024-08-29 08:58:51'),
+(3811, 'block_style', 3, 'Block style created. <br/><br/>Block Style Name: asd<br/>Description: asd<br/>Block Type Name: Call To Action', 2, '2024-08-29 15:19:22', '2024-08-29 15:19:22'),
+(3812, 'call_to_action', 1, 'Call to Action created. <br/><br/>Call to Action Name: asd<br/>Description: as<br/>Block Style Name: asd<br/>Call to Action Header: asd<br/>Call to Action Body: asd<br/>Publish Status: No', 2, '2024-08-29 16:46:17', '2024-08-29 16:46:17'),
+(3813, 'call_to_action', 1, 'Call to Action Header: asd -> asdasd<br/>', 2, '2024-08-29 16:48:07', '2024-08-29 16:48:07'),
+(3814, 'call_to_action', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-08-29 16:52:48', '2024-08-29 16:52:48'),
+(3815, 'call_to_action', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-08-29 16:52:55', '2024-08-29 16:52:55'),
+(3816, 'call_to_action', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-08-29 16:53:52', '2024-08-29 16:53:52'),
+(3817, 'call_to_action', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-08-29 16:54:11', '2024-08-29 16:54:11'),
+(3818, 'call_to_action', 2, 'Call to Action created. <br/><br/>Call to Action Name: asd<br/>Description: asd<br/>Block Style Name: asd<br/>Call to Action Header: asd<br/>Call to Action Body: asd<br/>Publish Status: No', 2, '2024-08-29 16:54:43', '2024-08-29 16:54:43'),
+(3819, 'call_to_action', 3, 'Call to Action created. <br/><br/>Call to Action Name: asdas<br/>Description: asdasd<br/>Block Style Name: asd<br/>Call to Action Header: asd<br/>Call to Action Body: asd<br/>Publish Status: No', 2, '2024-08-29 16:56:03', '2024-08-29 16:56:03'),
+(3820, 'call_to_action', 3, 'Publish Status: No -> Yes<br/>', 2, '2024-08-29 16:56:21', '2024-08-29 16:56:21'),
+(3821, 'block_style', 4, 'Block style created. <br/><br/>Block Style Name: asd<br/>Description: asd<br/>Block Type Name: Carousel', 2, '2024-08-29 17:15:26', '2024-08-29 17:15:26');
 
 -- --------------------------------------------------------
 
@@ -9482,7 +9553,9 @@ CREATE TABLE `block_style` (
 --
 
 INSERT INTO `block_style` (`block_style_id`, `block_style_name`, `description`, `block_type_id`, `block_type_name`, `created_date`, `last_log_by`) VALUES
-(2, 'Accordion', 'Accordion', 1, 'Accordion', '2024-08-27 14:20:20', 2);
+(2, 'Accordion', 'Accordion', 1, 'Accordion', '2024-08-27 14:20:20', 2),
+(3, 'asd', 'asd', 2, 'Call To Action', '2024-08-29 15:19:22', 2),
+(4, 'asd', 'asd', 3, 'Carousel', '2024-08-29 17:15:26', 2);
 
 --
 -- Triggers `block_style`
@@ -9660,6 +9733,107 @@ CREATE TRIGGER `blood_type_trigger_update` AFTER UPDATE ON `blood_type` FOR EACH
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('blood_type', NEW.blood_type_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `call_to_action`
+--
+
+DROP TABLE IF EXISTS `call_to_action`;
+CREATE TABLE `call_to_action` (
+  `call_to_action_id` int(10) UNSIGNED NOT NULL,
+  `call_to_action_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `call_to_action_header` varchar(500) NOT NULL,
+  `call_to_action_body` longtext NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `call_to_action`
+--
+
+INSERT INTO `call_to_action` (`call_to_action_id`, `call_to_action_name`, `description`, `block_style_id`, `block_style_name`, `call_to_action_header`, `call_to_action_body`, `publish_status`, `created_date`, `last_log_by`) VALUES
+(3, 'asdas', 'asdasd', 3, 'asd', 'asd', 'asd', 'Yes', '2024-08-29 16:56:03', 2);
+
+--
+-- Triggers `call_to_action`
+--
+DROP TRIGGER IF EXISTS `call_to_action_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `call_to_action_trigger_insert` AFTER INSERT ON `call_to_action` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Call to Action created. <br/>';
+
+    IF NEW.call_to_action_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call to Action Name: ", NEW.call_to_action_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.call_to_action_header <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call to Action Header: ", NEW.call_to_action_header);
+    END IF;
+
+    IF NEW.call_to_action_body <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call to Action Body: ", NEW.call_to_action_body);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('call_to_action', NEW.call_to_action_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `call_to_action_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `call_to_action_trigger_update` AFTER UPDATE ON `call_to_action` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.call_to_action_name <> OLD.call_to_action_name THEN
+        SET audit_log = CONCAT(audit_log, "Call to Action Name: ", OLD.call_to_action_name, " -> ", NEW.call_to_action_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.call_to_action_header <> OLD.call_to_action_header THEN
+        SET audit_log = CONCAT(audit_log, "Call to Action Header: ", OLD.call_to_action_header, " -> ", NEW.call_to_action_header, "<br/>");
+    END IF;
+
+    IF NEW.call_to_action_body <> OLD.call_to_action_body THEN
+        SET audit_log = CONCAT(audit_log, "Call to Action Body: ", OLD.call_to_action_body, " -> ", NEW.call_to_action_body, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('call_to_action', NEW.call_to_action_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -17498,6 +17672,14 @@ ALTER TABLE `blood_type`
   ADD KEY `blood_type_index_blood_type_id` (`blood_type_id`);
 
 --
+-- Indexes for table `call_to_action`
+--
+ALTER TABLE `call_to_action`
+  ADD PRIMARY KEY (`call_to_action_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `call_to_action_index_call_to_action_id` (`call_to_action_id`);
+
+--
 -- Indexes for table `city`
 --
 ALTER TABLE `city`
@@ -18107,7 +18289,7 @@ ALTER TABLE `accordion`
 -- AUTO_INCREMENT for table `accordion_item`
 --
 ALTER TABLE `accordion_item`
-  MODIFY `accordion_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `accordion_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `address_type`
@@ -18125,7 +18307,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3809;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3822;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -18155,7 +18337,7 @@ ALTER TABLE `block_item`
 -- AUTO_INCREMENT for table `block_style`
 --
 ALTER TABLE `block_style`
-  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `block_type`
@@ -18168,6 +18350,12 @@ ALTER TABLE `block_type`
 --
 ALTER TABLE `blood_type`
   MODIFY `blood_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `call_to_action`
+--
+ALTER TABLE `call_to_action`
+  MODIFY `call_to_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `city`
@@ -18631,6 +18819,12 @@ ALTER TABLE `block_type`
 --
 ALTER TABLE `blood_type`
   ADD CONSTRAINT `blood_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `call_to_action`
+--
+ALTER TABLE `call_to_action`
+  ADD CONSTRAINT `call_to_action_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `city`

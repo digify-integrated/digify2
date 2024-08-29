@@ -1,42 +1,42 @@
 <?php
-    require('components/accordion/model/accordion-model.php');
+    require('components/carousel/model/carousel-model.php');
 
-    $accordionModel = new AccordionModel($databaseModel);
+    $carouselModel = new CarouselModel($databaseModel);
 
     $publishWebsiteElement = $globalModel->checkSystemActionAccessRights($userID, 28);
     $unpublishWebsiteElement = $globalModel->checkSystemActionAccessRights($userID, 29);
 
     if(isset($_GET['id'])){
-        $accordionDetails = $accordionModel->getAccordion($detailID, null);
-        $publishStatus = $accordionDetails['publish_status'] ?? 'No';
+        $carouselDetails = $carouselModel->getCarousel($detailID, null);
+        $publishStatus = $carouselDetails['publish_status'] ?? 'No';
     }
 ?>
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Accordion</h5>
+                <h5 class="card-title mb-0">Carousel</h5>
                 <div class="card-actions cursor-pointer ms-auto d-flex button-group">
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Accordion</a></li>' : '';
+                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Carousel</a></li>' : '';
 
                             if($publishStatus == 'No' && $publishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="publish-accordion">Publish Accordion</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="publish-carousel">Publish Carousel</button></li>';
                             }
 
                             if($publishStatus == 'Yes' && $unpublishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="unpublish-accordion">Unpublish Accordion</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="unpublish-carousel">Unpublish Carousel</button></li>';
                             }
 
-                            echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-accordion">Delete Accordion</button></li>' : '';
+                            echo $deleteAccess['total'] > 0 && $publishStatus == 'No' ? '<li><button class="dropdown-item" type="button" id="delete-carousel">Delete Carousel</button></li>' : '';
                         ?>
                     </ul>
                 </div>
                 <?php
-                    echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#accordion-modal" id="edit-details">Edit</button>
+                    echo $writeAccess['total'] > 0 && $publishStatus == 'No' ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#carousel-modal" id="edit-details">Edit</button>
                                                         </div>' : '';
                 ?>
             </div>
@@ -44,7 +44,7 @@
                 <div class="row">
                     <div class="col-lg-6 mb-3">
                         <p class="mb-1 fs-2">Display Name</p>
-                        <h6 class="fw-semibold mb-0" id="accordion_name_summary">--</h6>
+                        <h6 class="fw-semibold mb-0" id="carousel_name_summary">--</h6>
                     </div>
                     <div class="col-lg-6 mb-3">
                         <p class="mb-1 fs-2">Block Style</p>
@@ -64,16 +64,16 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Accordion Item</h5>
+                <h5 class="card-title mb-0">Carousel Item</h5>
                 <?php
                     echo $writeAccess['total'] > 0 && $publishStatus == 'No' ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-success mb-0 px-4" data-bs-toggle="modal" data-bs-target="#accordion-item-modal" id="add-accordion-item">Create</button>
+                                                            <button class="btn btn-success mb-0 px-4" data-bs-toggle="modal" data-bs-target="#carousel-item-modal" id="add-carousel-item">Create</button>
                                                         </div>' : '';
                 ?>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="accordion-item-table" class="table align-middle text-nowrap w-100 mb-0">
+                    <table id="carousel-item-table" class="table align-middle text-nowrap w-100 mb-0">
                         <thead class="text-dark">
                             <tr>
                                 <th>Header</th>
@@ -90,20 +90,20 @@
     </div>
 </div>
 
-<div id="accordion-modal" class="modal fade" tabindex="-1" aria-labelledby="accordion-modal" aria-hidden="true">
+<div id="carousel-modal" class="modal fade" tabindex="-1" aria-labelledby="carousel-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8">Edit Accordion Details</h5>
+                <h5 class="modal-title fw-8">Edit Carousel Details</h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="accordion-form" method="post" action="#">
+                <form id="carousel-form" method="post" action="#">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label" for="accordion_name">Display Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control maxlength" id="accordion_name" name="accordion_name" maxlength="100" autocomplete="off">
+                                <label class="form-label" for="carousel_name">Display Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="carousel_name" name="carousel_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -125,27 +125,27 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="accordion-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="carousel-form" class="btn btn-success" id="submit-data">Save changes</button>
             </div>
         </div>
     </div>
 </div>
 
-<div id="accordion-item-modal" class="modal fade" tabindex="-1" aria-labelledby="accordion-item-modal" aria-hidden="true">
+<div id="carousel-item-modal" class="modal fade" tabindex="-1" aria-labelledby="carousel-item-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8" id="accordion-item-title"></h5>
+                <h5 class="modal-title fw-8" id="carousel-item-title"></h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="accordion-item-form" method="post" action="#">
-                    <input type="hidden" id="accordion_item_id" name="accordion_item_id">
+                <form id="carousel-item-form" method="post" action="#">
+                    <input type="hidden" id="carousel_item_id" name="carousel_item_id">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label" for="accordion_header">Accordion Header <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control maxlength" id="accordion_header" name="accordion_header" maxlength="500" autocomplete="off">
+                                <label class="form-label" for="carousel_header">Carousel Header <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="carousel_header" name="carousel_header" maxlength="500" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -158,8 +158,8 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label class="form-label" for="accordion_body">Accordion Body <span class="text-danger">*</span></label>
-                                <textarea class="form-control maxlength" id="accordion_body" name="accordion_body" maxlength="5000" rows="5"></textarea>
+                                <label class="form-label" for="carousel_body">Carousel Body <span class="text-danger">*</span></label>
+                                <textarea class="form-control maxlength" id="carousel_body" name="carousel_body" maxlength="5000" rows="5"></textarea>
                             </div>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="accordion-item-form" class="btn btn-success" id="submit-accordion-item-data">Save changes</button>
+                <button type="submit" form="carousel-item-form" class="btn btn-success" id="submit-carousel-item-data">Save changes</button>
             </div>
         </div>
     </div>

@@ -46,7 +46,7 @@ class AccordionModel {
     # -------------------------------------------------------------
     #
     # Function: updateAccordionItem
-    # Description: Updates the accordion.
+    # Description: Updates the accordion item.
     #
     # Parameters:
     # - $p_accordion_item_id (int): The accordion item ID.
@@ -131,7 +131,7 @@ class AccordionModel {
     # -------------------------------------------------------------
     #
     # Function: insertAccordionItem
-    # Description: Inserts the accordion.
+    # Description: Inserts the accordion item.
     #
     # Parameters:
     # - $p_accordion_id (int): The accordion ID.

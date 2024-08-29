@@ -4,32 +4,24 @@
     $(function() {
         generateDropdownOptions('block style options');
 
-        displayDetails('get carousel details');
+        displayDetails('get call to action details');
 
-        if($('#carousel-image-table').length){
-            carouselImageTable('#carousel-image-table');
-        }
-
-        if($('#carousel-form').length){
-            carouselForm();
-        }
-
-        if($('#carousel-image-form').length){
-            carouselImageForm();
+        if($('#call-to-action-form').length){
+            callToActionForm();
         }
 
         $(document).on('click','#edit-details',function() {
-            displayDetails('get carousel details');
+            displayDetails('get call to action details');
         });
 
-        $(document).on('click','#delete-carousel',function() {
-            const carousel_id = $('#details-id').text();
+        $(document).on('click','#delete-call-to-action',function() {
+            const call_to_action_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete carousel';
+            const transaction = 'delete call to action';
     
             Swal.fire({
-                title: 'Confirm Carousel Deletion',
-                text: 'Are you sure you want to delete this carousel?',
+                title: 'Confirm Call To Action Deletion',
+                text: 'Are you sure you want to delete this call to action?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -43,10 +35,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/call-to-action/controller/call-to-action-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
+                            call_to_action_id : call_to_action_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -81,29 +73,29 @@
             });
         });
 
-        $(document).on('click','#add-carousel-image',function() {
-            $('#carousel-image-title').text('Add Carousel Image');
-            resetModalForm('carousel-image-form');
+        $(document).on('click','#add-call-to-action-item',function() {
+            $('#call-to-action-item-title').text('Add Call To Action Item');
+            resetModalForm('call-to-action-item-form');
         });
 
-        $(document).on('click','.edit-carousel-image',function() {
-            const carousel_image_id = $(this).data('carousel-image-id');
-            sessionStorage.setImage('carousel_image_id', carousel_image_id);
+        $(document).on('click','.edit-call-to-action-item',function() {
+            const call_to_action_item_id = $(this).data('call-to-action-item-id');
+            sessionStorage.setItem('call_to_action_item_id', call_to_action_item_id);
 
-            $('#carousel-image-title').text('Edit Carousel Image');
+            $('#call-to-action-item-title').text('Edit Call To Action Item');
 
-            displayDetails('get carousel image details');
+            displayDetails('get call to action item details');
         });
 
-        $(document).on('click','.delete-carousel-image',function() {
-            const carousel_id = $('#details-id').text();
-            const carousel_image_id = $(this).data('carousel-image-id');
+        $(document).on('click','.delete-call-to-action-item',function() {
+            const call_to_action_id = $('#details-id').text();
+            const call_to_action_item_id = $(this).data('call-to-action-item-id');
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete carousel image';
+            const transaction = 'delete call to action item';
     
             Swal.fire({
-                title: 'Confirm Carousel Image Deletion',
-                text: 'Are you sure you want to delete this carousel image?',
+                title: 'Confirm Call To Action Item Deletion',
+                text: 'Are you sure you want to delete this call to action item?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -117,17 +109,17 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/call-to-action/controller/call-to-action-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
-                            carousel_image_id : carousel_image_id, 
+                            call_to_action_id : call_to_action_id, 
+                            call_to_action_item_id : call_to_action_item_id, 
                             transaction : transaction
                         },
                         success: function (response) {
                             if (response.success) {
                                 showNotification(response.title, response.message, response.messageType);
-                                reloadDatatable('#carousel-image-table');
+                                reloadDatatable('#call-to-action-item-table');
                             }
                             else {
                                 if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -156,14 +148,14 @@
             });
         });
 
-        $(document).on('click','#unpublish-carousel',function() {
-            const carousel_id = $('#details-id').text();
+        $(document).on('click','#unpublish-call-to-action',function() {
+            const call_to_action_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'unpublish carousel';
+            const transaction = 'unpublish call to action';
     
             Swal.fire({
-                title: 'Confirm Carousel Unpublish',
-                text: 'Are you sure you want to unpublish this carousel?',
+                title: 'Confirm Call To Action Unpublish',
+                text: 'Are you sure you want to unpublish this call to action?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Unpublish',
@@ -177,10 +169,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/call-to-action/controller/call-to-action-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
+                            call_to_action_id : call_to_action_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -215,14 +207,14 @@
             });
         });
 
-        $(document).on('click','#publish-carousel',function() {
-            const carousel_id = $('#details-id').text();
+        $(document).on('click','#publish-call-to-action',function() {
+            const call_to_action_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'publish carousel';
+            const transaction = 'publish call to action';
     
             Swal.fire({
-                title: 'Confirm Carousel Publish',
-                text: 'Are you sure you want to unpublish this carousel?',
+                title: 'Confirm Call To Action Publish',
+                text: 'Are you sure you want to unpublish this call to action?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Publish',
@@ -236,10 +228,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/call-to-action/controller/call-to-action-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
+                            call_to_action_id : call_to_action_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -274,38 +266,30 @@
             });
         });
 
-        if($('#log-notes-offcanvas').length){
-            $(document).on('click','.view-carousel-image-log-notes',function() {
-                const carousel_image_id = $(this).data('carousel-image-id');
-
-                logNotes('carousel_image', carousel_image_id);
-            });
-        }
-
         if($('#log-notes-main').length){
-            const carousel_id = $('#details-id').text();
+            const call_to_action_id = $('#details-id').text();
 
-            logNotesMain('carousel', carousel_id);
+            logNotesMain('call_to_action', call_to_action_id);
         }
 
         if($('#internal-notes').length){
-            const carousel_id = $('#details-id').text();
+            const call_to_action_id = $('#details-id').text();
 
-            internalNotes('carousel', carousel_id);
+            internalNotes('call_to_action', call_to_action_id);
         }
 
         if($('#internal-notes-form').length){
-            const carousel_id = $('#details-id').text();
+            const call_to_action_id = $('#details-id').text();
 
-            internalNotesForm('carousel', carousel_id);
+            internalNotesForm('call_to_action', call_to_action_id);
         }
     });
 })(jQuery);
 
-function carouselForm(){
-    $('#carousel-form').validate({
+function callToActionForm(){
+    $('#call-to-action-form').validate({
         rules: {
-            carousel_name: {
+            call_to_action_name: {
                 required: true
             },
             block_style_id: {
@@ -316,7 +300,7 @@ function carouselForm(){
             }
         },
         messages: {
-            carousel_name: {
+            call_to_action_name: {
                 required: 'Enter the display name'
             },
             block_style_id: {
@@ -348,14 +332,14 @@ function carouselForm(){
             }
         },
         submitHandler: function(form) {
-            const carousel_id = $('#details-id').text();
+            const call_to_action_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
-            const transaction = 'update carousel';
+            const transaction = 'update call to action';
           
             $.ajax({
                 type: 'POST',
-                url: 'components/carousel/controller/carousel-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&carousel_id=' + carousel_id,
+                url: 'components/call-to-action/controller/call-to-action-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&call_to_action_id=' + call_to_action_id,
                 dataType: 'json',
                 beforeSend: function() {
                     disableFormSubmitButton('submit-data');
@@ -363,8 +347,8 @@ function carouselForm(){
                 success: function (response) {
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
-                        displayDetails('get carousel details');
-                        $('#carousel-modal').modal('hide');
+                        displayDetails('get call to action details');
+                        $('#call-to-action-modal').modal('hide');
                     }
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -389,211 +373,46 @@ function carouselForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
-                    logNotesMain('carousel', carousel_id);
+                    logNotesMain('call_to_action', call_to_action_id);
                 }
             });
         
             return false;
         }
     });
-}
-
-function carouselImageForm(){
-    $('#carousel-image-form').validate({
-        rules: {
-            carousel_header: {
-                required: true
-            },
-            order_sequence: {
-                required: true
-            },
-            carousel_body: {
-                required: true
-            }
-        },
-        messages: {
-            carousel_header: {
-                required: 'Enter the carousel header'
-            },
-            order_sequence: {
-                required: 'Enter the order sequence'
-            },
-            carousel_body: {
-                required: 'Enter the carousel body'
-            }
-        },
-        errorPlacement: function(error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 2000);
-        },
-        highlight: function(element) {
-            var inputElement = $(element);
-            if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection').addClass('is-invalid');
-            }
-            else {
-                inputElement.addClass('is-invalid');
-            }
-        },
-        unhighlight: function(element) {
-            var inputElement = $(element);
-            if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection').removeClass('is-invalid');
-            }
-            else {
-                inputElement.removeClass('is-invalid');
-            }
-        },
-        submitHandler: function(form) {
-            const carousel_id = $('#details-id').text();
-            const page_link = document.getElementById('page-link').getAttribute('href'); 
-            const transaction = 'save carousel image';
-          
-            $.ajax({
-                type: 'POST',
-                url: 'components/carousel/controller/carousel-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&carousel_id=' + carousel_id,
-                dataType: 'json',
-                beforeSend: function() {
-                    disableFormSubmitButton('submit-carousel-image-data');
-                },
-                success: function (response) {
-                    if (response.success) {
-                        showNotification(response.title, response.message, response.messageType);
-                        $('#carousel-image-modal').modal('hide');
-                        reloadDatatable('#carousel-image-table');
-                        resetModalForm('carousel-image-form');
-                    }
-                    else {
-                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = page_link;
-                        }
-                        else {
-                            showNotification(response.title, response.message, response.messageType);
-                        }
-                    }
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                },
-                complete: function() {
-                    enableFormSubmitButton('submit-carousel-image-data');
-                }
-            });
-        
-            return false;
-        }
-    });
-}
-
-function carouselImageTable(datatable_name, buttons = false, show_all = false){
-    toggleHideActionDropdown();
-
-    const type = 'carousel image table';
-    const carousel_id = $('#details-id').text();
-    const page_id = $('#page-id').val();
-    const page_link = document.getElementById('page-link').getAttribute('href');
-
-    var settings;
-
-    const column = [ 
-        { 'data' : 'ACCORDION_HEADER' },
-        { 'data' : 'ACCORDION_BODY' },
-        { 'data' : 'ORDER_SEQUENCE' },
-        { 'data' : 'ACTION' }
-    ];
-
-    const column_definition = [
-        { 'width': 'auto', 'aTargets': 0 },
-        { 'width': 'auto', 'aTargets': 1 },
-        { 'width': '10%', 'aTargets': 2 },
-        { 'width': '10%','bSortable': false, 'aTargets': 3 }
-    ];
-
-    const length_menu = show_all ? [[-1], ['All']] : [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']];
-
-    settings = {
-        'ajax': { 
-            'url' : 'components/carousel/view/_carousel_generation.php',
-            'method' : 'POST',
-            'dataType': 'json',
-            'data': {
-                'type' : type,
-                'page_id' : page_id,
-                'page_link' : page_link,
-                'carousel_id' : carousel_id
-            },
-            'dataSrc' : '',
-            'error': function(xhr, status, error) {
-                var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                if (xhr.responseText) {
-                    fullErrorMessage += `, Response: ${xhr.responseText}`;
-                }
-                showErrorDialog(fullErrorMessage);
-            }
-        },
-        'dom': 'Brtip',
-        'lengthChange': false,
-        'order': [[ 1, 'asc' ]],
-        'columns' : column,
-        'fnDrawCallback': function( oSettings ) {
-            readjustDatatableColumn();
-        },
-        'columnDefs': column_definition,
-        'lengthMenu': length_menu,
-        'language': {
-            'emptyTable': 'No data found',
-            'searchPlaceholder': 'Search...',
-            'search': '',
-            'loadingRecords': 'Just a moment while we fetch your data...'
-        },
-    };
-
-    if (buttons) {
-        settings.dom = 'Bfrtip';
-        settings.buttons = ['csv', 'excel', 'pdf'];
-    }
-
-    destroyDatatable(datatable_name);
-
-    $(datatable_name).dataTable(settings);
 }
 
 function displayDetails(transaction){
     switch (transaction) {
-        case 'get carousel details':
-            var carousel_id = $('#details-id').text();
+        case 'get call to action details':
+            var call_to_action_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
-                url: 'components/carousel/controller/carousel-controller.php',
+                url: 'components/call-to-action/controller/call-to-action-controller.php',
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    carousel_id : carousel_id, 
+                    call_to_action_id : call_to_action_id, 
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('carousel-form');
+                    resetModalForm('call-to-action-form');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#carousel_name').val(response.carouselName);
+                        $('#call_to_action_name').val(response.callToActionName);
                         $('#description').val(response.description);
+                        $('#call_to_action_header').val(response.callToActionHeader);
+                        $('#call_to_action_body').val(response.callToActionBody);
                         
                         $('#block_style_id').val(response.blockStyleID).trigger('change');
                         
-                        $('#carousel_name_summary').text(response.carouselName);
+                        $('#call_to_action_name_summary').text(response.callToActionName);
                         $('#block_style_name_summary').text(response.blockStyleName);
                         $('#description_summary').text(response.description);
+                        $('#call_to_action_header_summary').text(response.callToActionHeader);
+                        $('#call_to_action_body_summary').text(response.callToActionBody);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -603,58 +422,6 @@ function displayDetails(transaction){
                         else if (response.notExist) {
                             setNotification(response.title, response.message, response.messageType);
                             window.location = page_link;
-                        }
-                        else {
-                            showNotification(response.title, response.message, response.messageType);
-                        }
-                    }
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                }
-            });
-            break;
-        case 'get carousel image details':
-            var carousel_id = $('#details-id').text();
-            var carousel_image_id = sessionStorage.getImage('carousel_image_id');
-            
-            $.ajax({
-                url: 'components/carousel/controller/carousel-controller.php',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    carousel_id : carousel_id, 
-                    carousel_image_id : carousel_image_id, 
-                    transaction : transaction
-                },
-                beforeSend: function(){
-                    resetModalForm('carousel-image-form');
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $('#carousel_image_id').val(carousel_image_id);
-                        $('#carousel_header').val(response.carouselHeader);
-                        $('#carousel_body').val(response.carouselBody);
-                        $('#order_sequence').val(response.orderSequence);
-                    } 
-                    else {
-                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = page_link;
-                        }
-                        else if (response.detailsNotExist) {
-                            showNotification(response.title, response.message, response.messageType);
-                            $('#carousel-image-modal').modal('hide');
-                            reloadDatatable('#carousel-image-table');
-                            resetModalForm('carousel-image-form');
                         }
                         else {
                             showNotification(response.title, response.message, response.messageType);
@@ -676,7 +443,7 @@ function displayDetails(transaction){
 function generateDropdownOptions(type){
     switch (type) {
         case 'block style options':
-            var block_type_id = '3';
+            var block_type_id = '2';
 
             $.ajax({
                 url: 'components/block-style/view/_block_style_generation.php',
@@ -688,7 +455,7 @@ function generateDropdownOptions(type){
                 },
                 success: function(response) {
                     $('#block_style_id').select2({
-                        dropdownParent: $('#carousel-modal'),
+                        dropdownParent: $('#call-to-action-modal'),
                         data: response
                     }).on('change', function (e) {
                         $(this).valid()
