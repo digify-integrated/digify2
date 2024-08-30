@@ -3,13 +3,13 @@ require_once '../../global/config/session.php';
 require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../contact-form/model/contact-form-model.php';
+require_once '../../header/model/header-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/global-model.php';
 
 $databaseModel = new DatabaseModel();
 $systemModel = new SystemModel();
-$contactformModel = new ContactFormModel($databaseModel);
+$contactformModel = new HeaderModel($databaseModel);
 $securityModel = new SecurityModel();
 $globalModel = new GlobalModel($databaseModel, $securityModel);
 
@@ -22,46 +22,46 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
     switch ($type) {
         # -------------------------------------------------------------
         #
-        # Type: contact form table
+        # Type: header table
         # Description:
-        # Generates the contact form table.
+        # Generates the header table.
         #
         # Parameters: None
         #
         # Returns: Array
         #
         # -------------------------------------------------------------
-        case 'contact form table':
-            $sql = $databaseModel->getConnection()->prepare('CALL generateContactFormTable()');
+        case 'header table':
+            $sql = $databaseModel->getConnection()->prepare('CALL generateHeaderTable()');
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();
 
-            $contactFormDeleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+            $headerDeleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
 
             foreach ($options as $row) {
-                $contactFormID = $row['contact_form_id'];
-                $contactFormName = $row['contact_form_name'];
+                $headerID = $row['header_id'];
+                $headerName = $row['header_name'];
                 $description = $row['description'];
                 $publishStatus = $row['publish_status'];
 
                 $publishStatusBadge = $publishStatus == 'Yes' ? '<span class="badge rounded-pill text-bg-success">Yes</span>' : '<span class=" badge rounded-pill text-bg-danger">No</span>';
 
-                $contactFormIDEncrypted = $securityModel->encryptData($contactFormID);
+                $headerIDEncrypted = $securityModel->encryptData($headerID);
 
                 $deleteButton = '';
-                if($contactFormDeleteAccess['total'] > 0){
-                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-contact-form" data-contact-form-id="' . $contactFormID . '" title="Delete Contact Form">
+                if($headerDeleteAccess['total'] > 0){
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-header" data-header-id="' . $headerID . '" title="Delete Header">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';
                 }
 
                 $response[] = [
-                    'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $contactFormID .'">',
+                    'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $headerID .'">',
                     'CONTACT_FORM_NAME' => '<div class="d-flex align-items-center">
                                                 <div class="ms-3">
                                                     <div class="user-meta-info">
-                                                        <h6 class="user-name mb-0">'. $contactFormName .'</h6>
+                                                        <h6 class="user-name mb-0">'. $headerName .'</h6>
                                                         <small>'. $description .'</small>
                                                     </div>
                                                 </div>
@@ -69,7 +69,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                         </div>',
                     'PUBLISH_STATUS' => $publishStatusBadge,
                     'ACTION' => '<div class="action-btn">
-                                    <a href="'. $pageLink .'&id='. $contactFormIDEncrypted .'" class="text-info" title="View Details">
+                                    <a href="'. $pageLink .'&id='. $headerIDEncrypted .'" class="text-info" title="View Details">
                                         <i class="ti ti-eye fs-5"></i>
                                     </a>
                                    '. $deleteButton .'
@@ -83,19 +83,19 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
         # -------------------------------------------------------------
         #
-        # Type: contact form options
+        # Type: header options
         # Description:
-        # Generates the contact form options.
+        # Generates the header options.
         #
         # Parameters: None
         #
         # Returns: Array
         #
         # -------------------------------------------------------------
-        case 'contact form options':
-            $contactFormID = isset($_POST['contact_form_id']) ? htmlspecialchars($_POST['contact_form_id'], ENT_QUOTES, 'UTF-8') : null;
-            $sql = $databaseModel->getConnection()->prepare('CALL generateContactFormOptions(:contactFormID)');
-            $sql->bindValue(':contactFormID', $contactFormID, PDO::PARAM_INT);
+        case 'header options':
+            $headerID = isset($_POST['header_id']) ? htmlspecialchars($_POST['header_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateHeaderOptions(:headerID)');
+            $sql->bindValue(':headerID', $headerID, PDO::PARAM_INT);
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();
@@ -107,8 +107,8 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
             foreach ($options as $row) {
                 $response[] = [
-                    'id' => $row['contact_form_id'],
-                    'text' => $row['contact_form_name']
+                    'id' => $row['header_id'],
+                    'text' => $row['header_name']
                 ];
             }
 

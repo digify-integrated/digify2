@@ -1,42 +1,42 @@
 <?php
-    require('components/contact-form/model/contact-form-model.php');
+    require('components/header/model/header-model.php');
 
-    $contactFormModel = new ContactFormModel($databaseModel);
+    $headerModel = new HeaderModel($databaseModel);
 
     $publishWebsiteElement = $globalModel->checkSystemActionAccessRights($userID, 28);
     $unpublishWebsiteElement = $globalModel->checkSystemActionAccessRights($userID, 29);
 
     if(isset($_GET['id'])){
-        $contactFormDetails = $contactFormModel->getContactForm($detailID, null);
-        $publishStatus = $contactFormDetails['publish_status'] ?? 'No';
+        $headerDetails = $headerModel->getHeader($detailID, null);
+        $publishStatus = $headerDetails['publish_status'] ?? 'No';
     }
 ?>
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Contact Form</h5>
+                <h5 class="card-title mb-0">Header</h5>
                 <div class="card-actions cursor-pointer ms-auto d-flex button-group">
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Contact Form</a></li>' : '';
+                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Header</a></li>' : '';
 
                             if($publishStatus == 'No' && $publishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="publish-contact-form">Publish Contact Form</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="publish-header">Publish Header</button></li>';
                             }
 
                             if($publishStatus == 'Yes' && $unpublishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="unpublish-contact-form">Unpublish Contact Form</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="unpublish-header">Unpublish Header</button></li>';
                             }
 
-                            echo $deleteAccess['total'] > 0 && $publishStatus == 'No' ? '<li><button class="dropdown-item" type="button" id="delete-contact-form">Delete Contact Form</button></li>' : '';
+                            echo $deleteAccess['total'] > 0 && $publishStatus == 'No' ? '<li><button class="dropdown-item" type="button" id="delete-header">Delete Header</button></li>' : '';
                         ?>
                     </ul>
                 </div>
                 <?php
                     echo $writeAccess['total'] > 0 && $publishStatus == 'No' ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#contact-form-modal" id="edit-details">Edit</button>
+                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#header-modal" id="edit-details">Edit</button>
                                                         </div>' : '';
                 ?>
             </div>
@@ -44,7 +44,7 @@
                 <div class="row">
                     <div class="col-lg-6 mb-3">
                         <p class="mb-1 fs-2">Display Name</p>
-                        <h6 class="fw-semibold mb-0" id="contact_form_name_summary">--</h6>
+                        <h6 class="fw-semibold mb-0" id="header_name_summary">--</h6>
                     </div>
                     <div class="col-lg-6 mb-3">
                         <p class="mb-1 fs-2">Block Style</p>
@@ -60,20 +60,20 @@
     </div>
 </div>
 
-<div id="contact-form-modal" class="modal fade" tabindex="-1" aria-labelledby="contact-form-modal" aria-hidden="true">
+<div id="header-modal" class="modal fade" tabindex="-1" aria-labelledby="header-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8">Edit Contact Form Details</h5>
+                <h5 class="modal-title fw-8">Edit Header Details</h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="contact-form" method="post" action="#">
+                <form id="header-form" method="post" action="#">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label" for="contact_form_name">Display Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control maxlength" id="contact_form_name" name="contact_form_name" maxlength="100" autocomplete="off">
+                                <label class="form-label" for="header_name">Display Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="header_name" name="header_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -95,7 +95,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="contact-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="header-form" class="btn btn-success" id="submit-data">Save changes</button>
             </div>
         </div>
     </div>

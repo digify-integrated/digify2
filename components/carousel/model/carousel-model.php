@@ -75,7 +75,7 @@ class CarouselModel {
     # Description: Updates the carousel publish status.
     #
     # Parameters:
-    # - $p_carousel_image_id (int): The carousel image ID.
+    # - $p_carousel_id (int): The carousel image ID.
     # - $p_publish_status (string): The publish status.
     # - $p_last_log_by (int): The last logged user.
     #

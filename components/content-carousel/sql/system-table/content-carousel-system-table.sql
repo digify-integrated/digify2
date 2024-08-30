@@ -1,8 +1,8 @@
-/* Carousel Table */
+/* Content Carousel Table */
 
-CREATE TABLE carousel (
-    carousel_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    carousel_name VARCHAR(100) NOT NULL,
+CREATE TABLE content_carousel (
+    content_carousel_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    content_carousel_name VARCHAR(100) NOT NULL,
     description VARCHAR(100) NOT NULL,
     block_style_id INT UNSIGNED NOT NULL,
     block_style_name VARCHAR(100) NOT NULL,
@@ -12,24 +12,31 @@ CREATE TABLE carousel (
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
 );
 
-CREATE INDEX carousel_index_carousel_id ON carousel(carousel_id);
+CREATE INDEX content_carouselindex_content_carousel_id ON content_carousel(content_carousel_id);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
-/* Carousel Image Table */
+/* Carousel Item Table */
 
-CREATE TABLE carousel_image (
-    carousel_image_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    carousel_id INT UNSIGNED NOT NULL,
-    carousel_image VARCHAR(500) NOT NULL,
+CREATE TABLE content_carousel_item (
+    content_carousel_item_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    content_carousel_id INT UNSIGNED NOT NULL,
+    content_carousel_title VARCHAR(500) NOT NULL,
+    content_carousel_heading VARCHAR(500) NOT NULL,
+    content_carousel_paragraph LONGTEXT NOT NULL,
+    call_to_action_button_1_text VARCHAR(100),
+    call_to_action_button_1_link VARCHAR(500),
+    call_to_action_button_2_text VARCHAR(100),
+    call_to_action_button_2_link VARCHAR(500),
+    content_carousel_image VARCHAR(500) NOT NULL,
     order_sequence INT NOT NULL,
     created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
-    FOREIGN KEY (carousel_id) REFERENCES carousel(carousel_id),
+    FOREIGN KEY (content_carousel_id) REFERENCES content_carousel(content_carousel_id),
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
 );
 
-CREATE INDEX carousel_image_index_carousel_image_id ON carousel_image(carousel_image_id);
-CREATE INDEX carousel_image_index_carousel_id ON carousel_image(carousel_id);
+CREATE INDEX content_carousel_item_index_content_carousel_item_id ON content_carousel_item(content_carousel_item_id);
+CREATE INDEX content_carousel_item_index_content_carousel_id ON content_carousel_item(content_carousel_id);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

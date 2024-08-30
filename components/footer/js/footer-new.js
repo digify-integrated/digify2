@@ -4,16 +4,16 @@
     $(function() {
         generateDropdownOptions('block style options');
 
-        if($('#content-carousel-form').length){
-            contentCarouselForm();
+        if($('#footer-form').length){
+            footerForm();
         }
     });
 })(jQuery);
 
-function contentCarouselForm(){
-    $('#content-carousel-form').validate({
+function footerForm(){
+    $('#footer-form').validate({
         rules: {
-            content_carousel_name: {
+            footer_name: {
                 required: true
             },
             block_style_id: {
@@ -24,7 +24,7 @@ function contentCarouselForm(){
             }
         },
         messages: {
-            content_carousel_name: {
+            footer_name: {
                 required: 'Enter the display name'
             },
             block_style_id: {
@@ -56,12 +56,12 @@ function contentCarouselForm(){
             }
         },
         submitHandler: function(form) {
-            const transaction = 'add content carousel';
+            const transaction = 'add footer';
             const page_link = document.getElementById('page-link').getAttribute('href');
           
             $.ajax({
                 type: 'POST',
-                url: 'components/content-carousel/controller/content-carousel-controller.php',
+                url: 'components/footer/controller/footer-controller.php',
                 data: $(form).serialize() + '&transaction=' + transaction,
                 dataType: 'json',
                 beforeSend: function() {
@@ -70,7 +70,7 @@ function contentCarouselForm(){
                 success: function (response) {
                     if (response.success) {
                         setNotification(response.title, response.message, response.messageType);
-                        window.location = page_link + '&id=' + response.contentCarouselID;
+                        window.location = page_link + '&id=' + response.footerID;
                     }
                     else {
                         if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -102,7 +102,7 @@ function contentCarouselForm(){
 function generateDropdownOptions(type){
     switch (type) {
         case 'block style options':
-            var block_type_id = '6';
+            var block_type_id = '7';
             
             $.ajax({
                 url: 'components/block-style/view/_block_style_generation.php',

@@ -2,17 +2,17 @@
     'use strict';
 
     $(function() {
-        if($('#content-carousel-table').length){
-            contentCarouselTable('#content-carousel-table');
+        if($('#footer-table').length){
+            footerTable('#footer-table');
         }
 
-        $(document).on('click','.delete-content-carousel',function() {
-            const content_carousel_id = $(this).data('content-carousel-id');
-            const transaction = 'delete content carousel';
+        $(document).on('click','.delete-footer',function() {
+            const footer_id = $(this).data('footer-id');
+            const transaction = 'delete footer';
     
             Swal.fire({
-                title: 'Confirm Content Carousel Deletion',
-                text: 'Are you sure you want to delete this content carousel?',
+                title: 'Confirm Footer Deletion',
+                text: 'Are you sure you want to delete this footer?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -26,16 +26,16 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/content-carousel/controller/content-carousel-controller.php',
+                        url: 'components/footer/controller/footer-controller.php',
                         dataType: 'json',
                         data: {
-                            content_carousel_id : content_carousel_id, 
+                            footer_id : footer_id, 
                             transaction : transaction
                         },
                         success: function (response) {
                             if (response.success) {
                                 showNotification(response.title, response.message, response.messageType);
-                                reloadDatatable('#content-carousel-table');
+                                reloadDatatable('#footer-table');
                             }
                             else {
                                 if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -44,7 +44,7 @@
                                 }
                                 else if (response.notExist) {
                                     setNotification(response.title, response.message, response.messageType);
-                                    reloadDatatable('#content-carousel-table');
+                                    reloadDatatable('#footer-table');
                                 }
                                 else {
                                     showNotification(response.title, response.message, response.messageType);
@@ -64,20 +64,20 @@
             });
         });
 
-        $(document).on('click','#delete-content-carousel',function() {
-            let content_carousel_id = [];
-            const transaction = 'delete multiple content carousel';
+        $(document).on('click','#delete-footer',function() {
+            let footer_id = [];
+            const transaction = 'delete multiple footer';
 
             $('.datatable-checkbox-children').each((index, element) => {
                 if ($(element).is(':checked')) {
-                    content_carousel_id.push(element.value);
+                    footer_id.push(element.value);
                 }
             });
     
-            if(content_carousel_id.length > 0){
+            if(footer_id.length > 0){
                 Swal.fire({
-                    title: 'Confirm Multiple Content Carousels Deletion',
-                    text: 'Are you sure you want to delete these content carousels?',
+                    title: 'Confirm Multiple Footers Deletion',
+                    text: 'Are you sure you want to delete these footers?',
                     icon: 'warning',
                     showCancelButton: !0,
                     confirmButtonText: 'Delete',
@@ -91,16 +91,16 @@
                     if (result.value) {
                         $.ajax({
                             type: 'POST',
-                            url: 'components/content-carousel/controller/content-carousel-controller.php',
+                            url: 'components/footer/controller/footer-controller.php',
                             dataType: 'json',
                             data: {
-                                content_carousel_id: content_carousel_id,
+                                footer_id: footer_id,
                                 transaction : transaction
                             },
                             success: function (response) {
                                 if (response.success) {
                                     showNotification(response.title, response.message, response.messageType);
-                                    reloadDatatable('#content-carousel-table');
+                                    reloadDatatable('#footer-table');
                                 }
                                 else {
                                     if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -129,21 +129,21 @@
                 });
             }
             else{
-                showNotification('Deletion Multiple Content Carousels Error', 'Please select the content carousels you wish to delete.', 'danger');
+                showNotification('Deletion Multiple Footers Error', 'Please select the footers you wish to delete.', 'danger');
             }
         });
 
         $('#datatable-search').on('keyup', function () {
-            var table = $('#content-carousel-table').DataTable();
+            var table = $('#footer-table').DataTable();
             table.search(this.value).draw();
         });
     });
 })(jQuery);
 
-function contentCarouselTable(datatable_name, buttons = false, show_all = false){
+function footerTable(datatable_name, buttons = false, show_all = false){
     toggleHideActionDropdown();
 
-    const type = 'content carousel table';
+    const type = 'footer table';
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
@@ -151,7 +151,7 @@ function contentCarouselTable(datatable_name, buttons = false, show_all = false)
 
     const column = [ 
         { 'data' : 'CHECK_BOX' },
-        { 'data' : 'CONTENT_CAROUSEL_NAME' },
+        { 'data' : 'CONTACT_FORM_NAME' },
         { 'data' : 'PUBLISH_STATUS' },
         { 'data' : 'ACTION' }
     ];
@@ -167,7 +167,7 @@ function contentCarouselTable(datatable_name, buttons = false, show_all = false)
 
     settings = {
         'ajax': { 
-            'url' : 'components/content-carousel/view/_content_carousel_generation.php',
+            'url' : 'components/footer/view/_footer_generation.php',
             'method' : 'POST',
             'dataType': 'json',
             'data': {

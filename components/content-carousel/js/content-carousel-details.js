@@ -4,32 +4,32 @@
     $(function() {
         generateDropdownOptions('block style options');
 
-        displayDetails('get carousel details');
+        displayDetails('get content carousel details');
 
-        if($('#carousel-image-table').length){
-            carouselImageTable('#carousel-image-table');
+        if($('#content-carousel-item-table').length){
+            contentCarouselItemTable('#content-carousel-item-table');
         }
 
-        if($('#carousel-form').length){
-            carouselForm();
+        if($('#content-carousel-form').length){
+            contentContentCarouselForm();
         }
 
-        if($('#carousel-image-form').length){
-            carouselImageForm();
+        if($('#content-carousel-item-form').length){
+            contentCarouselItemForm();
         }
 
         $(document).on('click','#edit-details',function() {
-            displayDetails('get carousel details');
+            displayDetails('get content carousel details');
         });
 
-        $(document).on('click','#delete-carousel',function() {
-            const carousel_id = $('#details-id').text();
+        $(document).on('click','#delete-content-carousel',function() {
+            const content_carousel_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete carousel';
+            const transaction = 'delete content carousel';
     
             Swal.fire({
-                title: 'Confirm Carousel Deletion',
-                text: 'Are you sure you want to delete this carousel?',
+                title: 'Confirm Content Carousel Deletion',
+                text: 'Are you sure you want to delete this content carousel?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -43,10 +43,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/content-carousel/controller/content-carousel-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
+                            content_carousel_id : content_carousel_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -81,29 +81,29 @@
             });
         });
 
-        $(document).on('click','#add-carousel-image',function() {
-            $('#carousel-image-title').text('Add Carousel Image');
-            resetModalForm('carousel-image-form');
+        $(document).on('click','#add-content-carousel-item',function() {
+            $('#content-carousel-item-title').text('Add Content Carousel Item');
+            resetModalForm('content-carousel-item-form');
         });
 
-        $(document).on('click','.edit-carousel-image',function() {
-            const carousel_image_id = $(this).data('carousel-image-id');
-            sessionStorage.setItem('carousel_image_id', carousel_image_id);
+        $(document).on('click','.edit-content-carousel-item',function() {
+            const content_carousel_item_id = $(this).data('content-carousel-item-id');
+            sessionStorage.setItem('content_carousel_item_id', content_carousel_item_id);
 
-            $('#carousel-image-title').text('Edit Carousel Image');
+            $('#content-carousel-item-title').text('Edit Content Carousel Item');
 
-            displayDetails('get carousel image details');
+            displayDetails('get content carousel item details');
         });
 
-        $(document).on('click','.delete-carousel-image',function() {
-            const carousel_id = $('#details-id').text();
-            const carousel_image_id = $(this).data('carousel-image-id');
+        $(document).on('click','.delete-content-carousel-item',function() {
+            const content_carousel_id = $('#details-id').text();
+            const content_carousel_item_id = $(this).data('content-carousel-item-id');
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete carousel image';
+            const transaction = 'delete content carousel item';
     
             Swal.fire({
-                title: 'Confirm Carousel Image Deletion',
-                text: 'Are you sure you want to delete this carousel image?',
+                title: 'Confirm Content Carousel Item Deletion',
+                text: 'Are you sure you want to delete this carousel item?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -117,17 +117,17 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/content-carousel/controller/content-carousel-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
-                            carousel_image_id : carousel_image_id, 
+                            content_carousel_id : content_carousel_id, 
+                            content_carousel_item_id : content_carousel_item_id, 
                             transaction : transaction
                         },
                         success: function (response) {
                             if (response.success) {
                                 showNotification(response.title, response.message, response.messageType);
-                                reloadDatatable('#carousel-image-table');
+                                reloadDatatable('#content-carousel-item-table');
                             }
                             else {
                                 if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -156,14 +156,14 @@
             });
         });
 
-        $(document).on('click','#unpublish-carousel',function() {
-            const carousel_id = $('#details-id').text();
+        $(document).on('click','#unpublish-content-carousel',function() {
+            const content_carousel_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'unpublish carousel';
+            const transaction = 'unpublish content carousel';
     
             Swal.fire({
-                title: 'Confirm Carousel Unpublish',
-                text: 'Are you sure you want to unpublish this carousel?',
+                title: 'Confirm Content Carousel Unpublish',
+                text: 'Are you sure you want to unpublish this content carousel?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Unpublish',
@@ -177,10 +177,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/content-carousel/controller/content-carousel-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
+                            content_carousel_id : content_carousel_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -215,14 +215,14 @@
             });
         });
 
-        $(document).on('click','#publish-carousel',function() {
-            const carousel_id = $('#details-id').text();
+        $(document).on('click','#publish-content-carousel',function() {
+            const content_carousel_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'publish carousel';
+            const transaction = 'publish content carousel';
     
             Swal.fire({
-                title: 'Confirm Carousel Publish',
-                text: 'Are you sure you want to unpublish this carousel?',
+                title: 'Confirm Content Carousel Publish',
+                text: 'Are you sure you want to unpublish this content carousel?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Publish',
@@ -236,10 +236,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/content-carousel/controller/content-carousel-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
+                            content_carousel_id : content_carousel_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -275,37 +275,37 @@
         });
 
         if($('#log-notes-offcanvas').length){
-            $(document).on('click','.view-carousel-image-log-notes',function() {
-                const carousel_image_id = $(this).data('carousel-image-id');
+            $(document).on('click','.view-content-carousel-item-log-notes',function() {
+                const content_carousel_item_id = $(this).data('content-carousel-item-id');
 
-                logNotes('carousel_image', carousel_image_id);
+                logNotes('content_carousel_item', content_carousel_item_id);
             });
         }
 
         if($('#log-notes-main').length){
-            const carousel_id = $('#details-id').text();
+            const content_carousel_id = $('#details-id').text();
 
-            logNotesMain('carousel', carousel_id);
+            logNotesMain('content_carousel', content_carousel_id);
         }
 
         if($('#internal-notes').length){
-            const carousel_id = $('#details-id').text();
+            const content_carousel_id = $('#details-id').text();
 
-            internalNotes('carousel', carousel_id);
+            internalNotes('content_carousel', content_carousel_id);
         }
 
         if($('#internal-notes-form').length){
-            const carousel_id = $('#details-id').text();
+            const content_carousel_id = $('#details-id').text();
 
-            internalNotesForm('carousel', carousel_id);
+            internalNotesForm('content_carousel', content_carousel_id);
         }
     });
 })(jQuery);
 
-function carouselForm(){
-    $('#carousel-form').validate({
+function contentContentCarouselForm(){
+    $('#content-carousel-form').validate({
         rules: {
-            carousel_name: {
+            content_carousel_name: {
                 required: true
             },
             block_style_id: {
@@ -316,7 +316,7 @@ function carouselForm(){
             }
         },
         messages: {
-            carousel_name: {
+            content_carousel_name: {
                 required: 'Enter the display name'
             },
             block_style_id: {
@@ -348,14 +348,14 @@ function carouselForm(){
             }
         },
         submitHandler: function(form) {
-            const carousel_id = $('#details-id').text();
+            const content_carousel_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
-            const transaction = 'update carousel';
+            const transaction = 'update content carousel';
           
             $.ajax({
                 type: 'POST',
-                url: 'components/carousel/controller/carousel-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&carousel_id=' + carousel_id,
+                url: 'components/content-carousel/controller/content-carousel-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&content_carousel_id=' + content_carousel_id,
                 dataType: 'json',
                 beforeSend: function() {
                     disableFormSubmitButton('submit-data');
@@ -363,8 +363,8 @@ function carouselForm(){
                 success: function (response) {
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
-                        displayDetails('get carousel details');
-                        $('#carousel-modal').modal('hide');
+                        displayDetails('get content carousel details');
+                        $('#content-carousel-modal').modal('hide');
                     }
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -389,7 +389,7 @@ function carouselForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
-                    logNotesMain('carousel', carousel_id);
+                    logNotesMain('content_carousel', content_carousel_id);
                 }
             });
         
@@ -398,12 +398,21 @@ function carouselForm(){
     });
 }
 
-function carouselImageForm(){
-    $('#carousel-image-form').validate({
+function contentCarouselItemForm(){
+    $('#content-carousel-item-form').validate({
         rules: {
-            carousel_image: {
+            content_carousel_title: {
+                required: true
+            },
+            content_carousel_heading: {
+                required: true
+            },
+            content_carousel_paragraph: {
+                required: true
+            },
+            content_carousel_image: {
                 required: function(element) {
-                    return $('#carousel_image_id').val() === '';
+                    return $('#content_carousel_item_id').val() === '';
                 }
             },
             order_sequence: {
@@ -411,8 +420,17 @@ function carouselImageForm(){
             }
         },
         messages: {
-            carousel_image: {
-                required: 'Enter the carousel image'
+            content_carousel_title: {
+                required: 'Enter the title'
+            },
+            content_carousel_heading: {
+                required: 'Enter the heading'
+            },
+            content_carousel_paragraph: {
+                required: 'Enter the paragraph'
+            },
+            content_carousel_image: {
+                required: 'Enter the content carousel image'
             },
             order_sequence: {
                 required: 'Enter the order sequence'
@@ -440,29 +458,29 @@ function carouselImageForm(){
             }
         },
         submitHandler: function(form) {
-            const carousel_id = $('#details-id').text();
+            const content_carousel_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
-            const transaction = 'save carousel image';
+            const transaction = 'save content carousel item';
             var formData = new FormData(form);
-            formData.append('carousel_id', carousel_id);
+            formData.append('content_carousel_id', content_carousel_id);
             formData.append('transaction', transaction);
           
             $.ajax({
                 type: 'POST',
-                url: 'components/carousel/controller/carousel-controller.php',
+                url: 'components/content-carousel/controller/content-carousel-controller.php',
                 data: formData,
                 processData: false,
                 contentType: false,
                 dataType: 'json',
                 beforeSend: function() {
-                    disableFormSubmitButton('submit-carousel-image-data');
+                    disableFormSubmitButton('submit-content-carousel-item-data');
                 },
                 success: function (response) {
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
-                        $('#carousel-image-modal').modal('hide');
-                        reloadDatatable('#carousel-image-table');
-                        resetModalForm('carousel-image-form');
+                        $('#content-carousel-item-modal').modal('hide');
+                        reloadDatatable('#content-carousel-item-table');
+                        resetModalForm('content-carousel-item-form');
                     }
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -486,7 +504,7 @@ function carouselImageForm(){
                     showErrorDialog(fullErrorMessage);
                 },
                 complete: function() {
-                    enableFormSubmitButton('submit-carousel-image-data');
+                    enableFormSubmitButton('submit-content-carousel-item-data');
                 }
             });
         
@@ -495,17 +513,20 @@ function carouselImageForm(){
     });
 }
 
-function carouselImageTable(datatable_name, buttons = false, show_all = false){
+function contentCarouselItemTable(datatable_name, buttons = false, show_all = false){
     toggleHideActionDropdown();
 
-    const type = 'carousel image table';
-    const carousel_id = $('#details-id').text();
+    const type = 'content carousel item table';
+    const content_carousel_id = $('#details-id').text();
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
     var settings;
 
     const column = [ 
+        { 'data' : 'CAROUSEL_ITEM' },
+        { 'data' : 'CALL_TO_ACTION_1' },
+        { 'data' : 'CALL_TO_ACTION_2' },
         { 'data' : 'CAROUSEL_IMAGE' },
         { 'data' : 'ORDER_SEQUENCE' },
         { 'data' : 'ACTION' }
@@ -513,22 +534,25 @@ function carouselImageTable(datatable_name, buttons = false, show_all = false){
 
     const column_definition = [
         { 'width': 'auto', 'aTargets': 0 },
-        { 'width': '10%', 'aTargets': 1 },
-        { 'width': '10%','bSortable': false, 'aTargets': 2 }
+        { 'width': 'auto', 'aTargets': 1 },
+        { 'width': 'auto', 'aTargets': 2 },
+        { 'width': 'auto', 'aTargets': 3 },
+        { 'width': '10%', 'aTargets': 4 },
+        { 'width': '10%','bSortable': false, 'aTargets': 5 }
     ];
 
     const length_menu = show_all ? [[-1], ['All']] : [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']];
 
     settings = {
         'ajax': { 
-            'url' : 'components/carousel/view/_carousel_generation.php',
+            'url' : 'components/content-carousel/view/_content_carousel_generation.php',
             'method' : 'POST',
             'dataType': 'json',
             'data': {
                 'type' : type,
                 'page_id' : page_id,
                 'page_link' : page_link,
-                'carousel_id' : carousel_id
+                'content_carousel_id' : content_carousel_id
             },
             'dataSrc' : '',
             'error': function(xhr, status, error) {
@@ -568,29 +592,29 @@ function carouselImageTable(datatable_name, buttons = false, show_all = false){
 
 function displayDetails(transaction){
     switch (transaction) {
-        case 'get carousel details':
-            var carousel_id = $('#details-id').text();
+        case 'get content carousel details':
+            var content_carousel_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
-                url: 'components/carousel/controller/carousel-controller.php',
+                url: 'components/content-carousel/controller/content-carousel-controller.php',
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    carousel_id : carousel_id, 
+                    content_carousel_id : content_carousel_id, 
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('carousel-form');
+                    resetModalForm('content-carousel-form');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#carousel_name').val(response.carouselName);
+                        $('#content_carousel_name').val(response.contentCarouselName);
                         $('#description').val(response.description);
                         
                         $('#block_style_id').val(response.blockStyleID).trigger('change');
                         
-                        $('#carousel_name_summary').text(response.carouselName);
+                        $('#content_carousel_name_summary').text(response.contentCarouselName);
                         $('#block_style_name_summary').text(response.blockStyleName);
                         $('#description_summary').text(response.description);
                     } 
@@ -617,25 +641,33 @@ function displayDetails(transaction){
                 }
             });
             break;
-        case 'get carousel image details':
-            var carousel_id = $('#details-id').text();
-            var carousel_image_id = sessionStorage.getItem('carousel_image_id');
+        case 'get content carousel item details':
+            var content_carousel_id = $('#details-id').text();
+            var content_carousel_item_id = sessionStorage.getItem('content_carousel_item_id');
             
             $.ajax({
-                url: 'components/carousel/controller/carousel-controller.php',
+                url: 'components/content-carousel/controller/content-carousel-controller.php',
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    carousel_id : carousel_id, 
-                    carousel_image_id : carousel_image_id, 
+                    content_carousel_id : content_carousel_id, 
+                    content_carousel_item_id : content_carousel_item_id, 
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('carousel-image-form');
+                    resetModalForm('content-carousel-item-form');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#carousel_image_id').val(carousel_image_id);
+                        $('#content_carousel_item_id').val(content_carousel_item_id);
+
+                        $('#content_carousel_title').val(response.contentCarouselTitle);
+                        $('#content_carousel_heading').val(response.contentCarouselHeading);
+                        $('#content_carousel_paragraph').val(response.contentCarouselParagraph);
+                        $('#call_to_action_button_1_text').val(response.callToActionButton1Text);
+                        $('#call_to_action_button_1_link').val(response.callToActionButton1Link);
+                        $('#call_to_action_button_2_text').val(response.callToActionButton2Text);
+                        $('#call_to_action_button_2_link').val(response.callToActionButton2Link);
                         $('#order_sequence').val(response.orderSequence);
                     } 
                     else {
@@ -649,9 +681,9 @@ function displayDetails(transaction){
                         }
                         else if (response.detailsNotExist) {
                             showNotification(response.title, response.message, response.messageType);
-                            $('#carousel-image-modal').modal('hide');
-                            reloadDatatable('#carousel-image-table');
-                            resetModalForm('carousel-image-form');
+                            $('#content-carousel-item-modal').modal('hide');
+                            reloadDatatable('#content-carousel-item-table');
+                            resetModalForm('content-carousel-item-form');
                         }
                         else {
                             showNotification(response.title, response.message, response.messageType);
@@ -673,7 +705,7 @@ function displayDetails(transaction){
 function generateDropdownOptions(type){
     switch (type) {
         case 'block style options':
-            var block_type_id = '3';
+            var block_type_id = '6';
 
             $.ajax({
                 url: 'components/block-style/view/_block_style_generation.php',
@@ -685,7 +717,7 @@ function generateDropdownOptions(type){
                 },
                 success: function(response) {
                     $('#block_style_id').select2({
-                        dropdownParent: $('#carousel-modal'),
+                        dropdownParent: $('#content-carousel-modal'),
                         data: response
                     }).on('change', function (e) {
                         $(this).valid()

@@ -2,76 +2,90 @@ DELIMITER //
 
 /* Check Stored Procedure */
 
-CREATE PROCEDURE checkCarouselExist(IN p_carousel_id INT)
+CREATE PROCEDURE checkContentCarouselExist(IN p_content_carousel_id INT)
 BEGIN
 	SELECT COUNT(*) AS total
-    FROM carousel
-    WHERE carousel_id = p_carousel_id;
+    FROM content_carousel
+    WHERE content_carousel_id = p_content_carousel_id;
 END //
 
-CREATE PROCEDURE checkCarouselImageExist(IN p_carousel_image_id INT)
+CREATE PROCEDURE checkContentCarouselItemExist(IN p_content_carousel_item_id INT)
 BEGIN
 	SELECT COUNT(*) AS total
-    FROM carousel_image
-    WHERE carousel_image_id = p_carousel_image_id;
+    FROM content_carousel_item
+    WHERE content_carousel_item_id = p_content_carousel_item_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
 
-CREATE PROCEDURE insertCarousel(IN p_carousel_name VARCHAR(100), IN p_description VARCHAR(100), IN p_block_style_id INT, IN p_block_style_name VARCHAR(100), IN p_last_log_by INT, OUT p_carousel_id INT)
+CREATE PROCEDURE insertContentCarousel(IN p_content_carousel_name VARCHAR(100), IN p_description VARCHAR(100), IN p_block_style_id INT, IN p_block_style_name VARCHAR(100), IN p_last_log_by INT, OUT p_content_carousel_id INT)
 BEGIN
-    INSERT INTO carousel (carousel_name, description, block_style_id, block_style_name, last_log_by) 
-	VALUES(p_carousel_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+    INSERT INTO content_carousel (content_carousel_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_content_carousel_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
 	
-    SET p_carousel_id = LAST_INSERT_ID();
+    SET p_content_carousel_id = LAST_INSERT_ID();
 END //
 
-CREATE PROCEDURE insertCarouselImage(IN p_carousel_id INT, IN p_carousel_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
+CREATE PROCEDURE insertContentCarouselItem(IN p_content_carousel_id INT, IN p_content_carousel_title VARCHAR(500), IN p_content_carousel_heading VARCHAR(500), IN p_content_carousel_paragraph LONGTEXT, IN p_call_to_action_button_1_text VARCHAR(100), IN p_call_to_action_button_1_link VARCHAR(500), IN p_call_to_action_button_2_text VARCHAR(100), IN p_call_to_action_button_2_link VARCHAR(500), IN p_content_carousel_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
 BEGIN
-    INSERT INTO carousel_image (carousel_id, carousel_image, order_sequence, last_log_by) 
-	VALUES(p_carousel_id, p_carousel_image, p_order_sequence, p_last_log_by);
+    INSERT INTO content_carousel_item (content_carousel_id, content_carousel_title, content_carousel_heading, content_carousel_paragraph, call_to_action_button_1_text, call_to_action_button_1_link, call_to_action_button_2_text, call_to_action_button_2_link, content_carousel_image, order_sequence, last_log_by) 
+	VALUES(p_content_carousel_id, p_content_carousel_title, p_content_carousel_heading, p_content_carousel_paragraph, p_call_to_action_button_1_text, p_call_to_action_button_1_link, p_call_to_action_button_2_text, p_call_to_action_button_2_link, p_content_carousel_image, p_order_sequence, p_last_log_by);
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Update Stored Procedure */
 
-CREATE PROCEDURE updateCarousel(IN p_carousel_id INT, IN p_carousel_name VARCHAR(100), IN p_description VARCHAR(100), IN p_block_style_id INT, IN p_block_style_name VARCHAR(100), IN p_last_log_by INT)
+CREATE PROCEDURE updateContentCarousel(IN p_content_carousel_id INT, IN p_content_carousel_name VARCHAR(100), IN p_description VARCHAR(100), IN p_block_style_id INT, IN p_block_style_name VARCHAR(100), IN p_last_log_by INT)
 BEGIN
-    UPDATE carousel
-    SET carousel_name = p_carousel_name,
+    UPDATE content_carousel
+    SET content_carousel_name = p_content_carousel_name,
         description = p_description,
         block_style_id = p_block_style_id,
         block_style_name = p_block_style_name,
         last_log_by = p_last_log_by
-    WHERE carousel_id = p_carousel_id;
+    WHERE content_carousel_id = p_content_carousel_id;
 END //
 
-CREATE PROCEDURE updateCarouselPublishStatus(IN p_carousel_id INT, IN p_publish_status VARCHAR(5), IN p_last_log_by INT)
+CREATE PROCEDURE updateContentCarouselPublishStatus(IN p_content_carousel_id INT, IN p_publish_status VARCHAR(5), IN p_last_log_by INT)
 BEGIN
-    UPDATE carousel
+    UPDATE content_carousel
     SET publish_status = p_publish_status,
         last_log_by = p_last_log_by
-    WHERE carousel_id = p_carousel_id;
+    WHERE content_carousel_id = p_content_carousel_id;
 END //
 
-CREATE PROCEDURE updateCarouselImage(IN p_carousel_image_id INT, IN p_carousel_id INT, IN p_carousel_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
+CREATE PROCEDURE updateContentCarouselItem(IN p_content_carousel_item_id INT, IN p_content_carousel_id INT, IN p_content_carousel_title VARCHAR(500), IN p_content_carousel_heading VARCHAR(500), IN p_content_carousel_paragraph LONGTEXT, IN p_call_to_action_button_1_text VARCHAR(100), IN p_call_to_action_button_1_link VARCHAR(500), IN p_call_to_action_button_2_text VARCHAR(100), IN p_call_to_action_button_2_link VARCHAR(500), IN p_content_carousel_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
 BEGIN
-    IF p_carousel_image IS NOT NULL AND p_carousel_image != '' THEN
-        UPDATE carousel_image
-        SET carousel_id = p_carousel_id,
-            carousel_image = p_carousel_image,
+    IF p_content_carousel_image IS NOT NULL AND p_content_carousel_image != '' THEN
+        UPDATE content_carousel_item
+        SET content_carousel_id = p_content_carousel_id,
+            content_carousel_title = p_content_carousel_title,
+            content_carousel_heading = p_content_carousel_heading,
+            content_carousel_paragraph = p_content_carousel_paragraph,
+            call_to_action_button_1_text = p_call_to_action_button_1_text,
+            call_to_action_button_1_link = p_call_to_action_button_1_link,
+            call_to_action_button_2_text = p_call_to_action_button_2_text,
+            call_to_action_button_2_link = p_call_to_action_button_2_link,
+            content_carousel_image = p_content_carousel_image,
             order_sequence = p_order_sequence,
             last_log_by = p_last_log_by
-        WHERE carousel_image_id = p_carousel_image_id;
+        WHERE content_carousel_item_id = p_content_carousel_item_id;
     ELSE
-        UPDATE carousel_image
-        SET carousel_id = p_carousel_id,
+        UPDATE content_carousel_item
+        SET content_carousel_id = p_content_carousel_id,
+            content_carousel_title = p_content_carousel_title,
+            content_carousel_heading = p_content_carousel_heading,
+            content_carousel_paragraph = p_content_carousel_paragraph,
+            call_to_action_button_1_text = p_call_to_action_button_1_text,
+            call_to_action_button_1_link = p_call_to_action_button_1_link,
+            call_to_action_button_2_text = p_call_to_action_button_2_text,
+            call_to_action_button_2_link = p_call_to_action_button_2_link,
             order_sequence = p_order_sequence,
             last_log_by = p_last_log_by
-        WHERE carousel_image_id = p_carousel_image_id;
+        WHERE content_carousel_item_id = p_content_carousel_item_id;
     END IF;   
 END //
 
@@ -79,7 +93,7 @@ END //
 
 /* Delete Stored Procedure */
 
-CREATE PROCEDURE deleteCarousel(IN p_carousel_id INT)
+CREATE PROCEDURE deleteContentCarousel(IN p_content_carousel_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -88,54 +102,54 @@ BEGIN
 
     START TRANSACTION;
 
-    DELETE FROM carousel_image WHERE carousel_id = p_carousel_id;
-    DELETE FROM carousel WHERE carousel_id = p_carousel_id;
+    DELETE FROM content_carousel_item WHERE content_carousel_id = p_content_carousel_id;
+    DELETE FROM content_carousel WHERE content_carousel_id = p_content_carousel_id;
 
     COMMIT;
 END //
 
-CREATE PROCEDURE deleteCarouselImage(IN p_carousel_image_id INT)
+CREATE PROCEDURE deleteContentCarouselItem(IN p_content_carousel_item_id INT)
 BEGIN
-   DELETE FROM carousel_image WHERE carousel_image_id = p_carousel_image_id;
+   DELETE FROM content_carousel_item WHERE content_carousel_item_id = p_content_carousel_item_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Get Stored Procedure */
 
-CREATE PROCEDURE getCarousel(IN p_carousel_id INT)
+CREATE PROCEDURE getContentCarousel(IN p_content_carousel_id INT)
 BEGIN
-	SELECT * FROM carousel
-	WHERE carousel_id = p_carousel_id;
+	SELECT * FROM content_carousel
+	WHERE content_carousel_id = p_content_carousel_id;
 END //
 
-CREATE PROCEDURE getCarouselImage(IN p_carousel_image_id INT)
+CREATE PROCEDURE getContentCarouselItem(IN p_content_carousel_item_id INT)
 BEGIN
-	SELECT * FROM carousel_image
-	WHERE carousel_image_id = p_carousel_image_id;
+	SELECT * FROM content_carousel_item
+	WHERE content_carousel_item_id = p_content_carousel_item_id;
 END //
 
-CREATE PROCEDURE getCarouselImageByCarouselID(IN p_carousel_id INT)
+CREATE PROCEDURE getContentCarouselItemByContentCarouselID(IN p_content_carousel_id INT)
 BEGIN
-	SELECT * FROM carousel_image
-	WHERE carousel_id = p_carousel_id;
+	SELECT * FROM content_carousel_item
+	WHERE content_carousel_id = p_content_carousel_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Generate Stored Procedure */
 
-CREATE PROCEDURE generateCarouselTable()
+CREATE PROCEDURE generateContentCarouselTable()
 BEGIN
-    SELECT carousel_id, carousel_name, description, publish_status
-    FROM carousel;
+    SELECT content_carousel_id, content_carousel_name, description, publish_status
+    FROM content_carousel;
 END //
 
-CREATE PROCEDURE generateCarouselImageTable(IN p_carousel_id INT)
+CREATE PROCEDURE generateContentCarouselItemTable(IN p_content_carousel_id INT)
 BEGIN
-    SELECT carousel_image_id, carousel_image, order_sequence 
-    FROM carousel_image
-    WHERE carousel_id = p_carousel_id;
+    SELECT content_carousel_item_id, content_carousel_title, content_carousel_heading, content_carousel_paragraph, call_to_action_button_1_text, call_to_action_button_1_link, call_to_action_button_2_text, call_to_action_button_2_link, content_carousel_image, order_sequence 
+    FROM content_carousel_item
+    WHERE content_carousel_id = p_content_carousel_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

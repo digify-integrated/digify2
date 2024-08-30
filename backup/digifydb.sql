@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2024 at 11:34 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 30, 2024 at 05:02 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -242,6 +242,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContactInformationTypeExist` (
     WHERE contact_information_type_id = p_contact_information_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkContentCarouselExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContentCarouselExist` (IN `p_content_carousel_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM content_carousel
+    WHERE content_carousel_id = p_content_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkContentCarouselItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContentCarouselItemExist` (IN `p_content_carousel_item_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM content_carousel_item
+    WHERE content_carousel_item_id = p_content_carousel_item_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkCountryExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCountryExist` (IN `p_country_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -417,11 +431,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkFileTypeExist` (IN `p_file_typ
     WHERE file_type_id = p_file_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkFooterExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkFooterExist` (IN `p_footer_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM footer
+    WHERE footer_id = p_footer_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkGenderExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkGenderExist` (IN `p_gender_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM gender
     WHERE gender_id = p_gender_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkHeaderExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkHeaderExist` (IN `p_header_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM header
+    WHERE header_id = p_header_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkIDTypeExist`$$
@@ -802,6 +830,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteContactInformationType` (IN `
     DELETE FROM contact_information_type WHERE contact_information_type_id = p_contact_information_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteContentCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteContentCarousel` (IN `p_content_carousel_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM content_carousel_item WHERE content_carousel_id = p_content_carousel_id;
+    DELETE FROM content_carousel WHERE content_carousel_id = p_content_carousel_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteContentCarouselItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteContentCarouselItem` (IN `p_content_carousel_item_id` INT)   BEGIN
+   DELETE FROM content_carousel_item WHERE content_carousel_item_id = p_content_carousel_item_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteCountry`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCountry` (IN `p_country_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1025,9 +1073,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFileType` (IN `p_file_type_id
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteFooter`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteFooter` (IN `p_footer_id` INT)   BEGIN
+    DELETE FROM footer WHERE footer_id = p_footer_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteGender`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteGender` (IN `p_gender_id` INT)   BEGIN
     DELETE FROM gender WHERE gender_id = p_gender_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteHeader`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteHeader` (IN `p_header_id` INT)   BEGIN
+    DELETE FROM header WHERE header_id = p_header_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteIDType`$$
@@ -1483,6 +1541,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContactInformationTypeTable
     ORDER BY contact_information_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateContentCarouselItemTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContentCarouselItemTable` (IN `p_content_carousel_id` INT)   BEGIN
+    SELECT content_carousel_item_id, content_carousel_title, content_carousel_heading, content_carousel_paragraph, call_to_action_button_1_text, call_to_action_button_1_link, call_to_action_button_2_text, call_to_action_button_2_link, content_carousel_image, order_sequence 
+    FROM content_carousel_item
+    WHERE content_carousel_id = p_content_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateContentCarouselTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContentCarouselTable` ()   BEGIN
+    SELECT content_carousel_id, content_carousel_name, description, publish_status
+    FROM content_carousel;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateCountryOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCountryOptions` ()   BEGIN
 	SELECT country_id, country_name 
@@ -1889,6 +1960,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFileTypeTable` ()   BEGIN
     ORDER BY file_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateFooterTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateFooterTable` ()   BEGIN
+    SELECT footer_id, footer_name, description, publish_status
+    FROM footer;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateGenderOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateGenderOptions` ()   BEGIN
 	SELECT gender_id, gender_name 
@@ -1901,6 +1978,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateGenderTable` ()   BEGIN
 	SELECT gender_id, gender_name 
     FROM gender 
     ORDER BY gender_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateHeaderTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateHeaderTable` ()   BEGIN
+    SELECT header_id, header_name, description, publish_status
+    FROM header;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateIDTypeOptions`$$
@@ -2523,6 +2606,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getContactInformationType` (IN `p_c
 	WHERE contact_information_type_id = p_contact_information_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getContentCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getContentCarousel` (IN `p_content_carousel_id` INT)   BEGIN
+	SELECT * FROM content_carousel
+	WHERE content_carousel_id = p_content_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getContentCarouselItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getContentCarouselItem` (IN `p_content_carousel_item_id` INT)   BEGIN
+	SELECT * FROM content_carousel_item
+	WHERE content_carousel_item_id = p_content_carousel_item_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getContentCarouselItemByContentCarouselID`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getContentCarouselItemByContentCarouselID` (IN `p_content_carousel_id` INT)   BEGIN
+	SELECT * FROM content_carousel_item
+	WHERE content_carousel_id = p_content_carousel_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getCountry`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCountry` (IN `p_country_id` INT)   BEGIN
 	SELECT * FROM country
@@ -2673,10 +2774,22 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getFileType` (IN `p_file_type_id` I
 	WHERE file_type_id = p_file_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getFooter`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getFooter` (IN `p_footer_id` INT)   BEGIN
+	SELECT * FROM footer
+	WHERE footer_id = p_footer_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getGender`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getGender` (IN `p_gender_id` INT)   BEGIN
 	SELECT * FROM gender
 	WHERE gender_id = p_gender_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getHeader`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getHeader` (IN `p_header_id` INT)   BEGIN
+	SELECT * FROM header
+	WHERE header_id = p_header_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getIDType`$$
@@ -3005,6 +3118,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContactInformationType` (IN `
     SET p_contact_information_type_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertContentCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContentCarousel` (IN `p_content_carousel_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_content_carousel_id` INT)   BEGIN
+    INSERT INTO content_carousel (content_carousel_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_content_carousel_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_content_carousel_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertContentCarouselItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContentCarouselItem` (IN `p_content_carousel_id` INT, IN `p_content_carousel_title` VARCHAR(500), IN `p_content_carousel_heading` VARCHAR(500), IN `p_content_carousel_paragraph` LONGTEXT, IN `p_call_to_action_button_1_text` VARCHAR(100), IN `p_call_to_action_button_1_link` VARCHAR(500), IN `p_call_to_action_button_2_text` VARCHAR(100), IN `p_call_to_action_button_2_link` VARCHAR(500), IN `p_content_carousel_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO content_carousel_item (content_carousel_id, content_carousel_title, content_carousel_heading, content_carousel_paragraph, call_to_action_button_1_text, call_to_action_button_1_link, call_to_action_button_2_text, call_to_action_button_2_link, content_carousel_image, order_sequence, last_log_by) 
+	VALUES(p_content_carousel_id, p_content_carousel_title, p_content_carousel_heading, p_content_carousel_paragraph, p_call_to_action_button_1_text, p_call_to_action_button_1_link, p_call_to_action_button_2_text, p_call_to_action_button_2_link, p_content_carousel_image, p_order_sequence, p_last_log_by);
+END$$
+
 DROP PROCEDURE IF EXISTS `insertCountry`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCountry` (IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_country_id` INT)   BEGIN
     INSERT INTO country (country_name, last_log_by) 
@@ -3226,12 +3353,28 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFileType` (IN `p_file_type_na
     SET p_file_type_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertFooter`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertFooter` (IN `p_footer_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_footer_id` INT)   BEGIN
+    INSERT INTO footer (footer_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_footer_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_footer_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertGender`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertGender` (IN `p_gender_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_gender_id` INT)   BEGIN
     INSERT INTO gender (gender_name, last_log_by) 
 	VALUES(p_gender_name, p_last_log_by);
 	
     SET p_gender_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertHeader`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertHeader` (IN `p_header_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_header_id` INT)   BEGIN
+    INSERT INTO header (header_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_header_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_header_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertIDType`$$
@@ -3531,6 +3674,7 @@ DROP PROCEDURE IF EXISTS `updateAppLogo`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppLogo` (IN `p_app_module_id` INT, IN `p_app_logo` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     UPDATE app_module
     SET app_logo = p_app_logo,
+
         last_log_by = p_last_log_by
     WHERE app_module_id = p_app_module_id;
 END$$
@@ -3928,6 +4072,57 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContactInformationType` (IN `
     SET contact_information_type_name = p_contact_information_type_name,
         last_log_by = p_last_log_by
     WHERE contact_information_type_id = p_contact_information_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateContentCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContentCarousel` (IN `p_content_carousel_id` INT, IN `p_content_carousel_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE content_carousel
+    SET content_carousel_name = p_content_carousel_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE content_carousel_id = p_content_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateContentCarouselItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContentCarouselItem` (IN `p_content_carousel_item_id` INT, IN `p_content_carousel_id` INT, IN `p_content_carousel_title` VARCHAR(500), IN `p_content_carousel_heading` VARCHAR(500), IN `p_content_carousel_paragraph` LONGTEXT, IN `p_call_to_action_button_1_text` VARCHAR(100), IN `p_call_to_action_button_1_link` VARCHAR(500), IN `p_call_to_action_button_2_text` VARCHAR(100), IN `p_call_to_action_button_2_link` VARCHAR(500), IN `p_content_carousel_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    IF p_content_carousel_image IS NOT NULL AND p_content_carousel_image != '' THEN
+        UPDATE content_carousel_item
+        SET content_carousel_id = p_content_carousel_id,
+            content_carousel_title = p_content_carousel_title,
+            content_carousel_heading = p_content_carousel_heading,
+            content_carousel_paragraph = p_content_carousel_paragraph,
+            call_to_action_button_1_text = p_call_to_action_button_1_text,
+            call_to_action_button_1_link = p_call_to_action_button_1_link,
+            call_to_action_button_2_text = p_call_to_action_button_2_text,
+            call_to_action_button_2_link = p_call_to_action_button_2_link,
+            content_carousel_image = p_content_carousel_image,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE content_carousel_item_id = p_content_carousel_item_id;
+    ELSE
+        UPDATE content_carousel_item
+        SET content_carousel_id = p_content_carousel_id,
+            content_carousel_title = p_content_carousel_title,
+            content_carousel_heading = p_content_carousel_heading,
+            content_carousel_paragraph = p_content_carousel_paragraph,
+            call_to_action_button_1_text = p_call_to_action_button_1_text,
+            call_to_action_button_1_link = p_call_to_action_button_1_link,
+            call_to_action_button_2_text = p_call_to_action_button_2_text,
+            call_to_action_button_2_link = p_call_to_action_button_2_link,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE content_carousel_item_id = p_content_carousel_item_id;
+    END IF;   
+END$$
+
+DROP PROCEDURE IF EXISTS `updateContentCarouselPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContentCarouselPublishStatus` (IN `p_content_carousel_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE content_carousel
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE content_carousel_id = p_content_carousel_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateCountry`$$
@@ -4643,6 +4838,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFileType` (IN `p_file_type_id
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateFooter`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFooter` (IN `p_footer_id` INT, IN `p_footer_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE footer
+    SET footer_name = p_footer_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE footer_id = p_footer_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateFooterPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateFooterPublishStatus` (IN `p_footer_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE footer
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE footer_id = p_footer_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateGender`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateGender` (IN `p_gender_id` INT, IN `p_gender_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -4663,6 +4877,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateGender` (IN `p_gender_id` INT
     WHERE gender_id = p_gender_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateHeader`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateHeader` (IN `p_header_id` INT, IN `p_header_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE header
+    SET header_name = p_header_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE header_id = p_header_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateHeaderPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateHeaderPublishStatus` (IN `p_header_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE header
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE header_id = p_header_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateIDType`$$
@@ -9602,6 +9835,30 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3860, 'contact_form', 1, 'Contact Form Name: asd -> asdasdasd<br/>Description: asd -> asd123<br/>', 2, '2024-08-30 17:24:39', '2024-08-30 17:24:39'),
 (3861, 'contact_form', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-08-30 17:24:42', '2024-08-30 17:24:42'),
 (3862, 'contact_form', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-08-30 17:24:45', '2024-08-30 17:24:45');
+INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `changed_by`, `changed_at`, `created_date`) VALUES
+(3863, 'user_account', 2, 'Last Connection Date: 2024-08-30 08:53:07 -> 2024-08-30 20:33:00<br/>', 2, '2024-08-30 20:33:00', '2024-08-30 20:33:00'),
+(3864, 'contact_form', 2, 'Contact form created. <br/><br/>Contact Form Name: asd<br/>Description: asd<br/>Block Style Name: asd<br/>Publish Status: No', 2, '2024-08-30 20:35:59', '2024-08-30 20:35:59'),
+(3865, 'block_style', 7, 'Block style created. <br/><br/>Block Style Name: Content Carousel<br/>Description: Content Carousel<br/>Block Type Name: Content Carousel', 2, '2024-08-30 22:19:50', '2024-08-30 22:19:50'),
+(3866, 'content_carousel', 1, 'Content carousel created. <br/><br/>Content Carousel Name: test<br/>Description: test<br/>Block Style Name: Content Carousel<br/>Publish Status: No', 2, '2024-08-30 22:20:40', '2024-08-30 22:20:40'),
+(3867, 'content_carousel', 1, 'Content Carousel Name: test -> test2<br/>Description: test -> test2<br/>', 2, '2024-08-30 22:22:49', '2024-08-30 22:22:49'),
+(3868, 'content_carousel_item', 1, 'Content carousel item created. <br/><br/>Content Carousel Title: test<br/>Content Carousel Heading: test<br/>Content Carousel Paragraph: test<br/>Call-to-Action Button 1 Text: test<br/>Call-to-Action Button 1 Link: test.php<br/>Call-to-Action Button 2 Text: test<br/>Call-to-Action Button 2 Link: test.php', 12, '2024-08-30 22:23:14', '2024-08-30 22:23:14'),
+(3869, 'content_carousel_item', 1, 'Order Sequence: 0 -> 12<br/>', 2, '2024-08-30 22:30:45', '2024-08-30 22:30:45'),
+(3870, 'content_carousel_item', 1, 'Content Carousel Title: test -> Title<br/>Content Carousel Heading: test -> Heading<br/>Content Carousel Paragraph: test -> Paragraph<br/>', 2, '2024-08-30 22:31:52', '2024-08-30 22:31:52'),
+(3871, 'content_carousel_item', 2, 'Content carousel item created. <br/><br/>Content Carousel Title: test<br/>Content Carousel Heading: test<br/>Content Carousel Paragraph: test<br/>Order Sequence: 12', 2, '2024-08-30 22:35:12', '2024-08-30 22:35:12'),
+(3872, 'content_carousel', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-08-30 22:35:48', '2024-08-30 22:35:48'),
+(3873, 'content_carousel', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-08-30 22:35:51', '2024-08-30 22:35:51'),
+(3874, 'block_style', 8, 'Block style created. <br/><br/>Block Style Name: Footer Style<br/>Description: Footer Style<br/>Block Type Name: Footer', 2, '2024-08-30 22:54:12', '2024-08-30 22:54:12'),
+(3875, 'block_style', 9, 'Block style created. <br/><br/>Block Style Name: Header Style<br/>Description: Header Style<br/>Block Type Name: Header', 2, '2024-08-30 22:54:22', '2024-08-30 22:54:22'),
+(3876, 'footer', 1, 'Footer created. <br/><br/>Footer Name: test<br/>Description: test<br/>Block Style Name: Footer Style<br/>Publish Status: No', 2, '2024-08-30 22:57:09', '2024-08-30 22:57:09'),
+(3877, 'footer', 2, 'Footer created. <br/><br/>Footer Name: test<br/>Description: test<br/>Block Style Name: Footer Style<br/>Publish Status: No', 2, '2024-08-30 22:57:40', '2024-08-30 22:57:40'),
+(3878, 'footer', 2, 'Footer Name: test -> testasd<br/>Description: test -> test123<br/>', 2, '2024-08-30 22:58:44', '2024-08-30 22:58:44'),
+(3879, 'footer', 2, 'Publish Status: No -> Yes<br/>', 2, '2024-08-30 22:58:47', '2024-08-30 22:58:47'),
+(3880, 'footer', 2, 'Publish Status: Yes -> No<br/>', 2, '2024-08-30 22:58:51', '2024-08-30 22:58:51'),
+(3881, 'header', 1, 'Header created. <br/><br/>Header Name: 1<br/>Description: 1<br/>Block Style Name: Header Style<br/>Publish Status: No', 2, '2024-08-30 23:00:30', '2024-08-30 23:00:30'),
+(3882, 'header', 1, 'Header Name: 1 -> 122<br/>Description: 1 -> 1231asd<br/>', 2, '2024-08-30 23:00:37', '2024-08-30 23:00:37'),
+(3883, 'header', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-08-30 23:00:44', '2024-08-30 23:00:44'),
+(3884, 'header', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-08-30 23:00:48', '2024-08-30 23:00:48'),
+(3885, 'header', 2, 'Header created. <br/><br/>Header Name: testt<br/>Description: test<br/>Block Style Name: Header Style<br/>Publish Status: No', 2, '2024-08-30 23:01:01', '2024-08-30 23:01:01');
 
 -- --------------------------------------------------------
 
@@ -9858,7 +10115,10 @@ INSERT INTO `block_style` (`block_style_id`, `block_style_name`, `description`, 
 (3, 'asd', 'asd', 2, 'Call To Action', '2024-08-29 15:19:22', 2),
 (4, 'asd', 'asd', 3, 'Carousel', '2024-08-29 17:15:26', 2),
 (5, 'Client', 'asd', 4, 'Client', '2024-08-30 13:39:32', 2),
-(6, 'asd', 'asd', 5, 'Contact Form', '2024-08-30 17:23:24', 2);
+(6, 'asd', 'asd', 5, 'Contact Form', '2024-08-30 17:23:24', 2),
+(7, 'Content Carousel', 'Content Carousel', 6, 'Content Carousel', '2024-08-30 22:19:50', 2),
+(8, 'Footer Style', 'Footer Style', 7, 'Footer', '2024-08-30 22:54:12', 2),
+(9, 'Header Style', 'Header Style', 8, 'Header', '2024-08-30 22:54:22', 2);
 
 --
 -- Triggers `block_style`
@@ -12589,6 +12849,195 @@ CREATE TRIGGER `contact_information_type_trigger_update` AFTER UPDATE ON `contac
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('contact_information_type', NEW.contact_information_type_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `content_carousel`
+--
+
+DROP TABLE IF EXISTS `content_carousel`;
+CREATE TABLE `content_carousel` (
+  `content_carousel_id` int(10) UNSIGNED NOT NULL,
+  `content_carousel_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `content_carousel`
+--
+DROP TRIGGER IF EXISTS `content_carousel_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `content_carousel_trigger_insert` AFTER INSERT ON `content_carousel` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Content carousel created. <br/>';
+
+    IF NEW.content_carousel_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Content Carousel Name: ", NEW.content_carousel_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('content_carousel', NEW.content_carousel_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `content_carousel_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `content_carousel_trigger_update` AFTER UPDATE ON `content_carousel` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.content_carousel_name <> OLD.content_carousel_name THEN
+        SET audit_log = CONCAT(audit_log, "Content Carousel Name: ", OLD.content_carousel_name, " -> ", NEW.content_carousel_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('content_carousel', NEW.content_carousel_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `content_carousel_item`
+--
+
+DROP TABLE IF EXISTS `content_carousel_item`;
+CREATE TABLE `content_carousel_item` (
+  `content_carousel_item_id` int(10) UNSIGNED NOT NULL,
+  `content_carousel_id` int(10) UNSIGNED NOT NULL,
+  `content_carousel_title` varchar(500) NOT NULL,
+  `content_carousel_heading` varchar(500) NOT NULL,
+  `content_carousel_paragraph` longtext NOT NULL,
+  `call_to_action_button_1_text` varchar(100) DEFAULT NULL,
+  `call_to_action_button_1_link` varchar(500) DEFAULT NULL,
+  `call_to_action_button_2_text` varchar(100) DEFAULT NULL,
+  `call_to_action_button_2_link` varchar(500) DEFAULT NULL,
+  `content_carousel_image` varchar(500) NOT NULL,
+  `order_sequence` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `content_carousel_item`
+--
+DROP TRIGGER IF EXISTS `content_carousel_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `content_carousel_item_trigger_insert` AFTER INSERT ON `content_carousel_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Content carousel item created. <br/>';
+
+    IF NEW.content_carousel_title <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Content Carousel Title: ", NEW.content_carousel_title);
+    END IF;
+
+    IF NEW.content_carousel_heading <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Content Carousel Heading: ", NEW.content_carousel_heading);
+    END IF;
+
+    IF NEW.content_carousel_paragraph <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Content Carousel Paragraph: ", NEW.content_carousel_paragraph);
+    END IF;
+
+    IF NEW.call_to_action_button_1_text <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button 1 Text: ", NEW.call_to_action_button_1_text);
+    END IF;
+
+    IF NEW.call_to_action_button_1_link <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button 1 Link: ", NEW.call_to_action_button_1_link);
+    END IF;
+
+    IF NEW.call_to_action_button_2_text <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button 2 Text: ", NEW.call_to_action_button_2_text);
+    END IF;
+
+    IF NEW.call_to_action_button_2_link <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button 2 Link: ", NEW.call_to_action_button_2_link);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('content_carousel_item', NEW.content_carousel_item_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `content_carousel_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `content_carousel_item_trigger_update` AFTER UPDATE ON `content_carousel_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+    
+    IF NEW.content_carousel_title <> OLD.content_carousel_title THEN
+        SET audit_log = CONCAT(audit_log, "Content Carousel Title: ", OLD.content_carousel_title, " -> ", NEW.content_carousel_title, "<br/>");
+    END IF;
+    
+    IF NEW.content_carousel_heading <> OLD.content_carousel_heading THEN
+        SET audit_log = CONCAT(audit_log, "Content Carousel Heading: ", OLD.content_carousel_heading, " -> ", NEW.content_carousel_heading, "<br/>");
+    END IF;
+    
+    IF NEW.content_carousel_paragraph <> OLD.content_carousel_paragraph THEN
+        SET audit_log = CONCAT(audit_log, "Content Carousel Paragraph: ", OLD.content_carousel_paragraph, " -> ", NEW.content_carousel_paragraph, "<br/>");
+    END IF;
+    
+    IF NEW.call_to_action_button_1_text <> OLD.call_to_action_button_1_text THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button 1 Text: ", OLD.call_to_action_button_1_text, " -> ", NEW.call_to_action_button_1_text, "<br/>");
+    END IF;
+
+    IF NEW.call_to_action_button_1_link <> OLD.call_to_action_button_1_link THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button 1 Link: ", OLD.call_to_action_button_1_link, " -> ", NEW.call_to_action_button_1_link, "<br/>");
+    END IF;
+    
+    IF NEW.call_to_action_button_2_text <> OLD.call_to_action_button_2_text THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button 2 Text: ", OLD.call_to_action_button_2_text, " -> ", NEW.call_to_action_button_2_text, "<br/>");
+    END IF;
+
+    IF NEW.call_to_action_button_2_link <> OLD.call_to_action_button_2_link THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button 2 Link: ", OLD.call_to_action_button_2_link, " -> ", NEW.call_to_action_button_2_link, "<br/>");
+    END IF;
+    
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('content_carousel_item', NEW.content_carousel_item_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -15430,6 +15879,82 @@ INSERT INTO `file_type` (`file_type_id`, `file_type_name`, `created_date`, `last
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `footer`
+--
+
+DROP TABLE IF EXISTS `footer`;
+CREATE TABLE `footer` (
+  `footer_id` int(10) UNSIGNED NOT NULL,
+  `footer_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `footer`
+--
+DROP TRIGGER IF EXISTS `footer_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `footer_trigger_insert` AFTER INSERT ON `footer` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Footer created. <br/>';
+
+    IF NEW.footer_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Footer Name: ", NEW.footer_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('footer', NEW.footer_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `footer_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `footer_trigger_update` AFTER UPDATE ON `footer` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.footer_name <> OLD.footer_name THEN
+        SET audit_log = CONCAT(audit_log, "Footer Name: ", OLD.footer_name, " -> ", NEW.footer_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('footer', NEW.footer_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `gender`
 --
 
@@ -15478,6 +16003,89 @@ CREATE TRIGGER `gender_trigger_update` AFTER UPDATE ON `gender` FOR EACH ROW BEG
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('gender', NEW.gender_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `header`
+--
+
+DROP TABLE IF EXISTS `header`;
+CREATE TABLE `header` (
+  `header_id` int(10) UNSIGNED NOT NULL,
+  `header_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `header`
+--
+
+INSERT INTO `header` (`header_id`, `header_name`, `description`, `block_style_id`, `block_style_name`, `publish_status`, `created_date`, `last_log_by`) VALUES
+(2, 'testt', 'test', 9, 'Header Style', 'No', '2024-08-30 23:01:01', 2);
+
+--
+-- Triggers `header`
+--
+DROP TRIGGER IF EXISTS `header_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `header_trigger_insert` AFTER INSERT ON `header` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Header created. <br/>';
+
+    IF NEW.header_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Header Name: ", NEW.header_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('header', NEW.header_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `header_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `header_trigger_update` AFTER UPDATE ON `header` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.header_name <> OLD.header_name THEN
+        SET audit_log = CONCAT(audit_log, "Header Name: ", OLD.header_name, " -> ", NEW.header_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('header', NEW.header_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -17656,7 +18264,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-30 08:53:07', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'AmHaeGM9P5JHbwu%2BAgYcjCBokDdw3UgES6nCMivqJL0%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-30 20:33:00', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'SgI6h4Z75PkfPAT7nlKJP9jAkvf5hegr6IFYE%2FtOeWk%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -18388,6 +18996,23 @@ ALTER TABLE `contact_information_type`
   ADD KEY `contact_information_type_index_contact_information_type_id` (`contact_information_type_id`);
 
 --
+-- Indexes for table `content_carousel`
+--
+ALTER TABLE `content_carousel`
+  ADD PRIMARY KEY (`content_carousel_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `content_carouselindex_content_carousel_id` (`content_carousel_id`);
+
+--
+-- Indexes for table `content_carousel_item`
+--
+ALTER TABLE `content_carousel_item`
+  ADD PRIMARY KEY (`content_carousel_item_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `content_carousel_item_index_content_carousel_item_id` (`content_carousel_item_id`),
+  ADD KEY `content_carousel_item_index_content_carousel_id` (`content_carousel_id`);
+
+--
 -- Indexes for table `country`
 --
 ALTER TABLE `country`
@@ -18632,12 +19257,28 @@ ALTER TABLE `file_type`
   ADD KEY `file_type_index_file_type_id` (`file_type_id`);
 
 --
+-- Indexes for table `footer`
+--
+ALTER TABLE `footer`
+  ADD PRIMARY KEY (`footer_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `footer_index_footer_id` (`footer_id`);
+
+--
 -- Indexes for table `gender`
 --
 ALTER TABLE `gender`
   ADD PRIMARY KEY (`gender_id`),
   ADD KEY `last_log_by` (`last_log_by`),
   ADD KEY `gender_index_gender_id` (`gender_id`);
+
+--
+-- Indexes for table `header`
+--
+ALTER TABLE `header`
+  ADD PRIMARY KEY (`header_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `header_index_header_id` (`header_id`);
 
 --
 -- Indexes for table `id_type`
@@ -18951,7 +19592,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3863;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3886;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -18981,7 +19622,7 @@ ALTER TABLE `block_item`
 -- AUTO_INCREMENT for table `block_style`
 --
 ALTER TABLE `block_style`
-  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `block_type`
@@ -19059,13 +19700,25 @@ ALTER TABLE `company`
 -- AUTO_INCREMENT for table `contact_form`
 --
 ALTER TABLE `contact_form`
-  MODIFY `contact_form_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `contact_form_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `contact_information_type`
 --
 ALTER TABLE `contact_information_type`
   MODIFY `contact_information_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `content_carousel`
+--
+ALTER TABLE `content_carousel`
+  MODIFY `content_carousel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `content_carousel_item`
+--
+ALTER TABLE `content_carousel_item`
+  MODIFY `content_carousel_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `country`
@@ -19212,10 +19865,22 @@ ALTER TABLE `file_type`
   MODIFY `file_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
+-- AUTO_INCREMENT for table `footer`
+--
+ALTER TABLE `footer`
+  MODIFY `footer_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `gender`
 --
 ALTER TABLE `gender`
   MODIFY `gender_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `header`
+--
+ALTER TABLE `header`
+  MODIFY `header_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `id_type`
@@ -19566,6 +20231,19 @@ ALTER TABLE `contact_information_type`
   ADD CONSTRAINT `contact_information_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `content_carousel`
+--
+ALTER TABLE `content_carousel`
+  ADD CONSTRAINT `content_carousel_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `content_carousel_item`
+--
+ALTER TABLE `content_carousel_item`
+  ADD CONSTRAINT `content_carousel_item_ibfk_1` FOREIGN KEY (`content_carousel_id`) REFERENCES `content_carousel` (`content_carousel_id`),
+  ADD CONSTRAINT `content_carousel_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `country`
 --
 ALTER TABLE `country`
@@ -19723,10 +20401,22 @@ ALTER TABLE `file_type`
   ADD CONSTRAINT `file_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `footer`
+--
+ALTER TABLE `footer`
+  ADD CONSTRAINT `footer_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `gender`
 --
 ALTER TABLE `gender`
   ADD CONSTRAINT `gender_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `header`
+--
+ALTER TABLE `header`
+  ADD CONSTRAINT `header_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `id_type`
