@@ -57,14 +57,22 @@ BEGIN
     WHERE carousel_id = p_carousel_id;
 END //
 
-CREATE PROCEDURE updateCarouselImage(IN p_carousel_image_id INT, IN p_carousel_id INT, IN p_p_carousel_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
+CREATE PROCEDURE updateCarouselImage(IN p_carousel_image_id INT, IN p_carousel_id INT, IN p_carousel_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
 BEGIN
-    UPDATE carousel_image
-    SET carousel_id = p_carousel_id,
-        carousel_image = p_carousel_image,
-        order_sequence = p_order_sequence,
-        last_log_by = p_last_log_by
-    WHERE carousel_image_id = p_carousel_image_id;
+    IF p_carousel_image IS NOT NULL AND p_carousel_image != '' THEN
+        UPDATE carousel_image
+        SET carousel_id = p_carousel_id,
+            carousel_image = p_carousel_image,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE carousel_image_id = p_carousel_image_id;
+    ELSE
+        UPDATE carousel_image
+        SET carousel_id = p_carousel_id,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE carousel_image_id = p_carousel_image_id;
+    END IF;   
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -105,6 +113,12 @@ CREATE PROCEDURE getCarouselImage(IN p_carousel_image_id INT)
 BEGIN
 	SELECT * FROM carousel_image
 	WHERE carousel_image_id = p_carousel_image_id;
+END //
+
+CREATE PROCEDURE getCarouselImageByCarouselID(IN p_carousel_id INT)
+BEGIN
+	SELECT * FROM carousel_image
+	WHERE carousel_id = p_carousel_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

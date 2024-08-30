@@ -31,7 +31,7 @@ function accordionForm(){
                 required: 'Choose the block style'
             },
             description: {
-                required: 'Choose the block style'
+                required: 'Enter the description'
             }
         },
         errorPlacement: function(error, element) {

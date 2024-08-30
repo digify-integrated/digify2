@@ -1,13 +1,13 @@
 DELIMITER //
 
-CREATE TRIGGER carousel_trigger_update
-AFTER UPDATE ON carousel
+CREATE TRIGGER client_trigger_update
+AFTER UPDATE ON client
 FOR EACH ROW
 BEGIN
     DECLARE audit_log TEXT DEFAULT '';
 
-    IF NEW.carousel_name <> OLD.carousel_name THEN
-        SET audit_log = CONCAT(audit_log, "Carousel Name: ", OLD.carousel_name, " -> ", NEW.carousel_name, "<br/>");
+    IF NEW.client_name <> OLD.client_name THEN
+        SET audit_log = CONCAT(audit_log, "Client Name: ", OLD.client_name, " -> ", NEW.client_name, "<br/>");
     END IF;
 
     IF NEW.description <> OLD.description THEN
@@ -24,18 +24,18 @@ BEGIN
     
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('carousel', NEW.carousel_id, audit_log, NEW.last_log_by, NOW());
+        VALUES ('client', NEW.client_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END //
 
-CREATE TRIGGER carousel_trigger_insert
-AFTER INSERT ON carousel
+CREATE TRIGGER client_trigger_insert
+AFTER INSERT ON client
 FOR EACH ROW
 BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Carousel created. <br/>';
+    DECLARE audit_log TEXT DEFAULT 'Client created. <br/>';
 
-    IF NEW.carousel_name <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Carousel Name: ", NEW.carousel_name);
+    IF NEW.client_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Client Name: ", NEW.client_name);
     END IF;
 
     IF NEW.description <> '' THEN
@@ -51,14 +51,18 @@ BEGIN
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('carousel', NEW.carousel_id, audit_log, NEW.last_log_by, NOW());
+    VALUES ('client', NEW.client_id, audit_log, NEW.last_log_by, NOW());
 END //
 
-CREATE TRIGGER carousel_image_trigger_update
-AFTER UPDATE ON carousel_image
+CREATE TRIGGER client_item_trigger_update
+AFTER UPDATE ON client_item
 FOR EACH ROW
 BEGIN
     DECLARE audit_log TEXT DEFAULT '';
+    
+    IF NEW.client_url <> OLD.client_url THEN
+        SET audit_log = CONCAT(audit_log, "Client URL: ", OLD.client_url, " -> ", NEW.client_url, "<br/>");
+    END IF;
     
     IF NEW.order_sequence <> OLD.order_sequence THEN
         SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
@@ -66,20 +70,24 @@ BEGIN
     
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-        VALUES ('carousel_image', NEW.carousel_image_id, audit_log, NEW.last_log_by, NOW());
+        VALUES ('client_item', NEW.client_item_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END //
 
-CREATE TRIGGER carousel_image_trigger_insert
-AFTER INSERT ON carousel_image
+CREATE TRIGGER client_item_trigger_insert
+AFTER INSERT ON client_item
 FOR EACH ROW
 BEGIN
-    DECLARE audit_log TEXT DEFAULT 'Carousel image created. <br/>';
+    DECLARE audit_log TEXT DEFAULT 'Client item created. <br/>';
+
+    IF NEW.client_url <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Client URL: ", NEW.client_url);
+    END IF;
 
     IF NEW.order_sequence <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
-    VALUES ('carousel_image', NEW.carousel_image_id, audit_log, NEW.last_log_by, NOW());
+    VALUES ('client_item', NEW.client_item_id, audit_log, NEW.last_log_by, NOW());
 END //

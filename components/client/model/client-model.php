@@ -1,10 +1,10 @@
 <?php
 /**
-* Class CarouselModel
+* Class ClientModel
 *
-* The CarouselModel class handles carousel related operations and interactions.
+* The ClientModel class handles client related operations and interactions.
 */
-class CarouselModel {
+class ClientModel {
     public $db;
 
     public function __construct(DatabaseModel $db) {
@@ -17,13 +17,13 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: updateCarousel
-    # Description: Updates the carousel.
+    # Function: updateClient
+    # Description: Updates the client.
     #
     # Parameters:
-    # - $p_carousel_id (int): The carousel ID.
-    # - $p_carousel_name (string): The carousel name.
-    # - $p_description (string): The carousel description.
+    # - $p_client_id (int): The client ID.
+    # - $p_client_name (string): The client name.
+    # - $p_description (string): The client description.
     # - $p_block_style_id (string): The block style ID.
     # - $p_block_style_name (string): The block style name.
     # - $p_last_log_by (int): The last logged user.
@@ -31,10 +31,10 @@ class CarouselModel {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateCarousel($p_carousel_id, $p_carousel_name, $p_description, $p_block_style_id, $p_block_style_name, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateCarousel(:p_carousel_id, :p_carousel_name, :p_description, :p_block_style_id, :p_block_style_name, :p_last_log_by)');
-        $stmt->bindValue(':p_carousel_id', $p_carousel_id, PDO::PARAM_INT);
-        $stmt->bindValue(':p_carousel_name', $p_carousel_name, PDO::PARAM_STR);
+    public function updateClient($p_client_id, $p_client_name, $p_description, $p_block_style_id, $p_block_style_name, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateClient(:p_client_id, :p_client_name, :p_description, :p_block_style_id, :p_block_style_name, :p_last_log_by)');
+        $stmt->bindValue(':p_client_id', $p_client_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_client_name', $p_client_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_description', $p_description, PDO::PARAM_STR);
         $stmt->bindValue(':p_block_style_id', $p_block_style_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_block_style_name', $p_block_style_name, PDO::PARAM_STR);
@@ -45,24 +45,26 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: updateCarouselImage
-    # Description: Updates the carousel image.
+    # Function: updateClientItem
+    # Description: Updates the client item.
     #
     # Parameters:
-    # - $p_carousel_image_id (int): The carousel image ID.
-    # - $p_carousel_id (int): The carousel ID.
-    # - $p_carousel_image (string): The carousel image.
+    # - $p_client_item_id (int): The client item ID.
+    # - $p_client_id (int): The client ID.
+    # - $p_client_logo (string): The client logo.
+    # - $p_client_url (string): The client logo.
     # - $p_order_sequence (int): The order sequence.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateCarouselImage($p_carousel_image_id, $p_carousel_id, $p_carousel_image, $p_order_sequence, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateCarouselImage(:p_carousel_image_id, :p_carousel_id, :p_carousel_image, :p_order_sequence, :p_last_log_by)');
-        $stmt->bindValue(':p_carousel_image_id', $p_carousel_image_id, PDO::PARAM_INT);
-        $stmt->bindValue(':p_carousel_id', $p_carousel_id, PDO::PARAM_INT);
-        $stmt->bindValue(':p_carousel_image', $p_carousel_image, PDO::PARAM_STR);
+    public function updateClientItem($p_client_item_id, $p_client_id, $p_client_logo, $p_client_url, $p_order_sequence, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateClientItem(:p_client_item_id, :p_client_id, :p_client_logo, :p_client_url, :p_order_sequence, :p_last_log_by)');
+        $stmt->bindValue(':p_client_item_id', $p_client_item_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_client_id', $p_client_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_client_logo', $p_client_logo, PDO::PARAM_STR);
+        $stmt->bindValue(':p_client_url', $p_client_url, PDO::PARAM_STR);
         $stmt->bindValue(':p_order_sequence', $p_order_sequence, PDO::PARAM_INT);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
@@ -71,20 +73,20 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: updateCarouselPublishStatus
-    # Description: Updates the carousel publish status.
+    # Function: updateClientPublishStatus
+    # Description: Updates the client publish status.
     #
     # Parameters:
-    # - $p_carousel_image_id (int): The carousel image ID.
+    # - $p_client_item_id (int): The client item ID.
     # - $p_publish_status (string): The publish status.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateCarouselPublishStatus($p_carousel_id, $p_publish_status, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateCarouselPublishStatus(:p_carousel_id, :p_publish_status, :p_last_log_by)');
-        $stmt->bindValue(':p_carousel_id', $p_carousel_id, PDO::PARAM_INT);
+    public function updateClientPublishStatus($p_client_id, $p_publish_status, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateClientPublishStatus(:p_client_id, :p_publish_status, :p_last_log_by)');
+        $stmt->bindValue(':p_client_id', $p_client_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_publish_status', $p_publish_status, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
@@ -97,12 +99,12 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: insertCarousel
-    # Description: Inserts the carousel.
+    # Function: insertClient
+    # Description: Inserts the client.
     #
     # Parameters:
-    # - $p_carousel_name (string): The carousel name.
-    # - $p_description (string): The carousel description.
+    # - $p_client_name (string): The client name.
+    # - $p_description (string): The client description.
     # - $p_block_style_id (string): The block style ID.
     # - $p_block_style_name (string): The block style name.
     # - $p_last_log_by (int): The last logged user.
@@ -110,40 +112,42 @@ class CarouselModel {
     # Returns: String
     #
     # -------------------------------------------------------------
-    public function insertCarousel($p_carousel_name, $p_description, $p_block_style_id, $p_block_style_name, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertCarousel(:p_carousel_name, :p_description, :p_block_style_id, :p_block_style_name, :p_last_log_by, @p_carousel_id)');
-        $stmt->bindValue(':p_carousel_name', $p_carousel_name, PDO::PARAM_STR);
+    public function insertClient($p_client_name, $p_description, $p_block_style_id, $p_block_style_name, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertClient(:p_client_name, :p_description, :p_block_style_id, :p_block_style_name, :p_last_log_by, @p_client_id)');
+        $stmt->bindValue(':p_client_name', $p_client_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_description', $p_description, PDO::PARAM_STR);
         $stmt->bindValue(':p_block_style_id', $p_block_style_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_block_style_name', $p_block_style_name, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
         
-        $result = $this->db->getConnection()->query('SELECT @p_carousel_id AS carousel_id');
-        $menuImageID = $result->fetch(PDO::FETCH_ASSOC)['carousel_id'];
+        $result = $this->db->getConnection()->query('SELECT @p_client_id AS client_id');
+        $menuItemID = $result->fetch(PDO::FETCH_ASSOC)['client_id'];
         
-        return $menuImageID;
+        return $menuItemID;
     }
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
     #
-    # Function: insertCarouselImage
-    # Description: Inserts the carousel image.
+    # Function: insertClientItem
+    # Description: Inserts the client item.
     #
     # Parameters:
-    # - $p_carousel_id (int): The carousel ID.
-    # - $p_carousel_image (string): The carousel image.
+    # - $p_client_id (int): The client ID.
+    # - $p_client_logo (string): The client logo.
+    # - $p_client_url (string): The client URL.
     # - $p_order_sequence (int): The order sequence.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function insertCarouselImage($p_carousel_id, $p_carousel_image, $p_order_sequence, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertCarouselImage(:p_carousel_id, :p_carousel_image, :p_order_sequence, :p_last_log_by)');
-        $stmt->bindValue(':p_carousel_id', $p_carousel_id, PDO::PARAM_INT);
-        $stmt->bindValue(':p_carousel_image', $p_carousel_image, PDO::PARAM_STR);
+    public function insertClientItem($p_client_id, $p_client_logo, $p_client_url, $p_order_sequence, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertClientItem(:p_client_id, :p_client_logo, :p_client_url, :p_order_sequence, :p_last_log_by)');
+        $stmt->bindValue(':p_client_id', $p_client_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_client_logo', $p_client_logo, PDO::PARAM_STR);
+        $stmt->bindValue(':p_client_url', $p_client_url, PDO::PARAM_STR);
         $stmt->bindValue(':p_order_sequence', $p_order_sequence, PDO::PARAM_INT);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
@@ -156,18 +160,18 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: checkCarouselExist
-    # Description: Checks if a carousel exists.
+    # Function: checkClientExist
+    # Description: Checks if a client exists.
     #
     # Parameters:
-    # - $p_carousel_id (int): The carousel ID.
+    # - $p_client_id (int): The client ID.
     #
     # Returns: The result of the query as an associative array.
     #
     # -------------------------------------------------------------
-    public function checkCarouselExist($p_carousel_id) {
-        $stmt = $this->db->getConnection()->prepare('CALL checkCarouselExist(:p_carousel_id)');
-        $stmt->bindValue(':p_carousel_id', $p_carousel_id, PDO::PARAM_INT);
+    public function checkClientExist($p_client_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkClientExist(:p_client_id)');
+        $stmt->bindValue(':p_client_id', $p_client_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -175,18 +179,18 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: checkCarouselImageExist
-    # Description: Checks if a carousel image exists.
+    # Function: checkClientItemExist
+    # Description: Checks if a client item exists.
     #
     # Parameters:
-    # - $p_carousel_image_id (int): The carousel image ID.
+    # - $p_client_item_id (int): The client item ID.
     #
     # Returns: The result of the query as an associative array.
     #
     # -------------------------------------------------------------
-    public function checkCarouselImageExist($p_carousel_image_id) {
-        $stmt = $this->db->getConnection()->prepare('CALL checkCarouselImageExist(:p_carousel_image_id)');
-        $stmt->bindValue(':p_carousel_image_id', $p_carousel_image_id, PDO::PARAM_INT);
+    public function checkClientItemExist($p_client_item_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkClientItemExist(:p_client_item_id)');
+        $stmt->bindValue(':p_client_item_id', $p_client_item_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -198,36 +202,36 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteCarousel
-    # Description: Deletes the carousel.
+    # Function: deleteClient
+    # Description: Deletes the client.
     #
     # Parameters:
-    # - $p_carousel_id (int): The carousel ID.
+    # - $p_client_id (int): The client ID.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function deleteCarousel($p_carousel_id) {
-        $stmt = $this->db->getConnection()->prepare('CALL deleteCarousel(:p_carousel_id)');
-        $stmt->bindValue(':p_carousel_id', $p_carousel_id, PDO::PARAM_INT);
+    public function deleteClient($p_client_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteClient(:p_client_id)');
+        $stmt->bindValue(':p_client_id', $p_client_id, PDO::PARAM_INT);
         $stmt->execute();
     }
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
     #
-    # Function: deleteCarouselImage
-    # Description: Deletes the carousel image.
+    # Function: deleteClientItem
+    # Description: Deletes the client item.
     #
     # Parameters:
-    # - $p_carousel_image_id (int): The carousel image ID.
+    # - $p_client_item_id (int): The client item ID.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function deleteCarouselImage($p_carousel_image_id) {
-        $stmt = $this->db->getConnection()->prepare('CALL deleteCarouselImage(:p_carousel_image_id)');
-        $stmt->bindValue(':p_carousel_image_id', $p_carousel_image_id, PDO::PARAM_INT);
+    public function deleteClientItem($p_client_item_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteClientItem(:p_client_item_id)');
+        $stmt->bindValue(':p_client_item_id', $p_client_item_id, PDO::PARAM_INT);
         $stmt->execute();
     }
     # -------------------------------------------------------------
@@ -238,19 +242,19 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: getCarousel
-    # Description: Retrieves the details of a carousel.
+    # Function: getClient
+    # Description: Retrieves the details of a client.
     #
     # Parameters:
-    # - $p_carousel_id (int): The carousel ID.
+    # - $p_client_id (int): The client ID.
     #
     # Returns:
-    # - An array containing the carousel details.
+    # - An array containing the client details.
     #
     # -------------------------------------------------------------
-    public function getCarousel($p_carousel_id) {
-        $stmt = $this->db->getConnection()->prepare('CALL getCarousel(:p_carousel_id)');
-        $stmt->bindValue(':p_carousel_id', $p_carousel_id, PDO::PARAM_INT);
+    public function getClient($p_client_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getClient(:p_client_id)');
+        $stmt->bindValue(':p_client_id', $p_client_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -258,19 +262,19 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: getCarouselImage
-    # Description: Retrieves the details of a carousel image.
+    # Function: getClientItem
+    # Description: Retrieves the details of a client item.
     #
     # Parameters:
-    # - $p_carousel_image_id (int): The carousel ID.
+    # - $p_client_item_id (int): The client ID.
     #
     # Returns:
-    # - An array containing the carousel details.
+    # - An array containing the client details.
     #
     # -------------------------------------------------------------
-    public function getCarouselImage($p_carousel_image_id) {
-        $stmt = $this->db->getConnection()->prepare('CALL getCarouselImage(:p_carousel_image_id)');
-        $stmt->bindValue(':p_carousel_image_id', $p_carousel_image_id, PDO::PARAM_INT);
+    public function getClientItem($p_client_item_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getClientItem(:p_client_item_id)');
+        $stmt->bindValue(':p_client_item_id', $p_client_item_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -278,19 +282,19 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: getCarouselImageByCarouselID
-    # Description: Retrieves the details of a carousel image.
+    # Function: getClientItemByClientID
+    # Description: Retrieves the details of a client item.
     #
     # Parameters:
-    # - $p_carousel_id (int): The carousel ID.
+    # - $p_client_id (int): The client ID.
     #
     # Returns:
-    # - An array containing the carousel details.
+    # - An array containing the client details.
     #
     # -------------------------------------------------------------
-    public function getCarouselImageByCarouselID($p_carousel_id) {
-        $stmt = $this->db->getConnection()->prepare('CALL getCarouselImageByCarouselID(:p_carousel_id)');
-        $stmt->bindValue(':p_carousel_id', $p_carousel_id, PDO::PARAM_INT);
+    public function getClientItemByClientID($p_client_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getClientItemByClientID(:p_client_id)');
+        $stmt->bindValue(':p_client_id', $p_client_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -302,26 +306,26 @@ class CarouselModel {
 
     # -------------------------------------------------------------
     #
-    # Function: generateCarouselOptions
-    # Description: Generates the carousel options.
+    # Function: generateClientOptions
+    # Description: Generates the client options.
     #
     # Parameters:None
     #
     # Returns: String.
     #
     # -------------------------------------------------------------
-    public function generateCarouselOptions($p_carousel_id) {
-        $stmt = $this->db->getConnection()->prepare('CALL generateCarouselOptions(:p_carousel_id)');
-        $stmt->bindValue(':p_carousel_id', $p_carousel_id, PDO::PARAM_INT);
+    public function generateClientOptions($p_client_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL generateClientOptions(:p_client_id)');
+        $stmt->bindValue(':p_client_id', $p_client_id, PDO::PARAM_INT);
         $stmt->execute();
         $options = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $htmlOptions = '';
         foreach ($options as $row) {
-            $carouselID = $row['carousel_id'];
-            $carouselName = $row['carousel_name'];
+            $clientID = $row['client_id'];
+            $clientName = $row['client_name'];
 
-            $htmlOptions .= '<option value="' . htmlspecialchars($carouselID, ENT_QUOTES) . '">' . htmlspecialchars($carouselName, ENT_QUOTES) . '</option>';
+            $htmlOptions .= '<option value="' . htmlspecialchars($clientID, ENT_QUOTES) . '">' . htmlspecialchars($clientName, ENT_QUOTES) . '</option>';
         }
 
         return $htmlOptions;

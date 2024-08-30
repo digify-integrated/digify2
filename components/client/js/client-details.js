@@ -4,32 +4,32 @@
     $(function() {
         generateDropdownOptions('block style options');
 
-        displayDetails('get accordion details');
+        displayDetails('get client details');
 
-        if($('#accordion-item-table').length){
-            accordionItemTable('#accordion-item-table');
+        if($('#client-item-table').length){
+            clientItemTable('#client-item-table');
         }
 
-        if($('#accordion-form').length){
-            accordionForm();
+        if($('#client-form').length){
+            clientForm();
         }
 
-        if($('#accordion-item-form').length){
-            accordionItemForm();
+        if($('#client-item-form').length){
+            clientItemForm();
         }
 
         $(document).on('click','#edit-details',function() {
-            displayDetails('get accordion details');
+            displayDetails('get client details');
         });
 
-        $(document).on('click','#delete-accordion',function() {
-            const accordion_id = $('#details-id').text();
+        $(document).on('click','#delete-client',function() {
+            const client_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete accordion';
+            const transaction = 'delete client';
     
             Swal.fire({
-                title: 'Confirm Accordion Deletion',
-                text: 'Are you sure you want to delete this accordion?',
+                title: 'Confirm Client Deletion',
+                text: 'Are you sure you want to delete this client?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -43,10 +43,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/accordion/controller/accordion-controller.php',
+                        url: 'components/client/controller/client-controller.php',
                         dataType: 'json',
                         data: {
-                            accordion_id : accordion_id, 
+                            client_id : client_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -81,29 +81,29 @@
             });
         });
 
-        $(document).on('click','#add-accordion-item',function() {
-            $('#accordion-item-title').text('Add Accordion Item');
-            resetModalForm('accordion-item-form');
+        $(document).on('click','#add-client-item',function() {
+            $('#client-item-title').text('Add Client Item');
+            resetModalForm('client-item-form');
         });
 
-        $(document).on('click','.edit-accordion-item',function() {
-            const accordion_item_id = $(this).data('accordion-item-id');
-            sessionStorage.setItem('accordion_item_id', accordion_item_id);
+        $(document).on('click','.edit-client-item',function() {
+            const client_item_id = $(this).data('client-item-id');
+            sessionStorage.setItem('client_item_id', client_item_id);
 
-            $('#accordion-item-title').text('Edit Accordion Item');
+            $('#client-item-title').text('Edit Client Item');
 
-            displayDetails('get accordion item details');
+            displayDetails('get client item details');
         });
 
-        $(document).on('click','.delete-accordion-item',function() {
-            const accordion_id = $('#details-id').text();
-            const accordion_item_id = $(this).data('accordion-item-id');
+        $(document).on('click','.delete-client-item',function() {
+            const client_id = $('#details-id').text();
+            const client_item_id = $(this).data('client-item-id');
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete accordion item';
+            const transaction = 'delete client item';
     
             Swal.fire({
-                title: 'Confirm Accordion Item Deletion',
-                text: 'Are you sure you want to delete this accordion item?',
+                title: 'Confirm Client Item Deletion',
+                text: 'Are you sure you want to delete this client item?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -117,17 +117,17 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/accordion/controller/accordion-controller.php',
+                        url: 'components/client/controller/client-controller.php',
                         dataType: 'json',
                         data: {
-                            accordion_id : accordion_id, 
-                            accordion_item_id : accordion_item_id, 
+                            client_id : client_id, 
+                            client_item_id : client_item_id, 
                             transaction : transaction
                         },
                         success: function (response) {
                             if (response.success) {
                                 showNotification(response.title, response.message, response.messageType);
-                                reloadDatatable('#accordion-item-table');
+                                reloadDatatable('#client-item-table');
                             }
                             else {
                                 if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -156,14 +156,14 @@
             });
         });
 
-        $(document).on('click','#unpublish-accordion',function() {
-            const accordion_id = $('#details-id').text();
+        $(document).on('click','#unpublish-client',function() {
+            const client_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'unpublish accordion';
+            const transaction = 'unpublish client';
     
             Swal.fire({
-                title: 'Confirm Accordion Unpublish',
-                text: 'Are you sure you want to unpublish this accordion?',
+                title: 'Confirm Client Unpublish',
+                text: 'Are you sure you want to unpublish this client?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Unpublish',
@@ -177,10 +177,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/accordion/controller/accordion-controller.php',
+                        url: 'components/client/controller/client-controller.php',
                         dataType: 'json',
                         data: {
-                            accordion_id : accordion_id, 
+                            client_id : client_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -215,14 +215,14 @@
             });
         });
 
-        $(document).on('click','#publish-accordion',function() {
-            const accordion_id = $('#details-id').text();
+        $(document).on('click','#publish-client',function() {
+            const client_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'publish accordion';
+            const transaction = 'publish client';
     
             Swal.fire({
-                title: 'Confirm Accordion Publish',
-                text: 'Are you sure you want to unpublish this accordion?',
+                title: 'Confirm Client Publish',
+                text: 'Are you sure you want to unpublish this client?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Publish',
@@ -236,10 +236,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/accordion/controller/accordion-controller.php',
+                        url: 'components/client/controller/client-controller.php',
                         dataType: 'json',
                         data: {
-                            accordion_id : accordion_id, 
+                            client_id : client_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -275,37 +275,37 @@
         });
 
         if($('#log-notes-offcanvas').length){
-            $(document).on('click','.view-accordion-item-log-notes',function() {
-                const accordion_item_id = $(this).data('accordion-item-id');
+            $(document).on('click','.view-client-item-log-notes',function() {
+                const client_item_id = $(this).data('client-item-id');
 
-                logNotes('accordion_item', accordion_item_id);
+                logNotes('client_item', client_item_id);
             });
         }
 
         if($('#log-notes-main').length){
-            const accordion_id = $('#details-id').text();
+            const client_id = $('#details-id').text();
 
-            logNotesMain('accordion', accordion_id);
+            logNotesMain('client', client_id);
         }
 
         if($('#internal-notes').length){
-            const accordion_id = $('#details-id').text();
+            const client_id = $('#details-id').text();
 
-            internalNotes('accordion', accordion_id);
+            internalNotes('client', client_id);
         }
 
         if($('#internal-notes-form').length){
-            const accordion_id = $('#details-id').text();
+            const client_id = $('#details-id').text();
 
-            internalNotesForm('accordion', accordion_id);
+            internalNotesForm('client', client_id);
         }
     });
 })(jQuery);
 
-function accordionForm(){
-    $('#accordion-form').validate({
+function clientForm(){
+    $('#client-form').validate({
         rules: {
-            accordion_name: {
+            client_name: {
                 required: true
             },
             block_style_id: {
@@ -316,7 +316,7 @@ function accordionForm(){
             }
         },
         messages: {
-            accordion_name: {
+            client_name: {
                 required: 'Enter the display name'
             },
             block_style_id: {
@@ -348,14 +348,14 @@ function accordionForm(){
             }
         },
         submitHandler: function(form) {
-            const accordion_id = $('#details-id').text();
+            const client_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
-            const transaction = 'update accordion';
+            const transaction = 'update client';
           
             $.ajax({
                 type: 'POST',
-                url: 'components/accordion/controller/accordion-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&accordion_id=' + accordion_id,
+                url: 'components/client/controller/client-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&client_id=' + client_id,
                 dataType: 'json',
                 beforeSend: function() {
                     disableFormSubmitButton('submit-data');
@@ -363,8 +363,8 @@ function accordionForm(){
                 success: function (response) {
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
-                        displayDetails('get accordion details');
-                        $('#accordion-modal').modal('hide');
+                        displayDetails('get client details');
+                        $('#client-modal').modal('hide');
                     }
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -389,7 +389,7 @@ function accordionForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
-                    logNotesMain('accordion', accordion_id);
+                    logNotesMain('client', client_id);
                 }
             });
         
@@ -398,28 +398,24 @@ function accordionForm(){
     });
 }
 
-function accordionItemForm(){
-    $('#accordion-item-form').validate({
+function clientItemForm(){
+    $('#client-item-form').validate({
         rules: {
-            accordion_header: {
-                required: true
+            client_item: {
+                required: function(element) {
+                    return $('#client_item_id').val() === '';
+                }
             },
             order_sequence: {
-                required: true
-            },
-            accordion_body: {
                 required: true
             }
         },
         messages: {
-            accordion_header: {
-                required: 'Enter the accordion header'
+            client_item: {
+                required: 'Enter the client item'
             },
             order_sequence: {
                 required: 'Enter the order sequence'
-            },
-            accordion_body: {
-                required: 'Enter the accordion body'
             }
         },
         errorPlacement: function(error, element) {
@@ -444,24 +440,29 @@ function accordionItemForm(){
             }
         },
         submitHandler: function(form) {
-            const accordion_id = $('#details-id').text();
+            const client_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
-            const transaction = 'save accordion item';
+            const transaction = 'save client item';
+            var formData = new FormData(form);
+            formData.append('client_id', client_id);
+            formData.append('transaction', transaction);
           
             $.ajax({
                 type: 'POST',
-                url: 'components/accordion/controller/accordion-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&accordion_id=' + accordion_id,
+                url: 'components/client/controller/client-controller.php',
+                data: formData,
+                processData: false,
+                contentType: false,
                 dataType: 'json',
                 beforeSend: function() {
-                    disableFormSubmitButton('submit-accordion-item-data');
+                    disableFormSubmitButton('submit-client-item-data');
                 },
                 success: function (response) {
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
-                        $('#accordion-item-modal').modal('hide');
-                        reloadDatatable('#accordion-item-table');
-                        resetModalForm('accordion-item-form');
+                        $('#client-item-modal').modal('hide');
+                        reloadDatatable('#client-item-table');
+                        resetModalForm('client-item-form');
                     }
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -485,7 +486,7 @@ function accordionItemForm(){
                     showErrorDialog(fullErrorMessage);
                 },
                 complete: function() {
-                    enableFormSubmitButton('submit-accordion-item-data');
+                    enableFormSubmitButton('submit-client-item-data');
                 }
             });
         
@@ -494,19 +495,19 @@ function accordionItemForm(){
     });
 }
 
-function accordionItemTable(datatable_name, buttons = false, show_all = false){
+function clientItemTable(datatable_name, buttons = false, show_all = false){
     toggleHideActionDropdown();
 
-    const type = 'accordion item table';
-    const accordion_id = $('#details-id').text();
+    const type = 'client item table';
+    const client_id = $('#details-id').text();
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
     var settings;
 
     const column = [ 
-        { 'data' : 'ACCORDION_HEADER' },
-        { 'data' : 'ACCORDION_BODY' },
+        { 'data' : 'CLIENT_LOGO' },
+        { 'data' : 'CLIENT_URL' },
         { 'data' : 'ORDER_SEQUENCE' },
         { 'data' : 'ACTION' }
     ];
@@ -522,14 +523,14 @@ function accordionItemTable(datatable_name, buttons = false, show_all = false){
 
     settings = {
         'ajax': { 
-            'url' : 'components/accordion/view/_accordion_generation.php',
+            'url' : 'components/client/view/_client_generation.php',
             'method' : 'POST',
             'dataType': 'json',
             'data': {
                 'type' : type,
                 'page_id' : page_id,
                 'page_link' : page_link,
-                'accordion_id' : accordion_id
+                'client_id' : client_id
             },
             'dataSrc' : '',
             'error': function(xhr, status, error) {
@@ -569,29 +570,29 @@ function accordionItemTable(datatable_name, buttons = false, show_all = false){
 
 function displayDetails(transaction){
     switch (transaction) {
-        case 'get accordion details':
-            var accordion_id = $('#details-id').text();
+        case 'get client details':
+            var client_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
-                url: 'components/accordion/controller/accordion-controller.php',
+                url: 'components/client/controller/client-controller.php',
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    accordion_id : accordion_id, 
+                    client_id : client_id, 
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('accordion-form');
+                    resetModalForm('client-form');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#accordion_name').val(response.accordionName);
+                        $('#client_name').val(response.clientName);
                         $('#description').val(response.description);
                         
                         $('#block_style_id').val(response.blockStyleID).trigger('change');
                         
-                        $('#accordion_name_summary').text(response.accordionName);
+                        $('#client_name_summary').text(response.clientName);
                         $('#block_style_name_summary').text(response.blockStyleName);
                         $('#description_summary').text(response.description);
                     } 
@@ -618,27 +619,27 @@ function displayDetails(transaction){
                 }
             });
             break;
-        case 'get accordion item details':
-            var accordion_id = $('#details-id').text();
-            var accordion_item_id = sessionStorage.getItem('accordion_item_id');
+        case 'get client item details':
+            var client_id = $('#details-id').text();
+            var client_item_id = sessionStorage.getItem('client_item_id');
             
             $.ajax({
-                url: 'components/accordion/controller/accordion-controller.php',
+                url: 'components/client/controller/client-controller.php',
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    accordion_id : accordion_id, 
-                    accordion_item_id : accordion_item_id, 
+                    client_id : client_id, 
+                    client_item_id : client_item_id, 
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('accordion-item-form');
+                    resetModalForm('client-item-form');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#accordion_item_id').val(accordion_item_id);
-                        $('#accordion_header').val(response.accordionHeader);
-                        $('#accordion_body').val(response.accordionBody);
+                        $('#client_item_id').val(client_item_id);
+                        
+                        $('#client_url').val(response.clientURL);
                         $('#order_sequence').val(response.orderSequence);
                     } 
                     else {
@@ -652,9 +653,9 @@ function displayDetails(transaction){
                         }
                         else if (response.detailsNotExist) {
                             showNotification(response.title, response.message, response.messageType);
-                            $('#accordion-item-modal').modal('hide');
-                            reloadDatatable('#accordion-item-table');
-                            resetModalForm('accordion-item-form');
+                            $('#client-item-modal').modal('hide');
+                            reloadDatatable('#client-item-table');
+                            resetModalForm('client-item-form');
                         }
                         else {
                             showNotification(response.title, response.message, response.messageType);
@@ -676,7 +677,7 @@ function displayDetails(transaction){
 function generateDropdownOptions(type){
     switch (type) {
         case 'block style options':
-            var block_type_id = '1';
+            var block_type_id = '4';
 
             $.ajax({
                 url: 'components/block-style/view/_block_style_generation.php',
@@ -688,7 +689,7 @@ function generateDropdownOptions(type){
                 },
                 success: function(response) {
                     $('#block_style_id').select2({
-                        dropdownParent: $('#accordion-modal'),
+                        dropdownParent: $('#client-modal'),
                         data: response
                     }).on('change', function (e) {
                         $(this).valid()

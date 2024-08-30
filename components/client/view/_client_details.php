@@ -1,42 +1,42 @@
 <?php
-    require('components/carousel/model/carousel-model.php');
+    require('components/client/model/client-model.php');
 
-    $carouselModel = new CarouselModel($databaseModel);
+    $clientModel = new ClientModel($databaseModel);
 
     $publishWebsiteElement = $globalModel->checkSystemActionAccessRights($userID, 28);
     $unpublishWebsiteElement = $globalModel->checkSystemActionAccessRights($userID, 29);
 
     if(isset($_GET['id'])){
-        $carouselDetails = $carouselModel->getCarousel($detailID, null);
-        $publishStatus = $carouselDetails['publish_status'] ?? 'No';
+        $clientDetails = $clientModel->getClient($detailID, null);
+        $publishStatus = $clientDetails['publish_status'] ?? 'No';
     }
 ?>
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Carousel</h5>
+                <h5 class="card-title mb-0">Client</h5>
                 <div class="card-actions cursor-pointer ms-auto d-flex button-group">
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Carousel</a></li>' : '';
+                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Client</a></li>' : '';
 
                             if($publishStatus == 'No' && $publishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="publish-carousel">Publish Carousel</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="publish-client">Publish Client</button></li>';
                             }
 
                             if($publishStatus == 'Yes' && $unpublishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="unpublish-carousel">Unpublish Carousel</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="unpublish-client">Unpublish Client</button></li>';
                             }
 
-                            echo $deleteAccess['total'] > 0 && $publishStatus == 'No' ? '<li><button class="dropdown-item" type="button" id="delete-carousel">Delete Carousel</button></li>' : '';
+                            echo $deleteAccess['total'] > 0 && $publishStatus == 'No' ? '<li><button class="dropdown-item" type="button" id="delete-client">Delete Client</button></li>' : '';
                         ?>
                     </ul>
                 </div>
                 <?php
                     echo $writeAccess['total'] > 0 && $publishStatus == 'No' ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#carousel-modal" id="edit-details">Edit</button>
+                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#client-modal" id="edit-details">Edit</button>
                                                         </div>' : '';
                 ?>
             </div>
@@ -44,7 +44,7 @@
                 <div class="row">
                     <div class="col-lg-6 mb-3">
                         <p class="mb-1 fs-2">Display Name</p>
-                        <h6 class="fw-semibold mb-0" id="carousel_name_summary">--</h6>
+                        <h6 class="fw-semibold mb-0" id="client_name_summary">--</h6>
                     </div>
                     <div class="col-lg-6 mb-3">
                         <p class="mb-1 fs-2">Block Style</p>
@@ -64,19 +64,20 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Carousel Image</h5>
+                <h5 class="card-title mb-0">Client Item</h5>
                 <?php
                     echo $writeAccess['total'] > 0 && $publishStatus == 'No' ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-success mb-0 px-4" data-bs-toggle="modal" data-bs-target="#carousel-image-modal" id="add-carousel-image">Create</button>
+                                                            <button class="btn btn-success mb-0 px-4" data-bs-toggle="modal" data-bs-target="#client-item-modal" id="add-client-item">Create</button>
                                                         </div>' : '';
                 ?>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="carousel-image-table" class="table align-middle text-nowrap w-100 mb-0">
+                    <table id="client-item-table" class="table align-middle text-nowrap w-100 mb-0">
                         <thead class="text-dark">
                             <tr>
-                                <th>Image</th>
+                                <th>Logo</th>
+                                <th>URL</th>
                                 <th>Order Sequence</th>
                                 <th>Actions</th>
                             </tr>
@@ -89,20 +90,20 @@
     </div>
 </div>
 
-<div id="carousel-modal" class="modal fade" tabindex="-1" aria-labelledby="carousel-modal" aria-hidden="true">
+<div id="client-modal" class="modal fade" tabindex="-1" aria-labelledby="client-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8">Edit Carousel Details</h5>
+                <h5 class="modal-title fw-8">Edit Client Details</h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="carousel-form" method="post" action="#">
+                <form id="client-form" method="post" action="#">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label" for="carousel_name">Display Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control maxlength" id="carousel_name" name="carousel_name" maxlength="100" autocomplete="off">
+                                <label class="form-label" for="client_name">Display Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="client_name" name="client_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -124,27 +125,35 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="carousel-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="client-form" class="btn btn-success" id="submit-data">Save changes</button>
             </div>
         </div>
     </div>
 </div>
 
-<div id="carousel-image-modal" class="modal fade" tabindex="-1" aria-labelledby="carousel-image-modal" aria-hidden="true">
+<div id="client-item-modal" class="modal fade" tabindex="-1" aria-labelledby="client-item-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8" id="carousel-image-title"></h5>
+                <h5 class="modal-title fw-8" id="client-item-title"></h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="carousel-image-form" method="post" action="#">
-                    <input type="hidden" id="carousel_image_id" name="carousel_image_id">
+                <form id="client-item-form" method="post" action="#">
+                    <input type="hidden" id="client_item_id" name="client_item_id">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label class="form-label" for="carousel_image">Carousel Image</label>
-                                <input type="file" class="form-control" id="carousel_image" name="carousel_image">
+                                <label class="form-label" for="client_logo">Client Logo</label>
+                                <input type="file" class="form-control" id="client_logo" name="client_logo">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label class="form-label" for="client_url">Client URL</label>
+                                <input type="url" class="form-control maxlength" id="client_url" name="client_url" maxlength="500" autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -160,7 +169,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="carousel-image-form" class="btn btn-success" id="submit-carousel-image-data">Save changes</button>
+                <button type="submit" form="client-item-form" class="btn btn-success" id="submit-client-item-data">Save changes</button>
             </div>
         </div>
     </div>

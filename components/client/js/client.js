@@ -2,17 +2,17 @@
     'use strict';
 
     $(function() {
-        if($('#carousel-table').length){
-            carouselTable('#carousel-table');
+        if($('#client-table').length){
+            clientTable('#client-table');
         }
 
-        $(document).on('click','.delete-carousel',function() {
-            const carousel_id = $(this).data('carousel-id');
-            const transaction = 'delete carousel';
+        $(document).on('click','.delete-client',function() {
+            const client_id = $(this).data('client-id');
+            const transaction = 'delete client';
     
             Swal.fire({
-                title: 'Confirm Carousel Deletion',
-                text: 'Are you sure you want to delete this carousel?',
+                title: 'Confirm Client Deletion',
+                text: 'Are you sure you want to delete this client?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -26,16 +26,16 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/client/controller/client-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
+                            client_id : client_id, 
                             transaction : transaction
                         },
                         success: function (response) {
                             if (response.success) {
                                 showNotification(response.title, response.message, response.messageType);
-                                reloadDatatable('#carousel-table');
+                                reloadDatatable('#client-table');
                             }
                             else {
                                 if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -44,7 +44,7 @@
                                 }
                                 else if (response.notExist) {
                                     setNotification(response.title, response.message, response.messageType);
-                                    reloadDatatable('#carousel-table');
+                                    reloadDatatable('#client-table');
                                 }
                                 else {
                                     showNotification(response.title, response.message, response.messageType);
@@ -64,20 +64,20 @@
             });
         });
 
-        $(document).on('click','#delete-carousel',function() {
-            let carousel_id = [];
-            const transaction = 'delete multiple carousel';
+        $(document).on('click','#delete-client',function() {
+            let client_id = [];
+            const transaction = 'delete multiple client';
 
             $('.datatable-checkbox-children').each((index, element) => {
                 if ($(element).is(':checked')) {
-                    carousel_id.push(element.value);
+                    client_id.push(element.value);
                 }
             });
     
-            if(carousel_id.length > 0){
+            if(client_id.length > 0){
                 Swal.fire({
-                    title: 'Confirm Multiple Carousels Deletion',
-                    text: 'Are you sure you want to delete these carousels?',
+                    title: 'Confirm Multiple Clients Deletion',
+                    text: 'Are you sure you want to delete these clients?',
                     icon: 'warning',
                     showCancelButton: !0,
                     confirmButtonText: 'Delete',
@@ -91,16 +91,16 @@
                     if (result.value) {
                         $.ajax({
                             type: 'POST',
-                            url: 'components/carousel/controller/carousel-controller.php',
+                            url: 'components/client/controller/client-controller.php',
                             dataType: 'json',
                             data: {
-                                carousel_id: carousel_id,
+                                client_id: client_id,
                                 transaction : transaction
                             },
                             success: function (response) {
                                 if (response.success) {
                                     showNotification(response.title, response.message, response.messageType);
-                                    reloadDatatable('#carousel-table');
+                                    reloadDatatable('#client-table');
                                 }
                                 else {
                                     if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -129,21 +129,21 @@
                 });
             }
             else{
-                showNotification('Deletion Multiple Carousels Error', 'Please select the carousels you wish to delete.', 'danger');
+                showNotification('Deletion Multiple Clients Error', 'Please select the clients you wish to delete.', 'danger');
             }
         });
 
         $('#datatable-search').on('keyup', function () {
-            var table = $('#carousel-table').DataTable();
+            var table = $('#client-table').DataTable();
             table.search(this.value).draw();
         });
     });
 })(jQuery);
 
-function carouselTable(datatable_name, buttons = false, show_all = false){
+function clientTable(datatable_name, buttons = false, show_all = false){
     toggleHideActionDropdown();
 
-    const type = 'carousel table';
+    const type = 'client table';
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
@@ -151,7 +151,7 @@ function carouselTable(datatable_name, buttons = false, show_all = false){
 
     const column = [ 
         { 'data' : 'CHECK_BOX' },
-        { 'data' : 'CAROUSEL_NAME' },
+        { 'data' : 'CLIENT_NAME' },
         { 'data' : 'PUBLISH_STATUS' },
         { 'data' : 'ACTION' }
     ];
@@ -167,7 +167,7 @@ function carouselTable(datatable_name, buttons = false, show_all = false){
 
     settings = {
         'ajax': { 
-            'url' : 'components/carousel/view/_carousel_generation.php',
+            'url' : 'components/client/view/_client_generation.php',
             'method' : 'POST',
             'dataType': 'json',
             'data': {

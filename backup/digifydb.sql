@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 29, 2024 at 11:34 AM
+-- Generation Time: Aug 30, 2024 at 11:34 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -179,6 +179,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCallToActionExist` (IN `p_call
     WHERE call_to_action_id = p_call_to_action_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkCarouselExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselExist` (IN `p_carousel_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM carousel
+    WHERE carousel_id = p_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkCarouselImageExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCarouselImageExist` (IN `p_carousel_image_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM carousel_image
+    WHERE carousel_image_id = p_carousel_image_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkCityExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCityExist` (IN `p_city_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -193,11 +207,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCivilStatusExist` (IN `p_civil
     WHERE civil_status_id = p_civil_status_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkClientExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkClientExist` (IN `p_client_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM client
+    WHERE client_id = p_client_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkClientItemExist`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `checkClientItemExist` (IN `p_client_style_id` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkClientItemExist` (IN `p_client_item_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
     FROM client_item
-    WHERE client_style_id = p_client_style_id;
+    WHERE client_item_id = p_client_item_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkCompanyExist`$$
@@ -205,6 +226,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkCompanyExist` (IN `p_company_i
 	SELECT COUNT(*) AS total
     FROM company
     WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkContactFormExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkContactFormExist` (IN `p_contact_form_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM contact_form
+    WHERE contact_form_id = p_contact_form_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkContactInformationTypeExist`$$
@@ -709,6 +737,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCallToAction` (IN `p_call_to_
    DELETE FROM call_to_action WHERE call_to_action_id = p_call_to_action_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCarousel` (IN `p_carousel_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM carousel_image WHERE carousel_id = p_carousel_id;
+    DELETE FROM carousel WHERE carousel_id = p_carousel_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteCarouselImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCarouselImage` (IN `p_carousel_image_id` INT)   BEGIN
+   DELETE FROM carousel_image WHERE carousel_image_id = p_carousel_image_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCity` (IN `p_city_id` INT)   BEGIN
     DELETE FROM city WHERE city_id = p_city_id;
@@ -719,9 +767,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCivilStatus` (IN `p_civil_sta
     DELETE FROM civil_status WHERE civil_status_id = p_civil_status_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteClient`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteClient` (IN `p_client_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM client_item WHERE client_id = p_client_id;
+    DELETE FROM client WHERE client_id = p_client_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteClientItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteClientItem` (IN `p_client_item_id` INT)   BEGIN
+   DELETE FROM client_item WHERE client_item_id = p_client_item_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteCompany` (IN `p_company_id` INT)   BEGIN
     DELETE FROM company WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteContactForm`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteContactForm` (IN `p_contact_form_id` INT)   BEGIN
+    DELETE FROM contact_form WHERE contact_form_id = p_contact_form_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteContactInformationType`$$
@@ -1284,6 +1357,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCallToActionTable` ()   BEG
     FROM call_to_action;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateCarouselImageTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselImageTable` (IN `p_carousel_id` INT)   BEGIN
+    SELECT carousel_image_id, carousel_image, order_sequence 
+    FROM carousel_image
+    WHERE carousel_id = p_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateCarouselTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCarouselTable` ()   BEGIN
+    SELECT carousel_id, carousel_name, description, publish_status
+    FROM carousel;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateCityOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCityOptions` ()   BEGIN
 	SELECT city_id, city_name, state_name, country_name 
@@ -1329,6 +1415,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCivilStatusTable` ()   BEGI
     ORDER BY civil_status_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateClientItemTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateClientItemTable` (IN `p_client_id` INT)   BEGIN
+    SELECT client_item_id, client_logo, client_url, order_sequence 
+    FROM client_item
+    WHERE client_id = p_client_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateClientTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateClientTable` ()   BEGIN
+    SELECT client_id, client_name, description, publish_status
+    FROM client;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateCompanyOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyOptions` ()   BEGIN
 	SELECT company_id, company_name 
@@ -1362,6 +1461,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateCompanyTable` (IN `p_filter
     PREPARE stmt FROM query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateContactFormTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateContactFormTable` ()   BEGIN
+    SELECT contact_form_id, contact_form_name, description, publish_status
+    FROM contact_form;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateContactInformationTypeOptions`$$
@@ -2352,6 +2457,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getCallToAction` (IN `p_call_to_act
 	WHERE call_to_action_id = p_call_to_action_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarousel` (IN `p_carousel_id` INT)   BEGIN
+	SELECT * FROM carousel
+	WHERE carousel_id = p_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCarouselImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarouselImage` (IN `p_carousel_image_id` INT)   BEGIN
+	SELECT * FROM carousel_image
+	WHERE carousel_image_id = p_carousel_image_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getCarouselImageByCarouselID`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getCarouselImageByCarouselID` (IN `p_carousel_id` INT)   BEGIN
+	SELECT * FROM carousel_image
+	WHERE carousel_id = p_carousel_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCity` (IN `p_city_id` INT)   BEGIN
 	SELECT * FROM city
@@ -2364,22 +2487,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getCivilStatus` (IN `p_civil_status
 	WHERE civil_status_id = p_civil_status_id;
 END$$
 
-DROP PROCEDURE IF EXISTS `getClientContainer`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getClientContainer` (IN `p_client_style_id` INT)   BEGIN
-	SELECT * FROM client_container
-	WHERE client_style_id = p_client_style_id;
+DROP PROCEDURE IF EXISTS `getClient`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getClient` (IN `p_client_id` INT)   BEGIN
+	SELECT * FROM client
+	WHERE client_id = p_client_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getClientItem`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getClientItem` (IN `p_client_style_id` INT)   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getClientItem` (IN `p_client_item_id` INT)   BEGIN
 	SELECT * FROM client_item
-	WHERE client_style_id = p_client_style_id;
+	WHERE client_item_id = p_client_item_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getClientItemByClientID`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getClientItemByClientID` (IN `p_client_id` INT)   BEGIN
+	SELECT * FROM client_item
+	WHERE client_id = p_client_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCompany` (IN `p_company_id` INT)   BEGIN
 	SELECT * FROM company
 	WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getContactForm`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getContactForm` (IN `p_contact_form_id` INT)   BEGIN
+	SELECT * FROM contact_form
+	WHERE contact_form_id = p_contact_form_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getContactInformationType`$$
@@ -2802,6 +2937,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCallToAction` (IN `p_call_to_
     SET p_call_to_action_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarousel` (IN `p_carousel_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_carousel_id` INT)   BEGIN
+    INSERT INTO carousel (carousel_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_carousel_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_carousel_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertCarouselImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCarouselImage` (IN `p_carousel_id` INT, IN `p_carousel_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO carousel_image (carousel_id, carousel_image, order_sequence, last_log_by) 
+	VALUES(p_carousel_id, p_carousel_image, p_order_sequence, p_last_log_by);
+END$$
+
 DROP PROCEDURE IF EXISTS `insertCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCity` (IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_city_id` INT)   BEGIN
     INSERT INTO city (city_name, state_id, state_name, country_id, country_name, last_log_by) 
@@ -2818,12 +2967,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCivilStatus` (IN `p_civil_sta
     SET p_civil_status_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertClient`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertClient` (IN `p_client_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_client_id` INT)   BEGIN
+    INSERT INTO client (client_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_client_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_client_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertClientItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertClientItem` (IN `p_client_id` INT, IN `p_client_logo` VARCHAR(500), IN `p_client_url` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO client_item (client_id, client_logo, client_url, order_sequence, last_log_by) 
+	VALUES(p_client_id, p_client_logo, p_client_url, p_order_sequence, p_last_log_by);
+END$$
+
 DROP PROCEDURE IF EXISTS `insertCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertCompany` (IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_company_id` INT)   BEGIN
     INSERT INTO company (company_name, legal_name, address, city_id, city_name, state_id, state_name, country_id, country_name, currency_id, currency_name, currency_symbol, tax_id, phone, mobile, email, website, last_log_by) 
 	VALUES(p_company_name, p_legal_name, p_address, p_city_id, p_city_name, p_state_id, p_state_name, p_country_id, p_country_name, p_currency_id, p_currency_name, p_currency_symbol, p_tax_id, p_phone, p_mobile, p_email, p_website, p_last_log_by);
 	
     SET p_company_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertContactForm`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertContactForm` (IN `p_contact_form_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_contact_form_id` INT)   BEGIN
+    INSERT INTO contact_form (contact_form_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_contact_form_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_contact_form_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertContactInformationType`$$
@@ -3541,6 +3712,43 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCallToActionPublishStatus` (I
     WHERE call_to_action_id = p_call_to_action_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateCarousel`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarousel` (IN `p_carousel_id` INT, IN `p_carousel_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE carousel
+    SET carousel_name = p_carousel_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE carousel_id = p_carousel_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCarouselImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarouselImage` (IN `p_carousel_image_id` INT, IN `p_carousel_id` INT, IN `p_carousel_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    IF p_carousel_image IS NOT NULL AND p_carousel_image != '' THEN
+        UPDATE carousel_image
+        SET carousel_id = p_carousel_id,
+            carousel_image = p_carousel_image,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE carousel_image_id = p_carousel_image_id;
+    ELSE
+        UPDATE carousel_image
+        SET carousel_id = p_carousel_id,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE carousel_image_id = p_carousel_image_id;
+    END IF;   
+END$$
+
+DROP PROCEDURE IF EXISTS `updateCarouselPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCarouselPublishStatus` (IN `p_carousel_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE carousel
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE carousel_id = p_carousel_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateCity`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCity` (IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3611,6 +3819,45 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCivilStatus` (IN `p_civil_sta
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateClient`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateClient` (IN `p_client_id` INT, IN `p_client_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE client
+    SET client_name = p_client_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE client_id = p_client_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateClientItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateClientItem` (IN `p_client_item_id` INT, IN `p_client_id` INT, IN `p_client_logo` VARCHAR(500), IN `p_client_url` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    IF p_client_logo IS NOT NULL AND p_client_logo != '' THEN
+        UPDATE client_item
+        SET client_id = p_client_id,
+            client_logo = p_client_logo,
+            client_url = p_client_url,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE client_item_id = p_client_item_id;
+    ELSE
+        UPDATE client_item
+        SET client_id = p_client_id,
+            client_url = p_client_url,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE client_item_id = p_client_item_id;
+    END IF;   
+END$$
+
+DROP PROCEDURE IF EXISTS `updateClientPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateClientPublishStatus` (IN `p_client_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE client
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE client_id = p_client_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateCompany`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompany` (IN `p_company_id` INT, IN `p_company_name` VARCHAR(100), IN `p_legal_name` VARCHAR(100), IN `p_address` VARCHAR(500), IN `p_city_id` INT, IN `p_city_name` VARCHAR(100), IN `p_state_id` INT, IN `p_state_name` VARCHAR(100), IN `p_country_id` INT, IN `p_country_name` VARCHAR(100), IN `p_currency_id` INT, IN `p_currency_name` VARCHAR(500), IN `p_currency_symbol` VARCHAR(10), IN `p_tax_id` VARCHAR(50), IN `p_phone` VARCHAR(50), IN `p_mobile` VARCHAR(50), IN `p_email` VARCHAR(500), IN `p_website` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3654,6 +3901,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateCompanyLogo` (IN `p_company_i
     SET company_logo = p_company_logo,
         last_log_by = p_last_log_by
     WHERE company_id = p_company_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateContactForm`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContactForm` (IN `p_contact_form_id` INT, IN `p_contact_form_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE contact_form
+    SET contact_form_name = p_contact_form_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE contact_form_id = p_contact_form_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateContactFormPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateContactFormPublishStatus` (IN `p_contact_form_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE contact_form
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE contact_form_id = p_contact_form_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateContactInformationType`$$
@@ -4277,6 +4543,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmploymentLocationType` (IN `
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
+
     END;
 
     START TRANSACTION;
@@ -5158,13 +5425,6 @@ CREATE TABLE `accordion` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `accordion`
---
-
-INSERT INTO `accordion` (`accordion_id`, `accordion_name`, `description`, `block_style_id`, `block_style_name`, `publish_status`, `created_date`, `last_log_by`) VALUES
-(3, 'test', 'test', 2, 'Accordion', 'No', '2024-08-27 14:57:30', 2);
 
 --
 -- Triggers `accordion`
@@ -9300,7 +9560,48 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3818, 'call_to_action', 2, 'Call to Action created. <br/><br/>Call to Action Name: asd<br/>Description: asd<br/>Block Style Name: asd<br/>Call to Action Header: asd<br/>Call to Action Body: asd<br/>Publish Status: No', 2, '2024-08-29 16:54:43', '2024-08-29 16:54:43'),
 (3819, 'call_to_action', 3, 'Call to Action created. <br/><br/>Call to Action Name: asdas<br/>Description: asdasd<br/>Block Style Name: asd<br/>Call to Action Header: asd<br/>Call to Action Body: asd<br/>Publish Status: No', 2, '2024-08-29 16:56:03', '2024-08-29 16:56:03'),
 (3820, 'call_to_action', 3, 'Publish Status: No -> Yes<br/>', 2, '2024-08-29 16:56:21', '2024-08-29 16:56:21'),
-(3821, 'block_style', 4, 'Block style created. <br/><br/>Block Style Name: asd<br/>Description: asd<br/>Block Type Name: Carousel', 2, '2024-08-29 17:15:26', '2024-08-29 17:15:26');
+(3821, 'block_style', 4, 'Block style created. <br/><br/>Block Style Name: asd<br/>Description: asd<br/>Block Type Name: Carousel', 2, '2024-08-29 17:15:26', '2024-08-29 17:15:26'),
+(3822, 'user_account', 2, 'Last Connection Date: 2024-08-27 21:00:23 -> 2024-08-30 08:53:07<br/>', 2, '2024-08-30 08:53:07', '2024-08-30 08:53:07'),
+(3823, 'carousel', 1, 'Carousel created. <br/><br/>Carousel Name: test<br/>Description: test<br/>Block Style Name: Accordion<br/>Publish Status: No', 2, '2024-08-30 09:48:08', '2024-08-30 09:48:08'),
+(3824, 'carousel', 1, 'Block Style Name: Accordion -> asd<br/>', 2, '2024-08-30 09:58:15', '2024-08-30 09:58:15'),
+(3825, 'carousel', 2, 'Carousel created. <br/><br/>Carousel Name: asdasd<br/>Description: asdasdas<br/>Block Style Name: asd<br/>Publish Status: No', 2, '2024-08-30 09:58:59', '2024-08-30 09:58:59'),
+(3826, 'upload_setting', 5, 'Upload Setting created. <br/><br/>Upload Setting Name: Website Elements Images<br/>Upload Setting Description: Sets the upload setting when uploading website elements image.<br/>Max File Size: 500', 2, '2024-08-30 10:44:07', '2024-08-30 10:44:07'),
+(3827, 'upload_setting_file_extension', 22, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Website Elements Images<br/>File Extension Name: JPEG<br/>File Extension: jpeg<br/>Date Assigned: 2024-08-30 10:44:26', 2, '2024-08-30 10:44:26', '2024-08-30 10:44:26'),
+(3828, 'upload_setting_file_extension', 23, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Website Elements Images<br/>File Extension Name: JPG<br/>File Extension: jpg<br/>Date Assigned: 2024-08-30 10:44:26', 2, '2024-08-30 10:44:26', '2024-08-30 10:44:26'),
+(3829, 'upload_setting_file_extension', 24, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Website Elements Images<br/>File Extension Name: PNG<br/>File Extension: png<br/>Date Assigned: 2024-08-30 10:44:26', 2, '2024-08-30 10:44:26', '2024-08-30 10:44:26'),
+(3830, 'upload_setting_file_extension', 25, 'Upload Setting File Extension created. <br/><br/>Upload Setting Name: Website Elements Images<br/>File Extension Name: SVG<br/>File Extension: svg<br/>Date Assigned: 2024-08-30 10:44:26', 2, '2024-08-30 10:44:26', '2024-08-30 10:44:26'),
+(3831, 'carousel_image', 1, 'Carousel image created. <br/><br/>Order Sequence: 1', 2, '2024-08-30 11:52:29', '2024-08-30 11:52:29'),
+(3832, 'carousel_image', 2, 'Carousel image created. <br/><br/>Order Sequence: 12', 2, '2024-08-30 11:57:30', '2024-08-30 11:57:30'),
+(3833, 'carousel_image', 3, 'Carousel image created. <br/><br/>Order Sequence: 12', 2, '2024-08-30 11:58:59', '2024-08-30 11:58:59'),
+(3834, 'carousel_image', 4, 'Carousel image created. <br/><br/>Order Sequence: 12', 2, '2024-08-30 12:05:13', '2024-08-30 12:05:13'),
+(3835, 'carousel_image', 4, 'Order Sequence: 12 -> 14<br/>', 2, '2024-08-30 12:13:22', '2024-08-30 12:13:22'),
+(3836, 'carousel', 2, 'Publish Status: No -> Yes<br/>', 2, '2024-08-30 12:17:21', '2024-08-30 12:17:21'),
+(3837, 'carousel', 2, 'Publish Status: Yes -> No<br/>', 2, '2024-08-30 12:17:28', '2024-08-30 12:17:28'),
+(3838, 'carousel_image', 5, 'Carousel image created. <br/><br/>Order Sequence: 12', 2, '2024-08-30 12:19:21', '2024-08-30 12:19:21'),
+(3839, 'carousel', 3, 'Carousel created. <br/><br/>Carousel Name: asd<br/>Description: asd<br/>Block Style Name: asd<br/>Publish Status: No', 2, '2024-08-30 12:26:23', '2024-08-30 12:26:23'),
+(3840, 'carousel_image', 6, 'Carousel image created. <br/><br/>Order Sequence: 12', 2, '2024-08-30 12:26:29', '2024-08-30 12:26:29'),
+(3841, 'carousel', 4, 'Carousel created. <br/><br/>Carousel Name: asd<br/>Description: asd<br/>Block Style Name: asd<br/>Publish Status: No', 2, '2024-08-30 12:31:21', '2024-08-30 12:31:21'),
+(3842, 'carousel_image', 7, 'Carousel image created. <br/><br/>Order Sequence: 12', 2, '2024-08-30 12:31:28', '2024-08-30 12:31:28'),
+(3843, 'block_style', 5, 'Block style created. <br/><br/>Block Style Name: Client<br/>Description: asd<br/>Block Type Name: Client', 2, '2024-08-30 13:39:32', '2024-08-30 13:39:32'),
+(3844, 'role_permission', 65, 'Menu Item: Content Carousel Style -> Client<br/>', 2, '2024-08-30 13:39:55', '2024-08-30 13:39:55'),
+(3845, 'menu_item', 60, 'Menu Item Name: Clients -> Client<br/>', 2, '2024-08-30 13:39:55', '2024-08-30 13:39:55'),
+(3846, 'menu_item', 60, 'Menu Item URL: clients.php -> client.php<br/>', 2, '2024-08-30 13:40:34', '2024-08-30 13:40:34'),
+(3847, 'client', 1, 'Client created. <br/><br/>Client Name: asd<br/>Description: asasd<br/>Block Style Name: Client<br/>Publish Status: No', 2, '2024-08-30 15:53:58', '2024-08-30 15:53:58'),
+(3848, 'client_item', 1, 'Client item created. <br/><br/>Client URL: asdasd<br/>Order Sequence: 12', 2, '2024-08-30 15:56:39', '2024-08-30 15:56:39'),
+(3849, 'client_item', 1, 'Client URL: asdasd -> http://asdasd.com<br/>', 2, '2024-08-30 15:59:18', '2024-08-30 15:59:18'),
+(3850, 'client_item', 2, 'Client item created. <br/><br/>Client URL: http://as.com<br/>Order Sequence: 12', 2, '2024-08-30 16:11:12', '2024-08-30 16:11:12'),
+(3851, 'client_item', 3, 'Client item created. <br/><br/>Client URL: http://as.com<br/>Order Sequence: 12', 2, '2024-08-30 16:12:48', '2024-08-30 16:12:48'),
+(3852, 'client_item', 4, 'Client item created. <br/><br/>Client URL: http://asd.com<br/>Order Sequence: 12', 2, '2024-08-30 16:15:39', '2024-08-30 16:15:39'),
+(3853, 'carousel', 5, 'Carousel created. <br/><br/>Carousel Name: asd<br/>Description: asd<br/>Block Style Name: asd<br/>Publish Status: No', 2, '2024-08-30 16:19:52', '2024-08-30 16:19:52'),
+(3854, 'carousel_image', 8, 'Carousel image created. <br/><br/>Order Sequence: 12', 2, '2024-08-30 16:20:05', '2024-08-30 16:20:05'),
+(3855, 'accordion_item', 4, 'Accordion item created. <br/><br/>Accordion Header: asd<br/>Accordion Body: asd<br/>Order Sequence: 12', 2, '2024-08-30 16:55:16', '2024-08-30 16:55:16'),
+(3856, 'accordion', 4, 'Accordion created. <br/><br/>Accordion Name: asd<br/>Description: 123<br/>Block Style Name: Accordion<br/>Publish Status: No', 2, '2024-08-30 16:55:25', '2024-08-30 16:55:25'),
+(3857, 'accordion_item', 5, 'Accordion item created. <br/><br/>Accordion Header: asd<br/>Accordion Body: asd<br/>Order Sequence: 12', 2, '2024-08-30 16:55:31', '2024-08-30 16:55:31'),
+(3858, 'block_style', 6, 'Block style created. <br/><br/>Block Style Name: asd<br/>Description: asd<br/>Block Type Name: Contact Form', 2, '2024-08-30 17:23:24', '2024-08-30 17:23:24'),
+(3859, 'contact_form', 1, 'Contact form created. <br/><br/>Contact Form Name: asd<br/>Description: asd<br/>Block Style Name: asd<br/>Publish Status: No', 2, '2024-08-30 17:24:33', '2024-08-30 17:24:33'),
+(3860, 'contact_form', 1, 'Contact Form Name: asd -> asdasdasd<br/>Description: asd -> asd123<br/>', 2, '2024-08-30 17:24:39', '2024-08-30 17:24:39'),
+(3861, 'contact_form', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-08-30 17:24:42', '2024-08-30 17:24:42'),
+(3862, 'contact_form', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-08-30 17:24:45', '2024-08-30 17:24:45');
 
 -- --------------------------------------------------------
 
@@ -9555,7 +9856,9 @@ CREATE TABLE `block_style` (
 INSERT INTO `block_style` (`block_style_id`, `block_style_name`, `description`, `block_type_id`, `block_type_name`, `created_date`, `last_log_by`) VALUES
 (2, 'Accordion', 'Accordion', 1, 'Accordion', '2024-08-27 14:20:20', 2),
 (3, 'asd', 'asd', 2, 'Call To Action', '2024-08-29 15:19:22', 2),
-(4, 'asd', 'asd', 3, 'Carousel', '2024-08-29 17:15:26', 2);
+(4, 'asd', 'asd', 3, 'Carousel', '2024-08-29 17:15:26', 2),
+(5, 'Client', 'asd', 4, 'Client', '2024-08-30 13:39:32', 2),
+(6, 'asd', 'asd', 5, 'Contact Form', '2024-08-30 17:23:24', 2);
 
 --
 -- Triggers `block_style`
@@ -9834,6 +10137,132 @@ CREATE TRIGGER `call_to_action_trigger_update` AFTER UPDATE ON `call_to_action` 
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('call_to_action', NEW.call_to_action_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `carousel`
+--
+
+DROP TABLE IF EXISTS `carousel`;
+CREATE TABLE `carousel` (
+  `carousel_id` int(10) UNSIGNED NOT NULL,
+  `carousel_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `carousel`
+--
+DROP TRIGGER IF EXISTS `carousel_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `carousel_trigger_insert` AFTER INSERT ON `carousel` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Carousel created. <br/>';
+
+    IF NEW.carousel_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Carousel Name: ", NEW.carousel_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('carousel', NEW.carousel_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `carousel_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `carousel_trigger_update` AFTER UPDATE ON `carousel` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.carousel_name <> OLD.carousel_name THEN
+        SET audit_log = CONCAT(audit_log, "Carousel Name: ", OLD.carousel_name, " -> ", NEW.carousel_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('carousel', NEW.carousel_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `carousel_image`
+--
+
+DROP TABLE IF EXISTS `carousel_image`;
+CREATE TABLE `carousel_image` (
+  `carousel_image_id` int(10) UNSIGNED NOT NULL,
+  `carousel_id` int(10) UNSIGNED NOT NULL,
+  `carousel_image` varchar(500) NOT NULL,
+  `order_sequence` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `carousel_image`
+--
+DROP TRIGGER IF EXISTS `carousel_image_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `carousel_image_trigger_insert` AFTER INSERT ON `carousel_image` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Carousel image created. <br/>';
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('carousel_image', NEW.carousel_image_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `carousel_image_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `carousel_image_trigger_update` AFTER UPDATE ON `carousel_image` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+    
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('carousel_image', NEW.carousel_image_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -11613,6 +12042,89 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `client`
+--
+
+DROP TABLE IF EXISTS `client`;
+CREATE TABLE `client` (
+  `client_id` int(10) UNSIGNED NOT NULL,
+  `client_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `client`
+--
+
+INSERT INTO `client` (`client_id`, `client_name`, `description`, `block_style_id`, `block_style_name`, `publish_status`, `created_date`, `last_log_by`) VALUES
+(1, 'asd', 'asasd', 5, 'Client', 'No', '2024-08-30 15:53:58', 2);
+
+--
+-- Triggers `client`
+--
+DROP TRIGGER IF EXISTS `client_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `client_trigger_insert` AFTER INSERT ON `client` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Client created. <br/>';
+
+    IF NEW.client_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Client Name: ", NEW.client_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('client', NEW.client_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `client_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `client_trigger_update` AFTER UPDATE ON `client` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.client_name <> OLD.client_name THEN
+        SET audit_log = CONCAT(audit_log, "Client Name: ", OLD.client_name, " -> ", NEW.client_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('client', NEW.client_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `client_container`
 --
 
@@ -11668,11 +12180,20 @@ DELIMITER ;
 DROP TABLE IF EXISTS `client_item`;
 CREATE TABLE `client_item` (
   `client_item_id` int(10) UNSIGNED NOT NULL,
-  `client_style_id` int(10) UNSIGNED NOT NULL,
-  `client_item` longtext NOT NULL,
+  `client_id` int(10) UNSIGNED NOT NULL,
+  `client_logo` varchar(500) NOT NULL,
+  `client_url` varchar(500) DEFAULT NULL,
+  `order_sequence` int(11) NOT NULL,
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `client_item`
+--
+
+INSERT INTO `client_item` (`client_item_id`, `client_id`, `client_logo`, `client_url`, `order_sequence`, `created_date`, `last_log_by`) VALUES
+(4, 1, './components/client/logo/1/tRwb.png', 'http://asd.com', 12, '2024-08-30 16:15:39', 2);
 
 --
 -- Triggers `client_item`
@@ -11682,8 +12203,12 @@ DELIMITER $$
 CREATE TRIGGER `client_item_trigger_insert` AFTER INSERT ON `client_item` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT 'Client item created. <br/>';
 
-    IF NEW.client_item <> '' THEN
-        SET audit_log = CONCAT(audit_log, "<br/>Client Item: ", NEW.client_item);
+    IF NEW.client_url <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Client URL: ", NEW.client_url);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
     END IF;
 
     INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
@@ -11695,9 +12220,13 @@ DROP TRIGGER IF EXISTS `client_item_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `client_item_trigger_update` AFTER UPDATE ON `client_item` FOR EACH ROW BEGIN
     DECLARE audit_log TEXT DEFAULT '';
-
-    IF NEW.client_item <> OLD.client_item THEN
-        SET audit_log = CONCAT(audit_log, "Client Item: ", OLD.client_item, " -> ", NEW.client_item, "<br/>");
+    
+    IF NEW.client_url <> OLD.client_url THEN
+        SET audit_log = CONCAT(audit_log, "Client URL: ", OLD.client_url, " -> ", NEW.client_url, "<br/>");
+    END IF;
+    
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
     END IF;
     
     IF LENGTH(audit_log) > 0 THEN
@@ -11928,6 +12457,82 @@ CREATE TRIGGER `company_trigger_update` AFTER UPDATE ON `company` FOR EACH ROW B
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('company', NEW.company_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contact_form`
+--
+
+DROP TABLE IF EXISTS `contact_form`;
+CREATE TABLE `contact_form` (
+  `contact_form_id` int(10) UNSIGNED NOT NULL,
+  `contact_form_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `contact_form`
+--
+DROP TRIGGER IF EXISTS `contact_form_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `contact_form_trigger_insert` AFTER INSERT ON `contact_form` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Contact form created. <br/>';
+
+    IF NEW.contact_form_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Contact Form Name: ", NEW.contact_form_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('contact_form', NEW.contact_form_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `contact_form_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `contact_form_trigger_update` AFTER UPDATE ON `contact_form` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.contact_form_name <> OLD.contact_form_name THEN
+        SET audit_log = CONCAT(audit_log, "Contact Form Name: ", OLD.contact_form_name, " -> ", NEW.contact_form_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('contact_form', NEW.contact_form_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -15375,6 +15980,7 @@ CREATE TRIGGER `menu_group_trigger_update` AFTER UPDATE ON `menu_group` FOR EACH
     DECLARE audit_log TEXT DEFAULT '';
 
     IF NEW.menu_group_name <> OLD.menu_group_name THEN
+
         SET audit_log = CONCAT(audit_log, "Menu Group Name: ", OLD.menu_group_name, " -> ", NEW.menu_group_name, "<br/>");
     END IF;
     
@@ -15481,7 +16087,7 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (57, 'Accordion', 'accordion.php', 'ti ti-layout-navbar', 10, 'Website Elements', 4, 'Website Studio', NULL, NULL, 1, '2024-08-26 21:47:05', 2),
 (58, 'Call to Action', 'call-to-action.php', 'ti ti-speakerphone', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 21:51:51', 2),
 (59, 'Carousel', 'carousel.php', 'ti ti-layout-sidebar', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 22:02:00', 2),
-(60, 'Clients', 'clients.php', 'ti ti-users', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 22:13:37', 2),
+(60, 'Client', 'client.php', 'ti ti-users', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 22:13:37', 2),
 (61, 'Contact Form', 'contact-form.php', 'ti ti-forms', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 22:14:17', 2),
 (62, 'Content Carousel', 'content-carousel.php', 'ti ti-layout-align-right', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, '2024-08-26 22:15:30', 2),
 (63, 'Footer', 'footer.php', 'ti ti-layout-bottombar', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 6, '2024-08-26 22:16:21', 2),
@@ -16159,7 +16765,7 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (62, 1, 'Administrator', 57, 'Accordion', 1, 1, 1, 1, '2024-08-24 19:52:52', '2024-08-24 19:52:52', 2),
 (63, 1, 'Administrator', 58, 'Call to Action', 1, 1, 1, 1, '2024-08-24 20:09:51', '2024-08-24 20:09:51', 2),
 (64, 1, 'Administrator', 59, 'Client Style', 1, 1, 1, 1, '2024-08-24 20:16:17', '2024-08-24 20:16:17', 2),
-(65, 1, 'Administrator', 60, 'Content Carousel Style', 1, 1, 1, 1, '2024-08-24 21:41:04', '2024-08-24 21:41:04', 2),
+(65, 1, 'Administrator', 60, 'Client', 1, 1, 1, 1, '2024-08-24 21:41:04', '2024-08-24 21:41:04', 2),
 (66, 1, 'Administrator', 61, 'Services Box Style', 1, 1, 1, 1, '2024-08-25 13:38:16', '2024-08-25 13:38:16', 2),
 (67, 1, 'Administrator', 62, 'Pricing Table Style', 1, 1, 1, 1, '2024-08-26 06:17:35', '2024-08-26 06:17:35', 2),
 (68, 1, 'Administrator', 64, 'Image Gallery Style', 1, 1, 1, 1, '2024-08-26 06:25:01', '2024-08-26 06:25:01', 2),
@@ -16869,7 +17475,8 @@ INSERT INTO `upload_setting` (`upload_setting_id`, `upload_setting_name`, `uploa
 (1, 'App Logo', 'Sets the upload setting when uploading app logo.', 800, '2024-06-26 16:34:32', 1),
 (2, 'Internal Notes Attachment', 'Sets the upload setting when uploading internal notes attachement.', 800, '2024-06-26 16:34:32', 1),
 (3, 'Employee Image', 'Sets the upload setting when uploading employee image.', 800, '2024-07-09 11:08:34', 2),
-(4, 'Employee ID Record', 'Sets the upload setting when uploading employee ID record.', 800, '2024-07-09 11:18:55', 2);
+(4, 'Employee ID Record', 'Sets the upload setting when uploading employee ID record.', 800, '2024-07-09 11:18:55', 2),
+(5, 'Website Elements Images', 'Sets the upload setting when uploading website elements image.', 500, '2024-08-30 10:44:07', 2);
 
 --
 -- Triggers `upload_setting`
@@ -16964,7 +17571,11 @@ INSERT INTO `upload_setting_file_extension` (`upload_setting_file_extension_id`,
 (17, 3, 'Employee Image', 63, 'PNG', 'png', '2024-07-09 11:08:48', '2024-07-09 11:08:48', 2),
 (19, 4, 'Employee ID Record', 62, 'JPEG', 'jpeg', '2024-08-13 09:08:33', '2024-08-13 09:08:33', 2),
 (20, 4, 'Employee ID Record', 61, 'JPG', 'jpg', '2024-08-13 09:08:33', '2024-08-13 09:08:33', 2),
-(21, 4, 'Employee ID Record', 63, 'PNG', 'png', '2024-08-13 09:08:33', '2024-08-13 09:08:33', 2);
+(21, 4, 'Employee ID Record', 63, 'PNG', 'png', '2024-08-13 09:08:33', '2024-08-13 09:08:33', 2),
+(22, 5, 'Website Elements Images', 62, 'JPEG', 'jpeg', '2024-08-30 10:44:26', '2024-08-30 10:44:26', 2),
+(23, 5, 'Website Elements Images', 61, 'JPG', 'jpg', '2024-08-30 10:44:26', '2024-08-30 10:44:26', 2),
+(24, 5, 'Website Elements Images', 63, 'PNG', 'png', '2024-08-30 10:44:26', '2024-08-30 10:44:26', 2),
+(25, 5, 'Website Elements Images', 66, 'SVG', 'svg', '2024-08-30 10:44:26', '2024-08-30 10:44:26', 2);
 
 --
 -- Triggers `upload_setting_file_extension`
@@ -17045,7 +17656,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-27 21:00:23', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'qmAqAvcZHFS2Wwp5ebERRjvtKfgaOE%2F2c3gZTEIjiY4%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-30 08:53:07', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'AmHaeGM9P5JHbwu%2BAgYcjCBokDdw3UgES6nCMivqJL0%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -17680,6 +18291,23 @@ ALTER TABLE `call_to_action`
   ADD KEY `call_to_action_index_call_to_action_id` (`call_to_action_id`);
 
 --
+-- Indexes for table `carousel`
+--
+ALTER TABLE `carousel`
+  ADD PRIMARY KEY (`carousel_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `carousel_index_carousel_id` (`carousel_id`);
+
+--
+-- Indexes for table `carousel_image`
+--
+ALTER TABLE `carousel_image`
+  ADD PRIMARY KEY (`carousel_image_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `carousel_image_index_carousel_image_id` (`carousel_image_id`),
+  ADD KEY `carousel_image_index_carousel_id` (`carousel_id`);
+
+--
 -- Indexes for table `city`
 --
 ALTER TABLE `city`
@@ -17698,6 +18326,14 @@ ALTER TABLE `civil_status`
   ADD KEY `civil_status_index_civil_status_id` (`civil_status_id`);
 
 --
+-- Indexes for table `client`
+--
+ALTER TABLE `client`
+  ADD PRIMARY KEY (`client_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `client_index_client_id` (`client_id`);
+
+--
 -- Indexes for table `client_container`
 --
 ALTER TABLE `client_container`
@@ -17713,7 +18349,7 @@ ALTER TABLE `client_item`
   ADD PRIMARY KEY (`client_item_id`),
   ADD KEY `last_log_by` (`last_log_by`),
   ADD KEY `client_item_index_client_item_id` (`client_item_id`),
-  ADD KEY `client_item_index_client_style_id` (`client_style_id`);
+  ADD KEY `client_item_index_client_id` (`client_id`);
 
 --
 -- Indexes for table `client_style`
@@ -17734,6 +18370,14 @@ ALTER TABLE `company`
   ADD KEY `company_index_state_id` (`state_id`),
   ADD KEY `company_index_country_id` (`country_id`),
   ADD KEY `company_index_currency_id` (`currency_id`);
+
+--
+-- Indexes for table `contact_form`
+--
+ALTER TABLE `contact_form`
+  ADD PRIMARY KEY (`contact_form_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `contact_form_index_contact_form_id` (`contact_form_id`);
 
 --
 -- Indexes for table `contact_information_type`
@@ -18283,13 +18927,13 @@ ALTER TABLE `work_schedule`
 -- AUTO_INCREMENT for table `accordion`
 --
 ALTER TABLE `accordion`
-  MODIFY `accordion_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `accordion_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `accordion_item`
 --
 ALTER TABLE `accordion_item`
-  MODIFY `accordion_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `accordion_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `address_type`
@@ -18307,7 +18951,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3822;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3863;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -18337,7 +18981,7 @@ ALTER TABLE `block_item`
 -- AUTO_INCREMENT for table `block_style`
 --
 ALTER TABLE `block_style`
-  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `block_type`
@@ -18358,6 +19002,18 @@ ALTER TABLE `call_to_action`
   MODIFY `call_to_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `carousel`
+--
+ALTER TABLE `carousel`
+  MODIFY `carousel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `carousel_image`
+--
+ALTER TABLE `carousel_image`
+  MODIFY `carousel_image_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `city`
 --
 ALTER TABLE `city`
@@ -18370,6 +19026,12 @@ ALTER TABLE `civil_status`
   MODIFY `civil_status_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `client`
+--
+ALTER TABLE `client`
+  MODIFY `client_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `client_container`
 --
 ALTER TABLE `client_container`
@@ -18379,7 +19041,7 @@ ALTER TABLE `client_container`
 -- AUTO_INCREMENT for table `client_item`
 --
 ALTER TABLE `client_item`
-  MODIFY `client_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `client_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `client_style`
@@ -18392,6 +19054,12 @@ ALTER TABLE `client_style`
 --
 ALTER TABLE `company`
   MODIFY `company_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `contact_form`
+--
+ALTER TABLE `contact_form`
+  MODIFY `contact_form_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `contact_information_type`
@@ -18703,13 +19371,13 @@ ALTER TABLE `ui_customization_setting`
 -- AUTO_INCREMENT for table `upload_setting`
 --
 ALTER TABLE `upload_setting`
-  MODIFY `upload_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `upload_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `upload_setting_file_extension`
 --
 ALTER TABLE `upload_setting_file_extension`
-  MODIFY `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `upload_setting_file_extension_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `user_account`
@@ -18827,6 +19495,19 @@ ALTER TABLE `call_to_action`
   ADD CONSTRAINT `call_to_action_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `carousel`
+--
+ALTER TABLE `carousel`
+  ADD CONSTRAINT `carousel_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `carousel_image`
+--
+ALTER TABLE `carousel_image`
+  ADD CONSTRAINT `carousel_image_ibfk_1` FOREIGN KEY (`carousel_id`) REFERENCES `carousel` (`carousel_id`),
+  ADD CONSTRAINT `carousel_image_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `city`
 --
 ALTER TABLE `city`
@@ -18841,6 +19522,12 @@ ALTER TABLE `civil_status`
   ADD CONSTRAINT `civil_status_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `client`
+--
+ALTER TABLE `client`
+  ADD CONSTRAINT `client_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `client_container`
 --
 ALTER TABLE `client_container`
@@ -18851,7 +19538,7 @@ ALTER TABLE `client_container`
 -- Constraints for table `client_item`
 --
 ALTER TABLE `client_item`
-  ADD CONSTRAINT `client_item_ibfk_1` FOREIGN KEY (`client_style_id`) REFERENCES `client_style` (`client_style_id`),
+  ADD CONSTRAINT `client_item_ibfk_1` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`),
   ADD CONSTRAINT `client_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
@@ -18865,6 +19552,12 @@ ALTER TABLE `client_style`
 --
 ALTER TABLE `company`
   ADD CONSTRAINT `company_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `contact_form`
+--
+ALTER TABLE `contact_form`
+  ADD CONSTRAINT `contact_form_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `contact_information_type`

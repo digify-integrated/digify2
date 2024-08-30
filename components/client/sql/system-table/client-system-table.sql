@@ -1,8 +1,8 @@
-/* Carousel Table */
+/* Client Table */
 
-CREATE TABLE carousel (
-    carousel_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    carousel_name VARCHAR(100) NOT NULL,
+CREATE TABLE client (
+    client_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    client_name VARCHAR(100) NOT NULL,
     description VARCHAR(100) NOT NULL,
     block_style_id INT UNSIGNED NOT NULL,
     block_style_name VARCHAR(100) NOT NULL,
@@ -12,24 +12,25 @@ CREATE TABLE carousel (
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
 );
 
-CREATE INDEX carousel_index_carousel_id ON carousel(carousel_id);
+CREATE INDEX client_index_client_id ON client(client_id);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
-/* Carousel Image Table */
+/* Client Item Table */
 
-CREATE TABLE carousel_image (
-    carousel_image_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    carousel_id INT UNSIGNED NOT NULL,
-    carousel_image VARCHAR(500) NOT NULL,
+CREATE TABLE client_item (
+    client_item_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    client_id INT UNSIGNED NOT NULL,
+    client_logo VARCHAR(500) NOT NULL,
+    client_url VARCHAR(500),
     order_sequence INT NOT NULL,
     created_date DATETIME NOT NULL DEFAULT NOW(),
     last_log_by INT UNSIGNED NOT NULL,
-    FOREIGN KEY (carousel_id) REFERENCES carousel(carousel_id),
+    FOREIGN KEY (client_id) REFERENCES client(client_id),
     FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
 );
 
-CREATE INDEX carousel_image_index_carousel_image_id ON carousel_image(carousel_image_id);
-CREATE INDEX carousel_image_index_carousel_id ON carousel_image(carousel_id);
+CREATE INDEX client_item_index_client_item_id ON client_item(client_item_id);
+CREATE INDEX client_item_index_client_id ON client_item(client_id);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

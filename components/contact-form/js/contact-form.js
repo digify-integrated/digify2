@@ -2,17 +2,17 @@
     'use strict';
 
     $(function() {
-        if($('#carousel-table').length){
-            carouselTable('#carousel-table');
+        if($('#contact-form-table').length){
+            contactFormTable('#contact-form-table');
         }
 
-        $(document).on('click','.delete-carousel',function() {
-            const carousel_id = $(this).data('carousel-id');
-            const transaction = 'delete carousel';
+        $(document).on('click','.delete-contact-form',function() {
+            const contact_form_id = $(this).data('contact-form-id');
+            const transaction = 'delete contact form';
     
             Swal.fire({
-                title: 'Confirm Carousel Deletion',
-                text: 'Are you sure you want to delete this carousel?',
+                title: 'Confirm Contact Form Deletion',
+                text: 'Are you sure you want to delete this contact form?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -26,16 +26,16 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/carousel/controller/carousel-controller.php',
+                        url: 'components/contact-form/controller/contact-form-controller.php',
                         dataType: 'json',
                         data: {
-                            carousel_id : carousel_id, 
+                            contact_form_id : contact_form_id, 
                             transaction : transaction
                         },
                         success: function (response) {
                             if (response.success) {
                                 showNotification(response.title, response.message, response.messageType);
-                                reloadDatatable('#carousel-table');
+                                reloadDatatable('#contact-form-table');
                             }
                             else {
                                 if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -44,7 +44,7 @@
                                 }
                                 else if (response.notExist) {
                                     setNotification(response.title, response.message, response.messageType);
-                                    reloadDatatable('#carousel-table');
+                                    reloadDatatable('#contact-form-table');
                                 }
                                 else {
                                     showNotification(response.title, response.message, response.messageType);
@@ -64,20 +64,20 @@
             });
         });
 
-        $(document).on('click','#delete-carousel',function() {
-            let carousel_id = [];
-            const transaction = 'delete multiple carousel';
+        $(document).on('click','#delete-contact-form',function() {
+            let contact_form_id = [];
+            const transaction = 'delete multiple contact form';
 
             $('.datatable-checkbox-children').each((index, element) => {
                 if ($(element).is(':checked')) {
-                    carousel_id.push(element.value);
+                    contact_form_id.push(element.value);
                 }
             });
     
-            if(carousel_id.length > 0){
+            if(contact_form_id.length > 0){
                 Swal.fire({
-                    title: 'Confirm Multiple Carousels Deletion',
-                    text: 'Are you sure you want to delete these carousels?',
+                    title: 'Confirm Multiple Contact Forms Deletion',
+                    text: 'Are you sure you want to delete these contact forms?',
                     icon: 'warning',
                     showCancelButton: !0,
                     confirmButtonText: 'Delete',
@@ -91,16 +91,16 @@
                     if (result.value) {
                         $.ajax({
                             type: 'POST',
-                            url: 'components/carousel/controller/carousel-controller.php',
+                            url: 'components/contact-form/controller/contact-form-controller.php',
                             dataType: 'json',
                             data: {
-                                carousel_id: carousel_id,
+                                contact_form_id: contact_form_id,
                                 transaction : transaction
                             },
                             success: function (response) {
                                 if (response.success) {
                                     showNotification(response.title, response.message, response.messageType);
-                                    reloadDatatable('#carousel-table');
+                                    reloadDatatable('#contact-form-table');
                                 }
                                 else {
                                     if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -129,21 +129,21 @@
                 });
             }
             else{
-                showNotification('Deletion Multiple Carousels Error', 'Please select the carousels you wish to delete.', 'danger');
+                showNotification('Deletion Multiple Contact Forms Error', 'Please select the contact forms you wish to delete.', 'danger');
             }
         });
 
         $('#datatable-search').on('keyup', function () {
-            var table = $('#carousel-table').DataTable();
+            var table = $('#contact-form-table').DataTable();
             table.search(this.value).draw();
         });
     });
 })(jQuery);
 
-function carouselTable(datatable_name, buttons = false, show_all = false){
+function contactFormTable(datatable_name, buttons = false, show_all = false){
     toggleHideActionDropdown();
 
-    const type = 'carousel table';
+    const type = 'contact form table';
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
@@ -151,7 +151,7 @@ function carouselTable(datatable_name, buttons = false, show_all = false){
 
     const column = [ 
         { 'data' : 'CHECK_BOX' },
-        { 'data' : 'CAROUSEL_NAME' },
+        { 'data' : 'CONTACT_FORM_NAME' },
         { 'data' : 'PUBLISH_STATUS' },
         { 'data' : 'ACTION' }
     ];
@@ -167,7 +167,7 @@ function carouselTable(datatable_name, buttons = false, show_all = false){
 
     settings = {
         'ajax': { 
-            'url' : 'components/carousel/view/_carousel_generation.php',
+            'url' : 'components/contact-form/view/_contact_form_generation.php',
             'method' : 'POST',
             'dataType': 'json',
             'data': {

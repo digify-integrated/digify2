@@ -3,17 +3,17 @@ session_start();
 
 # -------------------------------------------------------------
 #
-# Function: CarouselController
+# Function: ContentCarouselController
 # Description: 
-# The CarouselController class handles carousel related operations and interactions.
+# The ContentCarouselController class handles carousel related operations and interactions.
 #
 # Parameters: None
 #
 # Returns: None
 #
 # -------------------------------------------------------------
-class CarouselController {
-    private $carouselModel;
+class ContentCarouselController {
+    private $contentCarouselModel;
     private $blockStyleModel;
     private $uploadSettingModel;
     private $authenticationModel;
@@ -23,11 +23,11 @@ class CarouselController {
     #
     # Function: __construct
     # Description: 
-    # The constructor initializes the object with the provided carouselModel, AuthenticationModel and SecurityModel instances.
-    # These instances are used for carousel related, user related operations and security related operations, respectively.
+    # The constructor initializes the object with the provided contentCarouselModel, AuthenticationModel and SecurityModel instances.
+    # These instances are used for content carousel related, user related operations and security related operations, respectively.
     #
     # Parameters:
-    # - @param CarouselModel $carouselModel     The carouselModel instance for carousel related operations.
+    # - @param ContentCarouselModel $contentCarouselModel     The contentCarouselModel instance for content carousel related operations.
     # - @param BlockStyleModel $blockStyleModel     The blockStyleModel instance for block style related operations.
     # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
@@ -36,8 +36,8 @@ class CarouselController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(CarouselModel $carouselModel, BlockStyleModel $blockStyleModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
-        $this->carouselModel = $carouselModel;
+    public function __construct(ContentCarouselModel $contentCarouselModel, BlockStyleModel $blockStyleModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+        $this->contentCarouselModel = $contentCarouselModel;
         $this->blockStyleModel = $blockStyleModel;
         $this->uploadSettingModel = $uploadSettingModel;
         $this->authenticationModel = $authenticationModel;
@@ -127,34 +127,34 @@ class CarouselController {
             $transaction = isset($_POST['transaction']) ? $_POST['transaction'] : null;
 
             switch ($transaction) {
-                case 'add carousel':
+                case 'add content carousel':
                     $this->addCarousel();
                     break;
-                case 'update carousel':
+                case 'update content carousel':
                     $this->updateCarousel();
                     break;
-                case 'save carousel image':
+                case 'save content carousel image':
                     $this->saveCarouselImage();
                     break;
-                case 'get carousel details':
+                case 'get content carousel details':
                     $this->getCarouselDetails();
                     break;
-                case 'get carousel image details':
+                case 'get content carousel image details':
                     $this->getCarouselImageDetails();
                     break;
-                case 'publish carousel':
+                case 'publish content carousel':
                     $this->publishCarousel();
                     break;
-                case 'unpublish carousel':
+                case 'unpublish content carousel':
                     $this->unpublishCarousel();
                     break;
-                case 'delete carousel':
+                case 'delete content carousel':
                     $this->deleteCarousel();
                     break;
-                case 'delete carousel image':
+                case 'delete content carousel image':
                     $this->deleteCarouselImage();
                     break;
-                case 'delete multiple carousel':
+                case 'delete multiple content carousel':
                     $this->deleteMultipleCarousel();
                     break;
                 default:
@@ -180,7 +180,7 @@ class CarouselController {
     #
     # Function: addCarousel
     # Description: 
-    # Inserts a carousel.
+    # Inserts a content carousel.
     #
     # Parameters: None
     #
@@ -192,22 +192,22 @@ class CarouselController {
             return;
         }
 
-        if (isset($_POST['carousel_name']) && !empty($_POST['carousel_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
+        if (isset($_POST['content_carousel_name']) && !empty($_POST['content_carousel_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
             $userID = $_SESSION['user_account_id'];
-            $carouselName = $_POST['carousel_name'];
+            $carouselName = $_POST['content_carousel_name'];
             $blockStyleID = htmlspecialchars($_POST['block_style_id'], ENT_QUOTES, 'UTF-8');
             $description = $_POST['description'];
 
             $blockStyleDetails = $this->blockStyleModel->getBlockStyle($blockStyleID);
             $blockStyleName = $blockStyleDetails['block_style_name'] ?? '';
         
-            $carouselID = $this->carouselModel->insertCarousel($carouselName, $description, $blockStyleID, $blockStyleName, $userID);
+            $carouselID = $this->contentCarouselModel->insertCarousel($carouselName, $description, $blockStyleID, $blockStyleName, $userID);
     
             $response = [
                 'success' => true,
                 'carouselID' => $this->securityModel->encryptData($carouselID),
                 'title' => 'Insert Carousel Success',
-                'message' => 'The carousel has been inserted successfully.',
+                'message' => 'The content carousel has been inserted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -236,7 +236,7 @@ class CarouselController {
     #
     # Function: updateCarousel
     # Description: 
-    # Updates the carousel if it exists; otherwise, return an error message.
+    # Updates the content carousel if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -248,14 +248,14 @@ class CarouselController {
             return;
         }
         
-        if (isset($_POST['carousel_name']) && !empty($_POST['carousel_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
+        if (isset($_POST['content_carousel_name']) && !empty($_POST['content_carousel_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
             $userID = $_SESSION['user_account_id'];
-            $carouselID = htmlspecialchars($_POST['carousel_id'], ENT_QUOTES, 'UTF-8');
-            $carouselName = $_POST['carousel_name'];
+            $carouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
+            $carouselName = $_POST['content_carousel_name'];
             $blockStyleID = htmlspecialchars($_POST['block_style_id'], ENT_QUOTES, 'UTF-8');
             $description = $_POST['description'];
         
-            $checkCarouselExist = $this->carouselModel->checkCarouselExist($carouselID);
+            $checkCarouselExist = $this->contentCarouselModel->checkCarouselExist($carouselID);
             $total = $checkCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -263,7 +263,7 @@ class CarouselController {
                     'success' => false,
                     'notExist' => true,
                     'title' => 'Update Carousel Error',
-                    'message' => 'The carousel does not exist.',
+                    'message' => 'The content carousel does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -274,12 +274,12 @@ class CarouselController {
             $blockStyleDetails = $this->blockStyleModel->getBlockStyle($blockStyleID);
             $blockStyleName = $blockStyleDetails['block_style_name'] ?? '';
 
-            $this->carouselModel->updateCarousel($carouselID, $carouselName, $description, $blockStyleID, $blockStyleName, $userID);
+            $this->contentCarouselModel->updateCarousel($carouselID, $carouselName, $description, $blockStyleID, $blockStyleName, $userID);
                 
             $response = [
                 'success' => true,
                 'title' => 'Update Carousel Success',
-                'message' => 'The carousel has been updated successfully.',
+                'message' => 'The content carousel has been updated successfully.',
                 'messageType' => 'success'
             ];
             
@@ -308,7 +308,7 @@ class CarouselController {
     #
     # Function: saveCarouselImage
     # Description: 
-    # Updates the carousel if it exists; otherwise, insert.
+    # Updates the content carousel if it exists; otherwise, insert.
     #
     # Parameters: None
     #
@@ -320,13 +320,13 @@ class CarouselController {
             return;
         }
         
-        if (isset($_POST['carousel_image_id']) && isset($_POST['carousel_id']) && !empty($_POST['carousel_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
+        if (isset($_POST['content_carousel_image_id']) && isset($_POST['content_carousel_id']) && !empty($_POST['content_carousel_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
             $userID = $_SESSION['user_account_id'];
-            $carouselImageID = htmlspecialchars($_POST['carousel_image_id'], ENT_QUOTES, 'UTF-8');
-            $carouselID = htmlspecialchars($_POST['carousel_id'], ENT_QUOTES, 'UTF-8');
+            $carouselImageID = htmlspecialchars($_POST['content_carousel_image_id'], ENT_QUOTES, 'UTF-8');
+            $carouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
             $orderSequence = $_POST['order_sequence'];
         
-            $checkCarouselExist = $this->carouselModel->checkCarouselExist($carouselID);
+            $checkCarouselExist = $this->contentCarouselModel->checkCarouselExist($carouselID);
             $total = $checkCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -334,7 +334,7 @@ class CarouselController {
                     'success' => false,
                     'notExist' => true,
                     'title' => 'Save Carousel Image Error',
-                    'message' => 'The carousel does not exist.',
+                    'message' => 'The content carousel does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -342,14 +342,14 @@ class CarouselController {
                 exit;
             }
 
-            $checkCarouselImageExist = $this->carouselModel->checkCarouselImageExist($carouselImageID);
+            $checkCarouselImageExist = $this->contentCarouselModel->checkCarouselImageExist($carouselImageID);
             $total = $checkCarouselImageExist['total'] ?? 0;
 
             if($total > 0){
-                $carouselImageFileName = $_FILES['carousel_image']['name'];
-                $carouselImageFileSize = $_FILES['carousel_image']['size'];
-                $carouselImageFileError = $_FILES['carousel_image']['error'];
-                $carouselImageTempName = $_FILES['carousel_image']['tmp_name'];
+                $carouselImageFileName = $_FILES['content_carousel_image']['name'];
+                $carouselImageFileSize = $_FILES['content_carousel_image']['size'];
+                $carouselImageFileError = $_FILES['content_carousel_image']['error'];
+                $carouselImageTempName = $_FILES['content_carousel_image']['tmp_name'];
                 $carouselImageFileExtension = explode('.', $carouselImageFileName);
                 $carouselImageActualFileExtension = strtolower(end($carouselImageFileExtension));
 
@@ -380,7 +380,7 @@ class CarouselController {
                         $response = [
                             'success' => false,
                             'title' => 'Update Carousel Image Error',
-                            'message' => 'Please choose the carousel image.',
+                            'message' => 'Please choose the content carousel image.',
                             'messageType' => 'error'
                         ];
                         
@@ -420,7 +420,7 @@ class CarouselController {
         
                     $directory = PROJECT_BASE_DIR. '/'. CAROUSEL_IMAGE_DIR. $carouselID. '/';
                     $fileDestination = $directory. $fileNew;
-                    $filePath = './components/carousel/image/'. $carouselID . '/' . $fileNew;
+                    $filePath = './components/content-carousel/image/'. $carouselID . '/' . $fileNew;
         
                     $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
         
@@ -436,15 +436,15 @@ class CarouselController {
                         exit;
                     }
 
-                    $carouselImageDetails = $this->carouselModel->getCarouselImage($carouselImageID);
-                    $carouselImagePath = !empty($carouselImageDetails['carousel_image']) ? str_replace('./components/', '../../', $carouselImageDetails['carousel_image']) : null;
+                    $carouselImageDetails = $this->contentCarouselModel->getCarouselImage($carouselImageID);
+                    $carouselImagePath = !empty($carouselImageDetails['content_carousel_image']) ? str_replace('./components/', '../../', $carouselImageDetails['content_carousel_image']) : null;
 
                     if(file_exists($carouselImagePath)){
                         if (!unlink($carouselImagePath)) {
                             $response = [
                                 'success' => false,
                                 'title' => 'Update Carousel Image Error',
-                                'message' => 'The carousel image cannot be deleted due to an error.',
+                                'message' => 'The content carousel image cannot be deleted due to an error.',
                                 'messageType' => 'error'
                             ];
                             
@@ -457,7 +457,7 @@ class CarouselController {
                         $response = [
                             'success' => false,
                             'title' => 'Update Carousel Image Error',
-                            'message' => 'The carousel image cannot be uploaded due to an error.',
+                            'message' => 'The content carousel image cannot be uploaded due to an error.',
                             'messageType' => 'error'
                         ];
                         
@@ -465,12 +465,12 @@ class CarouselController {
                         exit;           
                     }  
 
-                    $this->carouselModel->updateCarouselImage($carouselImageID, $carouselID, $filePath, $orderSequence, $userID);
+                    $this->contentCarouselModel->updateCarouselImage($carouselImageID, $carouselID, $filePath, $orderSequence, $userID);
                     
                     $response = [
                         'success' => true,
                         'title' => 'Update Carousel Image Success',
-                        'message' => 'The carousel image has been inserted successfully.',
+                        'message' => 'The content carousel image has been inserted successfully.',
                         'messageType' => 'success'
                     ];
                     
@@ -478,12 +478,12 @@ class CarouselController {
                     exit;   
                 } 
                 else {
-                    $this->carouselModel->updateCarouselImage($carouselImageID, $carouselID, '', $orderSequence, $userID);
+                    $this->contentCarouselModel->updateCarouselImage($carouselImageID, $carouselID, '', $orderSequence, $userID);
 
                     $response = [
                         'success' => true,
                         'title' => 'Update Carousel Image Success',
-                        'message' => 'The carousel image has been inserted successfully.',
+                        'message' => 'The content carousel image has been inserted successfully.',
                         'messageType' => 'success'
                     ];
                     
@@ -492,10 +492,10 @@ class CarouselController {
                 }
             }
             else{
-                $carouselImageFileName = $_FILES['carousel_image']['name'];
-                $carouselImageFileSize = $_FILES['carousel_image']['size'];
-                $carouselImageFileError = $_FILES['carousel_image']['error'];
-                $carouselImageTempName = $_FILES['carousel_image']['tmp_name'];
+                $carouselImageFileName = $_FILES['content_carousel_image']['name'];
+                $carouselImageFileSize = $_FILES['content_carousel_image']['size'];
+                $carouselImageFileError = $_FILES['content_carousel_image']['error'];
+                $carouselImageTempName = $_FILES['content_carousel_image']['tmp_name'];
                 $carouselImageFileExtension = explode('.', $carouselImageFileName);
                 $carouselImageActualFileExtension = strtolower(end($carouselImageFileExtension));
     
@@ -525,7 +525,7 @@ class CarouselController {
                     $response = [
                         'success' => false,
                         'title' => 'Insert Carousel Image Error',
-                        'message' => 'Please choose the carousel image.',
+                        'message' => 'Please choose the content carousel image.',
                         'messageType' => 'error'
                     ];
                     
@@ -565,7 +565,7 @@ class CarouselController {
     
                 $directory = PROJECT_BASE_DIR. '/'. CAROUSEL_IMAGE_DIR. $carouselID. '/';
                 $fileDestination = $directory. $fileNew;
-                $filePath = './components/carousel/image/'. $carouselID . '/' . $fileNew;
+                $filePath = './components/content-carousel/image/'. $carouselID . '/' . $fileNew;
     
                 $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
     
@@ -585,7 +585,7 @@ class CarouselController {
                     $response = [
                         'success' => false,
                         'title' => 'Insert Carousel Image Error',
-                        'message' => 'The carousel image cannot be uploaded due to an error.',
+                        'message' => 'The content carousel image cannot be uploaded due to an error.',
                         'messageType' => 'error'
                     ];
                     
@@ -593,12 +593,12 @@ class CarouselController {
                     exit;           
                 }    
 
-                $this->carouselModel->insertCarouselImage($carouselID, $filePath, $orderSequence, $userID);
+                $this->contentCarouselModel->insertCarouselImage($carouselID, $filePath, $orderSequence, $userID);
                 
                 $response = [
                     'success' => true,
                     'title' => 'Insert Carousel Image Success',
-                    'message' => 'The carousel image has been inserted successfully.',
+                    'message' => 'The content carousel image has been inserted successfully.',
                     'messageType' => 'success'
                 ];
                 
@@ -628,7 +628,7 @@ class CarouselController {
     #
     # Function: publishCarousel
     # Description: 
-    # Publish the carousel if it exists; otherwise, return an error message.
+    # Publish the content carousel if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -640,11 +640,11 @@ class CarouselController {
             return;
         }
 
-        if (isset($_POST['carousel_id']) && !empty($_POST['carousel_id'])) {
+        if (isset($_POST['content_carousel_id']) && !empty($_POST['content_carousel_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $carouselID = htmlspecialchars($_POST['carousel_id'], ENT_QUOTES, 'UTF-8');
+            $carouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkCarouselExist = $this->carouselModel->checkCarouselExist($carouselID);
+            $checkCarouselExist = $this->contentCarouselModel->checkCarouselExist($carouselID);
             $total = $checkCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -652,7 +652,7 @@ class CarouselController {
                     'success' => false,
                     'notExist' => true,
                     'title' => 'Publish Carousel Error',
-                    'message' => 'The carousel does not exist.',
+                    'message' => 'The content carousel does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -660,12 +660,12 @@ class CarouselController {
                 exit;
             }
 
-            $this->carouselModel->updateCarouselPublishStatus($carouselID, 'Yes', $userID);
+            $this->contentCarouselModel->updateCarouselPublishStatus($carouselID, 'Yes', $userID);
                 
             $response = [
                 'success' => true,
                 'title' => 'Publish Carousel Success',
-                'message' => 'The carousel has been published successfully.',
+                'message' => 'The content carousel has been published successfully.',
                 'messageType' => 'success'
             ];
             
@@ -694,7 +694,7 @@ class CarouselController {
     #
     # Function: unpublishCarousel
     # Description: 
-    # Publish the carousel if it exists; otherwise, return an error message.
+    # Publish the content carousel if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -706,11 +706,11 @@ class CarouselController {
             return;
         }
 
-        if (isset($_POST['carousel_id']) && !empty($_POST['carousel_id'])) {
+        if (isset($_POST['content_carousel_id']) && !empty($_POST['content_carousel_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $carouselID = htmlspecialchars($_POST['carousel_id'], ENT_QUOTES, 'UTF-8');
+            $carouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkCarouselExist = $this->carouselModel->checkCarouselExist($carouselID);
+            $checkCarouselExist = $this->contentCarouselModel->checkCarouselExist($carouselID);
             $total = $checkCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -718,7 +718,7 @@ class CarouselController {
                     'success' => false,
                     'notExist' => true,
                     'title' => 'Unpublish Carousel Error',
-                    'message' => 'The carousel does not exist.',
+                    'message' => 'The content carousel does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -726,12 +726,12 @@ class CarouselController {
                 exit;
             }
 
-            $this->carouselModel->updateCarouselPublishStatus($carouselID, 'No', $userID);
+            $this->contentCarouselModel->updateCarouselPublishStatus($carouselID, 'No', $userID);
                 
             $response = [
                 'success' => true,
                 'title' => 'Unpublish Carousel Success',
-                'message' => 'The carousel has been unpublished successfully.',
+                'message' => 'The content carousel has been unpublished successfully.',
                 'messageType' => 'success'
             ];
             
@@ -760,7 +760,7 @@ class CarouselController {
     #
     # Function: deleteCarousel
     # Description: 
-    # Delete the carousel if it exists; otherwise, return an error message.
+    # Delete the content carousel if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -772,10 +772,10 @@ class CarouselController {
             return;
         }
 
-        if (isset($_POST['carousel_id']) && !empty($_POST['carousel_id'])) {
-            $carouselID = htmlspecialchars($_POST['carousel_id'], ENT_QUOTES, 'UTF-8');
+        if (isset($_POST['content_carousel_id']) && !empty($_POST['content_carousel_id'])) {
+            $carouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkCarouselExist = $this->carouselModel->checkCarouselExist($carouselID);
+            $checkCarouselExist = $this->contentCarouselModel->checkCarouselExist($carouselID);
             $total = $checkCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -783,7 +783,7 @@ class CarouselController {
                     'success' => false,
                     'notExist' => true,
                     'title' => 'Delete Carousel Error',
-                    'message' => 'The carousel does not exist.',
+                    'message' => 'The content carousel does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -791,17 +791,17 @@ class CarouselController {
                 exit;
             }
 
-            $carouselImageByCourselDetails = $this->carouselModel->getCarouselImageByCarouselID($carouselID);
+            $carouselImageByCourselDetails = $this->contentCarouselModel->getCarouselImageByCarouselID($carouselID);
 
             foreach ($carouselImageByCourselDetails as $row) {
-                $carouselImagePath = !empty($row['carousel_image']) ? str_replace('./components/', '../../', $row['carousel_image']) : null;
+                $carouselImagePath = !empty($row['content_carousel_image']) ? str_replace('./components/', '../../', $row['content_carousel_image']) : null;
 
                 if(file_exists($carouselImagePath)){
                     if (!unlink($carouselImagePath)) {
                         $response = [
                             'success' => false,
                             'title' => 'Delete Carousel Image Error',
-                            'message' => 'The carousel image cannot be deleted due to an error.',
+                            'message' => 'The content carousel image cannot be deleted due to an error.',
                             'messageType' => 'error'
                         ];
                         
@@ -811,12 +811,12 @@ class CarouselController {
                 }
             }
 
-            $this->carouselModel->deleteCarousel($carouselID);
+            $this->contentCarouselModel->deleteCarousel($carouselID);
                 
             $response = [
                 'success' => true,
                 'title' => 'Delete Carousel Success',
-                'message' => 'The carousel has been deleted successfully.',
+                'message' => 'The content carousel has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -841,7 +841,7 @@ class CarouselController {
     #
     # Function: deleteCarouselImage
     # Description: 
-    # Delete the carousel if it exists; otherwise, return an error message.
+    # Delete the content carousel if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -853,17 +853,17 @@ class CarouselController {
             return;
         }
 
-        if (isset($_POST['carousel_image_id']) && !empty($_POST['carousel_image_id'])) {
-            $carouselImageID = htmlspecialchars($_POST['carousel_image_id'], ENT_QUOTES, 'UTF-8');
+        if (isset($_POST['content_carousel_image_id']) && !empty($_POST['content_carousel_image_id'])) {
+            $carouselImageID = htmlspecialchars($_POST['content_carousel_image_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkCarouselImageExist = $this->carouselModel->checkCarouselImageExist($carouselImageID);
+            $checkCarouselImageExist = $this->contentCarouselModel->checkCarouselImageExist($carouselImageID);
             $total = $checkCarouselImageExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'title' => 'Delete Carousel Image Error',
-                    'message' => 'The carousel image does not exist.',
+                    'message' => 'The content carousel image does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -871,15 +871,15 @@ class CarouselController {
                 exit;
             }
 
-            $carouselImageDetails = $this->carouselModel->getCarouselImage($carouselImageID);
-            $carouselImagePath = !empty($carouselImageDetails['carousel_image']) ? str_replace('./components/', '../../', $carouselImageDetails['carousel_image']) : null;
+            $carouselImageDetails = $this->contentCarouselModel->getCarouselImage($carouselImageID);
+            $carouselImagePath = !empty($carouselImageDetails['content_carousel_image']) ? str_replace('./components/', '../../', $carouselImageDetails['content_carousel_image']) : null;
 
             if(file_exists($carouselImagePath)){
                 if (!unlink($carouselImagePath)) {
                     $response = [
                         'success' => false,
                         'title' => 'Delete Carousel Image Error',
-                        'message' => 'The carousel image cannot be deleted due to an error.',
+                        'message' => 'The content carousel image cannot be deleted due to an error.',
                         'messageType' => 'error'
                     ];
                     
@@ -888,12 +888,12 @@ class CarouselController {
                 }
             }
 
-            $this->carouselModel->deleteCarouselImage($carouselImageID);
+            $this->contentCarouselModel->deleteCarouselImage($carouselImageID);
                 
             $response = [
                 'success' => true,
                 'title' => 'Delete Carousel Image Success',
-                'message' => 'The carousel image has been deleted successfully.',
+                'message' => 'The content carousel image has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -918,7 +918,7 @@ class CarouselController {
     #
     # Function: deleteMultipleCarousel
     # Description: 
-    # Delete the selected carousels if it exists; otherwise, skip it.
+    # Delete the selected content carousels if it exists; otherwise, skip it.
     #
     # Parameters: None
     #
@@ -930,25 +930,25 @@ class CarouselController {
             return;
         }
 
-        if (isset($_POST['carousel_id']) && !empty($_POST['carousel_id'])) {
-            $carouselIDs = $_POST['carousel_id'];
+        if (isset($_POST['content_carousel_id']) && !empty($_POST['content_carousel_id'])) {
+            $carouselIDs = $_POST['content_carousel_id'];
     
             foreach($carouselIDs as $carouselID){
-                $checkCarouselExist = $this->carouselModel->checkCarouselExist($carouselID);
+                $checkCarouselExist = $this->contentCarouselModel->checkCarouselExist($carouselID);
                 $total = $checkCarouselExist['total'] ?? 0;
 
                 if($total > 0){
-                    $carouselImageByCourselDetails = $this->carouselModel->getCarouselImageByCarouselID($carouselID);
+                    $carouselImageByCourselDetails = $this->contentCarouselModel->getCarouselImageByCarouselID($carouselID);
 
                     foreach ($carouselImageByCourselDetails as $row) {
-                        $carouselImagePath = !empty($row['carousel_image']) ? str_replace('./components/', '../../', $row['carousel_image']) : null;
+                        $carouselImagePath = !empty($row['content_carousel_image']) ? str_replace('./components/', '../../', $row['content_carousel_image']) : null;
 
                         if(file_exists($carouselImagePath)){
                             if (!unlink($carouselImagePath)) {
                                 $response = [
                                     'success' => false,
                                     'title' => 'Delete Carousel Image Error',
-                                    'message' => 'The carousel image cannot be deleted due to an error.',
+                                    'message' => 'The content carousel image cannot be deleted due to an error.',
                                     'messageType' => 'error'
                                 ];
                                 
@@ -958,14 +958,14 @@ class CarouselController {
                         }
                     }
 
-                    $this->carouselModel->deleteCarousel($carouselID);
+                    $this->contentCarouselModel->deleteCarousel($carouselID);
                 }
             }
                 
             $response = [
                 'success' => true,
                 'title' => 'Delete Multiple Carousels Success',
-                'message' => 'The selected carousels have been deleted successfully.',
+                'message' => 'The selected content carousels have been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -994,7 +994,7 @@ class CarouselController {
     #
     # Function: getCarouselDetails
     # Description: 
-    # Handles the retrieval of carousel details.
+    # Handles the retrieval of content carousel details.
     #
     # Parameters: None
     #
@@ -1006,11 +1006,11 @@ class CarouselController {
             return;
         }
     
-        if (isset($_POST['carousel_id']) && !empty($_POST['carousel_id'])) {
+        if (isset($_POST['content_carousel_id']) && !empty($_POST['content_carousel_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $carouselID = htmlspecialchars($_POST['carousel_id'], ENT_QUOTES, 'UTF-8');
+            $carouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkCarouselExist = $this->carouselModel->checkCarouselExist($carouselID);
+            $checkCarouselExist = $this->contentCarouselModel->checkCarouselExist($carouselID);
             $total = $checkCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -1018,7 +1018,7 @@ class CarouselController {
                     'success' => false,
                     'notExist' => true,
                     'title' => 'Get Carousel Details Error',
-                    'message' => 'The carousel does not exist.',
+                    'message' => 'The content carousel does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -1026,11 +1026,11 @@ class CarouselController {
                 exit;
             }
     
-            $carouselDetails = $this->carouselModel->getCarousel($carouselID);
+            $carouselDetails = $this->contentCarouselModel->getCarousel($carouselID);
 
             $response = [
                 'success' => true,
-                'carouselName' => $carouselDetails['carousel_name'] ?? null,
+                'carouselName' => $carouselDetails['content_carousel_name'] ?? null,
                 'description' => $carouselDetails['description'] ?? null,
                 'blockStyleID' => $carouselDetails['block_style_id'] ?? '',
                 'blockStyleName' => $carouselDetails['block_style_name'] ?? ''
@@ -1057,7 +1057,7 @@ class CarouselController {
     #
     # Function: getCarouselImageDetails
     # Description: 
-    # Handles the retrieval of carousel image details.
+    # Handles the retrieval of content carousel image details.
     #
     # Parameters: None
     #
@@ -1069,18 +1069,18 @@ class CarouselController {
             return;
         }
     
-        if (isset($_POST['carousel_image_id']) && !empty($_POST['carousel_image_id'])) {
+        if (isset($_POST['content_carousel_image_id']) && !empty($_POST['content_carousel_image_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $carouselImageID = htmlspecialchars($_POST['carousel_image_id'], ENT_QUOTES, 'UTF-8');
+            $carouselImageID = htmlspecialchars($_POST['content_carousel_image_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkCarouselImageExist = $this->carouselModel->checkCarouselImageExist($carouselImageID);
+            $checkCarouselImageExist = $this->contentCarouselModel->checkCarouselImageExist($carouselImageID);
             $total = $checkCarouselImageExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'title' => 'Get Carousel Image Details Error',
-                    'message' => 'The carousel image does not exist.',
+                    'message' => 'The content carousel image does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -1088,7 +1088,7 @@ class CarouselController {
                 exit;
             }
     
-            $carouselImageDetails = $this->carouselModel->getCarouselImage($carouselImageID);
+            $carouselImageDetails = $this->contentCarouselModel->getCarouselImage($carouselImageID);
 
             $response = [
                 'success' => true,
@@ -1118,12 +1118,12 @@ require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../carousel/model/carousel-model.php';
+require_once '../../content-carousel/model/content-carousel-model.php';
 require_once '../../block-style/model/block-style-model.php';
 require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new CarouselController(new CarouselModel(new DatabaseModel), new BlockStyleModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new ContentCarouselController(new CarouselModel(new DatabaseModel), new BlockStyleModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>

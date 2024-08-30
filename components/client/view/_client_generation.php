@@ -3,13 +3,13 @@ require_once '../../global/config/session.php';
 require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../carousel/model/carousel-model.php';
+require_once '../../client/model/client-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/global-model.php';
 
 $databaseModel = new DatabaseModel();
 $systemModel = new SystemModel();
-$carouselModel = new CarouselModel($databaseModel);
+$clientModel = new ClientModel($databaseModel);
 $securityModel = new SecurityModel();
 $globalModel = new GlobalModel($databaseModel, $securityModel);
 
@@ -22,46 +22,46 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
     switch ($type) {
         # -------------------------------------------------------------
         #
-        # Type: carousel table
+        # Type: client table
         # Description:
-        # Generates the carousel table.
+        # Generates the client table.
         #
         # Parameters: None
         #
         # Returns: Array
         #
         # -------------------------------------------------------------
-        case 'carousel table':
-            $sql = $databaseModel->getConnection()->prepare('CALL generateCarouselTable()');
+        case 'client table':
+            $sql = $databaseModel->getConnection()->prepare('CALL generateClientTable()');
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();
 
-            $carouselDeleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
+            $clientDeleteAccess = $globalModel->checkAccessRights($userID, $pageID, 'delete');
 
             foreach ($options as $row) {
-                $carouselID = $row['carousel_id'];
-                $carouselName = $row['carousel_name'];
+                $clientID = $row['client_id'];
+                $clientName = $row['client_name'];
                 $description = $row['description'];
                 $publishStatus = $row['publish_status'];
 
                 $publishStatusBadge = $publishStatus == 'Yes' ? '<span class="badge rounded-pill text-bg-success">Yes</span>' : '<span class=" badge rounded-pill text-bg-danger">No</span>';
 
-                $carouselIDEncrypted = $securityModel->encryptData($carouselID);
+                $clientIDEncrypted = $securityModel->encryptData($clientID);
 
                 $deleteButton = '';
-                if($carouselDeleteAccess['total'] > 0){
-                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-carousel" data-carousel-id="' . $carouselID . '" title="Delete Carousel">
+                if($clientDeleteAccess['total'] > 0){
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-client" data-client-id="' . $clientID . '" title="Delete Client">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';
                 }
 
                 $response[] = [
-                    'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $carouselID .'">',
-                    'CAROUSEL_NAME' => '<div class="d-flex align-images-center">
+                    'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $clientID .'">',
+                    'CAROUSEL_NAME' => '<div class="d-flex align-items-center">
                                                 <div class="ms-3">
                                                     <div class="user-meta-info">
-                                                        <h6 class="user-name mb-0">'. $carouselName .'</h6>
+                                                        <h6 class="user-name mb-0">'. $clientName .'</h6>
                                                         <small>'. $description .'</small>
                                                     </div>
                                                 </div>
@@ -69,7 +69,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                         </div>',
                     'PUBLISH_STATUS' => $publishStatusBadge,
                     'ACTION' => '<div class="action-btn">
-                                    <a href="'. $pageLink .'&id='. $carouselIDEncrypted .'" class="text-info" title="View Details">
+                                    <a href="'. $pageLink .'&id='. $clientIDEncrypted .'" class="text-info" title="View Details">
                                         <i class="ti ti-eye fs-5"></i>
                                     </a>
                                    '. $deleteButton .'
@@ -83,50 +83,52 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
         # -------------------------------------------------------------
         #
-        # Type: carousel image table
+        # Type: client item table
         # Description:
-        # Generates the carousel image table.
+        # Generates the client item table.
         #
         # Parameters: None
         #
         # Returns: Array
         #
         # -------------------------------------------------------------
-        case 'carousel image table':
-            $carouselID = isset($_POST['carousel_id']) ? htmlspecialchars($_POST['carousel_id'], ENT_QUOTES, 'UTF-8') : null;
-            $sql = $databaseModel->getConnection()->prepare('CALL generateCarouselImageTable(:carouselID)');
-            $sql->bindValue(':carouselID', $carouselID, PDO::PARAM_INT);
+        case 'client item table':
+            $clientID = isset($_POST['client_id']) ? htmlspecialchars($_POST['client_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateClientItemTable(:clientID)');
+            $sql->bindValue(':clientID', $clientID, PDO::PARAM_INT);
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();
 
-            $carouselWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
+            $clientWriteAccess = $globalModel->checkAccessRights($userID, $pageID, 'write');
 
-            $carouselDetails = $carouselModel->getCarousel($carouselID, null);
-            $publishStatus = $carouselDetails['publish_status'] ?? 'No';
+            $clientDetails = $clientModel->getClient($clientID, null);
+            $publishStatus = $clientDetails['publish_status'] ?? 'No';
 
             foreach ($options as $row) {
-                $carouselImageID = $row['carousel_image_id'];
-                $carouselImage = $row['carousel_image'];
+                $clientItemID = $row['client_item_id'];
+                $clientLogo = $row['client_logo'];
+                $clientURL = $row['client_url'];
                 $orderSequence = $row['order_sequence'];
 
                 $updateButton = '';
                 $deleteButton = '';
-                if($publishStatus == 'No' && $carouselWriteAccess['total'] > 0){
-                    $updateButton = '<a href="javascript:void(0);" class="text-info ms-3 edit-carousel-image" data-bs-toggle="modal" data-bs-target="#carousel-image-modal" data-carousel-image-id="' . $carouselImageID . '" title="Edit Carousel Image">
+                if($publishStatus == 'No' && $clientWriteAccess['total'] > 0){
+                    $updateButton = '<a href="javascript:void(0);" class="text-info ms-3 edit-client-item" data-bs-toggle="modal" data-bs-target="#client-item-modal" data-client-item-id="' . $clientItemID . '" title="Edit Client Item">
                                             <i class="ti ti-pencil fs-5"></i>
                                         </a>';
-                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-carousel-image" data-carousel-image-id="' . $carouselImageID . '" title="Delete Carousel Image">
+                    $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-client-item" data-client-item-id="' . $clientItemID . '" title="Delete Client Item">
                                             <i class="ti ti-trash fs-5"></i>
                                         </a>';
                 }
 
                 $response[] = [
-                    'CAROUSEL_IMAGE' => '<a href="'. $carouselImage .'" target="_blank"><img src="'. $carouselImage .'" alt="modernize-img" class="rounded-1 img-fluid mb-9"></a>',
+                    'CLIENT_LOGO' => '<a href="'. $clientLogo .'" target="_blank"><img src="'. $clientLogo .'" alt="modernize-img" class="rounded-1 img-fluid mb-9"></a>',
+                    'CLIENT_URL' => '<a href="' . $clientURL . '" target="_blank">' . $clientURL . '</a>',
                     'ORDER_SEQUENCE' => $orderSequence,
                     'ACTION' => '<div class="action-btn">
                                     '. $updateButton .'
-                                   <a href="javascript:void(0);" class="text-warning ms-3 view-carousel-image-log-notes" data-carousel-image-id="' . $carouselImageID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
+                                   <a href="javascript:void(0);" class="text-warning ms-3 view-client-item-log-notes" data-client-item-id="' . $clientItemID . '" data-bs-toggle="offcanvas" data-bs-target="#log-notes-offcanvas" aria-controls="log-notes-offcanvas" title="View Log Notes">
                                         <i class="ti ti-file-text fs-5"></i>
                                     </a>
                                     '. $deleteButton .'
@@ -140,19 +142,19 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
         # -------------------------------------------------------------
         #
-        # Type: carousel options
+        # Type: client options
         # Description:
-        # Generates the carousel options.
+        # Generates the client options.
         #
         # Parameters: None
         #
         # Returns: Array
         #
         # -------------------------------------------------------------
-        case 'carousel options':
-            $carouselID = isset($_POST['carousel_id']) ? htmlspecialchars($_POST['carousel_id'], ENT_QUOTES, 'UTF-8') : null;
-            $sql = $databaseModel->getConnection()->prepare('CALL generateCarouselOptions(:carouselID)');
-            $sql->bindValue(':carouselID', $carouselID, PDO::PARAM_INT);
+        case 'client options':
+            $clientID = isset($_POST['client_id']) ? htmlspecialchars($_POST['client_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateClientOptions(:clientID)');
+            $sql->bindValue(':clientID', $clientID, PDO::PARAM_INT);
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();
@@ -164,8 +166,8 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
             foreach ($options as $row) {
                 $response[] = [
-                    'id' => $row['carousel_id'],
-                    'text' => $row['carousel_name']
+                    'id' => $row['client_id'],
+                    'text' => $row['client_name']
                 ];
             }
 
