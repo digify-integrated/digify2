@@ -15,22 +15,22 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
-                <h5 class="card-title mb-0">Carousel</h5>
+                <h5 class="card-title mb-0">Content Carousel</h5>
                 <div class="card-actions cursor-pointer ms-auto d-flex button-group">
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Carousel Carousel</a></li>' : '';
+                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Content Carousel</a></li>' : '';
 
                             if($publishStatus == 'No' && $publishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="publish-content-carousel">Publish Carousel Carousel</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="publish-content-carousel">Publish Content Carousel</button></li>';
                             }
 
                             if($publishStatus == 'Yes' && $unpublishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="unpublish-content-carousel">Unpublish Carousel Carousel</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="unpublish-content-carousel">Unpublish Content Carousel</button></li>';
                             }
 
-                            echo $deleteAccess['total'] > 0 && $publishStatus == 'No' ? '<li><button class="dropdown-item" type="button" id="delete-content-carousel">Delete Carousel</button></li>' : '';
+                            echo $deleteAccess['total'] > 0 && $publishStatus == 'No' ? '<li><button class="dropdown-item" type="button" id="delete-content-carousel">Delete Content Carousel</button></li>' : '';
                         ?>
                     </ul>
                 </div>

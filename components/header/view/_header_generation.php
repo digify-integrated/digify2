@@ -50,7 +50,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $headerIDEncrypted = $securityModel->encryptData($headerID);
 
                 $deleteButton = '';
-                if($headerDeleteAccess['total'] > 0){
+                if($headerDeleteAccess['total'] > 0 && $publishStatus == 'No'){
                     $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-header" data-header-id="' . $headerID . '" title="Delete Header">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';

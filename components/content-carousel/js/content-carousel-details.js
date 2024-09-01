@@ -11,7 +11,7 @@
         }
 
         if($('#content-carousel-form').length){
-            contentContentCarouselForm();
+            contentCarouselForm();
         }
 
         if($('#content-carousel-item-form').length){
@@ -302,7 +302,7 @@
     });
 })(jQuery);
 
-function contentContentCarouselForm(){
+function contentCarouselForm(){
     $('#content-carousel-form').validate({
         rules: {
             content_carousel_name: {

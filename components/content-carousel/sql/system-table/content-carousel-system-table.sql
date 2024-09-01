@@ -16,7 +16,7 @@ CREATE INDEX content_carouselindex_content_carousel_id ON content_carousel(conte
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
-/* Carousel Item Table */
+/* Content Carousel Item Table */
 
 CREATE TABLE content_carousel_item (
     content_carousel_item_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,

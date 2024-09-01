@@ -50,7 +50,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $carouselIDEncrypted = $securityModel->encryptData($carouselID);
 
                 $deleteButton = '';
-                if($carouselDeleteAccess['total'] > 0){
+                if($carouselDeleteAccess['total'] > 0 && $publishStatus == 'No'){
                     $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-carousel" data-carousel-id="' . $carouselID . '" title="Delete Carousel">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';

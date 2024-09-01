@@ -50,7 +50,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $callToActionIDEncrypted = $securityModel->encryptData($callToActionID);
 
                 $deleteButton = '';
-                if($callToActionDeleteAccess['total'] > 0){
+                if($callToActionDeleteAccess['total'] > 0 && $publishStatus == 'No'){
                     $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-call-to-action" data-call-to-action-id="' . $callToActionID . '" title="Delete CallToAction">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';

@@ -50,7 +50,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $clientIDEncrypted = $securityModel->encryptData($clientID);
 
                 $deleteButton = '';
-                if($clientDeleteAccess['total'] > 0){
+                if($clientDeleteAccess['total'] > 0 && $publishStatus == 'No'){
                     $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-client" data-client-id="' . $clientID . '" title="Delete Client">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';
@@ -58,7 +58,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $response[] = [
                     'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $clientID .'">',
-                    'CAROUSEL_NAME' => '<div class="d-flex align-items-center">
+                    'CLIENT_NAME' => '<div class="d-flex align-items-center">
                                                 <div class="ms-3">
                                                     <div class="user-meta-info">
                                                         <h6 class="user-name mb-0">'. $clientName .'</h6>

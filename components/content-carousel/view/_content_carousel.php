@@ -11,7 +11,7 @@
                 <?php
                     echo $deleteAccess['total'] > 0 ? '<button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0 d-none" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                                                         <ul class="dropdown-menu dropdown-menu-end">
-                                                            <li><button class="dropdown-item" type="button" id="delete-content-carousel">Delete Content Content</button></li>
+                                                            <li><button class="dropdown-item" type="button" id="delete-content-carousel">Delete Content Carousel</button></li>
                                                         </ul>' : '';
                     
                     echo $createAccess['total'] > 0 ? '<a href="'. $pageLink .'&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';

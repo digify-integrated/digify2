@@ -3,7 +3,7 @@ session_start();
 
 # -------------------------------------------------------------
 #
-# Function: Content CarouselController
+# Function: ContentCarouselController
 # Description: 
 # The Content CarouselController class handles carousel related operations and interactions.
 #
@@ -13,7 +13,7 @@ session_start();
 #
 # -------------------------------------------------------------
 class ContentCarouselController {
-    private $contentContentCarouselModel;
+    private $contentCarouselModel;
     private $blockStyleModel;
     private $uploadSettingModel;
     private $authenticationModel;
@@ -23,11 +23,11 @@ class ContentCarouselController {
     #
     # Function: __construct
     # Description: 
-    # The constructor initializes the object with the provided contentContentCarouselModel, AuthenticationModel and SecurityModel instances.
+    # The constructor initializes the object with the provided contentCarouselModel, AuthenticationModel and SecurityModel instances.
     # These instances are used for content carousel related, user related operations and security related operations, respectively.
     #
     # Parameters:
-    # - @param Content CarouselModel $contentContentCarouselModel     The contentContentCarouselModel instance for content carousel related operations.
+    # - @param ContentCarouselModel $contentCarouselModel     The contentCarouselModel instance for content carousel related operations.
     # - @param BlockStyleModel $blockStyleModel     The blockStyleModel instance for block style related operations.
     # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
@@ -36,8 +36,8 @@ class ContentCarouselController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(ContentCarouselModel $contentContentCarouselModel, BlockStyleModel $blockStyleModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
-        $this->contentContentCarouselModel = $contentContentCarouselModel;
+    public function __construct(ContentCarouselModel $contentCarouselModel, BlockStyleModel $blockStyleModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+        $this->contentCarouselModel = $contentCarouselModel;
         $this->blockStyleModel = $blockStyleModel;
         $this->uploadSettingModel = $uploadSettingModel;
         $this->authenticationModel = $authenticationModel;
@@ -201,7 +201,7 @@ class ContentCarouselController {
             $blockStyleDetails = $this->blockStyleModel->getBlockStyle($blockStyleID);
             $blockStyleName = $blockStyleDetails['block_style_name'] ?? '';
         
-            $contentCarouselID = $this->contentContentCarouselModel->insertContentCarousel($contentCarouselName, $description, $blockStyleID, $blockStyleName, $userID);
+            $contentCarouselID = $this->contentCarouselModel->insertContentCarousel($contentCarouselName, $description, $blockStyleID, $blockStyleName, $userID);
     
             $response = [
                 'success' => true,
@@ -255,7 +255,7 @@ class ContentCarouselController {
             $blockStyleID = htmlspecialchars($_POST['block_style_id'], ENT_QUOTES, 'UTF-8');
             $description = $_POST['description'];
         
-            $checkContentCarouselExist = $this->contentContentCarouselModel->checkContentCarouselExist($contentCarouselID);
+            $checkContentCarouselExist = $this->contentCarouselModel->checkContentCarouselExist($contentCarouselID);
             $total = $checkContentCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -274,7 +274,7 @@ class ContentCarouselController {
             $blockStyleDetails = $this->blockStyleModel->getBlockStyle($blockStyleID);
             $blockStyleName = $blockStyleDetails['block_style_name'] ?? '';
 
-            $this->contentContentCarouselModel->updateContentCarousel($contentCarouselID, $contentCarouselName, $description, $blockStyleID, $blockStyleName, $userID);
+            $this->contentCarouselModel->updateContentCarousel($contentCarouselID, $contentCarouselName, $description, $blockStyleID, $blockStyleName, $userID);
                 
             $response = [
                 'success' => true,
@@ -333,7 +333,7 @@ class ContentCarouselController {
             $callToActionButton2Link = $_POST['call_to_action_button_2_link'];
             $orderSequence = $_POST['order_sequence'];
         
-            $checkContentCarouselExist = $this->contentContentCarouselModel->checkContentCarouselExist($contentCarouselID);
+            $checkContentCarouselExist = $this->contentCarouselModel->checkContentCarouselExist($contentCarouselID);
             $total = $checkContentCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -349,7 +349,7 @@ class ContentCarouselController {
                 exit;
             }
 
-            $checkContentCarouselItemExist = $this->contentContentCarouselModel->checkContentCarouselItemExist($contentCarouselItemID);
+            $checkContentCarouselItemExist = $this->contentCarouselModel->checkContentCarouselItemExist($contentCarouselItemID);
             $total = $checkContentCarouselItemExist['total'] ?? 0;
 
             if($total > 0){
@@ -443,7 +443,7 @@ class ContentCarouselController {
                         exit;
                     }
 
-                    $contentCarouselItemDetails = $this->contentContentCarouselModel->getContentCarouselItem($contentCarouselItemID);
+                    $contentCarouselItemDetails = $this->contentCarouselModel->getContentCarouselItem($contentCarouselItemID);
                     $contentCarouselImagePath = !empty($contentCarouselItemDetails['content_carousel_image']) ? str_replace('./components/', '../../', $contentCarouselItemDetails['content_carousel_image']) : null;
 
                     if(file_exists($contentCarouselImagePath)){
@@ -472,7 +472,7 @@ class ContentCarouselController {
                         exit;           
                     }  
 
-                    $this->contentContentCarouselModel->updateContentCarouselItem($contentCarouselItemID, $contentCarouselID, $contentCarouselTitle, $contentCarouselHeading, $contentCarouselParagraph, $callToActionButton1Text, $callToActionButton1Link, $callToActionButton2Text, $callToActionButton2Link, $filePath, $orderSequence, $userID);
+                    $this->contentCarouselModel->updateContentCarouselItem($contentCarouselItemID, $contentCarouselID, $contentCarouselTitle, $contentCarouselHeading, $contentCarouselParagraph, $callToActionButton1Text, $callToActionButton1Link, $callToActionButton2Text, $callToActionButton2Link, $filePath, $orderSequence, $userID);
                     
                     $response = [
                         'success' => true,
@@ -485,7 +485,7 @@ class ContentCarouselController {
                     exit;   
                 } 
                 else {
-                    $this->contentContentCarouselModel->updateContentCarouselItem($contentCarouselItemID, $contentCarouselID, $contentCarouselTitle, $contentCarouselHeading, $contentCarouselParagraph, $callToActionButton1Text, $callToActionButton1Link, $callToActionButton2Text, $callToActionButton2Link, '', $orderSequence, $userID);
+                    $this->contentCarouselModel->updateContentCarouselItem($contentCarouselItemID, $contentCarouselID, $contentCarouselTitle, $contentCarouselHeading, $contentCarouselParagraph, $callToActionButton1Text, $callToActionButton1Link, $callToActionButton2Text, $callToActionButton2Link, '', $orderSequence, $userID);
 
                     $response = [
                         'success' => true,
@@ -600,7 +600,7 @@ class ContentCarouselController {
                     exit;           
                 }    
 
-                $this->contentContentCarouselModel->insertContentCarouselItem($contentCarouselID, $contentCarouselTitle, $contentCarouselHeading, $contentCarouselParagraph, $callToActionButton1Text, $callToActionButton1Link, $callToActionButton2Text, $callToActionButton2Link, $filePath, $orderSequence, $userID);
+                $this->contentCarouselModel->insertContentCarouselItem($contentCarouselID, $contentCarouselTitle, $contentCarouselHeading, $contentCarouselParagraph, $callToActionButton1Text, $callToActionButton1Link, $callToActionButton2Text, $callToActionButton2Link, $filePath, $orderSequence, $userID);
                 
                 $response = [
                     'success' => true,
@@ -651,7 +651,7 @@ class ContentCarouselController {
             $userID = $_SESSION['user_account_id'];
             $contentCarouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkContentCarouselExist = $this->contentContentCarouselModel->checkContentCarouselExist($contentCarouselID);
+            $checkContentCarouselExist = $this->contentCarouselModel->checkContentCarouselExist($contentCarouselID);
             $total = $checkContentCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -667,7 +667,7 @@ class ContentCarouselController {
                 exit;
             }
 
-            $this->contentContentCarouselModel->updateContentCarouselPublishStatus($contentCarouselID, 'Yes', $userID);
+            $this->contentCarouselModel->updateContentCarouselPublishStatus($contentCarouselID, 'Yes', $userID);
                 
             $response = [
                 'success' => true,
@@ -717,7 +717,7 @@ class ContentCarouselController {
             $userID = $_SESSION['user_account_id'];
             $contentCarouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkContentCarouselExist = $this->contentContentCarouselModel->checkContentCarouselExist($contentCarouselID);
+            $checkContentCarouselExist = $this->contentCarouselModel->checkContentCarouselExist($contentCarouselID);
             $total = $checkContentCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -733,7 +733,7 @@ class ContentCarouselController {
                 exit;
             }
 
-            $this->contentContentCarouselModel->updateContentCarouselPublishStatus($contentCarouselID, 'No', $userID);
+            $this->contentCarouselModel->updateContentCarouselPublishStatus($contentCarouselID, 'No', $userID);
                 
             $response = [
                 'success' => true,
@@ -782,7 +782,7 @@ class ContentCarouselController {
         if (isset($_POST['content_carousel_id']) && !empty($_POST['content_carousel_id'])) {
             $contentCarouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkContentCarouselExist = $this->contentContentCarouselModel->checkContentCarouselExist($contentCarouselID);
+            $checkContentCarouselExist = $this->contentCarouselModel->checkContentCarouselExist($contentCarouselID);
             $total = $checkContentCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -798,7 +798,7 @@ class ContentCarouselController {
                 exit;
             }
 
-            $contentCarouselItemByCourselDetails = $this->contentContentCarouselModel->getContentCarouselItemByContentCarouselID($contentCarouselID);
+            $contentCarouselItemByCourselDetails = $this->contentCarouselModel->getContentCarouselItemByContentCarouselID($contentCarouselID);
 
             foreach ($contentCarouselItemByCourselDetails as $row) {
                 $contentCarouselImagePath = !empty($row['content_carousel_image']) ? str_replace('./components/', '../../', $row['content_carousel_image']) : null;
@@ -818,7 +818,7 @@ class ContentCarouselController {
                 }
             }
 
-            $this->contentContentCarouselModel->deleteContentCarousel($contentCarouselID);
+            $this->contentCarouselModel->deleteContentCarousel($contentCarouselID);
                 
             $response = [
                 'success' => true,
@@ -863,7 +863,7 @@ class ContentCarouselController {
         if (isset($_POST['content_carousel_item_id']) && !empty($_POST['content_carousel_item_id'])) {
             $contentCarouselItemID = htmlspecialchars($_POST['content_carousel_item_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkContentCarouselItemExist = $this->contentContentCarouselModel->checkContentCarouselItemExist($contentCarouselItemID);
+            $checkContentCarouselItemExist = $this->contentCarouselModel->checkContentCarouselItemExist($contentCarouselItemID);
             $total = $checkContentCarouselItemExist['total'] ?? 0;
 
             if($total === 0){
@@ -878,7 +878,7 @@ class ContentCarouselController {
                 exit;
             }
 
-            $contentCarouselItemDetails = $this->contentContentCarouselModel->getContentCarouselItem($contentCarouselItemID);
+            $contentCarouselItemDetails = $this->contentCarouselModel->getContentCarouselItem($contentCarouselItemID);
             $contentCarouselImagePath = !empty($contentCarouselItemDetails['content_carousel_image']) ? str_replace('./components/', '../../', $contentCarouselItemDetails['content_carousel_image']) : null;
 
 
@@ -896,7 +896,7 @@ class ContentCarouselController {
                 }
             }
 
-            $this->contentContentCarouselModel->deleteContentCarouselItem($contentCarouselItemID);
+            $this->contentCarouselModel->deleteContentCarouselItem($contentCarouselItemID);
                 
             $response = [
                 'success' => true,
@@ -942,11 +942,11 @@ class ContentCarouselController {
             $contentCarouselIDs = $_POST['content_carousel_id'];
     
             foreach($contentCarouselIDs as $contentCarouselID){
-                $checkContentCarouselExist = $this->contentContentCarouselModel->checkContentCarouselExist($contentCarouselID);
+                $checkContentCarouselExist = $this->contentCarouselModel->checkContentCarouselExist($contentCarouselID);
                 $total = $checkContentCarouselExist['total'] ?? 0;
 
                 if($total > 0){
-                    $contentCarouselItemByCourselDetails = $this->contentContentCarouselModel->getContentCarouselItemByContentCarouselID($contentCarouselID);
+                    $contentCarouselItemByCourselDetails = $this->contentCarouselModel->getContentCarouselItemByContentCarouselID($contentCarouselID);
 
                     foreach ($contentCarouselItemByCourselDetails as $row) {
                         $contentCarouselImagePath = !empty($row['content_carousel_image']) ? str_replace('./components/', '../../', $row['content_carousel_image']) : null;
@@ -966,7 +966,7 @@ class ContentCarouselController {
                         }
                     }
 
-                    $this->contentContentCarouselModel->deleteContentCarousel($contentCarouselID);
+                    $this->contentCarouselModel->deleteContentCarousel($contentCarouselID);
                 }
             }
                 
@@ -1018,7 +1018,7 @@ class ContentCarouselController {
             $userID = $_SESSION['user_account_id'];
             $contentCarouselID = htmlspecialchars($_POST['content_carousel_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkContentCarouselExist = $this->contentContentCarouselModel->checkContentCarouselExist($contentCarouselID);
+            $checkContentCarouselExist = $this->contentCarouselModel->checkContentCarouselExist($contentCarouselID);
             $total = $checkContentCarouselExist['total'] ?? 0;
 
             if($total === 0){
@@ -1034,14 +1034,14 @@ class ContentCarouselController {
                 exit;
             }
     
-            $carouselDetails = $this->contentContentCarouselModel->getContentCarousel($contentCarouselID);
+            $contentCarouselDetails = $this->contentCarouselModel->getContentCarousel($contentCarouselID);
 
             $response = [
                 'success' => true,
-                'contentCarouselName' => $carouselDetails['content_carousel_name'] ?? null,
-                'description' => $carouselDetails['description'] ?? null,
-                'blockStyleID' => $carouselDetails['block_style_id'] ?? '',
-                'blockStyleName' => $carouselDetails['block_style_name'] ?? ''
+                'contentCarouselName' => $contentCarouselDetails['content_carousel_name'] ?? null,
+                'description' => $contentCarouselDetails['description'] ?? null,
+                'blockStyleID' => $contentCarouselDetails['block_style_id'] ?? '',
+                'blockStyleName' => $contentCarouselDetails['block_style_name'] ?? ''
             ];
 
             echo json_encode($response);
@@ -1081,7 +1081,7 @@ class ContentCarouselController {
             $userID = $_SESSION['user_account_id'];
             $contentCarouselItemID = htmlspecialchars($_POST['content_carousel_item_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkContentCarouselItemExist = $this->contentContentCarouselModel->checkContentCarouselItemExist($contentCarouselItemID);
+            $checkContentCarouselItemExist = $this->contentCarouselModel->checkContentCarouselItemExist($contentCarouselItemID);
             $total = $checkContentCarouselItemExist['total'] ?? 0;
 
             if($total === 0){
@@ -1096,7 +1096,7 @@ class ContentCarouselController {
                 exit;
             }
     
-            $contentCarouselItemDetails = $this->contentContentCarouselModel->getContentCarouselItem($contentCarouselItemID);
+            $contentCarouselItemDetails = $this->contentCarouselModel->getContentCarouselItem($contentCarouselItemID);
 
             $response = [
                 'success' => true,

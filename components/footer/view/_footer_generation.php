@@ -50,7 +50,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $footerIDEncrypted = $securityModel->encryptData($footerID);
 
                 $deleteButton = '';
-                if($footerDeleteAccess['total'] > 0){
+                if($footerDeleteAccess['total'] > 0 && $publishStatus == 'No'){
                     $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-footer" data-footer-id="' . $footerID . '" title="Delete Footer">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';

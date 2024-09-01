@@ -50,7 +50,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $contactFormIDEncrypted = $securityModel->encryptData($contactFormID);
 
                 $deleteButton = '';
-                if($contactFormDeleteAccess['total'] > 0){
+                if($contactFormDeleteAccess['total'] > 0 && $publishStatus == 'No'){
                     $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-contact-form" data-contact-form-id="' . $contactFormID . '" title="Delete Contact Form">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';

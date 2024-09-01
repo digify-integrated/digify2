@@ -305,7 +305,7 @@
 function carouselForm(){
     $('#carousel-form').validate({
         rules: {
-            carousel_name: {
+            content_carousel_name: {
                 required: true
             },
             block_style_id: {
@@ -316,7 +316,7 @@ function carouselForm(){
             }
         },
         messages: {
-            carousel_name: {
+            content_carousel_name: {
                 required: 'Enter the display name'
             },
             block_style_id: {
@@ -585,12 +585,12 @@ function displayDetails(transaction){
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#carousel_name').val(response.carouselName);
+                        $('#content_carousel_name').val(response.carouselName);
                         $('#description').val(response.description);
                         
                         $('#block_style_id').val(response.blockStyleID).trigger('change');
                         
-                        $('#carousel_name_summary').text(response.carouselName);
+                        $('#content_carousel_name_summary').text(response.carouselName);
                         $('#block_style_name_summary').text(response.blockStyleName);
                         $('#description_summary').text(response.description);
                     } 

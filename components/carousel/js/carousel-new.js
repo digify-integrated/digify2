@@ -13,7 +13,7 @@
 function carouselForm(){
     $('#carousel-form').validate({
         rules: {
-            carousel_name: {
+            content_carousel_name: {
                 required: true
             },
             block_style_id: {
@@ -24,7 +24,7 @@ function carouselForm(){
             }
         },
         messages: {
-            carousel_name: {
+            content_carousel_name: {
                 required: 'Enter the display name'
             },
             block_style_id: {

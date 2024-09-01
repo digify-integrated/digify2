@@ -50,7 +50,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 $accordionIDEncrypted = $securityModel->encryptData($accordionID);
 
                 $deleteButton = '';
-                if($accordionDeleteAccess['total'] > 0){
+                if($accordionDeleteAccess['total'] > 0 && $publishStatus == 'No'){
                     $deleteButton = '<a href="javascript:void(0);" class="text-danger ms-3 delete-accordion" data-accordion-id="' . $accordionID . '" title="Delete Accordion">
                                         <i class="ti ti-trash fs-5"></i>
                                     </a>';

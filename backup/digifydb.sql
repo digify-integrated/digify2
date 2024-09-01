@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 30, 2024 at 05:02 PM
+-- Generation Time: Sep 01, 2024 at 02:16 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -459,6 +459,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkIDTypeExist` (IN `p_id_type_id
     WHERE id_type_id = p_id_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkImageGalleryExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkImageGalleryExist` (IN `p_image_gallery_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM image_gallery
+    WHERE image_gallery_id = p_image_gallery_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkImageGalleryItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkImageGalleryItemExist` (IN `p_image_gallery_item_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM image_gallery_item
+    WHERE image_gallery_item_id = p_image_gallery_item_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkJobPositionExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkJobPositionExist` (IN `p_job_position_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -506,6 +520,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkNotificationSettingExist` (IN 
 	SELECT COUNT(*) AS total
     FROM notification_setting
     WHERE notification_setting_id = p_notification_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkPageTitleExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkPageTitleExist` (IN `p_page_title_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM page_title
+    WHERE page_title_id = p_page_title_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkProcesStepExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkProcesStepExist` (IN `p_process_step_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM process_step
+    WHERE process_step_id = p_process_step_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkProcesStepItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkProcesStepItemExist` (IN `p_process_step_item_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM process_step_item
+    WHERE process_step_item_id = p_process_step_item_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkRelationExist`$$
@@ -557,6 +592,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkScheduleTypeExist` (IN `p_sche
     WHERE schedule_type_id = p_schedule_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `checkServicesBoxExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkServicesBoxExist` (IN `p_services_box_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM services_box
+    WHERE services_box_id = p_services_box_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkServicesBoxItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkServicesBoxItemExist` (IN `p_services_box_item_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM services_box_item
+    WHERE services_box_item_id = p_services_box_item_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkSliderExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSliderExist` (IN `p_slider_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM slider
+    WHERE slider_id = p_slider_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkSliderItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSliderItemExist` (IN `p_slider_item_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM slider_item
+    WHERE slider_item_id = p_slider_item_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `checkSMSNotificationTemplateExist`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSMSNotificationTemplateExist` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT COUNT(*) AS total
@@ -590,6 +653,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSystemNotificationTemplateExis
 	SELECT COUNT(*) AS total
     FROM notification_setting_system_template
     WHERE notification_setting_id = p_notification_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkTestimonialExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkTestimonialExist` (IN `p_testimonial_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM testimonial
+    WHERE testimonial_id = p_testimonial_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkTestimonialItemExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkTestimonialItemExist` (IN `p_testimonial_item_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM testimonial_item
+    WHERE testimonial_item_id = p_testimonial_item_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkUICustomizationSettingExist`$$
@@ -1093,6 +1170,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteIDType` (IN `p_id_type_id` IN
     DELETE FROM id_type WHERE id_type_id = p_id_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteImageGallery`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteImageGallery` (IN `p_image_gallery_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM image_gallery_item WHERE image_gallery_id = p_image_gallery_id;
+    DELETE FROM image_gallery WHERE image_gallery_id = p_image_gallery_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteImageGalleryItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteImageGalleryItem` (IN `p_image_gallery_item_id` INT)   BEGIN
+   DELETE FROM image_gallery_item WHERE image_gallery_item_id = p_image_gallery_item_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteJobPosition`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteJobPosition` (IN `p_job_position_id` INT)   BEGIN
     DELETE FROM job_position WHERE job_position_id = p_job_position_id;
@@ -1154,6 +1251,31 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteNotificationSetting` (IN `p_n
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `deletePageTitle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePageTitle` (IN `p_page_title_id` INT)   BEGIN
+    DELETE FROM page_title WHERE page_title_id = p_page_title_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteProcesStep`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteProcesStep` (IN `p_process_step_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM process_step_item WHERE process_step_id = p_process_step_id;
+    DELETE FROM process_step WHERE process_step_id = p_process_step_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteProcesStepItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteProcesStepItem` (IN `p_process_step_item_id` INT)   BEGIN
+   DELETE FROM process_step_item WHERE process_step_item_id = p_process_step_item_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteRelation`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteRelation` (IN `p_relation_id` INT)   BEGIN
     DELETE FROM relation WHERE relation_id = p_relation_id;
@@ -1201,6 +1323,46 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteScheduleType` (IN `p_schedule
     DELETE FROM schedule_type WHERE schedule_type_id = p_schedule_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteServicesBox`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteServicesBox` (IN `p_services_box_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM services_box_item WHERE services_box_id = p_services_box_id;
+    DELETE FROM services_box WHERE services_box_id = p_services_box_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteServicesBoxItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteServicesBoxItem` (IN `p_services_box_item_id` INT)   BEGIN
+   DELETE FROM services_box_item WHERE services_box_item_id = p_services_box_item_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSlider` (IN `p_slider_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM slider_item WHERE slider_id = p_slider_id;
+    DELETE FROM slider WHERE slider_id = p_slider_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteSliderItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSliderItem` (IN `p_slider_item_id` INT)   BEGIN
+   DELETE FROM slider_item WHERE slider_item_id = p_slider_item_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `deleteState`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteState` (IN `p_state_id` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1229,6 +1391,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSystemAction` (IN `p_system_a
     DELETE FROM system_action WHERE system_action_id = p_system_action_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteTestimonial`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteTestimonial` (IN `p_testimonial_id` INT)   BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM testimonial_item WHERE testimonial_id = p_testimonial_id;
+    DELETE FROM testimonial WHERE testimonial_id = p_testimonial_id;
+
+    COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteTestimonialItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteTestimonialItem` (IN `p_testimonial_item_id` INT)   BEGIN
+   DELETE FROM testimonial_item WHERE testimonial_item_id = p_testimonial_item_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteUploadSetting`$$
@@ -2000,6 +2182,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateIDTypeTable` ()   BEGIN
     ORDER BY id_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateImageGalleryItemTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateImageGalleryItemTable` (IN `p_image_gallery_id` INT)   BEGIN
+    SELECT image_gallery_item_id, image_gallery_title, image_gallery_image, order_sequence 
+    FROM image_gallery_item
+    WHERE image_gallery_id = p_image_gallery_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateImageGalleryTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateImageGalleryTable` ()   BEGIN
+    SELECT image_gallery_id, image_gallery_name, description, publish_status
+    FROM image_gallery;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateIncomingSalesProposalTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateIncomingSalesProposalTable` ()   BEGIN
    SELECT * FROM sales_proposal WHERE sales_proposal_status IN ('Draft', 'For Review', 'For Initial Approval', 'For Final Approval') AND product_type NOT IN ('Refinancing', 'Fuel', 'Parts', 'Brand New');
@@ -2151,6 +2346,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateNotificationSettingTable` (
     ORDER BY notification_setting_name;
 END$$
 
+DROP PROCEDURE IF EXISTS `generatePageTitleTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generatePageTitleTable` ()   BEGIN
+    SELECT page_title_id, page_title_name, description, page_title, page_heading, page_title_image, publish_status
+    FROM page_title;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateProcesStepItemTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateProcesStepItemTable` (IN `p_process_step_id` INT)   BEGIN
+    SELECT process_step_item_id, process_step_title, process_step_heading, process_step_link, process_step_image, order_sequence 
+    FROM process_step_item
+    WHERE process_step_id = p_process_step_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateProcesStepTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateProcesStepTable` ()   BEGIN
+    SELECT process_step_id, process_step_name, description, publish_status
+    FROM process_step;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateRelationOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateRelationOptions` ()   BEGIN
 	SELECT relation_id, relation_name 
@@ -2248,6 +2462,32 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateScheduleTypeTable` ()   BEG
     ORDER BY schedule_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateServicesBoxItemTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateServicesBoxItemTable` (IN `p_services_box_id` INT)   BEGIN
+    SELECT services_box_item_id, services_box_title, services_box_heading, services_box_paragraph, call_to_action_button_text, call_to_action_button_link, services_box_image, order_sequence 
+    FROM services_box_item
+    WHERE services_box_id = p_services_box_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateServicesBoxTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateServicesBoxTable` ()   BEGIN
+    SELECT services_box_id, services_box_name, description, publish_status
+    FROM services_box;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateSliderItemTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSliderItemTable` (IN `p_slider_id` INT)   BEGIN
+    SELECT slider_item_id, slider_title, slider_heading, slider_paragraph, call_to_action_button_1_text, call_to_action_button_1_link, call_to_action_button_2_text, call_to_action_button_2_link, slider_image, order_sequence 
+    FROM slider_item
+    WHERE slider_id = p_slider_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateSliderTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSliderTable` ()   BEGIN
+    SELECT slider_id, slider_name, description, publish_status
+    FROM slider;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateStateOptions`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateStateOptions` ()   BEGIN
 	SELECT state_id, state_name, country_name
@@ -2302,6 +2542,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSystemActionTable` ()   BEG
 	SELECT system_action_id, system_action_name, system_action_description
     FROM system_action 
     ORDER BY system_action_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateTestimonialItemTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateTestimonialItemTable` (IN `p_testimonial_id` INT)   BEGIN
+    SELECT testimonial_item_id, testimonial_client, testimonial_title, testimonial_paragraph, rating, testimonial_image, order_sequence 
+    FROM testimonial_item
+    WHERE testimonial_id = p_testimonial_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateTestimonialTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateTestimonialTable` ()   BEGIN
+    SELECT testimonial_id, testimonial_name, description, publish_status
+    FROM testimonial;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateUploadSettingFileExtensionTable`$$
@@ -2798,6 +3051,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getIDType` (IN `p_id_type_id` INT) 
 	WHERE id_type_id = p_id_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getImageGallery`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getImageGallery` (IN `p_image_gallery_id` INT)   BEGIN
+	SELECT * FROM image_gallery
+	WHERE image_gallery_id = p_image_gallery_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getImageGalleryItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getImageGalleryItem` (IN `p_image_gallery_item_id` INT)   BEGIN
+	SELECT * FROM image_gallery_item
+	WHERE image_gallery_item_id = p_image_gallery_item_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getImageGalleryItemByImageGalleryID`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getImageGalleryItemByImageGalleryID` (IN `p_image_gallery_id` INT)   BEGIN
+	SELECT * FROM image_gallery_item
+	WHERE image_gallery_id = p_image_gallery_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getInternalNotesAttachment`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getInternalNotesAttachment` (IN `p_internal_notes_id` INT)   BEGIN
 	SELECT * FROM internal_notes_attachment
@@ -2846,10 +3117,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getNotificationSetting` (IN `p_noti
 	WHERE notification_setting_id = p_notification_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getPageTitle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getPageTitle` (IN `p_page_title_id` INT)   BEGIN
+	SELECT * FROM page_title
+	WHERE page_title_id = p_page_title_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getPasswordHistory`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getPasswordHistory` (IN `p_user_account_id` INT)   BEGIN
 	SELECT * FROM password_history
 	WHERE user_account_id = p_user_account_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getProcesStep`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getProcesStep` (IN `p_process_step_id` INT)   BEGIN
+	SELECT * FROM process_step
+	WHERE process_step_id = p_process_step_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getProcesStepItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getProcesStepItem` (IN `p_process_step_item_id` INT)   BEGIN
+	SELECT * FROM process_step_item
+	WHERE process_step_item_id = p_process_step_item_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getProcesStepItemByProcesStepID`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getProcesStepItemByProcesStepID` (IN `p_process_step_id` INT)   BEGIN
+	SELECT * FROM process_step_item
+	WHERE process_step_id = p_process_step_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getRelation`$$
@@ -2882,6 +3177,42 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getSecuritySetting` (IN `p_security
 	WHERE security_setting_id = p_security_setting_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getServicesBox`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getServicesBox` (IN `p_services_box_id` INT)   BEGIN
+	SELECT * FROM services_box
+	WHERE services_box_id = p_services_box_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getServicesBoxItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getServicesBoxItem` (IN `p_services_box_item_id` INT)   BEGIN
+	SELECT * FROM services_box_item
+	WHERE services_box_item_id = p_services_box_item_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getServicesBoxItemByServicesBoxID`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getServicesBoxItemByServicesBoxID` (IN `p_services_box_id` INT)   BEGIN
+	SELECT * FROM services_box_item
+	WHERE services_box_id = p_services_box_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getSlider` (IN `p_slider_id` INT)   BEGIN
+	SELECT * FROM slider
+	WHERE slider_id = p_slider_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getSliderItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getSliderItem` (IN `p_slider_item_id` INT)   BEGIN
+	SELECT * FROM slider_item
+	WHERE slider_item_id = p_slider_item_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getSliderItemBySliderID`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getSliderItemBySliderID` (IN `p_slider_id` INT)   BEGIN
+	SELECT * FROM slider_item
+	WHERE slider_id = p_slider_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getSMSNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getSMSNotificationTemplate` (IN `p_notification_setting_id` INT)   BEGIN
 	SELECT * FROM notification_setting_sms_template
@@ -2910,6 +3241,24 @@ DROP PROCEDURE IF EXISTS `getSystemSetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getSystemSetting` (IN `p_system_setting_id` INT)   BEGIN
 	SELECT * FROM system_setting
 	WHERE system_setting_id = p_system_setting_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getTestimonial`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTestimonial` (IN `p_testimonial_id` INT)   BEGIN
+	SELECT * FROM testimonial
+	WHERE testimonial_id = p_testimonial_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getTestimonialItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTestimonialItem` (IN `p_testimonial_item_id` INT)   BEGIN
+	SELECT * FROM testimonial_item
+	WHERE testimonial_item_id = p_testimonial_item_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getTestimonialItemByTestimonialID`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getTestimonialItemByTestimonialID` (IN `p_testimonial_id` INT)   BEGIN
+	SELECT * FROM testimonial_item
+	WHERE testimonial_id = p_testimonial_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getUICustomizationSetting`$$
@@ -3385,6 +3734,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertIDType` (IN `p_id_type_name` 
     SET p_id_type_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertImageGallery`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertImageGallery` (IN `p_image_gallery_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_image_gallery_id` INT)   BEGIN
+    INSERT INTO image_gallery (image_gallery_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_image_gallery_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_image_gallery_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertImageGalleryItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertImageGalleryItem` (IN `p_image_gallery_id` INT, IN `p_image_gallery_title` VARCHAR(500), IN `p_image_gallery_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO image_gallery_item (image_gallery_id, image_gallery_title, image_gallery_image, order_sequence, last_log_by) 
+	VALUES(p_image_gallery_id, p_image_gallery_title, p_image_gallery_image, p_order_sequence, p_last_log_by);
+END$$
+
 DROP PROCEDURE IF EXISTS `insertInternalNotes`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertInternalNotes` (IN `p_table_name` VARCHAR(255), IN `p_reference_id` INT, IN `p_internal_note` VARCHAR(5000), IN `p_internal_note_by` INT, OUT `p_internal_notes_id` INT)   BEGIN
     INSERT INTO internal_notes (table_name, reference_id, internal_note, internal_note_by) 
@@ -3447,10 +3810,32 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertNotificationSetting` (IN `p_n
     SET p_notification_setting_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertPageTitle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertPageTitle` (IN `p_page_title_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_page_title` VARCHAR(500), IN `p_page_heading` VARCHAR(500), IN `p_last_log_by` INT, OUT `p_page_title_id` INT)   BEGIN
+    INSERT INTO page_title (page_title_name, description, block_style_id, block_style_name, page_title, page_heading, last_log_by) 
+	VALUES(p_page_title_name, p_description, p_block_style_id, p_block_style_name, p_page_title, p_page_heading, p_last_log_by);
+	
+    SET p_page_title_id = LAST_INSERT_ID();
+END$$
+
 DROP PROCEDURE IF EXISTS `insertPasswordHistory`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertPasswordHistory` (IN `p_user_account_id` INT, IN `p_password` VARCHAR(255))   BEGIN
     INSERT INTO password_history (user_account_id, password, password_change_date) 
     VALUES (p_user_account_id, p_password, NOW());
+END$$
+
+DROP PROCEDURE IF EXISTS `insertProcesStep`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertProcesStep` (IN `p_process_step_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_process_step_id` INT)   BEGIN
+    INSERT INTO process_step (process_step_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_process_step_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_process_step_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertProcesStepItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertProcesStepItem` (IN `p_process_step_id` INT, IN `p_process_step_title` VARCHAR(500), IN `p_process_step_heading` VARCHAR(500), IN `p_process_step_link` VARCHAR(500), IN `p_process_step_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO process_step_item (process_step_id, process_step_title, process_step_heading, process_step_link, process_step_image, order_sequence, last_log_by) 
+	VALUES(p_process_step_id, p_process_step_title, p_process_step_heading, p_process_step_link, p_process_step_image, p_order_sequence, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertRelation`$$
@@ -3503,6 +3888,34 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertScheduleType` (IN `p_schedule
     SET p_schedule_type_id = LAST_INSERT_ID();
 END$$
 
+DROP PROCEDURE IF EXISTS `insertServicesBox`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertServicesBox` (IN `p_services_box_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_services_box_id` INT)   BEGIN
+    INSERT INTO services_box (services_box_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_services_box_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_services_box_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertServicesBoxItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertServicesBoxItem` (IN `p_services_box_id` INT, IN `p_services_box_title` VARCHAR(500), IN `p_services_box_heading` VARCHAR(500), IN `p_services_box_paragraph` LONGTEXT, IN `p_call_to_action_button_text` VARCHAR(100), IN `p_call_to_action_button_link` VARCHAR(500), IN `p_services_box_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO services_box_item (services_box_id, services_box_title, services_box_heading, services_box_paragraph, call_to_action_button_text, call_to_action_button_link, services_box_image, order_sequence, last_log_by) 
+	VALUES(p_services_box_id, p_services_box_title, p_services_box_heading, p_services_box_paragraph, p_call_to_action_button_text, p_call_to_action_button_link, p_services_box_image, p_order_sequence, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSlider` (IN `p_slider_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_slider_id` INT)   BEGIN
+    INSERT INTO slider (slider_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_slider_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_slider_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertSliderItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSliderItem` (IN `p_slider_id` INT, IN `p_slider_title` VARCHAR(500), IN `p_slider_heading` VARCHAR(500), IN `p_slider_paragraph` LONGTEXT, IN `p_call_to_action_button_1_text` VARCHAR(100), IN `p_call_to_action_button_1_link` VARCHAR(500), IN `p_call_to_action_button_2_text` VARCHAR(100), IN `p_call_to_action_button_2_link` VARCHAR(500), IN `p_slider_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO slider_item (slider_id, slider_title, slider_heading, slider_paragraph, call_to_action_button_1_text, call_to_action_button_1_link, call_to_action_button_2_text, call_to_action_button_2_link, slider_image, order_sequence, last_log_by) 
+	VALUES(p_slider_id, p_slider_title, p_slider_heading, p_slider_paragraph, p_call_to_action_button_1_text, p_call_to_action_button_1_link, p_call_to_action_button_2_text, p_call_to_action_button_2_link, p_slider_image, p_order_sequence, p_last_log_by);
+END$$
+
 DROP PROCEDURE IF EXISTS `insertSMSNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSMSNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_sms_notification_message` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO notification_setting_sms_template (notification_setting_id, sms_notification_message, last_log_by) 
@@ -3529,6 +3942,20 @@ DROP PROCEDURE IF EXISTS `insertSystemNotificationTemplate`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSystemNotificationTemplate` (IN `p_notification_setting_id` INT, IN `p_system_notification_title` VARCHAR(200), IN `p_system_notification_message` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
     INSERT INTO notification_setting_system_template (notification_setting_id, system_notification_title, system_notification_message, last_log_by) 
 	VALUES(p_notification_setting_id, p_system_notification_title, p_system_notification_message, p_last_log_by);
+END$$
+
+DROP PROCEDURE IF EXISTS `insertTestimonial`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTestimonial` (IN `p_testimonial_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_testimonial_id` INT)   BEGIN
+    INSERT INTO testimonial (testimonial_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_testimonial_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_testimonial_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertTestimonialItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertTestimonialItem` (IN `p_testimonial_id` INT, IN `p_testimonial_client` VARCHAR(500), IN `p_testimonial_title` VARCHAR(500), IN `p_testimonial_paragraph` LONGTEXT, IN `p_rating` INT, IN `p_testimonial_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    INSERT INTO testimonial_item (testimonial_id, testimonial_client, testimonial_title, testimonial_paragraph, rating, testimonial_image, order_sequence, last_log_by) 
+	VALUES(p_testimonial_id, p_testimonial_client, p_testimonial_title, p_testimonial_paragraph, p_rating, p_testimonial_image, p_order_sequence, p_last_log_by);
 END$$
 
 DROP PROCEDURE IF EXISTS `insertUICustomizationSetting`$$
@@ -4906,6 +5333,45 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateIDType` (IN `p_id_type_id` IN
     WHERE id_type_id = p_id_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateImageGallery`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateImageGallery` (IN `p_image_gallery_id` INT, IN `p_image_gallery_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE image_gallery
+    SET image_gallery_name = p_image_gallery_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE image_gallery_id = p_image_gallery_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateImageGalleryItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateImageGalleryItem` (IN `p_image_gallery_item_id` INT, IN `p_image_gallery_id` INT, IN `p_image_gallery_title` VARCHAR(500), IN `p_image_gallery_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    IF p_image_gallery_image IS NOT NULL AND p_image_gallery_image != '' THEN
+        UPDATE image_gallery_item
+        SET image_gallery_id = p_image_gallery_id,
+            image_gallery_title = p_image_gallery_title,
+            image_gallery_image = p_image_gallery_image,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE image_gallery_item_id = p_image_gallery_item_id;
+    ELSE
+        UPDATE image_gallery_item
+        SET image_gallery_id = p_image_gallery_id,
+            image_gallery_title = p_image_gallery_title,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE image_gallery_item_id = p_image_gallery_item_id;
+    END IF;   
+END$$
+
+DROP PROCEDURE IF EXISTS `updateImageGalleryPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateImageGalleryPublishStatus` (IN `p_image_gallery_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE image_gallery
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE image_gallery_id = p_image_gallery_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateJobPosition`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateJobPosition` (IN `p_job_position_id` INT, IN `p_job_position_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -5074,6 +5540,91 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOTPAsExpired` (IN `p_user_acc
 	UPDATE user_account 
     SET otp_expiry_date = p_otp_expiry_date
     WHERE user_account_id = p_user_account_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updatePageTitle`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePageTitle` (IN `p_page_title_id` INT, IN `p_page_title_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_page_title` VARCHAR(500), IN `p_page_heading` VARCHAR(500), IN `p_page_title_image` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    IF p_page_title_image IS NOT NULL AND p_page_title_image != '' THEN
+        UPDATE page_title
+        SET page_title_name = p_page_title_name,
+            description = p_description,
+            block_style_id = p_block_style_id,
+            block_style_name = p_block_style_name,
+            page_title = p_page_title,
+            page_heading = p_page_heading,
+            page_title_image = p_page_title_image,
+            last_log_by = p_last_log_by
+        WHERE page_title_id = p_page_title_id;
+    ELSE
+        UPDATE page_title
+        SET page_title_name = p_page_title_name,
+            description = p_description,
+            block_style_id = p_block_style_id,
+            block_style_name = p_block_style_name,
+            page_title = p_page_title,
+            page_heading = p_page_heading,
+            last_log_by = p_last_log_by
+        WHERE page_title_id = p_page_title_id;
+    END IF;  
+END$$
+
+DROP PROCEDURE IF EXISTS `updatePageTitleImage`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePageTitleImage` (IN `p_page_title_id` INT, IN `p_page_title_image` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN
+    UPDATE page_title
+    SET page_title_image = p_page_title_image,
+        last_log_by = p_last_log_by
+    WHERE page_title_id = p_page_title_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updatePageTitlePublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePageTitlePublishStatus` (IN `p_page_title_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE page_title
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE page_title_id = p_page_title_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateProcesStep`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProcesStep` (IN `p_process_step_id` INT, IN `p_process_step_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE process_step
+    SET process_step_name = p_process_step_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE process_step_id = p_process_step_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateProcesStepItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProcesStepItem` (IN `p_process_step_item_id` INT, IN `p_process_step_id` INT, IN `p_process_step_title` VARCHAR(500), IN `p_process_step_heading` VARCHAR(500), IN `p_process_step_link` VARCHAR(500), IN `p_process_step_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    IF p_process_step_image IS NOT NULL AND p_process_step_image != '' THEN
+        UPDATE process_step_item
+        SET process_step_id = p_process_step_id,
+            process_step_title = p_process_step_title,
+            process_step_heading = p_process_step_heading,
+            process_step_link = p_process_step_link,
+            process_step_image = p_process_step_image,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE process_step_item_id = p_process_step_item_id;
+    ELSE
+        UPDATE process_step_item
+        SET process_step_id = p_process_step_id,
+            process_step_title = p_process_step_title,
+            process_step_heading = p_process_step_heading,
+            process_step_link = p_process_step_link,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE process_step_item_id = p_process_step_item_id;
+    END IF;   
+END$$
+
+DROP PROCEDURE IF EXISTS `updateProcesStepPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProcesStepPublishStatus` (IN `p_process_step_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE process_step
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE process_step_id = p_process_step_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateRegistrationVerification`$$
@@ -5270,6 +5821,104 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSecuritySetting` (IN `p_max_f
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateServicesBox`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateServicesBox` (IN `p_services_box_id` INT, IN `p_services_box_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE services_box
+    SET services_box_name = p_services_box_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE services_box_id = p_services_box_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateServicesBoxItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateServicesBoxItem` (IN `p_services_box_item_id` INT, IN `p_services_box_id` INT, IN `p_services_box_title` VARCHAR(500), IN `p_services_box_heading` VARCHAR(500), IN `p_services_box_paragraph` LONGTEXT, IN `p_call_to_action_button_text` VARCHAR(100), IN `p_call_to_action_button_link` VARCHAR(500), IN `p_services_box_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    IF p_services_box_image IS NOT NULL AND p_services_box_image != '' THEN
+        UPDATE services_box_item
+        SET services_box_id = p_services_box_id,
+            services_box_title = p_services_box_title,
+            services_box_heading = p_services_box_heading,
+            services_box_paragraph = p_services_box_paragraph,
+            call_to_action_button_text = p_call_to_action_button_text,
+            call_to_action_button_link = p_call_to_action_button_link,
+            services_box_image = p_services_box_image,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE services_box_item_id = p_services_box_item_id;
+    ELSE
+        UPDATE services_box_item
+        SET services_box_id = p_services_box_id,
+            services_box_title = p_services_box_title,
+            services_box_heading = p_services_box_heading,
+            services_box_paragraph = p_services_box_paragraph,
+            call_to_action_button_text = p_call_to_action_button_text,
+            call_to_action_button_link = p_call_to_action_button_link,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE services_box_item_id = p_services_box_item_id;
+    END IF;   
+END$$
+
+DROP PROCEDURE IF EXISTS `updateServicesBoxPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateServicesBoxPublishStatus` (IN `p_services_box_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE services_box
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE services_box_id = p_services_box_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateSlider`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSlider` (IN `p_slider_id` INT, IN `p_slider_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE slider
+    SET slider_name = p_slider_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE slider_id = p_slider_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateSliderItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSliderItem` (IN `p_slider_item_id` INT, IN `p_slider_id` INT, IN `p_slider_title` VARCHAR(500), IN `p_slider_heading` VARCHAR(500), IN `p_slider_paragraph` LONGTEXT, IN `p_call_to_action_button_1_text` VARCHAR(100), IN `p_call_to_action_button_1_link` VARCHAR(500), IN `p_call_to_action_button_2_text` VARCHAR(100), IN `p_call_to_action_button_2_link` VARCHAR(500), IN `p_slider_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    IF p_slider_image IS NOT NULL AND p_slider_image != '' THEN
+        UPDATE slider_item
+        SET slider_id = p_slider_id,
+            slider_title = p_slider_title,
+            slider_heading = p_slider_heading,
+            slider_paragraph = p_slider_paragraph,
+            call_to_action_button_1_text = p_call_to_action_button_1_text,
+            call_to_action_button_1_link = p_call_to_action_button_1_link,
+            call_to_action_button_2_text = p_call_to_action_button_2_text,
+            call_to_action_button_2_link = p_call_to_action_button_2_link,
+            slider_image = p_slider_image,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE slider_item_id = p_slider_item_id;
+    ELSE
+        UPDATE slider_item
+        SET slider_id = p_slider_id,
+            slider_title = p_slider_title,
+            slider_heading = p_slider_heading,
+            slider_paragraph = p_slider_paragraph,
+            call_to_action_button_1_text = p_call_to_action_button_1_text,
+            call_to_action_button_1_link = p_call_to_action_button_1_link,
+            call_to_action_button_2_text = p_call_to_action_button_2_text,
+            call_to_action_button_2_link = p_call_to_action_button_2_link,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE slider_item_id = p_slider_item_id;
+    END IF;   
+END$$
+
+DROP PROCEDURE IF EXISTS `updateSliderPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSliderPublishStatus` (IN `p_slider_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE slider
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE slider_id = p_slider_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateSMSNotificationChannelStatus`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSMSNotificationChannelStatus` (IN `p_notification_setting_id` INT, IN `p_sms_notification` INT(1), IN `p_last_log_by` INT)   BEGIN
     UPDATE notification_setting
@@ -5388,6 +6037,51 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSystemSetting` (IN `p_allow_r
     WHERE system_setting_id = 1;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateTestimonial`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTestimonial` (IN `p_testimonial_id` INT, IN `p_testimonial_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE testimonial
+    SET testimonial_name = p_testimonial_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE testimonial_id = p_testimonial_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateTestimonialItem`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTestimonialItem` (IN `p_testimonial_item_id` INT, IN `p_testimonial_id` INT, IN `p_testimonial_client` VARCHAR(500), IN `p_testimonial_title` VARCHAR(500), IN `p_testimonial_paragraph` LONGTEXT, IN `p_rating` INT, IN `p_testimonial_image` VARCHAR(500), IN `p_order_sequence` INT, IN `p_last_log_by` INT)   BEGIN
+    IF p_testimonial_image IS NOT NULL AND p_testimonial_image != '' THEN
+        UPDATE testimonial_item
+        SET testimonial_id = p_testimonial_id,
+            testimonial_client = p_testimonial_client,
+            testimonial_title = p_testimonial_title,
+            testimonial_paragraph = p_testimonial_paragraph,
+            rating = p_rating,
+            testimonial_image = p_testimonial_image,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE testimonial_item_id = p_testimonial_item_id;
+    ELSE
+        UPDATE testimonial_item
+        SET testimonial_id = p_testimonial_id,
+            testimonial_client = p_testimonial_client,
+            testimonial_title = p_testimonial_title,
+            testimonial_paragraph = p_testimonial_paragraph,
+            rating = p_rating,
+            order_sequence = p_order_sequence,
+            last_log_by = p_last_log_by
+        WHERE testimonial_item_id = p_testimonial_item_id;
+    END IF;   
+END$$
+
+DROP PROCEDURE IF EXISTS `updateTestimonialPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateTestimonialPublishStatus` (IN `p_testimonial_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE testimonial
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE testimonial_id = p_testimonial_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateTwoFactorAuthenticationStatus`$$
@@ -9858,7 +10552,64 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3882, 'header', 1, 'Header Name: 1 -> 122<br/>Description: 1 -> 1231asd<br/>', 2, '2024-08-30 23:00:37', '2024-08-30 23:00:37'),
 (3883, 'header', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-08-30 23:00:44', '2024-08-30 23:00:44'),
 (3884, 'header', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-08-30 23:00:48', '2024-08-30 23:00:48'),
-(3885, 'header', 2, 'Header created. <br/><br/>Header Name: testt<br/>Description: test<br/>Block Style Name: Header Style<br/>Publish Status: No', 2, '2024-08-30 23:01:01', '2024-08-30 23:01:01');
+(3885, 'header', 2, 'Header created. <br/><br/>Header Name: testt<br/>Description: test<br/>Block Style Name: Header Style<br/>Publish Status: No', 2, '2024-08-30 23:01:01', '2024-08-30 23:01:01'),
+(3886, 'user_account', 2, 'Last Connection Date: 2024-08-30 20:33:00 -> 2024-08-31 10:23:57<br/>', 2, '2024-08-31 10:23:57', '2024-08-31 10:23:57'),
+(3887, 'block_style', 10, 'Block style created. <br/><br/>Block Style Name: Image Gallery<br/>Description: Image Gallery<br/>Block Type Name: Image Gallery', 2, '2024-08-31 11:04:51', '2024-08-31 11:04:51'),
+(3888, 'image_gallery', 1, 'Image gallery created. <br/><br/>Image Gallery Name: asd<br/>Description: asd<br/>Block Style Name: Image Gallery<br/>Publish Status: No', 2, '2024-08-31 11:04:56', '2024-08-31 11:04:56'),
+(3889, 'image_gallery_item', 1, 'Image gallery item created. <br/><br/>Image Gallery Title: asdasd<br/>Order Sequence: 12', 2, '2024-08-31 11:05:55', '2024-08-31 11:05:55'),
+(3890, 'image_gallery_item', 2, 'Image gallery item created. <br/><br/>Image Gallery Title: asdasd<br/>Order Sequence: 12', 2, '2024-08-31 11:07:28', '2024-08-31 11:07:28'),
+(3891, 'image_gallery_item', 3, 'Image gallery item created. <br/><br/>Image Gallery Title: asda<br/>Order Sequence: 12', 2, '2024-08-31 11:07:45', '2024-08-31 11:07:45'),
+(3892, 'image_gallery_item', 4, 'Image gallery item created. <br/><br/>Image Gallery Title: asd<br/>Order Sequence: 12', 2, '2024-08-31 11:08:04', '2024-08-31 11:08:04'),
+(3893, 'image_gallery', 1, 'Image Gallery Name: asd -> asdasd<br/>Description: asd -> asdasd<br/>', 2, '2024-08-31 11:08:09', '2024-08-31 11:08:09'),
+(3894, 'image_gallery', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-08-31 11:08:14', '2024-08-31 11:08:14'),
+(3895, 'image_gallery', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-08-31 11:08:17', '2024-08-31 11:08:17'),
+(3896, 'image_gallery_item', 4, 'Image Gallery Title: asd -> asd123123<br/>Order Sequence: 12 -> 12123123<br/>', 2, '2024-08-31 11:08:24', '2024-08-31 11:08:24'),
+(3897, 'user_account', 2, 'Last Connection Date: 2024-08-31 10:23:57 -> 2024-09-01 08:22:17<br/>', 2, '2024-09-01 08:22:17', '2024-09-01 08:22:17'),
+(3898, 'block_style', 11, 'Block style created. <br/><br/>Block Style Name: Page Title Style<br/>Description: Page Title Style<br/>Block Type Name: Page Title', 2, '2024-09-01 13:11:35', '2024-09-01 13:11:35'),
+(3899, 'page_title', 1, 'Page title created. <br/><br/>Page Title Name: asd<br/>Description: asdasd<br/>Block Style Name: Page Title Style<br/>Page Title: asd<br/>Page Heading: asd<br/>Publish Status: No', 2, '2024-09-01 13:19:02', '2024-09-01 13:19:02'),
+(3900, 'page_title', 1, 'Page Title Name: asd -> asd5678<br/>Description: asdasd -> asdasdnbmmbn<br/>Page Title: asd -> asd345<br/>Page Heading: asd -> asd123<br/>', 2, '2024-09-01 13:20:19', '2024-09-01 13:20:19'),
+(3901, 'page_title', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-09-01 13:20:41', '2024-09-01 13:20:41'),
+(3902, 'page_title', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-09-01 13:20:45', '2024-09-01 13:20:45'),
+(3903, 'page_title', 2, 'Page title created. <br/><br/>Page Title Name: asd<br/>Description: asdasd<br/>Block Style Name: Page Title Style<br/>Page Title: asd<br/>Page Heading: asd<br/>Publish Status: No', 2, '2024-09-01 13:22:18', '2024-09-01 13:22:18'),
+(3904, 'page_title', 3, 'Page title created. <br/><br/>Page Title Name: asd<br/>Description: asdasd<br/>Block Style Name: Page Title Style<br/>Page Title: asd<br/>Page Heading: asd<br/>Publish Status: No', 2, '2024-09-01 13:22:43', '2024-09-01 13:22:43'),
+(3905, 'page_title', 4, 'Page title created. <br/><br/>Page Title Name: asd<br/>Description: asdasd<br/>Block Style Name: Page Title Style<br/>Page Title: ads<br/>Page Heading: asd<br/>Publish Status: No', 2, '2024-09-01 13:24:35', '2024-09-01 13:24:35'),
+(3906, 'content_carousel', 2, 'Content carousel created. <br/><br/>Content Carousel Name: sad<br/>Description: asd<br/>Block Style Name: Content Carousel<br/>Publish Status: No', 2, '2024-09-01 13:30:14', '2024-09-01 13:30:14'),
+(3907, 'user_account', 2, 'Last Connection Date: 2024-09-01 08:22:17 -> 2024-09-01 17:57:52<br/>', 2, '2024-09-01 17:57:52', '2024-09-01 17:57:52'),
+(3908, 'block_style', 12, 'Block style created. <br/><br/>Block Style Name: Process Step Style<br/>Description: Process Step Style<br/>Block Type Name: Process Step', 2, '2024-09-01 18:52:53', '2024-09-01 18:52:53'),
+(3909, 'process_step', 1, 'Process step created. <br/><br/>Process Step Name: adsa<br/>Description: asd<br/>Block Style Name: Process Step Style<br/>Publish Status: No', 2, '2024-09-01 18:53:15', '2024-09-01 18:53:15'),
+(3910, 'process_step_item', 1, 'Process step item created. <br/><br/>Process Step Title: asd<br/>Process Step Heading: asd<br/>Process Step Link: asdas<br/>Order Sequence: 12', 2, '2024-09-01 18:53:24', '2024-09-01 18:53:24'),
+(3911, 'process_step', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-09-01 18:53:56', '2024-09-01 18:53:56'),
+(3912, 'process_step', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-09-01 18:54:02', '2024-09-01 18:54:02'),
+(3913, 'process_step_item', 2, 'Process step item created. <br/><br/>Process Step Title: asd<br/>Process Step Heading: asd<br/>Process Step Link: asd<br/>Order Sequence: 12', 2, '2024-09-01 18:54:08', '2024-09-01 18:54:08'),
+(3914, 'process_step', 2, 'Process step created. <br/><br/>Process Step Name: asd<br/>Description: asd<br/>Block Style Name: Process Step Style<br/>Publish Status: No', 2, '2024-09-01 18:54:24', '2024-09-01 18:54:24'),
+(3915, 'block_style', 13, 'Block style created. <br/><br/>Block Style Name: Services Box Style<br/>Description: Services Box Style<br/>Block Type Name: Services Box', 2, '2024-09-01 19:24:37', '2024-09-01 19:24:37'),
+(3916, 'services_box', 1, 'Services box created. <br/><br/>Services Box Name: asd<br/>Description: asd<br/>Block Style Name: Services Box Style<br/>Publish Status: No', 2, '2024-09-01 19:25:24', '2024-09-01 19:25:24'),
+(3917, 'services_box', 1, 'Services Box Name: asd -> asdasd<br/>Description: asd -> asdasd<br/>', 2, '2024-09-01 19:25:29', '2024-09-01 19:25:29'),
+(3918, 'services_box_item', 1, 'Services box item created. <br/><br/>Services Box Title: asd<br/>Services Box Heading: asd<br/>Services Box Paragraph: asd<br/>Call-to-Action Button Text: asd<br/>Call-to-Action Button Link: asd<br/>Order Sequence: 12', 2, '2024-09-01 19:25:39', '2024-09-01 19:25:39'),
+(3919, 'services_box_item', 1, 'Services Box Title: asd -> asdasd<br/>Services Box Heading: asd -> asdasd<br/>Services Box Paragraph: asd -> asdasd<br/>Call-to-Action Button Text: asd -> asdasd<br/>Call-to-Action Button Link: asd -> asdasd<br/>Order Sequence: 12 -> 1212<br/>', 2, '2024-09-01 19:26:01', '2024-09-01 19:26:01'),
+(3920, 'services_box_item', 2, 'Services box item created. <br/><br/>Services Box Title: asd<br/>Services Box Heading: asd<br/>Services Box Paragraph: asd<br/>Call-to-Action Button Text: asd<br/>Call-to-Action Button Link: asd<br/>Order Sequence: 12', 2, '2024-09-01 19:26:20', '2024-09-01 19:26:20'),
+(3921, 'services_box', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-09-01 19:26:25', '2024-09-01 19:26:25'),
+(3922, 'services_box', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-09-01 19:26:28', '2024-09-01 19:26:28'),
+(3923, 'services_box', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-09-01 19:26:36', '2024-09-01 19:26:36'),
+(3924, 'services_box', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-09-01 19:26:43', '2024-09-01 19:26:43'),
+(3925, 'block_style', 14, 'Block style created. <br/><br/>Block Style Name: Slider Style<br/>Description: Slider Style<br/>Block Type Name: Slider', 2, '2024-09-01 19:30:58', '2024-09-01 19:30:58'),
+(3926, 'slider', 1, 'Slider created. <br/><br/>Slider Name: test<br/>Description: test<br/>Block Style Name: Content Carousel<br/>Publish Status: No', 2, '2024-09-01 19:43:14', '2024-09-01 19:43:14'),
+(3927, 'slider', 1, 'Slider Name: test -> testasd<br/>Description: test -> testasd<br/>', 2, '2024-09-01 19:43:18', '2024-09-01 19:43:18'),
+(3928, 'slider_item', 1, 'Slider item created. <br/><br/>Slider Title: asd<br/>Slider Heading: asd<br/>Slider Paragraph: asd<br/>Call-to-Action Button 1 Text: asd<br/>Call-to-Action Button 1 Link: asd<br/>Call-to-Action Button 2 Text: asd<br/>Call-to-Action Button 2 Link: asd<br/>Order Sequence: 12', 2, '2024-09-01 19:43:28', '2024-09-01 19:43:28'),
+(3929, 'slider_item', 1, 'Slider Title: asd -> asdasd<br/>Slider Heading: asd -> asdasd<br/>Slider Paragraph: asd -> asdasd<br/>Call-to-Action Button 1 Text: asd -> asdasd<br/>Call-to-Action Button 1 Link: asd -> asdasd<br/>Call-to-Action Button 2 Text: asd -> asdasd<br/>Call-to-Action Button 2 Link: asd -> asdasd<br/>Order Sequence: 12 -> 12123<br/>', 2, '2024-09-01 19:43:57', '2024-09-01 19:43:57'),
+(3930, 'slider_item', 2, 'Slider item created. <br/><br/>Slider Title: asd<br/>Slider Heading: asd<br/>Slider Paragraph: asd<br/>Call-to-Action Button 1 Text: asdas<br/>Call-to-Action Button 1 Link: asd<br/>Call-to-Action Button 2 Text: asd<br/>Call-to-Action Button 2 Link: asd<br/>Order Sequence: 12', 2, '2024-09-01 19:44:26', '2024-09-01 19:44:26'),
+(3931, 'slider', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-09-01 19:44:32', '2024-09-01 19:44:32'),
+(3932, 'slider', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-09-01 19:44:37', '2024-09-01 19:44:37'),
+(3933, 'testimonial', 1, 'Testimonial created. <br/><br/>Testimonial Name: asd<br/>Description: asdasd<br/>Block Style Name: Slider Style<br/>Publish Status: No', 2, '2024-09-01 20:06:30', '2024-09-01 20:06:30'),
+(3934, 'block_style', 15, 'Block style created. <br/><br/>Block Style Name: Testimonial Style<br/>Description: Testimonial Style<br/>Block Type Name: Testimonial', 2, '2024-09-01 20:06:51', '2024-09-01 20:06:51'),
+(3935, 'testimonial', 1, 'Description: asdasd -> asdasdasdasd<br/>Block Style Name: Slider Style -> Testimonial Style<br/>', 2, '2024-09-01 20:07:23', '2024-09-01 20:07:23'),
+(3936, 'testimonial', 1, 'Testimonial Name: asd -> asdasdasd<br/>Description: asdasdasdasd -> asdasdasdasdasdasdasd<br/>', 2, '2024-09-01 20:07:35', '2024-09-01 20:07:35'),
+(3937, 'testimonial_item', 1, 'Testimonial item created. <br/><br/>Testimonial Client: asd<br/>Testimonial Title: asd<br/>Testimonial Paragraph: asd<br/>Rating: 5<br/>Order Sequence: 12', 2, '2024-09-01 20:08:08', '2024-09-01 20:08:08'),
+(3938, 'testimonial_item', 1, 'Testimonial Client: asd -> asdasdasd<br/>Testimonial Title: asd -> asdasdasd<br/>Testimonial Paragraph: asd -> asdasdasd<br/>', 2, '2024-09-01 20:15:31', '2024-09-01 20:15:31'),
+(3939, 'testimonial_item', 1, 'Testimonial Client: asdasdasd -> asdasdasd123123<br/>Testimonial Title: asdasdasd -> asdasdasd123123<br/>Testimonial Paragraph: asdasdasd -> asdasdasd1223123<br/>Rating: 5 -> 3<br/>Order Sequence: 12 -> 13<br/>', 2, '2024-09-01 20:15:49', '2024-09-01 20:15:49'),
+(3940, 'testimonial', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-09-01 20:16:12', '2024-09-01 20:16:12'),
+(3941, 'testimonial', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-09-01 20:16:15', '2024-09-01 20:16:15'),
+(3942, 'testimonial_item', 2, 'Testimonial item created. <br/><br/>Testimonial Client: asd<br/>Testimonial Title: asd<br/>Testimonial Paragraph: asd<br/>Rating: 4<br/>Order Sequence: 1221', 2, '2024-09-01 20:16:24', '2024-09-01 20:16:24');
 
 -- --------------------------------------------------------
 
@@ -10118,7 +10869,13 @@ INSERT INTO `block_style` (`block_style_id`, `block_style_name`, `description`, 
 (6, 'asd', 'asd', 5, 'Contact Form', '2024-08-30 17:23:24', 2),
 (7, 'Content Carousel', 'Content Carousel', 6, 'Content Carousel', '2024-08-30 22:19:50', 2),
 (8, 'Footer Style', 'Footer Style', 7, 'Footer', '2024-08-30 22:54:12', 2),
-(9, 'Header Style', 'Header Style', 8, 'Header', '2024-08-30 22:54:22', 2);
+(9, 'Header Style', 'Header Style', 8, 'Header', '2024-08-30 22:54:22', 2),
+(10, 'Image Gallery', 'Image Gallery', 9, 'Image Gallery', '2024-08-31 11:04:51', 2),
+(11, 'Page Title Style', 'Page Title Style', 10, 'Page Title', '2024-09-01 13:11:35', 2),
+(12, 'Process Step Style', 'Process Step Style', 12, 'Process Step', '2024-09-01 18:52:53', 2),
+(13, 'Services Box Style', 'Services Box Style', 13, 'Services Box', '2024-09-01 19:24:37', 2),
+(14, 'Slider Style', 'Slider Style', 14, 'Slider', '2024-09-01 19:30:58', 2),
+(15, 'Testimonial Style', 'Testimonial Style', 15, 'Testimonial', '2024-09-01 20:06:51', 2);
 
 --
 -- Triggers `block_style`
@@ -12871,6 +13628,13 @@ CREATE TABLE `content_carousel` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `content_carousel`
+--
+
+INSERT INTO `content_carousel` (`content_carousel_id`, `content_carousel_name`, `description`, `block_style_id`, `block_style_name`, `publish_status`, `created_date`, `last_log_by`) VALUES
+(2, 'sad', 'asd', 7, 'Content Carousel', 'No', '2024-09-01 13:30:14', 2);
 
 --
 -- Triggers `content_carousel`
@@ -16027,13 +16791,6 @@ CREATE TABLE `header` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `header`
---
-
-INSERT INTO `header` (`header_id`, `header_name`, `description`, `block_style_id`, `block_style_name`, `publish_status`, `created_date`, `last_log_by`) VALUES
-(2, 'testt', 'test', 9, 'Header Style', 'No', '2024-08-30 23:01:01', 2);
-
---
 -- Triggers `header`
 --
 DROP TRIGGER IF EXISTS `header_trigger_insert`;
@@ -16158,6 +16915,141 @@ CREATE TRIGGER `id_type_trigger_update` AFTER UPDATE ON `id_type` FOR EACH ROW B
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('id_type', NEW.id_type_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `image_gallery`
+--
+
+DROP TABLE IF EXISTS `image_gallery`;
+CREATE TABLE `image_gallery` (
+  `image_gallery_id` int(10) UNSIGNED NOT NULL,
+  `image_gallery_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `image_gallery`
+--
+DROP TRIGGER IF EXISTS `image_gallery_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `image_gallery_trigger_insert` AFTER INSERT ON `image_gallery` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Image gallery created. <br/>';
+
+    IF NEW.image_gallery_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Image Gallery Name: ", NEW.image_gallery_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('image_gallery', NEW.image_gallery_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `image_gallery_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `image_gallery_trigger_update` AFTER UPDATE ON `image_gallery` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.image_gallery_name <> OLD.image_gallery_name THEN
+        SET audit_log = CONCAT(audit_log, "Image Gallery Name: ", OLD.image_gallery_name, " -> ", NEW.image_gallery_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('image_gallery', NEW.image_gallery_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `image_gallery_item`
+--
+
+DROP TABLE IF EXISTS `image_gallery_item`;
+CREATE TABLE `image_gallery_item` (
+  `image_gallery_item_id` int(10) UNSIGNED NOT NULL,
+  `image_gallery_id` int(10) UNSIGNED NOT NULL,
+  `image_gallery_title` varchar(500) NOT NULL,
+  `image_gallery_image` varchar(500) NOT NULL,
+  `order_sequence` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `image_gallery_item`
+--
+DROP TRIGGER IF EXISTS `image_gallery_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `image_gallery_item_trigger_insert` AFTER INSERT ON `image_gallery_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Image gallery item created. <br/>';
+
+    IF NEW.image_gallery_title <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Image Gallery Title: ", NEW.image_gallery_title);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('image_gallery_item', NEW.image_gallery_item_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `image_gallery_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `image_gallery_item_trigger_update` AFTER UPDATE ON `image_gallery_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+    
+    IF NEW.image_gallery_title <> OLD.image_gallery_title THEN
+        SET audit_log = CONCAT(audit_log, "Image Gallery Title: ", OLD.image_gallery_title, " -> ", NEW.image_gallery_title, "<br/>");
+    END IF;
+    
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('image_gallery_item', NEW.image_gallery_item_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -17060,6 +17952,108 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `page_title`
+--
+
+DROP TABLE IF EXISTS `page_title`;
+CREATE TABLE `page_title` (
+  `page_title_id` int(10) UNSIGNED NOT NULL,
+  `page_title_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `page_title` varchar(500) NOT NULL,
+  `page_heading` varchar(500) NOT NULL,
+  `page_title_image` varchar(500) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `page_title`
+--
+
+INSERT INTO `page_title` (`page_title_id`, `page_title_name`, `description`, `block_style_id`, `block_style_name`, `page_title`, `page_heading`, `page_title_image`, `publish_status`, `created_date`, `last_log_by`) VALUES
+(4, 'asd', 'asdasd', 11, 'Page Title Style', 'ads', 'asd', './components/page-title/image/4/vZiI.jpg', 'No', '2024-09-01 13:24:35', 2);
+
+--
+-- Triggers `page_title`
+--
+DROP TRIGGER IF EXISTS `page_title_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `page_title_trigger_insert` AFTER INSERT ON `page_title` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Page title created. <br/>';
+
+    IF NEW.page_title_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Page Title Name: ", NEW.page_title_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.page_title <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Page Title: ", NEW.page_title);
+    END IF;
+
+    IF NEW.page_heading <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Page Heading: ", NEW.page_heading);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('page_title', NEW.page_title_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `page_title_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `page_title_trigger_update` AFTER UPDATE ON `page_title` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.page_title_name <> OLD.page_title_name THEN
+        SET audit_log = CONCAT(audit_log, "Page Title Name: ", OLD.page_title_name, " -> ", NEW.page_title_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.page_title <> OLD.page_title THEN
+        SET audit_log = CONCAT(audit_log, "Page Title: ", OLD.page_title, " -> ", NEW.page_title, "<br/>");
+    END IF;
+
+    IF NEW.page_heading <> OLD.page_heading THEN
+        SET audit_log = CONCAT(audit_log, "Page Heading: ", OLD.page_heading, " -> ", NEW.page_heading, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('page_title', NEW.page_title_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `password_history`
 --
 
@@ -17082,6 +18076,166 @@ INSERT INTO `password_history` (`password_history_id`, `user_account_id`, `passw
 (3, 10, 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', '2024-08-21 14:34:24', '2024-08-21 14:34:24'),
 (4, 11, '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', '2024-08-21 16:48:18', '2024-08-21 16:48:18'),
 (5, 12, '8yxzquTHrvtqWG82aM98iU%2BCanoOa%2Fzu4bqCJyZ70qA%3D', '2024-08-22 10:49:09', '2024-08-22 10:49:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `process_step`
+--
+
+DROP TABLE IF EXISTS `process_step`;
+CREATE TABLE `process_step` (
+  `process_step_id` int(10) UNSIGNED NOT NULL,
+  `process_step_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `process_step`
+--
+
+INSERT INTO `process_step` (`process_step_id`, `process_step_name`, `description`, `block_style_id`, `block_style_name`, `publish_status`, `created_date`, `last_log_by`) VALUES
+(2, 'asd', 'asd', 12, 'Process Step Style', 'No', '2024-09-01 18:54:24', 2);
+
+--
+-- Triggers `process_step`
+--
+DROP TRIGGER IF EXISTS `process_step_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `process_step_trigger_insert` AFTER INSERT ON `process_step` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Process step created. <br/>';
+
+    IF NEW.process_step_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Process Step Name: ", NEW.process_step_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('process_step', NEW.process_step_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `process_step_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `process_step_trigger_update` AFTER UPDATE ON `process_step` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.process_step_name <> OLD.process_step_name THEN
+        SET audit_log = CONCAT(audit_log, "Process Step Name: ", OLD.process_step_name, " -> ", NEW.process_step_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('process_step', NEW.process_step_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `process_step_item`
+--
+
+DROP TABLE IF EXISTS `process_step_item`;
+CREATE TABLE `process_step_item` (
+  `process_step_item_id` int(10) UNSIGNED NOT NULL,
+  `process_step_id` int(10) UNSIGNED NOT NULL,
+  `process_step_title` varchar(500) NOT NULL,
+  `process_step_heading` varchar(500) NOT NULL,
+  `process_step_link` varchar(500) DEFAULT NULL,
+  `process_step_image` varchar(500) NOT NULL,
+  `order_sequence` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `process_step_item`
+--
+DROP TRIGGER IF EXISTS `process_step_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `process_step_item_trigger_insert` AFTER INSERT ON `process_step_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Process step item created. <br/>';
+
+    IF NEW.process_step_title <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Process Step Title: ", NEW.process_step_title);
+    END IF;
+
+    IF NEW.process_step_heading <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Process Step Heading: ", NEW.process_step_heading);
+    END IF;
+    
+    IF NEW.process_step_link <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Process Step Link: ", NEW.process_step_link);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('process_step_item', NEW.process_step_item_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `process_step_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `process_step_item_trigger_update` AFTER UPDATE ON `process_step_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+    
+    IF NEW.process_step_title <> OLD.process_step_title THEN
+        SET audit_log = CONCAT(audit_log, "Process Step Title: ", OLD.process_step_title, " -> ", NEW.process_step_title, "<br/>");
+    END IF;
+    
+    IF NEW.process_step_heading <> OLD.process_step_heading THEN
+        SET audit_log = CONCAT(audit_log, "Process Step Heading: ", OLD.process_step_heading, " -> ", NEW.process_step_heading, "<br/>");
+    END IF;
+    
+    IF NEW.process_step_link <> OLD.process_step_link THEN
+        SET audit_log = CONCAT(audit_log, "Process Step Link: ", OLD.process_step_link, " -> ", NEW.process_step_link, "<br/>");
+    END IF;
+    
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('process_step_item', NEW.process_step_item_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -17775,6 +18929,366 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `services_box`
+--
+
+DROP TABLE IF EXISTS `services_box`;
+CREATE TABLE `services_box` (
+  `services_box_id` int(10) UNSIGNED NOT NULL,
+  `services_box_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `services_box`
+--
+DROP TRIGGER IF EXISTS `services_box_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `services_box_trigger_insert` AFTER INSERT ON `services_box` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Services box created. <br/>';
+
+    IF NEW.services_box_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Services Box Name: ", NEW.services_box_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('services_box', NEW.services_box_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `services_box_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `services_box_trigger_update` AFTER UPDATE ON `services_box` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.services_box_name <> OLD.services_box_name THEN
+        SET audit_log = CONCAT(audit_log, "Services Box Name: ", OLD.services_box_name, " -> ", NEW.services_box_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('services_box', NEW.services_box_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `services_box_item`
+--
+
+DROP TABLE IF EXISTS `services_box_item`;
+CREATE TABLE `services_box_item` (
+  `services_box_item_id` int(10) UNSIGNED NOT NULL,
+  `services_box_id` int(10) UNSIGNED NOT NULL,
+  `services_box_title` varchar(500) NOT NULL,
+  `services_box_heading` varchar(500) NOT NULL,
+  `services_box_paragraph` longtext NOT NULL,
+  `call_to_action_button_text` varchar(100) DEFAULT NULL,
+  `call_to_action_button_link` varchar(500) DEFAULT NULL,
+  `services_box_image` varchar(500) NOT NULL,
+  `order_sequence` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `services_box_item`
+--
+DROP TRIGGER IF EXISTS `services_box_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `services_box_item_trigger_insert` AFTER INSERT ON `services_box_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Services box item created. <br/>';
+
+    IF NEW.services_box_title <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Services Box Title: ", NEW.services_box_title);
+    END IF;
+
+    IF NEW.services_box_heading <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Services Box Heading: ", NEW.services_box_heading);
+    END IF;
+
+    IF NEW.services_box_paragraph <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Services Box Paragraph: ", NEW.services_box_paragraph);
+    END IF;
+
+    IF NEW.call_to_action_button_text <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button Text: ", NEW.call_to_action_button_text);
+    END IF;
+
+    IF NEW.call_to_action_button_link <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button Link: ", NEW.call_to_action_button_link);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('services_box_item', NEW.services_box_item_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `services_box_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `services_box_item_trigger_update` AFTER UPDATE ON `services_box_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+    
+    IF NEW.services_box_title <> OLD.services_box_title THEN
+        SET audit_log = CONCAT(audit_log, "Services Box Title: ", OLD.services_box_title, " -> ", NEW.services_box_title, "<br/>");
+    END IF;
+    
+    IF NEW.services_box_heading <> OLD.services_box_heading THEN
+        SET audit_log = CONCAT(audit_log, "Services Box Heading: ", OLD.services_box_heading, " -> ", NEW.services_box_heading, "<br/>");
+    END IF;
+    
+    IF NEW.services_box_paragraph <> OLD.services_box_paragraph THEN
+        SET audit_log = CONCAT(audit_log, "Services Box Paragraph: ", OLD.services_box_paragraph, " -> ", NEW.services_box_paragraph, "<br/>");
+    END IF;
+    
+    IF NEW.call_to_action_button_text <> OLD.call_to_action_button_text THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button Text: ", OLD.call_to_action_button_text, " -> ", NEW.call_to_action_button_text, "<br/>");
+    END IF;
+
+    IF NEW.call_to_action_button_link <> OLD.call_to_action_button_link THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button Link: ", OLD.call_to_action_button_link, " -> ", NEW.call_to_action_button_link, "<br/>");
+    END IF;
+    
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('services_box_item', NEW.services_box_item_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `slider`
+--
+
+DROP TABLE IF EXISTS `slider`;
+CREATE TABLE `slider` (
+  `slider_id` int(10) UNSIGNED NOT NULL,
+  `slider_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `slider`
+--
+DROP TRIGGER IF EXISTS `slider_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `slider_trigger_insert` AFTER INSERT ON `slider` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Slider created. <br/>';
+
+    IF NEW.slider_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Slider Name: ", NEW.slider_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('slider', NEW.slider_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `slider_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `slider_trigger_update` AFTER UPDATE ON `slider` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.slider_name <> OLD.slider_name THEN
+        SET audit_log = CONCAT(audit_log, "Slider Name: ", OLD.slider_name, " -> ", NEW.slider_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('slider', NEW.slider_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `slider_item`
+--
+
+DROP TABLE IF EXISTS `slider_item`;
+CREATE TABLE `slider_item` (
+  `slider_item_id` int(10) UNSIGNED NOT NULL,
+  `slider_id` int(10) UNSIGNED NOT NULL,
+  `slider_title` varchar(500) NOT NULL,
+  `slider_heading` varchar(500) NOT NULL,
+  `slider_paragraph` longtext NOT NULL,
+  `call_to_action_button_1_text` varchar(100) DEFAULT NULL,
+  `call_to_action_button_1_link` varchar(500) DEFAULT NULL,
+  `call_to_action_button_2_text` varchar(100) DEFAULT NULL,
+  `call_to_action_button_2_link` varchar(500) DEFAULT NULL,
+  `slider_image` varchar(500) NOT NULL,
+  `order_sequence` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `slider_item`
+--
+DROP TRIGGER IF EXISTS `slider_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `slider_item_trigger_insert` AFTER INSERT ON `slider_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Slider item created. <br/>';
+
+    IF NEW.slider_title <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Slider Title: ", NEW.slider_title);
+    END IF;
+
+    IF NEW.slider_heading <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Slider Heading: ", NEW.slider_heading);
+    END IF;
+
+    IF NEW.slider_paragraph <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Slider Paragraph: ", NEW.slider_paragraph);
+    END IF;
+
+    IF NEW.call_to_action_button_1_text <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button 1 Text: ", NEW.call_to_action_button_1_text);
+    END IF;
+
+    IF NEW.call_to_action_button_1_link <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button 1 Link: ", NEW.call_to_action_button_1_link);
+    END IF;
+
+    IF NEW.call_to_action_button_2_text <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button 2 Text: ", NEW.call_to_action_button_2_text);
+    END IF;
+
+    IF NEW.call_to_action_button_2_link <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Call-to-Action Button 2 Link: ", NEW.call_to_action_button_2_link);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('slider_item', NEW.slider_item_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `slider_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `slider_item_trigger_update` AFTER UPDATE ON `slider_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+    
+    IF NEW.slider_title <> OLD.slider_title THEN
+        SET audit_log = CONCAT(audit_log, "Slider Title: ", OLD.slider_title, " -> ", NEW.slider_title, "<br/>");
+    END IF;
+    
+    IF NEW.slider_heading <> OLD.slider_heading THEN
+        SET audit_log = CONCAT(audit_log, "Slider Heading: ", OLD.slider_heading, " -> ", NEW.slider_heading, "<br/>");
+    END IF;
+    
+    IF NEW.slider_paragraph <> OLD.slider_paragraph THEN
+        SET audit_log = CONCAT(audit_log, "Slider Paragraph: ", OLD.slider_paragraph, " -> ", NEW.slider_paragraph, "<br/>");
+    END IF;
+    
+    IF NEW.call_to_action_button_1_text <> OLD.call_to_action_button_1_text THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button 1 Text: ", OLD.call_to_action_button_1_text, " -> ", NEW.call_to_action_button_1_text, "<br/>");
+    END IF;
+
+    IF NEW.call_to_action_button_1_link <> OLD.call_to_action_button_1_link THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button 1 Link: ", OLD.call_to_action_button_1_link, " -> ", NEW.call_to_action_button_1_link, "<br/>");
+    END IF;
+    
+    IF NEW.call_to_action_button_2_text <> OLD.call_to_action_button_2_text THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button 2 Text: ", OLD.call_to_action_button_2_text, " -> ", NEW.call_to_action_button_2_text, "<br/>");
+    END IF;
+
+    IF NEW.call_to_action_button_2_link <> OLD.call_to_action_button_2_link THEN
+        SET audit_log = CONCAT(audit_log, "Call-to-Action Button 2 Link: ", OLD.call_to_action_button_2_link, " -> ", NEW.call_to_action_button_2_link, "<br/>");
+    END IF;
+    
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('slider_item', NEW.slider_item_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `state`
 --
 
@@ -18036,6 +19550,168 @@ INSERT INTO `system_setting` (`system_setting_id`, `system_setting_name`, `syste
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `testimonial`
+--
+
+DROP TABLE IF EXISTS `testimonial`;
+CREATE TABLE `testimonial` (
+  `testimonial_id` int(10) UNSIGNED NOT NULL,
+  `testimonial_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `testimonial`
+--
+DROP TRIGGER IF EXISTS `testimonial_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `testimonial_trigger_insert` AFTER INSERT ON `testimonial` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Testimonial created. <br/>';
+
+    IF NEW.testimonial_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Testimonial Name: ", NEW.testimonial_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('testimonial', NEW.testimonial_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `testimonial_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `testimonial_trigger_update` AFTER UPDATE ON `testimonial` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.testimonial_name <> OLD.testimonial_name THEN
+        SET audit_log = CONCAT(audit_log, "Testimonial Name: ", OLD.testimonial_name, " -> ", NEW.testimonial_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('testimonial', NEW.testimonial_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `testimonial_item`
+--
+
+DROP TABLE IF EXISTS `testimonial_item`;
+CREATE TABLE `testimonial_item` (
+  `testimonial_item_id` int(10) UNSIGNED NOT NULL,
+  `testimonial_id` int(10) UNSIGNED NOT NULL,
+  `testimonial_client` varchar(500) NOT NULL,
+  `testimonial_title` varchar(500) NOT NULL,
+  `testimonial_paragraph` longtext NOT NULL,
+  `rating` float DEFAULT NULL,
+  `testimonial_image` varchar(500) NOT NULL,
+  `order_sequence` int(11) NOT NULL,
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `testimonial_item`
+--
+DROP TRIGGER IF EXISTS `testimonial_item_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `testimonial_item_trigger_insert` AFTER INSERT ON `testimonial_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Testimonial item created. <br/>';
+
+    IF NEW.testimonial_client <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Testimonial Client: ", NEW.testimonial_client);
+    END IF;
+
+    IF NEW.testimonial_title <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Testimonial Title: ", NEW.testimonial_title);
+    END IF;
+
+    IF NEW.testimonial_paragraph <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Testimonial Paragraph: ", NEW.testimonial_paragraph);
+    END IF;
+
+    IF NEW.rating <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Rating: ", NEW.rating);
+    END IF;
+
+    IF NEW.order_sequence <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Order Sequence: ", NEW.order_sequence);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('testimonial_item', NEW.testimonial_item_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `testimonial_item_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `testimonial_item_trigger_update` AFTER UPDATE ON `testimonial_item` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+    
+    IF NEW.testimonial_client <> OLD.testimonial_client THEN
+        SET audit_log = CONCAT(audit_log, "Testimonial Client: ", OLD.testimonial_client, " -> ", NEW.testimonial_client, "<br/>");
+    END IF;
+    
+    IF NEW.testimonial_title <> OLD.testimonial_title THEN
+        SET audit_log = CONCAT(audit_log, "Testimonial Title: ", OLD.testimonial_title, " -> ", NEW.testimonial_title, "<br/>");
+    END IF;
+    
+    IF NEW.testimonial_paragraph <> OLD.testimonial_paragraph THEN
+        SET audit_log = CONCAT(audit_log, "Testimonial Paragraph: ", OLD.testimonial_paragraph, " -> ", NEW.testimonial_paragraph, "<br/>");
+    END IF;
+    
+    IF NEW.rating <> OLD.rating THEN
+        SET audit_log = CONCAT(audit_log, "Rating: ", OLD.rating, " -> ", NEW.rating, "<br/>");
+    END IF;
+    
+    IF NEW.order_sequence <> OLD.order_sequence THEN
+        SET audit_log = CONCAT(audit_log, "Order Sequence: ", OLD.order_sequence, " -> ", NEW.order_sequence, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('testimonial_item', NEW.testimonial_item_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `ui_customization_setting`
 --
 
@@ -18264,7 +19940,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-08-30 20:33:00', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'SgI6h4Z75PkfPAT7nlKJP9jAkvf5hegr6IFYE%2FtOeWk%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-09-01 17:57:52', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'VFTBEzvqd2uxO%2F75%2F6x9asOS8JNRgCQE3wHkvpg95c0%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -19289,6 +20965,23 @@ ALTER TABLE `id_type`
   ADD KEY `id_type_index_id_type_id` (`id_type_id`);
 
 --
+-- Indexes for table `image_gallery`
+--
+ALTER TABLE `image_gallery`
+  ADD PRIMARY KEY (`image_gallery_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `image_galleryindex_image_gallery_id` (`image_gallery_id`);
+
+--
+-- Indexes for table `image_gallery_item`
+--
+ALTER TABLE `image_gallery_item`
+  ADD PRIMARY KEY (`image_gallery_item_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `image_gallery_item_index_image_gallery_item_id` (`image_gallery_item_id`),
+  ADD KEY `image_gallery_item_index_image_gallery_id` (`image_gallery_id`);
+
+--
 -- Indexes for table `internal_notes`
 --
 ALTER TABLE `internal_notes`
@@ -19385,12 +21078,37 @@ ALTER TABLE `notification_setting_system_template`
   ADD KEY `notification_setting_system_index_notification_setting_id` (`notification_setting_id`);
 
 --
+-- Indexes for table `page_title`
+--
+ALTER TABLE `page_title`
+  ADD PRIMARY KEY (`page_title_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `page_titleindex_page_title_id` (`page_title_id`);
+
+--
 -- Indexes for table `password_history`
 --
 ALTER TABLE `password_history`
   ADD PRIMARY KEY (`password_history_id`),
   ADD KEY `password_history_index_password_history_id` (`password_history_id`),
   ADD KEY `password_history_index_user_account_id` (`user_account_id`);
+
+--
+-- Indexes for table `process_step`
+--
+ALTER TABLE `process_step`
+  ADD PRIMARY KEY (`process_step_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `process_stepindex_process_step_id` (`process_step_id`);
+
+--
+-- Indexes for table `process_step_item`
+--
+ALTER TABLE `process_step_item`
+  ADD PRIMARY KEY (`process_step_item_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `process_step_item_index_process_step_item_id` (`process_step_item_id`),
+  ADD KEY `process_step_item_index_process_step_id` (`process_step_id`);
 
 --
 -- Indexes for table `relation`
@@ -19463,6 +21181,40 @@ ALTER TABLE `security_setting`
   ADD KEY `security_setting_index_security_setting_id` (`security_setting_id`);
 
 --
+-- Indexes for table `services_box`
+--
+ALTER TABLE `services_box`
+  ADD PRIMARY KEY (`services_box_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `services_boxindex_services_box_id` (`services_box_id`);
+
+--
+-- Indexes for table `services_box_item`
+--
+ALTER TABLE `services_box_item`
+  ADD PRIMARY KEY (`services_box_item_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `services_box_item_index_services_box_item_id` (`services_box_item_id`),
+  ADD KEY `services_box_item_index_services_box_id` (`services_box_id`);
+
+--
+-- Indexes for table `slider`
+--
+ALTER TABLE `slider`
+  ADD PRIMARY KEY (`slider_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `sliderindex_slider_id` (`slider_id`);
+
+--
+-- Indexes for table `slider_item`
+--
+ALTER TABLE `slider_item`
+  ADD PRIMARY KEY (`slider_item_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `slider_item_index_slider_item_id` (`slider_item_id`),
+  ADD KEY `slider_item_index_slider_id` (`slider_id`);
+
+--
 -- Indexes for table `state`
 --
 ALTER TABLE `state`
@@ -19486,6 +21238,23 @@ ALTER TABLE `system_setting`
   ADD PRIMARY KEY (`system_setting_id`),
   ADD KEY `last_log_by` (`last_log_by`),
   ADD KEY `system_setting_index_system_setting_id` (`system_setting_id`);
+
+--
+-- Indexes for table `testimonial`
+--
+ALTER TABLE `testimonial`
+  ADD PRIMARY KEY (`testimonial_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `testimonialindex_testimonial_id` (`testimonial_id`);
+
+--
+-- Indexes for table `testimonial_item`
+--
+ALTER TABLE `testimonial_item`
+  ADD PRIMARY KEY (`testimonial_item_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `testimonial_item_index_testimonial_item_id` (`testimonial_item_id`),
+  ADD KEY `testimonial_item_index_testimonial_id` (`testimonial_id`);
 
 --
 -- Indexes for table `ui_customization_setting`
@@ -19592,7 +21361,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3886;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3943;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -19622,7 +21391,7 @@ ALTER TABLE `block_item`
 -- AUTO_INCREMENT for table `block_style`
 --
 ALTER TABLE `block_style`
-  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `block_type`
@@ -19712,7 +21481,7 @@ ALTER TABLE `contact_information_type`
 -- AUTO_INCREMENT for table `content_carousel`
 --
 ALTER TABLE `content_carousel`
-  MODIFY `content_carousel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `content_carousel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `content_carousel_item`
@@ -19889,6 +21658,18 @@ ALTER TABLE `id_type`
   MODIFY `id_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
+-- AUTO_INCREMENT for table `image_gallery`
+--
+ALTER TABLE `image_gallery`
+  MODIFY `image_gallery_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `image_gallery_item`
+--
+ALTER TABLE `image_gallery_item`
+  MODIFY `image_gallery_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `internal_notes`
 --
 ALTER TABLE `internal_notes`
@@ -19955,10 +21736,28 @@ ALTER TABLE `notification_setting_system_template`
   MODIFY `notification_setting_system_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `page_title`
+--
+ALTER TABLE `page_title`
+  MODIFY `page_title_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `password_history`
 --
 ALTER TABLE `password_history`
   MODIFY `password_history_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `process_step`
+--
+ALTER TABLE `process_step`
+  MODIFY `process_step_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `process_step_item`
+--
+ALTER TABLE `process_step_item`
+  MODIFY `process_step_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `relation`
@@ -20009,6 +21808,30 @@ ALTER TABLE `security_setting`
   MODIFY `security_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `services_box`
+--
+ALTER TABLE `services_box`
+  MODIFY `services_box_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `services_box_item`
+--
+ALTER TABLE `services_box_item`
+  MODIFY `services_box_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `slider`
+--
+ALTER TABLE `slider`
+  MODIFY `slider_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `slider_item`
+--
+ALTER TABLE `slider_item`
+  MODIFY `slider_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `state`
 --
 ALTER TABLE `state`
@@ -20025,6 +21848,18 @@ ALTER TABLE `system_action`
 --
 ALTER TABLE `system_setting`
   MODIFY `system_setting_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `testimonial`
+--
+ALTER TABLE `testimonial`
+  MODIFY `testimonial_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `testimonial_item`
+--
+ALTER TABLE `testimonial_item`
+  MODIFY `testimonial_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `ui_customization_setting`
@@ -20425,6 +22260,19 @@ ALTER TABLE `id_type`
   ADD CONSTRAINT `id_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `image_gallery`
+--
+ALTER TABLE `image_gallery`
+  ADD CONSTRAINT `image_gallery_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `image_gallery_item`
+--
+ALTER TABLE `image_gallery_item`
+  ADD CONSTRAINT `image_gallery_item_ibfk_1` FOREIGN KEY (`image_gallery_id`) REFERENCES `image_gallery` (`image_gallery_id`),
+  ADD CONSTRAINT `image_gallery_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `internal_notes`
 --
 ALTER TABLE `internal_notes`
@@ -20497,10 +22345,68 @@ ALTER TABLE `notification_setting_system_template`
   ADD CONSTRAINT `notification_setting_system_template_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
+-- Constraints for table `page_title`
+--
+ALTER TABLE `page_title`
+  ADD CONSTRAINT `page_title_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `process_step`
+--
+ALTER TABLE `process_step`
+  ADD CONSTRAINT `process_step_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `process_step_item`
+--
+ALTER TABLE `process_step_item`
+  ADD CONSTRAINT `process_step_item_ibfk_1` FOREIGN KEY (`process_step_id`) REFERENCES `process_step` (`process_step_id`),
+  ADD CONSTRAINT `process_step_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
 -- Constraints for table `relation`
 --
 ALTER TABLE `relation`
   ADD CONSTRAINT `relation_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `services_box`
+--
+ALTER TABLE `services_box`
+  ADD CONSTRAINT `services_box_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `services_box_item`
+--
+ALTER TABLE `services_box_item`
+  ADD CONSTRAINT `services_box_item_ibfk_1` FOREIGN KEY (`services_box_id`) REFERENCES `services_box` (`services_box_id`),
+  ADD CONSTRAINT `services_box_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `slider`
+--
+ALTER TABLE `slider`
+  ADD CONSTRAINT `slider_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `slider_item`
+--
+ALTER TABLE `slider_item`
+  ADD CONSTRAINT `slider_item_ibfk_1` FOREIGN KEY (`slider_id`) REFERENCES `slider` (`slider_id`),
+  ADD CONSTRAINT `slider_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `testimonial`
+--
+ALTER TABLE `testimonial`
+  ADD CONSTRAINT `testimonial_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `testimonial_item`
+--
+ALTER TABLE `testimonial_item`
+  ADD CONSTRAINT `testimonial_item_ibfk_1` FOREIGN KEY (`testimonial_id`) REFERENCES `testimonial` (`testimonial_id`),
+  ADD CONSTRAINT `testimonial_item_ibfk_2` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `website`
