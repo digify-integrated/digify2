@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 01, 2024 at 02:16 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Sep 02, 2024 at 11:27 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -527,6 +527,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkPageTitleExist` (IN `p_page_ti
 	SELECT COUNT(*) AS total
     FROM page_title
     WHERE page_title_id = p_page_title_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkPricingTableExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkPricingTableExist` (IN `p_pricing_table_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM pricing_table
+    WHERE pricing_table_id = p_pricing_table_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkProcesStepExist`$$
@@ -1254,6 +1261,11 @@ END$$
 DROP PROCEDURE IF EXISTS `deletePageTitle`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePageTitle` (IN `p_page_title_id` INT)   BEGIN
     DELETE FROM page_title WHERE page_title_id = p_page_title_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deletePricingTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deletePricingTable` (IN `p_pricing_table_id` INT)   BEGIN
+    DELETE FROM pricing_table WHERE pricing_table_id = p_pricing_table_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteProcesStep`$$
@@ -2352,6 +2364,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generatePageTitleTable` ()   BEGIN
     FROM page_title;
 END$$
 
+DROP PROCEDURE IF EXISTS `generatePricingTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generatePricingTable` ()   BEGIN
+    SELECT pricing_table_id, pricing_table_name, description, publish_status
+    FROM pricing_table;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateProcesStepItemTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateProcesStepItemTable` (IN `p_process_step_id` INT)   BEGIN
     SELECT process_step_item_id, process_step_title, process_step_heading, process_step_link, process_step_image, order_sequence 
@@ -2485,6 +2503,7 @@ END$$
 DROP PROCEDURE IF EXISTS `generateSliderTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSliderTable` ()   BEGIN
     SELECT slider_id, slider_name, description, publish_status
+
     FROM slider;
 END$$
 
@@ -3127,6 +3146,12 @@ DROP PROCEDURE IF EXISTS `getPasswordHistory`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getPasswordHistory` (IN `p_user_account_id` INT)   BEGIN
 	SELECT * FROM password_history
 	WHERE user_account_id = p_user_account_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getPricingTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getPricingTable` (IN `p_pricing_table_id` INT)   BEGIN
+	SELECT * FROM pricing_table
+	WHERE pricing_table_id = p_pricing_table_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getProcesStep`$$
@@ -3822,6 +3847,14 @@ DROP PROCEDURE IF EXISTS `insertPasswordHistory`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `insertPasswordHistory` (IN `p_user_account_id` INT, IN `p_password` VARCHAR(255))   BEGIN
     INSERT INTO password_history (user_account_id, password, password_change_date) 
     VALUES (p_user_account_id, p_password, NOW());
+END$$
+
+DROP PROCEDURE IF EXISTS `insertPricingTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertPricingTable` (IN `p_pricing_table_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_pricing_table_id` INT)   BEGIN
+    INSERT INTO pricing_table (pricing_table_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_pricing_table_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_pricing_table_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertProcesStep`$$
@@ -5584,6 +5617,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePageTitlePublishStatus` (IN `
     WHERE page_title_id = p_page_title_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `updatePricingTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePricingTable` (IN `p_pricing_table_id` INT, IN `p_pricing_table_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE pricing_table
+    SET pricing_table_name = p_pricing_table_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE pricing_table_id = p_pricing_table_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updatePricingTablePublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updatePricingTablePublishStatus` (IN `p_pricing_table_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE pricing_table
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE pricing_table_id = p_pricing_table_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateProcesStep`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProcesStep` (IN `p_process_step_id` INT, IN `p_process_step_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
     UPDATE process_step
@@ -6565,7 +6617,8 @@ INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_descri
 (1, 'Settings', 'Centralized management hub for comprehensive organizational oversight and control', './components/app-module/image/logo/1/setting.png', '1.0.0', 22, 'Account Setting', 100, '2024-06-26 13:43:48', 2),
 (2, 'Employees', 'Centralize employee information', './components/app-module/image/logo/2/kwDc.png', '1.0.0', 23, 'Inventory Overview', 1, '2024-06-27 15:30:44', 2),
 (3, 'Customer', 'Bring all your customer information into one easy-to-access location', './components/app-module/image/logo/3/rL4r.png', '1.0.0', 50, 'Customer', 3, '2024-08-19 10:28:21', 2),
-(4, 'Website Studio', 'Create and customize your website', './components/app-module/image/logo/4/TnX0.png', '1.0.0', 54, 'Websites', 1, '2024-08-22 20:54:37', 2);
+(4, 'Website Studio', 'Create and customize your website', './components/app-module/image/logo/4/TnX0.png', '1.0.0', 54, 'Websites', 1, '2024-08-22 20:54:37', 2),
+(5, 'CRM', 'Track leads and close opportunities', './components/app-module/image/logo/5/CxLn.png', '1.0.0', 53, ' Banks & Cards', 3, '2024-09-02 14:17:04', 2);
 
 --
 -- Triggers `app_module`
@@ -10609,7 +10662,21 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3939, 'testimonial_item', 1, 'Testimonial Client: asdasdasd -> asdasdasd123123<br/>Testimonial Title: asdasdasd -> asdasdasd123123<br/>Testimonial Paragraph: asdasdasd -> asdasdasd1223123<br/>Rating: 5 -> 3<br/>Order Sequence: 12 -> 13<br/>', 2, '2024-09-01 20:15:49', '2024-09-01 20:15:49'),
 (3940, 'testimonial', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-09-01 20:16:12', '2024-09-01 20:16:12'),
 (3941, 'testimonial', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-09-01 20:16:15', '2024-09-01 20:16:15'),
-(3942, 'testimonial_item', 2, 'Testimonial item created. <br/><br/>Testimonial Client: asd<br/>Testimonial Title: asd<br/>Testimonial Paragraph: asd<br/>Rating: 4<br/>Order Sequence: 1221', 2, '2024-09-01 20:16:24', '2024-09-01 20:16:24');
+(3942, 'testimonial_item', 2, 'Testimonial item created. <br/><br/>Testimonial Client: asd<br/>Testimonial Title: asd<br/>Testimonial Paragraph: asd<br/>Rating: 4<br/>Order Sequence: 1221', 2, '2024-09-01 20:16:24', '2024-09-01 20:16:24'),
+(3943, 'user_account', 2, 'Failed Login Attempts: 0 -> 1<br/>', 2, '2024-09-02 10:15:35', '2024-09-02 10:15:35'),
+(3944, 'user_account', 2, 'Failed Login Attempts: 1 -> 0<br/>', 2, '2024-09-02 10:15:39', '2024-09-02 10:15:39'),
+(3945, 'user_account', 2, 'Last Connection Date: 2024-09-01 17:57:52 -> 2024-09-02 10:15:39<br/>', 2, '2024-09-02 10:15:39', '2024-09-02 10:15:39'),
+(3946, 'menu_group', 8, 'Order Sequence: 23 -> 1<br/>', 2, '2024-09-02 10:39:03', '2024-09-02 10:39:03'),
+(3947, 'block_style', 16, 'Block style created. <br/><br/>Block Style Name: Pricing Table Style<br/>Description: Pricing Table Style<br/>Block Type Name: Pricing Table', 2, '2024-09-02 11:19:00', '2024-09-02 11:19:00'),
+(3948, 'pricing_table', 1, 'Pricing table created. <br/><br/>Pricing Table Name: asd<br/>Description: asd<br/>Block Style Name: Pricing Table Style<br/>Publish Status: No', 2, '2024-09-02 11:40:44', '2024-09-02 11:40:44'),
+(3949, 'pricing_table', 1, 'Pricing Table Name: asd -> asdasd<br/>Description: asd -> asdasd<br/>', 2, '2024-09-02 11:40:48', '2024-09-02 11:40:48'),
+(3950, 'pricing_table', 1, 'Publish Status: No -> Yes<br/>', 2, '2024-09-02 11:40:51', '2024-09-02 11:40:51'),
+(3951, 'pricing_table', 1, 'Publish Status: Yes -> No<br/>', 2, '2024-09-02 11:40:54', '2024-09-02 11:40:54'),
+(3952, 'block_type', 16, 'Block type created. <br/><br/>Block Type Name: Columns', 2, '2024-09-02 13:50:24', '2024-09-02 13:50:24'),
+(3953, 'block_style', 17, 'Block style created. <br/><br/>Block Style Name: Columns Style<br/>Description: Columns Style<br/>Block Type Name: Columns', 2, '2024-09-02 13:50:49', '2024-09-02 13:50:49'),
+(3954, 'app_module', 5, 'App module created. <br/><br/>App Module Name: CRM<br/>App Module Description: Track leads and close opportunities<br/>App Version: 1.0.0<br/>Menu Item Name:  Banks & Cards<br/>Order Sequence: 3', 2, '2024-09-02 14:17:04', '2024-09-02 14:17:04'),
+(3955, 'block_container', 2, 'Block container created. <br/><br/>Block Container: asdasdasd', 2, '2024-09-02 17:02:48', '2024-09-02 17:02:48'),
+(3956, 'block_container', 3, 'Block container created. <br/><br/>Block Container: \n    <div class=\"col-lg-12\">\n        <div class=\"card\">\n            <div class=\"card-header d-flex align-items-center\">\n                <h5 class=\"card-title mb-0\">Block Item</h5>\n                <?php\n                    echo $writeAccess[\'total\'] > 0 ? \'<div class=\"card-actions cursor-pointer ms-auto d-flex button-group\">\n                                                            <button type=\"submit\" form=\"block-item-form\" class=\"btn btn-success\" id=\"submit-block-item-data\">Save</button>\n                                                        </div>\' : \'\';\n                ?>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"col-lg-12 mb-0\">\n                    <form id=\"block-item-form\" method=\"post\" action=\"#\">\n                        <div class=\"row\">\n                            <div class=\"col-lg-12\">\n                                <div class=\"mb-3\">\n                                    <textarea class=\"form-control maxlength\" id=\"block_item\" name=\"block_item\" rows=\"5\"></textarea>\n                                </div>\n                            </div>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    </div>', 2, '2024-09-02 17:05:09', '2024-09-02 17:05:09');
 
 -- --------------------------------------------------------
 
@@ -10758,6 +10825,13 @@ CREATE TABLE `block_container` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `block_container`
+--
+
+INSERT INTO `block_container` (`block_container_id`, `block_style_id`, `block_container`, `created_date`, `last_log_by`) VALUES
+(3, 2, '\n    <div class=\"col-lg-12\">\n        <div class=\"card\">\n            <div class=\"card-header d-flex align-items-center\">\n                <h5 class=\"card-title mb-0\">Block Item</h5>\n                <?php\n                    echo $writeAccess[\'total\'] > 0 ? \'<div class=\"card-actions cursor-pointer ms-auto d-flex button-group\">\n                                                            <button type=\"submit\" form=\"block-item-form\" class=\"btn btn-success\" id=\"submit-block-item-data\">Save</button>\n                                                        </div>\' : \'\';\n                ?>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"col-lg-12 mb-0\">\n                    <form id=\"block-item-form\" method=\"post\" action=\"#\">\n                        <div class=\"row\">\n                            <div class=\"col-lg-12\">\n                                <div class=\"mb-3\">\n                                    <textarea class=\"form-control maxlength\" id=\"block_item\" name=\"block_item\" rows=\"5\"></textarea>\n                                </div>\n                            </div>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    </div>', '2024-09-02 17:05:09', 2);
+
+--
 -- Triggers `block_container`
 --
 DROP TRIGGER IF EXISTS `block_container_trigger_insert`;
@@ -10875,7 +10949,9 @@ INSERT INTO `block_style` (`block_style_id`, `block_style_name`, `description`, 
 (12, 'Process Step Style', 'Process Step Style', 12, 'Process Step', '2024-09-01 18:52:53', 2),
 (13, 'Services Box Style', 'Services Box Style', 13, 'Services Box', '2024-09-01 19:24:37', 2),
 (14, 'Slider Style', 'Slider Style', 14, 'Slider', '2024-09-01 19:30:58', 2),
-(15, 'Testimonial Style', 'Testimonial Style', 15, 'Testimonial', '2024-09-01 20:06:51', 2);
+(15, 'Testimonial Style', 'Testimonial Style', 15, 'Testimonial', '2024-09-01 20:06:51', 2),
+(16, 'Pricing Table Style', 'Pricing Table Style', 11, 'Pricing Table', '2024-09-02 11:19:00', 2),
+(17, 'Columns Style', 'Columns Style', 16, 'Columns', '2024-09-02 13:50:49', 2);
 
 --
 -- Triggers `block_style`
@@ -10960,7 +11036,8 @@ INSERT INTO `block_type` (`block_type_id`, `block_type_name`, `created_date`, `l
 (12, 'Process Step', '2024-08-26 21:40:20', 1),
 (13, 'Services Box', '2024-08-26 21:40:20', 1),
 (14, 'Slider', '2024-08-26 21:40:20', 1),
-(15, 'Testimonial', '2024-08-26 21:40:20', 1);
+(15, 'Testimonial', '2024-08-26 21:40:20', 1),
+(16, 'Columns', '2024-09-02 13:50:24', 2);
 
 --
 -- Triggers `block_type`
@@ -17445,7 +17522,7 @@ INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `
 (5, 'Employees', 2, 'Employees', 1, '2024-06-27 15:29:15', 2),
 (6, 'Employee Configurations', 2, 'Employees', 23, '2024-06-27 17:17:10', 2),
 (7, 'Customers', 3, 'Customer', 3, '2024-08-19 10:29:11', 2),
-(8, 'Websites', 4, 'Website Studio', 23, '2024-08-23 14:36:06', 2),
+(8, 'Websites', 4, 'Website Studio', 1, '2024-08-23 14:36:06', 2),
 (9, 'Website Configurations', 4, 'Website Studio', 90, '2024-08-23 16:25:19', 2),
 (10, 'Website Elements', 4, 'Website Studio', 2, '2024-08-26 11:59:34', 2);
 
@@ -18076,6 +18153,82 @@ INSERT INTO `password_history` (`password_history_id`, `user_account_id`, `passw
 (3, 10, 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', '2024-08-21 14:34:24', '2024-08-21 14:34:24'),
 (4, 11, '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', '2024-08-21 16:48:18', '2024-08-21 16:48:18'),
 (5, 12, '8yxzquTHrvtqWG82aM98iU%2BCanoOa%2Fzu4bqCJyZ70qA%3D', '2024-08-22 10:49:09', '2024-08-22 10:49:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pricing_table`
+--
+
+DROP TABLE IF EXISTS `pricing_table`;
+CREATE TABLE `pricing_table` (
+  `pricing_table_id` int(10) UNSIGNED NOT NULL,
+  `pricing_table_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Triggers `pricing_table`
+--
+DROP TRIGGER IF EXISTS `pricing_table_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `pricing_table_trigger_insert` AFTER INSERT ON `pricing_table` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Pricing table created. <br/>';
+
+    IF NEW.pricing_table_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Pricing Table Name: ", NEW.pricing_table_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('pricing_table', NEW.pricing_table_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `pricing_table_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `pricing_table_trigger_update` AFTER UPDATE ON `pricing_table` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.pricing_table_name <> OLD.pricing_table_name THEN
+        SET audit_log = CONCAT(audit_log, "Pricing Table Name: ", OLD.pricing_table_name, " -> ", NEW.pricing_table_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('pricing_table', NEW.pricing_table_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -19940,7 +20093,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-09-01 17:57:52', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'VFTBEzvqd2uxO%2F75%2F6x9asOS8JNRgCQE3wHkvpg95c0%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-09-02 10:15:39', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'oEgIBjE315jsQoAXcQkisdjALNXLsVfcTedkGEv0y8Y%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -21094,6 +21247,14 @@ ALTER TABLE `password_history`
   ADD KEY `password_history_index_user_account_id` (`user_account_id`);
 
 --
+-- Indexes for table `pricing_table`
+--
+ALTER TABLE `pricing_table`
+  ADD PRIMARY KEY (`pricing_table_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `pricing_tableindex_pricing_table_id` (`pricing_table_id`);
+
+--
 -- Indexes for table `process_step`
 --
 ALTER TABLE `process_step`
@@ -21355,13 +21516,13 @@ ALTER TABLE `address_type`
 -- AUTO_INCREMENT for table `app_module`
 --
 ALTER TABLE `app_module`
-  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `app_module_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3943;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3957;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -21379,7 +21540,7 @@ ALTER TABLE `bank_account_type`
 -- AUTO_INCREMENT for table `block_container`
 --
 ALTER TABLE `block_container`
-  MODIFY `block_container_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `block_container_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `block_item`
@@ -21391,13 +21552,13 @@ ALTER TABLE `block_item`
 -- AUTO_INCREMENT for table `block_style`
 --
 ALTER TABLE `block_style`
-  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `block_style_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `block_type`
 --
 ALTER TABLE `block_type`
-  MODIFY `block_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `block_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `blood_type`
@@ -21746,6 +21907,12 @@ ALTER TABLE `page_title`
 --
 ALTER TABLE `password_history`
   MODIFY `password_history_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `pricing_table`
+--
+ALTER TABLE `pricing_table`
+  MODIFY `pricing_table_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `process_step`
@@ -22349,6 +22516,12 @@ ALTER TABLE `notification_setting_system_template`
 --
 ALTER TABLE `page_title`
   ADD CONSTRAINT `page_title_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `pricing_table`
+--
+ALTER TABLE `pricing_table`
+  ADD CONSTRAINT `pricing_table_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `process_step`

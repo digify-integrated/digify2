@@ -9,28 +9,26 @@
     <?php require_once('components/global/view/_head.php'); ?>
     <link rel="stylesheet" href="./assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="./assets/libs/select2/dist/css/select2.min.css">
-    <link rel="stylesheet" href="./assets/libs/prismjs/css/prism.css">
-    <link rel="stylesheet" href="./assets/libs/codemirror/css/codemirror.min.css">
 </head>
 <body>
     <?php require_once('components/global/view/_preloader.php'); ?>
     <div id="main-wrapper">
         <?php require_once('components/global/view/_sidebar.php'); ?>
         <div class="page-wrapper">
-            <?php require_once('components/global/view/_header.php'); ?>
+            <?php require_once('components/global/view/_columns.php'); ?>
             <div class="body-wrapper">
                 <div class="container-fluid">
                     <?php 
                         require_once('components/global/view/_breadcrumbs.php'); 
 
                         if($newRecord){
-                            require_once('components/block-style/view/_block_style_new.php');
+                            require_once('components/columns/view/_columns_new.php');
                         }
                         else if(!empty($detailID)){
-                            require_once('components/block-style/view/_block_style_details.php');
+                            require_once('components/columns/view/_columns_details.php');
                         }
                         else{
-                            require_once('components/block-style/view/_block_style.php');
+                            require_once('components/columns/view/_columns.php');
                         }
                     ?>
                 </div>
@@ -49,23 +47,18 @@
     <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
-    <script src="./assets/libs/prismjs/js/prism.js"></script>
-    <script src="./assets/libs/codemirror/js/codemirror.min.js"></script>
-    <script src="./assets/libs/codemirror/js/htmlmixed.min.js"></script>
-    <script src="./assets/libs/codemirror/js/javascript.min.js"></script>
-    <script src="./assets/libs/codemirror/js/php.min.js"></script>
 
     <?php
-        $scriptLink = 'block-style.js';
+        $scriptLink = 'columns.js';
 
         if($newRecord){
-            $scriptLink = 'block-style-new.js';
+            $scriptLink = 'columns-new.js';
         }
         else if(!empty($detailID)){
-            $scriptLink = 'block-style-details.js';
+            $scriptLink = 'columns-details.js';
         }
 
-        echo '<script src="./components/block-style/js/'. $scriptLink .'?v=' . rand() .'"></script>';
+        echo '<script src="./components/columns/js/'. $scriptLink .'?v=' . rand() .'"></script>';
     ?>
 </body>
 

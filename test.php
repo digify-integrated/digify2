@@ -10,30 +10,38 @@ class MyTranslator {
         $this->translator = new LibreTranslate('https://trans.zillyhuhn.com');
     }
 
-    public function translate($text, $source_language, $target_language) {
-        $response = $this->translator->translate($text, $source_language, $target_language);
-    
-        if (is_string($response)) {
-            return $response;
-        } else {
-            var_dump($response); // Inspect the response
-            throw new \Exception('Translation failed: Unknown error');
+    public function translate($texts, $source_language, $target_language) {
+        $translations = [];
+
+        foreach ($texts as $text) {
+            $response = $this->translator->translate($text, $source_language, $target_language);
+        
+            if (is_string($response)) {
+                $translations[] = $response;
+            } else {
+                var_dump($response); // Inspect the response
+                throw new \Exception('Translation failed: Unknown error');
+            }
         }
+
+        return $translations;
     }    
 }
 
 $translator = new MyTranslator();
 
-$text = "HOW CAN WE HELP YOU?
-Need cleaning solutions? Get in touch with us!
-We’re here to help with any questions you might have and look forward to connecting with you. Feel free to reach out to us or drop by our office for a friendly chat over coffee.";
-$source_language = 'en';
-$target_language = 'ar';
+if (isset($_POST['texts']) && isset($_POST['source_language']) && isset($_POST['target_language'])) {
+    $texts = $_POST['texts'];
+    $source_language = $_POST['source_language'];
+    $target_language = $_POST['target_language'];
 
-try {
-    $translated_text = $translator->translate($text, $source_language, $target_language);
-    echo $translated_text; // Outputs: ¡Hola!
-} catch (\Exception $e) {
-    echo 'Error: ' . $e->getMessage();
+    try {
+        $translations = $translator->translate($texts, $source_language, $target_language);
+        echo json_encode(['translations' => $translations]);
+    } catch (\Exception $e) {
+        echo json_encode(['error' => $e->getMessage()]);
+    }
+} else {
+    echo json_encode(['error' => 'Invalid request']);
 }
 ?>

@@ -39,40 +39,54 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0">Block Container</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-block-container-details" data-bs-target="#block-container-modal">Edit</button>
+                                                            <button type="submit" form="block-container-form" class="btn btn-success" id="submit-block-container-data">Save</button>
                                                         </div>' : '';
                 ?>
             </div>
             <div class="card-body">
                 <div class="col-lg-12 mb-0">
-                    <pre class="line-numbers">
-                        <code class="language-markup" id="block_container_summary"></code>
-                    </pre>
+                    <form id="block-container-form" method="post" action="#">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <textarea class="" id="block_container" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-6">
+</div>
+<div class="row">
+    <div class="col-lg-12">
         <div class="card">
             <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0">Block Item</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-block-item-details" data-bs-target="#block-item-modal">Edit</button>
+                                                            <button type="submit" form="block-item-form" class="btn btn-success" id="submit-block-item-data">Save</button>
                                                         </div>' : '';
                 ?>
             </div>
             <div class="card-body">
                 <div class="col-lg-12 mb-0">
-                    <pre class="line-numbers">
-                        <code class="language-markup" id="block_item_summary"></code>
-                    </pre>
+                    <form id="block-item-form" method="post" action="#">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <textarea class="form-control maxlength" id="block_item" name="block_item" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -113,60 +127,6 @@
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="block-style-form" class="btn btn-success" id="submit-data">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="block-container-modal" tabindex="-1" aria-labelledby="block-container-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-        <div class="modal-content">
-            <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8">Edit Block Container Details</h5>
-                <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="block-container-form" method="post" action="#">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="mb-3">
-                                <label class="form-label" for="block_container">Block Container <span class="text-danger">*</span></label>
-                                <textarea class="form-control maxlength" id="block_container" name="block_container" rows="5"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer border-top">
-                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="block-container-form" class="btn btn-success" id="submit-block-container-data">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="block-item-modal" tabindex="-1" aria-labelledby="block-item-modal" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-        <div class="modal-content">
-            <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8">Edit Block Item Details</h5>
-                <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="block-item-form" method="post" action="#">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="mb-3">
-                                <label class="form-label" for="block_item">Block Item <span class="text-danger">*</span></label>
-                                <textarea class="form-control maxlength" id="block_item" name="block_item" rows="5"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer border-top">
-                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="block-item-form" class="btn btn-success" id="submit-block-item-data">Save changes</button>
             </div>
         </div>
     </div>

@@ -108,6 +108,28 @@
 
             internalNotesForm('block_style', block_style_id);
         }
+
+        if($('#block_container').length){
+            var editor = CodeMirror.fromTextArea(document.getElementById("block_container"), {
+                mode: "htmlmixed",
+                theme: "default",
+                lineNumbers: true,
+                lineWrapping: false,
+                viewportMargin: 10,
+                height: "300px"
+            });
+        }
+
+        if($('#block_item').length){
+            var editor = CodeMirror.fromTextArea(document.getElementById("block_item"), {
+                mode: "htmlmixed",
+                theme: "default",
+                lineNumbers: true,
+                lineWrapping: false,
+                viewportMargin: 10,
+                height: "300px"
+            });
+        }
     });
 })(jQuery);
 
@@ -238,11 +260,20 @@ function blockContainerForm(){
             const block_style_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update block container';
+
+            // Get the values of the CodeMirror editors
+            const blockContainerValue = $('#block_container').val();
+
+            // Include the values in the serialized form data
+            const formData = $(form).serialize() + 
+                '&block_container=' + encodeURIComponent(blockContainerValue) + 
+                '&transaction=' + transaction + 
+                '&block_style_id=' + block_style_id;
           
             $.ajax({
                 type: 'POST',
                 url: 'components/block-style/controller/block-style-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&block_style_id=' + block_style_id,
+                data: formData,
                 dataType: 'json',
                 beforeSend: function() {
                     disableFormSubmitButton('submit-block-container-data');
@@ -438,7 +469,6 @@ function displayDetails(transaction){
                         $('#block_container').val(response.blockContainer);
                         
                         $('#block_container_summary').text(response.blockContainer);
-                        Prism.highlightElement($('#block_container_summary')[0]);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
