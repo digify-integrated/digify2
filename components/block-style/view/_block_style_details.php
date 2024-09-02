@@ -45,7 +45,7 @@
                 <h5 class="card-title mb-0">Block Container</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button type="submit" form="block-container-form" class="btn btn-success" id="submit-block-container-data">Save</button>
+                                                            <button type="button" class="btn btn-success" id="submit-block-container-data">Save</button>
                                                         </div>' : '';
                 ?>
             </div>
@@ -72,7 +72,7 @@
                 <h5 class="card-title mb-0">Block Item</h5>
                 <?php
                     echo $writeAccess['total'] > 0 ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button type="submit" form="block-item-form" class="btn btn-success" id="submit-block-item-data">Save</button>
+                                                            <button type="button" class="btn btn-success" id="submit-block-item-data">Save</button>
                                                         </div>' : '';
                 ?>
             </div>

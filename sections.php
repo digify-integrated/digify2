@@ -15,20 +15,20 @@
     <div id="main-wrapper">
         <?php require_once('components/global/view/_sidebar.php'); ?>
         <div class="page-wrapper">
-            <?php require_once('components/global/view/_columns.php'); ?>
+            <?php require_once('components/global/view/_header.php'); ?>
             <div class="body-wrapper">
                 <div class="container-fluid">
                     <?php 
                         require_once('components/global/view/_breadcrumbs.php'); 
 
                         if($newRecord){
-                            require_once('components/columns/view/_columns_new.php');
+                            require_once('components/sections/view/_sections_new.php');
                         }
                         else if(!empty($detailID)){
-                            require_once('components/columns/view/_columns_details.php');
+                            require_once('components/sections/view/_sections_details.php');
                         }
                         else{
-                            require_once('components/columns/view/_columns.php');
+                            require_once('components/sections/view/_sections.php');
                         }
                     ?>
                 </div>
@@ -49,16 +49,16 @@
     <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
 
     <?php
-        $scriptLink = 'columns.js';
+        $scriptLink = 'sections.js';
 
         if($newRecord){
-            $scriptLink = 'columns-new.js';
+            $scriptLink = 'sections-new.js';
         }
         else if(!empty($detailID)){
-            $scriptLink = 'columns-details.js';
+            $scriptLink = 'sections-details.js';
         }
 
-        echo '<script src="./components/columns/js/'. $scriptLink .'?v=' . rand() .'"></script>';
+        echo '<script src="./components/sections/js/'. $scriptLink .'?v=' . rand() .'"></script>';
     ?>
 </body>
 

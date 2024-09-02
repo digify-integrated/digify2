@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2024 at 11:27 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Sep 02, 2024 at 04:32 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -597,6 +597,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkScheduleTypeExist` (IN `p_sche
 	SELECT COUNT(*) AS total
     FROM schedule_type
     WHERE schedule_type_id = p_schedule_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkSectionsExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkSectionsExist` (IN `p_sections_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM sections
+    WHERE sections_id = p_sections_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkServicesBoxExist`$$
@@ -1333,6 +1340,11 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteScheduleType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteScheduleType` (IN `p_schedule_type_id` INT)   BEGIN
     DELETE FROM schedule_type WHERE schedule_type_id = p_schedule_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteSections`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteSections` (IN `p_sections_id` INT)   BEGIN
+    DELETE FROM sections WHERE sections_id = p_sections_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteServicesBox`$$
@@ -2480,6 +2492,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateScheduleTypeTable` ()   BEG
     ORDER BY schedule_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `generateSectionsTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateSectionsTable` ()   BEGIN
+    SELECT sections_id, sections_name, description, publish_status
+    FROM sections;
+END$$
+
 DROP PROCEDURE IF EXISTS `generateServicesBoxItemTable`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `generateServicesBoxItemTable` (IN `p_services_box_id` INT)   BEGIN
     SELECT services_box_item_id, services_box_title, services_box_heading, services_box_paragraph, call_to_action_button_text, call_to_action_button_link, services_box_image, order_sequence 
@@ -3194,6 +3212,12 @@ DROP PROCEDURE IF EXISTS `getScheduleType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getScheduleType` (IN `p_schedule_type_id` INT)   BEGIN
 	SELECT * FROM schedule_type
 	WHERE schedule_type_id = p_schedule_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `getSections`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getSections` (IN `p_sections_id` INT)   BEGIN
+	SELECT * FROM sections
+	WHERE sections_id = p_sections_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `getSecuritySetting`$$
@@ -3919,6 +3943,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertScheduleType` (IN `p_schedule
 	VALUES(p_schedule_type_name, p_last_log_by);
 	
     SET p_schedule_type_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertSections`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertSections` (IN `p_sections_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT, OUT `p_sections_id` INT)   BEGIN
+    INSERT INTO sections (sections_name, description, block_style_id, block_style_name, last_log_by) 
+	VALUES(p_sections_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
+	
+    SET p_sections_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertServicesBox`$$
@@ -5821,6 +5853,25 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateScheduleType` (IN `p_schedule
     COMMIT;
 END$$
 
+DROP PROCEDURE IF EXISTS `updateSections`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSections` (IN `p_sections_id` INT, IN `p_sections_name` VARCHAR(100), IN `p_description` VARCHAR(100), IN `p_block_style_id` INT, IN `p_block_style_name` VARCHAR(100), IN `p_last_log_by` INT)   BEGIN
+    UPDATE sections
+    SET sections_name = p_sections_name,
+        description = p_description,
+        block_style_id = p_block_style_id,
+        block_style_name = p_block_style_name,
+        last_log_by = p_last_log_by
+    WHERE sections_id = p_sections_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateSectionsPublishStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSectionsPublishStatus` (IN `p_sections_id` INT, IN `p_publish_status` VARCHAR(5), IN `p_last_log_by` INT)   BEGIN
+    UPDATE sections
+    SET publish_status = p_publish_status,
+        last_log_by = p_last_log_by
+    WHERE sections_id = p_sections_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `updateSecuritySetting`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `updateSecuritySetting` (IN `p_max_failed_login` INT, IN `p_max_failed_otp_attempt` INT, IN `p_password_expiry_duration` INT, IN `p_otp_duration` INT, IN `p_reset_password_token_duration` INT, IN `p_session_inactivity_limit` INT, IN `p_password_recovery_link` VARCHAR(1000), IN `p_registration_verification_token_duration` INT, IN `p_last_log_by` INT)   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -6618,7 +6669,7 @@ INSERT INTO `app_module` (`app_module_id`, `app_module_name`, `app_module_descri
 (2, 'Employees', 'Centralize employee information', './components/app-module/image/logo/2/kwDc.png', '1.0.0', 23, 'Inventory Overview', 1, '2024-06-27 15:30:44', 2),
 (3, 'Customer', 'Bring all your customer information into one easy-to-access location', './components/app-module/image/logo/3/rL4r.png', '1.0.0', 50, 'Customer', 3, '2024-08-19 10:28:21', 2),
 (4, 'Website Studio', 'Create and customize your website', './components/app-module/image/logo/4/TnX0.png', '1.0.0', 54, 'Websites', 1, '2024-08-22 20:54:37', 2),
-(5, 'CRM', 'Track leads and close opportunities', './components/app-module/image/logo/5/CxLn.png', '1.0.0', 53, ' Banks & Cards', 3, '2024-09-02 14:17:04', 2);
+(5, 'CRM', 'Track leads and close opportunities', './components/app-module/image/logo/5/CxLn.png', '1.0.0', 73, 'My Bookings', 3, '2024-09-02 14:17:04', 2);
 
 --
 -- Triggers `app_module`
@@ -10676,7 +10727,36 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (3953, 'block_style', 17, 'Block style created. <br/><br/>Block Style Name: Columns Style<br/>Description: Columns Style<br/>Block Type Name: Columns', 2, '2024-09-02 13:50:49', '2024-09-02 13:50:49'),
 (3954, 'app_module', 5, 'App module created. <br/><br/>App Module Name: CRM<br/>App Module Description: Track leads and close opportunities<br/>App Version: 1.0.0<br/>Menu Item Name:  Banks & Cards<br/>Order Sequence: 3', 2, '2024-09-02 14:17:04', '2024-09-02 14:17:04'),
 (3955, 'block_container', 2, 'Block container created. <br/><br/>Block Container: asdasdasd', 2, '2024-09-02 17:02:48', '2024-09-02 17:02:48'),
-(3956, 'block_container', 3, 'Block container created. <br/><br/>Block Container: \n    <div class=\"col-lg-12\">\n        <div class=\"card\">\n            <div class=\"card-header d-flex align-items-center\">\n                <h5 class=\"card-title mb-0\">Block Item</h5>\n                <?php\n                    echo $writeAccess[\'total\'] > 0 ? \'<div class=\"card-actions cursor-pointer ms-auto d-flex button-group\">\n                                                            <button type=\"submit\" form=\"block-item-form\" class=\"btn btn-success\" id=\"submit-block-item-data\">Save</button>\n                                                        </div>\' : \'\';\n                ?>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"col-lg-12 mb-0\">\n                    <form id=\"block-item-form\" method=\"post\" action=\"#\">\n                        <div class=\"row\">\n                            <div class=\"col-lg-12\">\n                                <div class=\"mb-3\">\n                                    <textarea class=\"form-control maxlength\" id=\"block_item\" name=\"block_item\" rows=\"5\"></textarea>\n                                </div>\n                            </div>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    </div>', 2, '2024-09-02 17:05:09', '2024-09-02 17:05:09');
+(3956, 'block_container', 3, 'Block container created. <br/><br/>Block Container: \n    <div class=\"col-lg-12\">\n        <div class=\"card\">\n            <div class=\"card-header d-flex align-items-center\">\n                <h5 class=\"card-title mb-0\">Block Item</h5>\n                <?php\n                    echo $writeAccess[\'total\'] > 0 ? \'<div class=\"card-actions cursor-pointer ms-auto d-flex button-group\">\n                                                            <button type=\"submit\" form=\"block-item-form\" class=\"btn btn-success\" id=\"submit-block-item-data\">Save</button>\n                                                        </div>\' : \'\';\n                ?>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"col-lg-12 mb-0\">\n                    <form id=\"block-item-form\" method=\"post\" action=\"#\">\n                        <div class=\"row\">\n                            <div class=\"col-lg-12\">\n                                <div class=\"mb-3\">\n                                    <textarea class=\"form-control maxlength\" id=\"block_item\" name=\"block_item\" rows=\"5\"></textarea>\n                                </div>\n                            </div>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    </div>', 2, '2024-09-02 17:05:09', '2024-09-02 17:05:09'),
+(3957, 'user_account', 2, 'Last Connection Date: 2024-09-02 10:15:39 -> 2024-09-02 19:14:08<br/>', 2, '2024-09-02 19:14:08', '2024-09-02 19:14:08'),
+(3958, 'block_container', 3, 'Block Container: \n    <div class=\"col-lg-12\">\n        <div class=\"card\">\n            <div class=\"card-header d-flex align-items-center\">\n                <h5 class=\"card-title mb-0\">Block Item</h5>\n                <?php\n                    echo $writeAccess[\'total\'] > 0 ? \'<div class=\"card-actions cursor-pointer ms-auto d-flex button-group\">\n                                                            <button type=\"submit\" form=\"block-item-form\" class=\"btn btn-success\" id=\"submit-block-item-data\">Save</button>\n                                                        </div>\' : \'\';\n                ?>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"col-lg-12 mb-0\">\n                    <form id=\"block-item-form\" method=\"post\" action=\"#\">\n                        <div class=\"row\">\n                            <div class=\"col-lg-12\">\n                                <div class=\"mb-3\">\n                                    <textarea class=\"form-control maxlength\" id=\"block_item\" name=\"block_item\" rows=\"5\"></textarea>\n                                </div>\n                            </div>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    </div> -> sdasdasdasd<br/>', 2, '2024-09-02 20:23:44', '2024-09-02 20:23:44'),
+(3959, 'block_container', 3, 'Block Container: sdasdasdasd -> %3Cdiv%20class%3D%22card-header%20d-flex%20align-items-center%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ch5%20class%3D%22card-title%20mb-0%22%3EBlock%20Style%3C%2Fh5%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cdiv%20class%3D%22card-actions%20cursor-pointer%20ms-auto%20d-flex%20button-group%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cbutton%20type%3D%22button%22%20class%3D%22btn%20btn-dark%20dropdown-toggle%20action-dropdown%20mb-0%22%20data-bs-toggle%3D%22dropdown%22%20aria-expanded%3D%22false%22%3EAction%3C%2Fbutton%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cul%20class%3D%22dropdown-menu%20dropdown-menu-end%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20class%3D%22dropdown-item%22%20href%3D%22block-style.php%3Fapp_module_id%3D9sziRtvbk3xLr1X309jNAXvhYj%252FLZjWSUiLuxPg6nPU%253D%26amp%3Bpage_id%3DJYlbFlmG0KYM836W5Q8Lg6DS2ZeDSIzPS3I4JQOdTFg%253D%26amp%3Bnew%22%3ECreate%20Block%20Style%3C%2Fa%3E%3C%2Fli%3E%3Cli%3E%3Cbutton%20class%3D%22dropdown-item%22%20type%3D%22button%22%20id%3D%22delete-block-style%22%3EDelete%20Block%20Style%3C%2Fbutton%3E%3C%2Fli%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cdiv%20class%3D%22card-actions%20cursor-pointer%20ms-auto%20d-flex%20button-group%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cbutton%20class%3D%22btn%20btn-info%20mb-0%20px-4%22%20data-bs-toggle%3D%22modal%22%20id%3D%22edit-details%22%20data-bs-target%3D%22%23block-style-modal%22%3EEdit%3C%2Fbutton%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fdiv%3E%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fdiv%3E<br/>', 2, '2024-09-02 20:24:04', '2024-09-02 20:24:04'),
+(3960, 'block_container', 3, 'Block Container: %3Cdiv%20class%3D%22card-header%20d-flex%20align-items-center%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Ch5%20class%3D%22card-title%20mb-0%22%3EBlock%20Style%3C%2Fh5%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cdiv%20class%3D%22card-actions%20cursor-pointer%20ms-auto%20d-flex%20button-group%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cbutton%20type%3D%22button%22%20class%3D%22btn%20btn-dark%20dropdown-toggle%20action-dropdown%20mb-0%22%20data-bs-toggle%3D%22dropdown%22%20aria-expanded%3D%22false%22%3EAction%3C%2Fbutton%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cul%20class%3D%22dropdown-menu%20dropdown-menu-end%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cli%3E%3Ca%20class%3D%22dropdown-item%22%20href%3D%22block-style.php%3Fapp_module_id%3D9sziRtvbk3xLr1X309jNAXvhYj%252FLZjWSUiLuxPg6nPU%253D%26amp%3Bpage_id%3DJYlbFlmG0KYM836W5Q8Lg6DS2ZeDSIzPS3I4JQOdTFg%253D%26amp%3Bnew%22%3ECreate%20Block%20Style%3C%2Fa%3E%3C%2Fli%3E%3Cli%3E%3Cbutton%20class%3D%22dropdown-item%22%20type%3D%22button%22%20id%3D%22delete-block-style%22%3EDelete%20Block%20Style%3C%2Fbutton%3E%3C%2Fli%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Ful%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fdiv%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cdiv%20class%3D%22card-actions%20cursor-pointer%20ms-auto%20d-flex%20button-group%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cbutton%20class%3D%22btn%20btn-info%20mb-0%20px-4%22%20data-bs-toggle%3D%22modal%22%20id%3D%22edit-details%22%20data-bs-target%3D%22%23block-style-modal%22%3EEdit%3C%2Fbutton%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fdiv%3E%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fdiv%3E -> <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-lg-6 mb-3\">\n                        <p class=\"mb-1 fs-2\">Display Name</p>\n                        <h6 class=\"fw-semibold mb-0\" id=\"block_style_name_summary\">Accordion</h6>\n                    </div>\n                    <div class=\"col-lg-6 mb-3\">\n                        <p class=\"mb-1 fs-2\">Block Type</p>\n                        <h6 class=\"fw-semibold mb-0\" id=\"block_type_name_summary\">Accordion</h6>\n                    </div>\n                    <div class=\"col-lg-12 mb-0\">\n                        <p class=\"mb-1 fs-2\">Description</p>\n                        <h6 class=\"fw-semibold mb-0\" id=\"description_summary\">Accordion</h6>\n                    </div>\n                </div>\n            </div><br/>', 2, '2024-09-02 20:24:27', '2024-09-02 20:24:27'),
+(3961, 'block_item', 2, 'Block item created. <br/><br/>Block Item: <div class=\"modal fade\" id=\"block-style-modal\" tabindex=\"-1\" aria-labelledby=\"block-style-modal\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-scrollable modal-r\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header border-bottom\">\n                <h5 class=\"modal-title fw-8\">Edit Block Style Details</h5>\n                <button type=\"button\" class=\"btn-close fs-2\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <form id=\"block-style-form\" method=\"post\" action=\"#\" novalidate=\"novalidate\">\n                    <div class=\"row\">\n                        <div class=\"col-lg-6\">\n                            <div class=\"mb-3\">\n                                <label class=\"form-label\" for=\"block_style_name\">Display Name <span class=\"text-danger\">*</span></label>\n                                <input type=\"text\" class=\"form-control maxlength\" id=\"block_style_name\" name=\"block_style_name\" maxlength=\"100\" autocomplete=\"off\">\n                            </div>\n                        </div>\n                        <div class=\"col-lg-6\">\n                            <label class=\"form-label\" for=\"block_type_id\">Block Type <span class=\"text-danger\">*</span></label>\n                            <div class=\"mb-3\">\n                                <select id=\"block_type_id\" name=\"block_type_id\" class=\"select2 form-control select2-hidden-accessible\" data-select2-id=\"select2-data-block_type_id\" tabindex=\"-1\" aria-hidden=\"true\"><option value=\"\" data-select2-id=\"select2-data-2-tpax\">--</option><option value=\"1\" data-select2-id=\"select2-data-3-83dd\">Accordion</option><option value=\"2\" data-select2-id=\"select2-data-4-vlc7\">Call To Action</option><option value=\"3\" data-select2-id=\"select2-data-5-bsb4\">Carousel</option><option value=\"4\" data-select2-id=\"select2-data-6-nn6x\">Client</option><option value=\"16\" data-select2-id=\"select2-data-7-9zxa\">Columns</option><option value=\"5\" data-select2-id=\"select2-data-8-5tmw\">Contact Form</option><option value=\"6\" data-select2-id=\"select2-data-9-08bm\">Content Carousel</option><option value=\"7\" data-select2-id=\"select2-data-10-nhy2\">Footer</option><option value=\"8\" data-select2-id=\"select2-data-11-6jp9\">Header</option><option value=\"9\" data-select2-id=\"select2-data-12-3dz1\">Image Gallery</option><option value=\"10\" data-select2-id=\"select2-data-13-ytv4\">Page Title</option><option value=\"11\" data-select2-id=\"select2-data-14-17j5\">Pricing Table</option><option value=\"12\" data-select2-id=\"select2-data-15-4gex\">Process Step</option><option value=\"13\" data-select2-id=\"select2-data-16-5lfp\">Services Box</option><option value=\"14\" data-select2-id=\"select2-data-17-s3y5\">Slider</option><option value=\"15\" data-select2-id=\"select2-data-18-n2p5\">Testimonial</option></select><span class=\"select2 select2-container select2-container--default\" dir=\"ltr\" data-select2-id=\"select2-data-1-3k7c\" style=\"width: auto;\"><span class=\"selection\"><span class=\"select2-selection select2-selection--single\" role=\"combobox\" aria-haspopup=\"true\" aria-expanded=\"false\" tabindex=\"0\" aria-disabled=\"false\" aria-labelledby=\"select2-block_type_id-container\" aria-controls=\"select2-block_type_id-container\"><span class=\"select2-selection__rendered\" id=\"select2-block_type_id-container\" role=\"textbox\" aria-readonly=\"true\" title=\"Accordion\">Accordion</span><span class=\"select2-selection__arrow\" role=\"presentation\"><b role=\"presentation\"></b></span></span></span><span class=\"dropdown-wrapper\" aria-hidden=\"true\"></span></span>\n                            </div>\n                        </div>\n                        <div class=\"col-lg-12\">\n                            <div class=\"mb-3\">\n                                <label class=\"form-label\" for=\"description\">Description</label>\n                                <textarea class=\"form-control maxlength\" id=\"description\" name=\"description\" maxlength=\"500\" rows=\"5\"></textarea>\n                            </div>\n                        </div>\n                    </div>\n                </form>\n            </div>\n            <div class=\"modal-footer border-top\">\n                <button type=\"button\" class=\"btn btn-outline-danger\" data-bs-dismiss=\"modal\">Close</button>\n                <button type=\"submit\" form=\"block-style-form\" class=\"btn btn-success\" id=\"submit-data\">Save changes</button>\n            </div>\n        </div>\n    </div>\n</div>', 2, '2024-09-02 20:30:18', '2024-09-02 20:30:18'),
+(3962, 'block_container', 3, 'Block Container: <div class=\"card-body\">\n                <div class=\"row\">\n                    <div class=\"col-lg-6 mb-3\">\n                        <p class=\"mb-1 fs-2\">Display Name</p>\n                        <h6 class=\"fw-semibold mb-0\" id=\"block_style_name_summary\">Accordion</h6>\n                    </div>\n                    <div class=\"col-lg-6 mb-3\">\n                        <p class=\"mb-1 fs-2\">Block Type</p>\n                        <h6 class=\"fw-semibold mb-0\" id=\"block_type_name_summary\">Accordion</h6>\n                    </div>\n                    <div class=\"col-lg-12 mb-0\">\n                        <p class=\"mb-1 fs-2\">Description</p>\n                        <h6 class=\"fw-semibold mb-0\" id=\"description_summary\">Accordion</h6>\n                    </div>\n                </div>\n            </div> -> <div class=\"modal fade\" id=\"block-style-modal\" tabindex=\"-1\" aria-labelledby=\"block-style-modal\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-scrollable modal-r\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header border-bottom\">\n                <h5 class=\"modal-title fw-8\">Edit Block Style Details</h5>\n                <button type=\"button\" class=\"btn-close fs-2\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <form id=\"block-style-form\" method=\"post\" action=\"#\" novalidate=\"novalidate\">\n                    <div class=\"row\">\n                        <div class=\"col-lg-6\">\n                            <div class=\"mb-3\">\n                                <label class=\"form-label\" for=\"block_style_name\">Display Name <span class=\"text-danger\">*</span></label>\n                                <input type=\"text\" class=\"form-control maxlength\" id=\"block_style_name\" name=\"block_style_name\" maxlength=\"100\" autocomplete=\"off\">\n                            </div>\n                        </div>\n                        <div class=\"col-lg-6\">\n                            <label class=\"form-label\" for=\"block_type_id\">Block Type <span class=\"text-danger\">*</span></label>\n                            <div class=\"mb-3\">\n                                <select id=\"block_type_id\" name=\"block_type_id\" class=\"select2 form-control select2-hidden-accessible\" data-select2-id=\"select2-data-block_type_id\" tabindex=\"-1\" aria-hidden=\"true\"><option value=\"\" data-select2-id=\"select2-data-2-tpax\">--</option><option value=\"1\" data-select2-id=\"select2-data-3-83dd\">Accordion</option><option value=\"2\" data-select2-id=\"select2-data-4-vlc7\">Call To Action</option><option value=\"3\" data-select2-id=\"select2-data-5-bsb4\">Carousel</option><option value=\"4\" data-select2-id=\"select2-data-6-nn6x\">Client</option><option value=\"16\" data-select2-id=\"select2-data-7-9zxa\">Columns</option><option value=\"5\" data-select2-id=\"select2-data-8-5tmw\">Contact Form</option><option value=\"6\" data-select2-id=\"select2-data-9-08bm\">Content Carousel</option><option value=\"7\" data-select2-id=\"select2-data-10-nhy2\">Footer</option><option value=\"8\" data-select2-id=\"select2-data-11-6jp9\">Header</option><option value=\"9\" data-select2-id=\"select2-data-12-3dz1\">Image Gallery</option><option value=\"10\" data-select2-id=\"select2-data-13-ytv4\">Page Title</option><option value=\"11\" data-select2-id=\"select2-data-14-17j5\">Pricing Table</option><option value=\"12\" data-select2-id=\"select2-data-15-4gex\">Process Step</option><option value=\"13\" data-select2-id=\"select2-data-16-5lfp\">Services Box</option><option value=\"14\" data-select2-id=\"select2-data-17-s3y5\">Slider</option><option value=\"15\" data-select2-id=\"select2-data-18-n2p5\">Testimonial</option></select><span class=\"select2 select2-container select2-container--default\" dir=\"ltr\" data-select2-id=\"select2-data-1-3k7c\" style=\"width: auto;\"><span class=\"selection\"><span class=\"select2-selection select2-selection--single\" role=\"combobox\" aria-haspopup=\"true\" aria-expanded=\"false\" tabindex=\"0\" aria-disabled=\"false\" aria-labelledby=\"select2-block_type_id-container\" aria-controls=\"select2-block_type_id-container\"><span class=\"select2-selection__rendered\" id=\"select2-block_type_id-container\" role=\"textbox\" aria-readonly=\"true\" title=\"Accordion\">Accordion</span><span class=\"select2-selection__arrow\" role=\"presentation\"><b role=\"presentation\"></b></span></span></span><span class=\"dropdown-wrapper\" aria-hidden=\"true\"></span></span>\n                            </div>\n                        </div>\n                        <div class=\"col-lg-12\">\n                            <div class=\"mb-3\">\n                                <label class=\"form-label\" for=\"description\">Description</label>\n                                <textarea class=\"form-control maxlength\" id=\"description\" name=\"description\" maxlength=\"500\" rows=\"5\"></textarea>\n                            </div>\n                        </div>\n                    </div>\n                </form>\n            </div>\n            <div class=\"modal-footer border-top\">\n                <button type=\"button\" class=\"btn btn-outline-danger\" data-bs-dismiss=\"modal\">Close</button>\n                <button type=\"submit\" form=\"block-style-form\" class=\"btn btn-success\" id=\"submit-data\">Save changes</button>\n            </div>\n        </div>\n    </div>\n</div><br/>', 2, '2024-09-02 20:30:24', '2024-09-02 20:30:24'),
+(3963, 'block_container', 4, 'Block container created. <br/><br/>Block Container: asdasd', 2, '2024-09-02 20:39:17', '2024-09-02 20:39:17'),
+(3964, 'block_container', 4, 'Block Container: asdasd -> asdasdasda<br/>', 2, '2024-09-02 20:43:22', '2024-09-02 20:43:22'),
+(3965, 'menu_item', 72, 'Menu Item created. <br/><br/>Menu Item Name: Sections<br/>Menu Item URL: sections.php<br/>Menu Item Icon: ti ti-section<br/>Menu Group Name: Website Elements<br/>App Module: Website Studio<br/>Order Sequence: 19', 2, '2024-09-02 21:53:55', '2024-09-02 21:53:55'),
+(3966, 'role_permission', 77, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Sections<br/>Date Assigned: 2024-09-02 21:54:07', 2, '2024-09-02 21:54:07', '2024-09-02 21:54:07'),
+(3967, 'role_permission', 77, 'Read Access: 0 -> 1<br/>', 2, '2024-09-02 21:54:09', '2024-09-02 21:54:09'),
+(3968, 'role_permission', 77, 'Create Access: 0 -> 1<br/>', 2, '2024-09-02 21:54:09', '2024-09-02 21:54:09'),
+(3969, 'role_permission', 77, 'Write Access: 0 -> 1<br/>', 2, '2024-09-02 21:54:10', '2024-09-02 21:54:10'),
+(3970, 'role_permission', 77, 'Delete Access: 0 -> 1<br/>', 2, '2024-09-02 21:54:11', '2024-09-02 21:54:11'),
+(3971, 'sections', 1, 'Sections created. <br/><br/>Sections Name: asd<br/>Description: asd<br/>Block Style Name: Columns Style<br/>Publish Status: No', 2, '2024-09-02 21:58:22', '2024-09-02 21:58:22'),
+(3972, 'block_style', 17, 'Block Type Name: Columns -> Sections<br/>', 2, '2024-09-02 21:58:39', '2024-09-02 21:58:39'),
+(3973, 'block_type', 16, 'Block Type Name: Columns -> Sections<br/>', 2, '2024-09-02 21:58:39', '2024-09-02 21:58:39'),
+(3974, 'block_style', 17, 'Block Style Name: Columns Style -> Sections Style<br/>Description: Columns Style -> Sections Style<br/>', 2, '2024-09-02 22:00:17', '2024-09-02 22:00:17'),
+(3975, 'user_account', 2, 'Failed Login Attempts: 0 -> 1<br/>', 2, '2024-09-02 22:26:17', '2024-09-02 22:26:17'),
+(3976, 'user_account', 2, 'Failed Login Attempts: 1 -> 0<br/>', 2, '2024-09-02 22:26:21', '2024-09-02 22:26:21'),
+(3977, 'user_account', 2, 'Last Connection Date: 2024-09-02 19:14:08 -> 2024-09-02 22:26:21<br/>', 2, '2024-09-02 22:26:21', '2024-09-02 22:26:21'),
+(3978, 'menu_group', 11, 'Menu group created. <br/><br/>Menu Group Name: Booking<br/>App Module: CRM<br/>Order Sequence: 1', 2, '2024-09-02 22:30:28', '2024-09-02 22:30:28'),
+(3979, 'menu_item', 73, 'Menu Item created. <br/><br/>Menu Item Name: My Bookings<br/>Menu Item URL: my-bookings.php<br/>Menu Item Icon: ti ti-calendar-time<br/>Menu Group Name: Booking<br/>App Module: CRM<br/>Order Sequence: 1', 2, '2024-09-02 22:31:14', '2024-09-02 22:31:14'),
+(3980, 'role_permission', 78, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: My Bookings<br/>Date Assigned: 2024-09-02 22:31:18', 2, '2024-09-02 22:31:18', '2024-09-02 22:31:18'),
+(3981, 'role_permission', 78, 'Read Access: 0 -> 1<br/>', 2, '2024-09-02 22:31:19', '2024-09-02 22:31:19'),
+(3982, 'role_permission', 78, 'Create Access: 0 -> 1<br/>', 2, '2024-09-02 22:31:20', '2024-09-02 22:31:20'),
+(3983, 'role_permission', 78, 'Write Access: 0 -> 1<br/>', 2, '2024-09-02 22:31:20', '2024-09-02 22:31:20'),
+(3984, 'role_permission', 78, 'Delete Access: 0 -> 1<br/>', 2, '2024-09-02 22:31:21', '2024-09-02 22:31:21'),
+(3985, 'app_module', 5, 'Menu Item Name:  Banks & Cards -> My Bookings<br/>', 2, '2024-09-02 22:31:53', '2024-09-02 22:31:53');
 
 -- --------------------------------------------------------
 
@@ -10829,7 +10909,8 @@ CREATE TABLE `block_container` (
 --
 
 INSERT INTO `block_container` (`block_container_id`, `block_style_id`, `block_container`, `created_date`, `last_log_by`) VALUES
-(3, 2, '\n    <div class=\"col-lg-12\">\n        <div class=\"card\">\n            <div class=\"card-header d-flex align-items-center\">\n                <h5 class=\"card-title mb-0\">Block Item</h5>\n                <?php\n                    echo $writeAccess[\'total\'] > 0 ? \'<div class=\"card-actions cursor-pointer ms-auto d-flex button-group\">\n                                                            <button type=\"submit\" form=\"block-item-form\" class=\"btn btn-success\" id=\"submit-block-item-data\">Save</button>\n                                                        </div>\' : \'\';\n                ?>\n            </div>\n            <div class=\"card-body\">\n                <div class=\"col-lg-12 mb-0\">\n                    <form id=\"block-item-form\" method=\"post\" action=\"#\">\n                        <div class=\"row\">\n                            <div class=\"col-lg-12\">\n                                <div class=\"mb-3\">\n                                    <textarea class=\"form-control maxlength\" id=\"block_item\" name=\"block_item\" rows=\"5\"></textarea>\n                                </div>\n                            </div>\n                        </div>\n                    </form>\n                </div>\n            </div>\n        </div>\n    </div>', '2024-09-02 17:05:09', 2);
+(3, 2, '<div class=\"modal fade\" id=\"block-style-modal\" tabindex=\"-1\" aria-labelledby=\"block-style-modal\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-scrollable modal-r\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header border-bottom\">\n                <h5 class=\"modal-title fw-8\">Edit Block Style Details</h5>\n                <button type=\"button\" class=\"btn-close fs-2\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <form id=\"block-style-form\" method=\"post\" action=\"#\" novalidate=\"novalidate\">\n                    <div class=\"row\">\n                        <div class=\"col-lg-6\">\n                            <div class=\"mb-3\">\n                                <label class=\"form-label\" for=\"block_style_name\">Display Name <span class=\"text-danger\">*</span></label>\n                                <input type=\"text\" class=\"form-control maxlength\" id=\"block_style_name\" name=\"block_style_name\" maxlength=\"100\" autocomplete=\"off\">\n                            </div>\n                        </div>\n                        <div class=\"col-lg-6\">\n                            <label class=\"form-label\" for=\"block_type_id\">Block Type <span class=\"text-danger\">*</span></label>\n                            <div class=\"mb-3\">\n                                <select id=\"block_type_id\" name=\"block_type_id\" class=\"select2 form-control select2-hidden-accessible\" data-select2-id=\"select2-data-block_type_id\" tabindex=\"-1\" aria-hidden=\"true\"><option value=\"\" data-select2-id=\"select2-data-2-tpax\">--</option><option value=\"1\" data-select2-id=\"select2-data-3-83dd\">Accordion</option><option value=\"2\" data-select2-id=\"select2-data-4-vlc7\">Call To Action</option><option value=\"3\" data-select2-id=\"select2-data-5-bsb4\">Carousel</option><option value=\"4\" data-select2-id=\"select2-data-6-nn6x\">Client</option><option value=\"16\" data-select2-id=\"select2-data-7-9zxa\">Columns</option><option value=\"5\" data-select2-id=\"select2-data-8-5tmw\">Contact Form</option><option value=\"6\" data-select2-id=\"select2-data-9-08bm\">Content Carousel</option><option value=\"7\" data-select2-id=\"select2-data-10-nhy2\">Footer</option><option value=\"8\" data-select2-id=\"select2-data-11-6jp9\">Header</option><option value=\"9\" data-select2-id=\"select2-data-12-3dz1\">Image Gallery</option><option value=\"10\" data-select2-id=\"select2-data-13-ytv4\">Page Title</option><option value=\"11\" data-select2-id=\"select2-data-14-17j5\">Pricing Table</option><option value=\"12\" data-select2-id=\"select2-data-15-4gex\">Process Step</option><option value=\"13\" data-select2-id=\"select2-data-16-5lfp\">Services Box</option><option value=\"14\" data-select2-id=\"select2-data-17-s3y5\">Slider</option><option value=\"15\" data-select2-id=\"select2-data-18-n2p5\">Testimonial</option></select><span class=\"select2 select2-container select2-container--default\" dir=\"ltr\" data-select2-id=\"select2-data-1-3k7c\" style=\"width: auto;\"><span class=\"selection\"><span class=\"select2-selection select2-selection--single\" role=\"combobox\" aria-haspopup=\"true\" aria-expanded=\"false\" tabindex=\"0\" aria-disabled=\"false\" aria-labelledby=\"select2-block_type_id-container\" aria-controls=\"select2-block_type_id-container\"><span class=\"select2-selection__rendered\" id=\"select2-block_type_id-container\" role=\"textbox\" aria-readonly=\"true\" title=\"Accordion\">Accordion</span><span class=\"select2-selection__arrow\" role=\"presentation\"><b role=\"presentation\"></b></span></span></span><span class=\"dropdown-wrapper\" aria-hidden=\"true\"></span></span>\n                            </div>\n                        </div>\n                        <div class=\"col-lg-12\">\n                            <div class=\"mb-3\">\n                                <label class=\"form-label\" for=\"description\">Description</label>\n                                <textarea class=\"form-control maxlength\" id=\"description\" name=\"description\" maxlength=\"500\" rows=\"5\"></textarea>\n                            </div>\n                        </div>\n                    </div>\n                </form>\n            </div>\n            <div class=\"modal-footer border-top\">\n                <button type=\"button\" class=\"btn btn-outline-danger\" data-bs-dismiss=\"modal\">Close</button>\n                <button type=\"submit\" form=\"block-style-form\" class=\"btn btn-success\" id=\"submit-data\">Save changes</button>\n            </div>\n        </div>\n    </div>\n</div>', '2024-09-02 17:05:09', 2),
+(4, 10, 'asdasdasda', '2024-09-02 20:39:17', 2);
 
 --
 -- Triggers `block_container`
@@ -10879,6 +10960,13 @@ CREATE TABLE `block_item` (
   `created_date` datetime NOT NULL DEFAULT current_timestamp(),
   `last_log_by` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `block_item`
+--
+
+INSERT INTO `block_item` (`block_item_id`, `block_style_id`, `block_item`, `created_date`, `last_log_by`) VALUES
+(2, 2, '<div class=\"modal fade\" id=\"block-style-modal\" tabindex=\"-1\" aria-labelledby=\"block-style-modal\" aria-hidden=\"true\">\n    <div class=\"modal-dialog modal-dialog-scrollable modal-r\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header border-bottom\">\n                <h5 class=\"modal-title fw-8\">Edit Block Style Details</h5>\n                <button type=\"button\" class=\"btn-close fs-2\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <form id=\"block-style-form\" method=\"post\" action=\"#\" novalidate=\"novalidate\">\n                    <div class=\"row\">\n                        <div class=\"col-lg-6\">\n                            <div class=\"mb-3\">\n                                <label class=\"form-label\" for=\"block_style_name\">Display Name <span class=\"text-danger\">*</span></label>\n                                <input type=\"text\" class=\"form-control maxlength\" id=\"block_style_name\" name=\"block_style_name\" maxlength=\"100\" autocomplete=\"off\">\n                            </div>\n                        </div>\n                        <div class=\"col-lg-6\">\n                            <label class=\"form-label\" for=\"block_type_id\">Block Type <span class=\"text-danger\">*</span></label>\n                            <div class=\"mb-3\">\n                                <select id=\"block_type_id\" name=\"block_type_id\" class=\"select2 form-control select2-hidden-accessible\" data-select2-id=\"select2-data-block_type_id\" tabindex=\"-1\" aria-hidden=\"true\"><option value=\"\" data-select2-id=\"select2-data-2-tpax\">--</option><option value=\"1\" data-select2-id=\"select2-data-3-83dd\">Accordion</option><option value=\"2\" data-select2-id=\"select2-data-4-vlc7\">Call To Action</option><option value=\"3\" data-select2-id=\"select2-data-5-bsb4\">Carousel</option><option value=\"4\" data-select2-id=\"select2-data-6-nn6x\">Client</option><option value=\"16\" data-select2-id=\"select2-data-7-9zxa\">Columns</option><option value=\"5\" data-select2-id=\"select2-data-8-5tmw\">Contact Form</option><option value=\"6\" data-select2-id=\"select2-data-9-08bm\">Content Carousel</option><option value=\"7\" data-select2-id=\"select2-data-10-nhy2\">Footer</option><option value=\"8\" data-select2-id=\"select2-data-11-6jp9\">Header</option><option value=\"9\" data-select2-id=\"select2-data-12-3dz1\">Image Gallery</option><option value=\"10\" data-select2-id=\"select2-data-13-ytv4\">Page Title</option><option value=\"11\" data-select2-id=\"select2-data-14-17j5\">Pricing Table</option><option value=\"12\" data-select2-id=\"select2-data-15-4gex\">Process Step</option><option value=\"13\" data-select2-id=\"select2-data-16-5lfp\">Services Box</option><option value=\"14\" data-select2-id=\"select2-data-17-s3y5\">Slider</option><option value=\"15\" data-select2-id=\"select2-data-18-n2p5\">Testimonial</option></select><span class=\"select2 select2-container select2-container--default\" dir=\"ltr\" data-select2-id=\"select2-data-1-3k7c\" style=\"width: auto;\"><span class=\"selection\"><span class=\"select2-selection select2-selection--single\" role=\"combobox\" aria-haspopup=\"true\" aria-expanded=\"false\" tabindex=\"0\" aria-disabled=\"false\" aria-labelledby=\"select2-block_type_id-container\" aria-controls=\"select2-block_type_id-container\"><span class=\"select2-selection__rendered\" id=\"select2-block_type_id-container\" role=\"textbox\" aria-readonly=\"true\" title=\"Accordion\">Accordion</span><span class=\"select2-selection__arrow\" role=\"presentation\"><b role=\"presentation\"></b></span></span></span><span class=\"dropdown-wrapper\" aria-hidden=\"true\"></span></span>\n                            </div>\n                        </div>\n                        <div class=\"col-lg-12\">\n                            <div class=\"mb-3\">\n                                <label class=\"form-label\" for=\"description\">Description</label>\n                                <textarea class=\"form-control maxlength\" id=\"description\" name=\"description\" maxlength=\"500\" rows=\"5\"></textarea>\n                            </div>\n                        </div>\n                    </div>\n                </form>\n            </div>\n            <div class=\"modal-footer border-top\">\n                <button type=\"button\" class=\"btn btn-outline-danger\" data-bs-dismiss=\"modal\">Close</button>\n                <button type=\"submit\" form=\"block-style-form\" class=\"btn btn-success\" id=\"submit-data\">Save changes</button>\n            </div>\n        </div>\n    </div>\n</div>', '2024-09-02 20:30:18', 2);
 
 --
 -- Triggers `block_item`
@@ -10951,7 +11039,7 @@ INSERT INTO `block_style` (`block_style_id`, `block_style_name`, `description`, 
 (14, 'Slider Style', 'Slider Style', 14, 'Slider', '2024-09-01 19:30:58', 2),
 (15, 'Testimonial Style', 'Testimonial Style', 15, 'Testimonial', '2024-09-01 20:06:51', 2),
 (16, 'Pricing Table Style', 'Pricing Table Style', 11, 'Pricing Table', '2024-09-02 11:19:00', 2),
-(17, 'Columns Style', 'Columns Style', 16, 'Columns', '2024-09-02 13:50:49', 2);
+(17, 'Sections Style', 'Sections Style', 16, 'Sections', '2024-09-02 13:50:49', 2);
 
 --
 -- Triggers `block_style`
@@ -11037,7 +11125,7 @@ INSERT INTO `block_type` (`block_type_id`, `block_type_name`, `created_date`, `l
 (13, 'Services Box', '2024-08-26 21:40:20', 1),
 (14, 'Slider', '2024-08-26 21:40:20', 1),
 (15, 'Testimonial', '2024-08-26 21:40:20', 1),
-(16, 'Columns', '2024-09-02 13:50:24', 2);
+(16, 'Sections', '2024-09-02 13:50:24', 2);
 
 --
 -- Triggers `block_type`
@@ -17524,7 +17612,8 @@ INSERT INTO `menu_group` (`menu_group_id`, `menu_group_name`, `app_module_id`, `
 (7, 'Customers', 3, 'Customer', 3, '2024-08-19 10:29:11', 2),
 (8, 'Websites', 4, 'Website Studio', 1, '2024-08-23 14:36:06', 2),
 (9, 'Website Configurations', 4, 'Website Studio', 90, '2024-08-23 16:25:19', 2),
-(10, 'Website Elements', 4, 'Website Studio', 2, '2024-08-26 11:59:34', 2);
+(10, 'Website Elements', 4, 'Website Studio', 2, '2024-08-26 11:59:34', 2),
+(11, 'Booking', 5, 'CRM', 1, '2024-09-02 22:30:28', 2);
 
 --
 -- Triggers `menu_group`
@@ -17675,7 +17764,9 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (68, 'Process Step', 'process-step.php', 'ti ti-step-into', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 16, '2024-08-26 22:24:28', 2),
 (69, 'Services Box', 'services-box.php', 'ti ti-subtask', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 19, '2024-08-26 22:26:40', 2),
 (70, 'Slider', 'slider.php', 'ti ti-slideshow', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 19, '2024-08-26 22:27:17', 2),
-(71, 'Testimonial', 'testimonial.php', 'ti ti-message-dots', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 20, '2024-08-26 22:29:36', 2);
+(71, 'Testimonial', 'testimonial.php', 'ti ti-message-dots', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 20, '2024-08-26 22:29:36', 2),
+(72, 'Sections', 'sections.php', 'ti ti-section', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 19, '2024-09-02 21:53:55', 2),
+(73, 'My Bookings', 'my-bookings.php', 'ti ti-calendar-time', 11, 'Booking', 5, 'CRM', 0, NULL, 1, '2024-09-02 22:31:14', 2);
 
 --
 -- Triggers `menu_item`
@@ -18691,7 +18782,9 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (73, 1, 'Administrator', 68, 'Footer Style', 1, 1, 1, 1, '2024-08-26 06:36:04', '2024-08-26 06:36:04', 2),
 (74, 1, 'Administrator', 69, 'Page Title Style', 1, 1, 1, 1, '2024-08-26 06:37:34', '2024-08-26 06:37:34', 2),
 (75, 1, 'Administrator', 70, 'Call To Action Style', 1, 1, 1, 1, '2024-08-26 11:31:00', '2024-08-26 11:31:00', 2),
-(76, 1, 'Administrator', 71, 'Testimonial', 1, 1, 1, 1, '2024-08-26 22:29:42', '2024-08-26 22:29:42', 2);
+(76, 1, 'Administrator', 71, 'Testimonial', 1, 1, 1, 1, '2024-08-26 22:29:42', '2024-08-26 22:29:42', 2),
+(77, 1, 'Administrator', 72, 'Sections', 1, 1, 1, 1, '2024-09-02 21:54:07', '2024-09-02 21:54:07', 2),
+(78, 1, 'Administrator', 73, 'My Bookings', 1, 1, 1, 1, '2024-09-02 22:31:18', '2024-09-02 22:31:18', 2);
 
 --
 -- Triggers `role_permission`
@@ -19003,6 +19096,89 @@ CREATE TRIGGER `schedule_type_trigger_update` AFTER UPDATE ON `schedule_type` FO
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('schedule_type', NEW.schedule_type_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sections`
+--
+
+DROP TABLE IF EXISTS `sections`;
+CREATE TABLE `sections` (
+  `sections_id` int(10) UNSIGNED NOT NULL,
+  `sections_name` varchar(100) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  `block_style_id` int(10) UNSIGNED NOT NULL,
+  `block_style_name` varchar(100) NOT NULL,
+  `publish_status` varchar(5) NOT NULL DEFAULT 'No',
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sections`
+--
+
+INSERT INTO `sections` (`sections_id`, `sections_name`, `description`, `block_style_id`, `block_style_name`, `publish_status`, `created_date`, `last_log_by`) VALUES
+(1, 'asd', 'asd', 17, 'Columns Style', 'No', '2024-09-02 21:58:22', 2);
+
+--
+-- Triggers `sections`
+--
+DROP TRIGGER IF EXISTS `sections_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `sections_trigger_insert` AFTER INSERT ON `sections` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Sections created. <br/>';
+
+    IF NEW.sections_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Sections Name: ", NEW.sections_name);
+    END IF;
+
+    IF NEW.description <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Description: ", NEW.description);
+    END IF;
+
+    IF NEW.block_style_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Block Style Name: ", NEW.block_style_name);
+    END IF;
+
+    IF NEW.publish_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Publish Status: ", NEW.publish_status);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('sections', NEW.sections_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `sections_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `sections_trigger_update` AFTER UPDATE ON `sections` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.sections_name <> OLD.sections_name THEN
+        SET audit_log = CONCAT(audit_log, "Sections Name: ", OLD.sections_name, " -> ", NEW.sections_name, "<br/>");
+    END IF;
+
+    IF NEW.description <> OLD.description THEN
+        SET audit_log = CONCAT(audit_log, "Description: ", OLD.description, " -> ", NEW.description, "<br/>");
+    END IF;
+
+    IF NEW.block_style_name <> OLD.block_style_name THEN
+        SET audit_log = CONCAT(audit_log, "Block Style Name: ", OLD.block_style_name, " -> ", NEW.block_style_name, "<br/>");
+    END IF;
+
+    IF NEW.publish_status <> OLD.publish_status THEN
+        SET audit_log = CONCAT(audit_log, "Publish Status: ", OLD.publish_status, " -> ", NEW.publish_status, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('sections', NEW.sections_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -20093,7 +20269,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-09-02 10:15:39', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'oEgIBjE315jsQoAXcQkisdjALNXLsVfcTedkGEv0y8Y%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-09-02 22:26:21', '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', 'bXIZA2KQuUiSAJ0wgtmvuWPCDeSrMEImsggPxCFdLww%3D', 'Customer', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -20166,6 +20342,7 @@ CREATE TRIGGER `user_account_trigger_insert` AFTER INSERT ON `user_account` FOR 
     IF NEW.user_type <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>User Type: ", NEW.user_type);
     END IF;
+
 
     IF NEW.user_verified <> '' THEN
         SET audit_log = CONCAT(audit_log, "<br/>User Verified: ", NEW.user_verified);
@@ -21334,6 +21511,14 @@ ALTER TABLE `schedule_type`
   ADD KEY `schedule_type_index_schedule_type_id` (`schedule_type_id`);
 
 --
+-- Indexes for table `sections`
+--
+ALTER TABLE `sections`
+  ADD PRIMARY KEY (`sections_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `sections_index_sections_id` (`sections_id`);
+
+--
 -- Indexes for table `security_setting`
 --
 ALTER TABLE `security_setting`
@@ -21522,7 +21707,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3957;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3986;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -21540,13 +21725,13 @@ ALTER TABLE `bank_account_type`
 -- AUTO_INCREMENT for table `block_container`
 --
 ALTER TABLE `block_container`
-  MODIFY `block_container_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `block_container_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `block_item`
 --
 ALTER TABLE `block_item`
-  MODIFY `block_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `block_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `block_style`
@@ -21864,13 +22049,13 @@ ALTER TABLE `language_proficiency`
 -- AUTO_INCREMENT for table `menu_group`
 --
 ALTER TABLE `menu_group`
-  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `menu_group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -21948,7 +22133,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
@@ -21967,6 +22152,12 @@ ALTER TABLE `role_user_account`
 --
 ALTER TABLE `schedule_type`
   MODIFY `schedule_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `sections`
+--
+ALTER TABLE `sections`
+  MODIFY `sections_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `security_setting`
@@ -22541,6 +22732,12 @@ ALTER TABLE `process_step_item`
 --
 ALTER TABLE `relation`
   ADD CONSTRAINT `relation_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `sections`
+--
+ALTER TABLE `sections`
+  ADD CONSTRAINT `sections_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `services_box`

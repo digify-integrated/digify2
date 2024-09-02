@@ -1,20 +1,20 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-columns d-flex align-items-center">
-                <h5 class="card-title mb-0">Columns</h5>
+            <div class="card-sections d-flex align-items-center">
+                <h5 class="card-title mb-0">Sections</h5>
                 <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                    <button type="submit" form="columns-form" class="btn btn-success mb-0" id="submit-data">Save</button>
+                    <button type="submit" form="sections-form" class="btn btn-success mb-0" id="submit-data">Save</button>
                     <button type="button" id="discard-create" class="btn btn-outline-danger mb-0">Discard</button>
                 </div>
             </div>
             <div class="card-body">
-                <form id="columns-form" method="post" action="#">
+                <form id="sections-form" method="post" action="#">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label" for="columns_name">Display Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control maxlength" id="columns_name" name="columns_name" maxlength="100" autocomplete="off">
+                                <label class="form-label" for="sections_name">Display Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="sections_name" name="sections_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-lg-6">

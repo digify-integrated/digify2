@@ -11,7 +11,7 @@
                 <?php
                     echo $deleteAccess['total'] > 0 ? '<button type="button" class="btn btn-dark dropdown-toggle action-dropdown mb-0 d-none" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                                                         <ul class="dropdown-menu dropdown-menu-end">
-                                                            <li><button class="dropdown-item" type="button" id="delete-columns">Delete Columns</button></li>
+                                                            <li><button class="dropdown-item" type="button" id="delete-sections">Delete Sections</button></li>
                                                         </ul>' : '';
                     
                     echo $createAccess['total'] > 0 ? '<a href="'. $pageLink .'&new" class="btn btn-success d-flex align-items-center mb-0">Create</a>' : '';
@@ -27,7 +27,7 @@
             <div class="card mb-0">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="columns-table" class="table align-middle text-nowrap w-100 mb-0">
+                        <table id="sections-table" class="table align-middle text-nowrap w-100 mb-0">
                             <thead class="text-dark">
                                 <tr>
                                     <th class="all">
@@ -35,7 +35,7 @@
                                             <input class="form-check-input" id="datatable-checkbox" type="checkbox">
                                         </div>
                                     </th>
-                                    <th>Columns</th>
+                                    <th>Sections</th>
                                     <th>Publish Status</th>
                                     <th>Actions</th>
                                 </tr>

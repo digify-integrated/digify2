@@ -1,6 +1,9 @@
 (function($) {
     'use strict';
 
+    var container_editor; 
+    var item_editor; 
+
     $(function() {
         generateDropdownOptions('block type options');
 
@@ -10,14 +13,6 @@
 
         if($('#block-style-form').length){
             blockStyleForm();
-        }
-
-        if($('#block-container-form').length){
-            blockContainerForm();
-        }
-
-        if($('#block-item-form').length){
-            blockItemForm();
         }
 
         $(document).on('click','#edit-details',function() {
@@ -110,170 +105,33 @@
         }
 
         if($('#block_container').length){
-            var editor = CodeMirror.fromTextArea(document.getElementById("block_container"), {
+            container_editor = CodeMirror.fromTextArea(document.getElementById("block_container"), {
                 mode: "htmlmixed",
                 theme: "default",
                 lineNumbers: true,
                 lineWrapping: false,
-                viewportMargin: 10,
-                height: "300px"
+                viewportMargin: Infinity,
+                height: "800px"
             });
+
+            container_editor.setSize("100%", "500px");
         }
 
-        if($('#block_item').length){
-            var editor = CodeMirror.fromTextArea(document.getElementById("block_item"), {
-                mode: "htmlmixed",
-                theme: "default",
-                lineNumbers: true,
-                lineWrapping: false,
-                viewportMargin: 10,
-                height: "300px"
-            });
-        }
-    });
-})(jQuery);
-
-function blockStyleForm(){
-    $('#block-style-form').validate({
-        rules: {
-            block_style_name: {
-                required: true
-            },
-            block_type_id: {
-                required: true
-            }
-        },
-        messages: {
-            block_style_name: {
-                required: 'Enter the display name'
-            },
-            block_type_id: {
-                required: 'Choose the block type'
-            }
-        },
-        errorPlacement: function(error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 2000);
-        },
-        highlight: function(element) {
-            var inputElement = $(element);
-            if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection').addClass('is-invalid');
-            }
-            else {
-                inputElement.addClass('is-invalid');
-            }
-        },
-        unhighlight: function(element) {
-            var inputElement = $(element);
-            if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection').removeClass('is-invalid');
-            }
-            else {
-                inputElement.removeClass('is-invalid');
-            }
-        },
-        submitHandler: function(form) {
-            const block_style_id = $('#details-id').text();
-            const page_link = document.getElementById('page-link').getAttribute('href'); 
-            const transaction = 'update block style';
-          
-            $.ajax({
-                type: 'POST',
-                url: 'components/block-style/controller/block-style-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&block_style_id=' + block_style_id,
-                dataType: 'json',
-                beforeSend: function() {
-                    disableFormSubmitButton('submit-data');
-                },
-                success: function (response) {
-                    if (response.success) {
-                        showNotification(response.title, response.message, response.messageType);
-                        displayDetails('get block style details');
-                        $('#block-style-modal').modal('hide');
-                    }
-                    else {
-                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = page_link;
-                        }
-                        else {
-                            showNotification(response.title, response.message, response.messageType);
-                        }
-                    }
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                },
-                complete: function() {
-                    enableFormSubmitButton('submit-data');
-                    logNotesMain('block_style', block_style_id);
-                }
-            });
-        
-            return false;
-        }
-    });
-}
-
-function blockContainerForm(){
-    $('#block-container-form').validate({
-        rules: {
-            block_container: {
-                required: true
-            }
-        },
-        messages: {
-            block_container: {
-                required: 'Enter the block container'
-            },
-        },
-        errorPlacement: function(error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 2000);
-        },
-        highlight: function(element) {
-            var inputElement = $(element);
-            if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection').addClass('is-invalid');
-            }
-            else {
-                inputElement.addClass('is-invalid');
-            }
-        },
-        unhighlight: function(element) {
-            var inputElement = $(element);
-            if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection').removeClass('is-invalid');
-            }
-            else {
-                inputElement.removeClass('is-invalid');
-            }
-        },
-        submitHandler: function(form) {
+        $(document).on('click','#submit-block-container-data',function() {
             const block_style_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update block container';
 
-            // Get the values of the CodeMirror editors
-            const blockContainerValue = $('#block_container').val();
-
-            // Include the values in the serialized form data
-            const formData = $(form).serialize() + 
-                '&block_container=' + encodeURIComponent(blockContainerValue) + 
-                '&transaction=' + transaction + 
-                '&block_style_id=' + block_style_id;
+            const blockContainerValue = container_editor.getValue();
           
             $.ajax({
                 type: 'POST',
                 url: 'components/block-style/controller/block-style-controller.php',
-                data: formData,
+                data: {
+                    block_style_id : block_style_id, 
+                    transaction : transaction,
+                    block_container : blockContainerValue
+                },
                 dataType: 'json',
                 beforeSend: function() {
                     disableFormSubmitButton('submit-block-container-data');
@@ -282,18 +140,14 @@ function blockContainerForm(){
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
                         displayDetails('get block container details');
-                        $('#block-container-modal').modal('hide');
-                    }
-                    else {
+                    } else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
                             setNotification(response.title, response.message, response.messageType);
                             window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
+                        } else if (response.notExist) {
                             setNotification(response.title, response.message, response.messageType);
                             window.location = page_link;
-                        }
-                        else {
+                        } else {
                             showNotification(response.title, response.message, response.messageType);
                         }
                     }
@@ -309,54 +163,36 @@ function blockContainerForm(){
                     enableFormSubmitButton('submit-block-container-data');
                 }
             });
-        
-            return false;
-        }
-    });
-}
+        });
 
-function blockItemForm(){
-    $('#block-item-form').validate({
-        rules: {
-            block_item: {
-                required: true
-            }
-        },
-        messages: {
-            block_item: {
-                required: 'Enter the block item'
-            },
-        },
-        errorPlacement: function(error, element) {
-            showNotification('Attention Required: Error Found', error, 'error', 2000);
-        },
-        highlight: function(element) {
-            var inputElement = $(element);
-            if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection').addClass('is-invalid');
-            }
-            else {
-                inputElement.addClass('is-invalid');
-            }
-        },
-        unhighlight: function(element) {
-            var inputElement = $(element);
-            if (inputElement.hasClass('select2-hidden-accessible')) {
-                inputElement.next().find('.select2-selection').removeClass('is-invalid');
-            }
-            else {
-                inputElement.removeClass('is-invalid');
-            }
-        },
-        submitHandler: function(form) {
+        if($('#block_item').length){
+            item_editor = CodeMirror.fromTextArea(document.getElementById("block_item"), {
+                mode: "htmlmixed",
+                theme: "default",
+                lineNumbers: true,
+                lineWrapping: false,
+                viewportMargin: Infinity,
+                height: "800px"
+            });
+
+            item_editor.setSize("100%", "500px");
+        }
+
+        $(document).on('click','#submit-block-item-data',function() {
             const block_style_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
             const transaction = 'update block item';
+
+            const blockContainerValue = item_editor.getValue();
           
             $.ajax({
                 type: 'POST',
                 url: 'components/block-style/controller/block-style-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&block_style_id=' + block_style_id,
+                data: {
+                    block_style_id : block_style_id, 
+                    transaction : transaction,
+                    block_item : blockContainerValue
+                },
                 dataType: 'json',
                 beforeSend: function() {
                     disableFormSubmitButton('submit-block-item-data');
@@ -365,18 +201,14 @@ function blockItemForm(){
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
                         displayDetails('get block item details');
-                        $('#block-item-modal').modal('hide');
-                    }
-                    else {
+                    } else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
                             setNotification(response.title, response.message, response.messageType);
                             window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
+                        } else if (response.notExist) {
                             setNotification(response.title, response.message, response.messageType);
                             window.location = page_link;
-                        }
-                        else {
+                        } else {
                             showNotification(response.title, response.message, response.messageType);
                         }
                     }
@@ -392,153 +224,243 @@ function blockItemForm(){
                     enableFormSubmitButton('submit-block-item-data');
                 }
             });
+        });
+
         
-            return false;
+        function blockStyleForm(){
+            $('#block-style-form').validate({
+                rules: {
+                    block_style_name: {
+                        required: true
+                    },
+                    block_type_id: {
+                        required: true
+                    }
+                },
+                messages: {
+                    block_style_name: {
+                        required: 'Enter the display name'
+                    },
+                    block_type_id: {
+                        required: 'Choose the block type'
+                    }
+                },
+                errorPlacement: function(error, element) {
+                    showNotification('Attention Required: Error Found', error, 'error', 2000);
+                },
+                highlight: function(element) {
+                    var inputElement = $(element);
+                    if (inputElement.hasClass('select2-hidden-accessible')) {
+                        inputElement.next().find('.select2-selection').addClass('is-invalid');
+                    }
+                    else {
+                        inputElement.addClass('is-invalid');
+                    }
+                },
+                unhighlight: function(element) {
+                    var inputElement = $(element);
+                    if (inputElement.hasClass('select2-hidden-accessible')) {
+                        inputElement.next().find('.select2-selection').removeClass('is-invalid');
+                    }
+                    else {
+                        inputElement.removeClass('is-invalid');
+                    }
+                },
+                submitHandler: function(form) {
+                    const block_style_id = $('#details-id').text();
+                    const page_link = document.getElementById('page-link').getAttribute('href'); 
+                    const transaction = 'update block style';
+                
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/block-style/controller/block-style-controller.php',
+                        data: $(form).serialize() + '&transaction=' + transaction + '&block_style_id=' + block_style_id,
+                        dataType: 'json',
+                        beforeSend: function() {
+                            disableFormSubmitButton('submit-data');
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                displayDetails('get block style details');
+                                $('#block-style-modal').modal('hide');
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        },
+                        complete: function() {
+                            enableFormSubmitButton('submit-data');
+                            logNotesMain('block_style', block_style_id);
+                        }
+                    });
+                
+                    return false;
+                }
+            });
+        }
+
+        function displayDetails(transaction){
+            switch (transaction) {
+                case 'get block style details':
+                    var block_style_id = $('#details-id').text();
+                    var page_link = document.getElementById('page-link').getAttribute('href'); 
+                    
+                    $.ajax({
+                        url: 'components/block-style/controller/block-style-controller.php',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {
+                            block_style_id : block_style_id, 
+                            transaction : transaction
+                        },
+                        beforeSend: function(){
+                            resetModalForm('block-style-form');
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                $('#block_style_name').val(response.blockStyleName);
+                                $('#description').val(response.description);
+        
+                                $('#block_type_id').val(response.blockTypeID).trigger('change');
+                                
+                                $('#block_style_name_summary').text(response.blockStyleName);
+                                $('#description_summary').text(response.description);
+                                $('#block_type_name_summary').text(response.blockTypeName);
+                            } 
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    break;
+                case 'get block container details':
+                    var block_style_id = $('#details-id').text();
+                    var page_link = document.getElementById('page-link').getAttribute('href'); 
+                    
+                    $.ajax({
+                        url: 'components/block-style/controller/block-style-controller.php',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {
+                            block_style_id : block_style_id, 
+                            transaction : transaction
+                        },
+                        beforeSend: function(){
+                            resetModalForm('block-container-form');
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                if(response.blockContainer != '' && response.blockContainer != null){
+                                    container_editor.setValue(response.blockContainer);
+                                }
+                            } 
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    break;
+                case 'get block item details':
+                    var block_style_id = $('#details-id').text();
+                    var page_link = document.getElementById('page-link').getAttribute('href'); 
+                    
+                    $.ajax({
+                        url: 'components/block-style/controller/block-style-controller.php',
+                        method: 'POST',
+                        dataType: 'json',
+                        data: {
+                            block_style_id : block_style_id, 
+                            transaction : transaction
+                        },
+                        beforeSend: function(){
+                            resetModalForm('block-item-form');
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                if(response.blockItem != '' && response.blockItem != null){
+                                    item_editor.setValue(response.blockItem);
+                                }
+                            } 
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    break;
+            }
         }
     });
-}
+})(jQuery);
 
-function displayDetails(transaction){
-    switch (transaction) {
-        case 'get block style details':
-            var block_style_id = $('#details-id').text();
-            var page_link = document.getElementById('page-link').getAttribute('href'); 
-            
-            $.ajax({
-                url: 'components/block-style/controller/block-style-controller.php',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    block_style_id : block_style_id, 
-                    transaction : transaction
-                },
-                beforeSend: function(){
-                    resetModalForm('block-style-form');
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $('#block_style_name').val(response.blockStyleName);
-                        $('#description').val(response.description);
-
-                        $('#block_type_id').val(response.blockTypeID).trigger('change');
-                        
-                        $('#block_style_name_summary').text(response.blockStyleName);
-                        $('#description_summary').text(response.description);
-                        $('#block_type_name_summary').text(response.blockTypeName);
-                    } 
-                    else {
-                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = page_link;
-                        }
-                        else {
-                            showNotification(response.title, response.message, response.messageType);
-                        }
-                    }
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                }
-            });
-            break;
-        case 'get block container details':
-            var block_style_id = $('#details-id').text();
-            var page_link = document.getElementById('page-link').getAttribute('href'); 
-            
-            $.ajax({
-                url: 'components/block-style/controller/block-style-controller.php',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    block_style_id : block_style_id, 
-                    transaction : transaction
-                },
-                beforeSend: function(){
-                    resetModalForm('block-container-form');
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $('#block_container').val(response.blockContainer);
-                        
-                        $('#block_container_summary').text(response.blockContainer);
-                    } 
-                    else {
-                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = page_link;
-                        }
-                        else {
-                            showNotification(response.title, response.message, response.messageType);
-                        }
-                    }
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                }
-            });
-            break;
-        case 'get block item details':
-            var block_style_id = $('#details-id').text();
-            var page_link = document.getElementById('page-link').getAttribute('href'); 
-            
-            $.ajax({
-                url: 'components/block-style/controller/block-style-controller.php',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    block_style_id : block_style_id, 
-                    transaction : transaction
-                },
-                beforeSend: function(){
-                    resetModalForm('block-item-form');
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $('#block_item').val(response.blockItem);
-                        
-                        $('#block_item_summary').text(response.blockItem);
-                    } 
-                    else {
-                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = page_link;
-                        }
-                        else {
-                            showNotification(response.title, response.message, response.messageType);
-                        }
-                    }
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                }
-            });
-            break;
-    }
-}
 
 function generateDropdownOptions(type){
     switch (type) {

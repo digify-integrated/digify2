@@ -4,24 +4,24 @@
     $(function() {
         generateDropdownOptions('block style options');
 
-        displayDetails('get columns details');
+        displayDetails('get sections details');
 
-        if($('#columns-form').length){
-            columnsForm();
+        if($('#sections-form').length){
+            sectionsForm();
         }
 
         $(document).on('click','#edit-details',function() {
-            displayDetails('get columns details');
+            displayDetails('get sections details');
         });
 
-        $(document).on('click','#delete-columns',function() {
-            const columns_id = $('#details-id').text();
+        $(document).on('click','#delete-sections',function() {
+            const sections_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'delete columns';
+            const transaction = 'delete sections';
     
             Swal.fire({
-                title: 'Confirm Columns Deletion',
-                text: 'Are you sure you want to delete this columns?',
+                title: 'Confirm Sections Deletion',
+                text: 'Are you sure you want to delete this sections?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -35,10 +35,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/columns/controller/columns-controller.php',
+                        url: 'components/sections/controller/sections-controller.php',
                         dataType: 'json',
                         data: {
-                            columns_id : columns_id, 
+                            sections_id : sections_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -73,14 +73,14 @@
             });
         });
 
-        $(document).on('click','#unpublish-columns',function() {
-            const columns_id = $('#details-id').text();
+        $(document).on('click','#unpublish-sections',function() {
+            const sections_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'unpublish columns';
+            const transaction = 'unpublish sections';
     
             Swal.fire({
-                title: 'Confirm Columns Unpublish',
-                text: 'Are you sure you want to unpublish this columns?',
+                title: 'Confirm Sections Unpublish',
+                text: 'Are you sure you want to unpublish this sections?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Unpublish',
@@ -94,10 +94,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/columns/controller/columns-controller.php',
+                        url: 'components/sections/controller/sections-controller.php',
                         dataType: 'json',
                         data: {
-                            columns_id : columns_id, 
+                            sections_id : sections_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -132,14 +132,14 @@
             });
         });
 
-        $(document).on('click','#publish-columns',function() {
-            const columns_id = $('#details-id').text();
+        $(document).on('click','#publish-sections',function() {
+            const sections_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'publish columns';
+            const transaction = 'publish sections';
     
             Swal.fire({
-                title: 'Confirm Columns Publish',
-                text: 'Are you sure you want to unpublish this columns?',
+                title: 'Confirm Sections Publish',
+                text: 'Are you sure you want to unpublish this sections?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Publish',
@@ -153,10 +153,10 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/columns/controller/columns-controller.php',
+                        url: 'components/sections/controller/sections-controller.php',
                         dataType: 'json',
                         data: {
-                            columns_id : columns_id, 
+                            sections_id : sections_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -192,29 +192,29 @@
         });
 
         if($('#log-notes-main').length){
-            const columns_id = $('#details-id').text();
+            const sections_id = $('#details-id').text();
 
-            logNotesMain('columns', columns_id);
+            logNotesMain('sections', sections_id);
         }
 
         if($('#internal-notes').length){
-            const columns_id = $('#details-id').text();
+            const sections_id = $('#details-id').text();
 
-            internalNotes('columns', columns_id);
+            internalNotes('sections', sections_id);
         }
 
         if($('#internal-notes-form').length){
-            const columns_id = $('#details-id').text();
+            const sections_id = $('#details-id').text();
 
-            internalNotesForm('columns', columns_id);
+            internalNotesForm('sections', sections_id);
         }
     });
 })(jQuery);
 
-function columnsForm(){
-    $('#columns-form').validate({
+function sectionsForm(){
+    $('#sections-form').validate({
         rules: {
-            columns_name: {
+            sections_name: {
                 required: true
             },
             block_style_id: {
@@ -225,7 +225,7 @@ function columnsForm(){
             }
         },
         messages: {
-            columns_name: {
+            sections_name: {
                 required: 'Enter the display name'
             },
             block_style_id: {
@@ -257,14 +257,14 @@ function columnsForm(){
             }
         },
         submitHandler: function(form) {
-            const columns_id = $('#details-id').text();
+            const sections_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href'); 
-            const transaction = 'update columns';
+            const transaction = 'update sections';
           
             $.ajax({
                 type: 'POST',
-                url: 'components/columns/controller/columns-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&columns_id=' + columns_id,
+                url: 'components/sections/controller/sections-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&sections_id=' + sections_id,
                 dataType: 'json',
                 beforeSend: function() {
                     disableFormSubmitButton('submit-data');
@@ -272,8 +272,8 @@ function columnsForm(){
                 success: function (response) {
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
-                        displayDetails('get columns details');
-                        $('#columns-modal').modal('hide');
+                        displayDetails('get sections details');
+                        $('#sections-modal').modal('hide');
                     }
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -298,7 +298,7 @@ function columnsForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
-                    logNotesMain('columns', columns_id);
+                    logNotesMain('sections', sections_id);
                 }
             });
         
@@ -309,29 +309,29 @@ function columnsForm(){
 
 function displayDetails(transaction){
     switch (transaction) {
-        case 'get columns details':
-            var columns_id = $('#details-id').text();
+        case 'get sections details':
+            var sections_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
-                url: 'components/columns/controller/columns-controller.php',
+                url: 'components/sections/controller/sections-controller.php',
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    columns_id : columns_id, 
+                    sections_id : sections_id, 
                     transaction : transaction
                 },
                 beforeSend: function(){
-                    resetModalForm('columns-form');
+                    resetModalForm('sections-form');
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#columns_name').val(response.columnsName);
+                        $('#sections_name').val(response.sectionsName);
                         $('#description').val(response.description);
                         
                         $('#block_style_id').val(response.blockStyleID).trigger('change');
                         
-                        $('#columns_name_summary').text(response.columnsName);
+                        $('#sections_name_summary').text(response.sectionsName);
                         $('#block_style_name_summary').text(response.blockStyleName);
                         $('#description_summary').text(response.description);
                     } 
@@ -376,7 +376,7 @@ function generateDropdownOptions(type){
                 },
                 success: function(response) {
                     $('#block_style_id').select2({
-                        dropdownParent: $('#columns-modal'),
+                        dropdownParent: $('#sections-modal'),
                         data: response
                     }).on('change', function (e) {
                         $(this).valid()

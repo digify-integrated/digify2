@@ -313,10 +313,22 @@ class BlockStyleController {
             return;
         }
         
-        if (isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['block_container']) && !empty($_POST['block_container'])) {
+        if (isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['block_container'])) {
             $userID = $_SESSION['user_account_id'];
             $blockStyleID = htmlspecialchars($_POST['block_style_id'], ENT_QUOTES, 'UTF-8');
             $blockContainer = $_POST['block_container'];
+
+            if(empty($blockContainer)){
+                $response = [
+                    'success' => false,
+                    'title' => 'Update Block Container Error',
+                    'message' => 'The block container cannot be empty.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
         
             $checkBlockContainerExist = $this->blockStyleModel->checkBlockContainerExist($blockStyleID);
             $total = $checkBlockContainerExist['total'] ?? 0;
@@ -368,10 +380,22 @@ class BlockStyleController {
             return;
         }
         
-        if (isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['block_item']) && !empty($_POST['block_item'])) {
+        if (isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['block_item'])) {
             $userID = $_SESSION['user_account_id'];
             $blockStyleID = htmlspecialchars($_POST['block_style_id'], ENT_QUOTES, 'UTF-8');
             $blockItem = $_POST['block_item'];
+
+            if(empty($blockItem)){
+                $response = [
+                    'success' => false,
+                    'title' => 'Update Block Item Error',
+                    'message' => 'The block item cannot be empty.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
         
             $checkBlockItemExist = $this->blockStyleModel->checkBlockItemExist($blockStyleID);
             $total = $checkBlockItemExist['total'] ?? 0;

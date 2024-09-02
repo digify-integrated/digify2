@@ -2,17 +2,17 @@
     'use strict';
 
     $(function() {
-        if($('#columns-table').length){
-            columnsTable('#columns-table');
+        if($('#sections-table').length){
+            sectionsTable('#sections-table');
         }
 
-        $(document).on('click','.delete-columns',function() {
-            const columns_id = $(this).data('columns-id');
-            const transaction = 'delete columns';
+        $(document).on('click','.delete-sections',function() {
+            const sections_id = $(this).data('sections-id');
+            const transaction = 'delete sections';
     
             Swal.fire({
-                title: 'Confirm Columns Deletion',
-                text: 'Are you sure you want to delete this columns?',
+                title: 'Confirm Sections Deletion',
+                text: 'Are you sure you want to delete this sections?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Delete',
@@ -26,16 +26,16 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: 'components/columns/controller/columns-controller.php',
+                        url: 'components/sections/controller/sections-controller.php',
                         dataType: 'json',
                         data: {
-                            columns_id : columns_id, 
+                            sections_id : sections_id, 
                             transaction : transaction
                         },
                         success: function (response) {
                             if (response.success) {
                                 showNotification(response.title, response.message, response.messageType);
-                                reloadDatatable('#columns-table');
+                                reloadDatatable('#sections-table');
                             }
                             else {
                                 if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -44,7 +44,7 @@
                                 }
                                 else if (response.notExist) {
                                     setNotification(response.title, response.message, response.messageType);
-                                    reloadDatatable('#columns-table');
+                                    reloadDatatable('#sections-table');
                                 }
                                 else {
                                     showNotification(response.title, response.message, response.messageType);
@@ -64,20 +64,20 @@
             });
         });
 
-        $(document).on('click','#delete-columns',function() {
-            let columns_id = [];
-            const transaction = 'delete multiple columns';
+        $(document).on('click','#delete-sections',function() {
+            let sections_id = [];
+            const transaction = 'delete multiple sections';
 
             $('.datatable-checkbox-children').each((index, element) => {
                 if ($(element).is(':checked')) {
-                    columns_id.push(element.value);
+                    sections_id.push(element.value);
                 }
             });
     
-            if(columns_id.length > 0){
+            if(sections_id.length > 0){
                 Swal.fire({
-                    title: 'Confirm Multiple Columnss Deletion',
-                    text: 'Are you sure you want to delete these columnss?',
+                    title: 'Confirm Multiple Sections Deletion',
+                    text: 'Are you sure you want to delete these sections?',
                     icon: 'warning',
                     showCancelButton: !0,
                     confirmButtonText: 'Delete',
@@ -91,16 +91,16 @@
                     if (result.value) {
                         $.ajax({
                             type: 'POST',
-                            url: 'components/columns/controller/columns-controller.php',
+                            url: 'components/sections/controller/sections-controller.php',
                             dataType: 'json',
                             data: {
-                                columns_id: columns_id,
+                                sections_id: sections_id,
                                 transaction : transaction
                             },
                             success: function (response) {
                                 if (response.success) {
                                     showNotification(response.title, response.message, response.messageType);
-                                    reloadDatatable('#columns-table');
+                                    reloadDatatable('#sections-table');
                                 }
                                 else {
                                     if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -129,21 +129,21 @@
                 });
             }
             else{
-                showNotification('Deletion Multiple Columnss Error', 'Please select the columnss you wish to delete.', 'danger');
+                showNotification('Deletion Multiple Sections Error', 'Please select the sections you wish to delete.', 'danger');
             }
         });
 
         $('#datatable-search').on('keyup', function () {
-            var table = $('#columns-table').DataTable();
+            var table = $('#sections-table').DataTable();
             table.search(this.value).draw();
         });
     });
 })(jQuery);
 
-function columnsTable(datatable_name, buttons = false, show_all = false){
+function sectionsTable(datatable_name, buttons = false, show_all = false){
     toggleHideActionDropdown();
 
-    const type = 'columns table';
+    const type = 'sections table';
     const page_id = $('#page-id').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
@@ -167,7 +167,7 @@ function columnsTable(datatable_name, buttons = false, show_all = false){
 
     settings = {
         'ajax': { 
-            'url' : 'components/columns/view/_columns_generation.php',
+            'url' : 'components/sections/view/_sections_generation.php',
             'method' : 'POST',
             'dataType': 'json',
             'data': {
@@ -187,7 +187,7 @@ function columnsTable(datatable_name, buttons = false, show_all = false){
         'dom': 'Brtip',
         'lengthChange': false,
         'order': [[ 1, 'asc' ]],
-        'columns' : column,
+        'sections' : column,
         'fnDrawCallback': function( oSettings ) {
             readjustDatatableColumn();
         },

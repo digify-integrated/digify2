@@ -4,16 +4,16 @@
     $(function() {
         generateDropdownOptions('block style options');
 
-        if($('#columns-form').length){
-            columnsForm();
+        if($('#sections-form').length){
+            sectionsForm();
         }
     });
 })(jQuery);
 
-function columnsForm(){
-    $('#columns-form').validate({
+function sectionsForm(){
+    $('#sections-form').validate({
         rules: {
-            columns_name: {
+            sections_name: {
                 required: true
             },
             block_style_id: {
@@ -24,7 +24,7 @@ function columnsForm(){
             }
         },
         messages: {
-            columns_name: {
+            sections_name: {
                 required: 'Enter the display name'
             },
             block_style_id: {
@@ -56,12 +56,12 @@ function columnsForm(){
             }
         },
         submitHandler: function(form) {
-            const transaction = 'add columns';
+            const transaction = 'add sections';
             const page_link = document.getElementById('page-link').getAttribute('href');
           
             $.ajax({
                 type: 'POST',
-                url: 'components/columns/controller/columns-controller.php',
+                url: 'components/sections/controller/sections-controller.php',
                 data: $(form).serialize() + '&transaction=' + transaction,
                 dataType: 'json',
                 beforeSend: function() {
@@ -70,7 +70,7 @@ function columnsForm(){
                 success: function (response) {
                     if (response.success) {
                         setNotification(response.title, response.message, response.messageType);
-                        window.location = page_link + '&id=' + response.columnsID;
+                        window.location = page_link + '&id=' + response.sectionsID;
                     }
                     else {
                         if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {

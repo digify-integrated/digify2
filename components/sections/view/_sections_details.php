@@ -1,42 +1,42 @@
 <?php
-    require('components/columns/model/columns-model.php');
+    require('components/sections/model/sections-model.php');
 
-    $columnsModel = new ColumnsModel($databaseModel);
+    $sectionsModel = new SectionsModel($databaseModel);
 
     $publishWebsiteElement = $globalModel->checkSystemActionAccessRights($userID, 28);
     $unpublishWebsiteElement = $globalModel->checkSystemActionAccessRights($userID, 29);
 
     if(isset($_GET['id'])){
-        $columnsDetails = $columnsModel->getColumns($detailID, null);
-        $publishStatus = $columnsDetails['publish_status'] ?? 'No';
+        $sectionsDetails = $sectionsModel->getSections($detailID, null);
+        $publishStatus = $sectionsDetails['publish_status'] ?? 'No';
     }
 ?>
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-columns d-flex align-items-center">
-                <h5 class="card-title mb-0">Columns</h5>
+            <div class="card-header d-flex align-items-center">
+                <h5 class="card-title mb-0">Sections</h5>
                 <div class="card-actions cursor-pointer ms-auto d-flex button-group">
                     <button type="button" class="btn btn-dark dropdown-toggle mb-0" data-bs-toggle="dropdown" aria-expanded="false">Action</button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <?php
-                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Columns</a></li>' : '';
+                            echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Sections</a></li>' : '';
 
                             if($publishStatus == 'No' && $publishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="publish-columns">Publish Columns</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="publish-sections">Publish Sections</button></li>';
                             }
 
                             if($publishStatus == 'Yes' && $unpublishWebsiteElement['total'] > 0){
-                                echo '<li><button class="dropdown-item" type="button" id="unpublish-columns">Unpublish Columns</button></li>';
+                                echo '<li><button class="dropdown-item" type="button" id="unpublish-sections">Unpublish Sections</button></li>';
                             }
 
-                            echo $deleteAccess['total'] > 0 && $publishStatus == 'No' ? '<li><button class="dropdown-item" type="button" id="delete-columns">Delete Columns</button></li>' : '';
+                            echo $deleteAccess['total'] > 0 && $publishStatus == 'No' ? '<li><button class="dropdown-item" type="button" id="delete-sections">Delete Sections</button></li>' : '';
                         ?>
                     </ul>
                 </div>
                 <?php
                     echo $writeAccess['total'] > 0 && $publishStatus == 'No' ? '<div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#columns-modal" id="edit-details">Edit</button>
+                                                            <button class="btn btn-info mb-0 px-4" data-bs-toggle="modal" id="edit-details" data-bs-target="#sections-modal" id="edit-details">Edit</button>
                                                         </div>' : '';
                 ?>
             </div>
@@ -44,7 +44,7 @@
                 <div class="row">
                     <div class="col-lg-6 mb-3">
                         <p class="mb-1 fs-2">Display Name</p>
-                        <h6 class="fw-semibold mb-0" id="columns_name_summary">--</h6>
+                        <h6 class="fw-semibold mb-0" id="sections_name_summary">--</h6>
                     </div>
                     <div class="col-lg-6 mb-3">
                         <p class="mb-1 fs-2">Block Style</p>
@@ -60,20 +60,20 @@
     </div>
 </div>
 
-<div id="columns-modal" class="modal fade" tabindex="-1" aria-labelledby="columns-modal" aria-hidden="true">
+<div id="sections-modal" class="modal fade" tabindex="-1" aria-labelledby="sections-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
-            <div class="modal-columns border-bottom">
-                <h5 class="modal-title fw-8">Edit Columns Details</h5>
+            <div class="modal-sections border-bottom">
+                <h5 class="modal-title fw-8">Edit Sections Details</h5>
                 <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="columns-form" method="post" action="#">
+                <form id="sections-form" method="post" action="#">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="mb-3">
-                                <label class="form-label" for="columns_name">Display Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control maxlength" id="columns_name" name="columns_name" maxlength="100" autocomplete="off">
+                                <label class="form-label" for="sections_name">Display Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="sections_name" name="sections_name" maxlength="100" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-lg-6">
@@ -95,7 +95,7 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="columns-form" class="btn btn-success" id="submit-data">Save changes</button>
+                <button type="submit" form="sections-form" class="btn btn-success" id="submit-data">Save changes</button>
             </div>
         </div>
     </div>

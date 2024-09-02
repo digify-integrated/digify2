@@ -3,17 +3,17 @@ session_start();
 
 # -------------------------------------------------------------
 #
-# Function: ColumnsController
+# Function: SectionsController
 # Description: 
-# The ColumnsController class handles columns related operations and interactions.
+# The SectionsController class handles sections related operations and interactions.
 #
 # Parameters: None
 #
 # Returns: None
 #
 # -------------------------------------------------------------
-class ColumnsController {
-    private $columnsModel;
+class SectionsController {
+    private $sectionsModel;
     private $blockStyleModel;
     private $authenticationModel;
     private $securityModel;
@@ -22,11 +22,11 @@ class ColumnsController {
     #
     # Function: __construct
     # Description: 
-    # The constructor initializes the object with the provided columnsModel, AuthenticationModel and SecurityModel instances.
-    # These instances are used for columns related, user related operations and security related operations, respectively.
+    # The constructor initializes the object with the provided sectionsModel, AuthenticationModel and SecurityModel instances.
+    # These instances are used for sections related, user related operations and security related operations, respectively.
     #
     # Parameters:
-    # - @param ColumnsModel $columnsModel     The columnsModel instance for columns related operations.
+    # - @param SectionsModel $sectionsModel     The sectionsModel instance for sections related operations.
     # - @param BlockStyleModel $blockStyleModel     The blockStyleModel instance for block style related operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
@@ -34,8 +34,8 @@ class ColumnsController {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(ColumnsModel $columnsModel, BlockStyleModel $blockStyleModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
-        $this->columnsModel = $columnsModel;
+    public function __construct(SectionsModel $sectionsModel, BlockStyleModel $blockStyleModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+        $this->sectionsModel = $sectionsModel;
         $this->blockStyleModel = $blockStyleModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
@@ -124,26 +124,26 @@ class ColumnsController {
             $transaction = isset($_POST['transaction']) ? $_POST['transaction'] : null;
 
             switch ($transaction) {
-                case 'add columns':
-                    $this->addColumns();
+                case 'add sections':
+                    $this->addSections();
                     break;
-                case 'update columns':
-                    $this->updateColumns();
+                case 'update sections':
+                    $this->updateSections();
                     break;
-                case 'get columns details':
-                    $this->getColumnsDetails();
+                case 'get sections details':
+                    $this->getSectionsDetails();
                     break;
-                case 'publish columns':
-                    $this->publishColumns();
+                case 'publish sections':
+                    $this->publishSections();
                     break;
-                case 'unpublish columns':
-                    $this->unpublishColumns();
+                case 'unpublish sections':
+                    $this->unpublishSections();
                     break;
-                case 'delete columns':
-                    $this->deleteColumns();
+                case 'delete sections':
+                    $this->deleteSections();
                     break;
-                case 'delete multiple columns':
-                    $this->deleteMultipleColumns();
+                case 'delete multiple sections':
+                    $this->deleteMultipleSections();
                     break;
                 default:
                     $response = [
@@ -166,36 +166,36 @@ class ColumnsController {
 
     # -------------------------------------------------------------
     #
-    # Function: addColumns
+    # Function: addSections
     # Description: 
-    # Inserts a columns.
+    # Inserts a sections.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function addColumns() {
+    public function addSections() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['columns_name']) && !empty($_POST['columns_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
+        if (isset($_POST['sections_name']) && !empty($_POST['sections_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
             $userID = $_SESSION['user_account_id'];
-            $columnsName = $_POST['columns_name'];
+            $sectionsName = $_POST['sections_name'];
             $blockStyleID = htmlspecialchars($_POST['block_style_id'], ENT_QUOTES, 'UTF-8');
             $description = $_POST['description'];
 
             $blockStyleDetails = $this->blockStyleModel->getBlockStyle($blockStyleID);
             $blockStyleName = $blockStyleDetails['block_style_name'] ?? '';
         
-            $columnsID = $this->columnsModel->insertColumns($columnsName, $description, $blockStyleID, $blockStyleName, $userID);
+            $sectionsID = $this->sectionsModel->insertSections($sectionsName, $description, $blockStyleID, $blockStyleName, $userID);
     
             $response = [
                 'success' => true,
-                'columnsID' => $this->securityModel->encryptData($columnsID),
-                'title' => 'Insert Columns Success',
-                'message' => 'The columns has been inserted successfully.',
+                'sectionsID' => $this->securityModel->encryptData($sectionsID),
+                'title' => 'Insert Sections Success',
+                'message' => 'The sections has been inserted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -222,36 +222,36 @@ class ColumnsController {
 
     # -------------------------------------------------------------
     #
-    # Function: updateColumns
+    # Function: updateSections
     # Description: 
-    # Updates the columns if it exists; otherwise, return an error message.
+    # Updates the sections if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function updateColumns() {
+    public function updateSections() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
         
-        if (isset($_POST['columns_name']) && !empty($_POST['columns_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
+        if (isset($_POST['sections_name']) && !empty($_POST['sections_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
             $userID = $_SESSION['user_account_id'];
-            $columnsID = htmlspecialchars($_POST['columns_id'], ENT_QUOTES, 'UTF-8');
-            $columnsName = $_POST['columns_name'];
+            $sectionsID = htmlspecialchars($_POST['sections_id'], ENT_QUOTES, 'UTF-8');
+            $sectionsName = $_POST['sections_name'];
             $blockStyleID = htmlspecialchars($_POST['block_style_id'], ENT_QUOTES, 'UTF-8');
             $description = $_POST['description'];
         
-            $checkColumnsExist = $this->columnsModel->checkColumnsExist($columnsID);
-            $total = $checkColumnsExist['total'] ?? 0;
+            $checkSectionsExist = $this->sectionsModel->checkSectionsExist($sectionsID);
+            $total = $checkSectionsExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Update Columns Error',
-                    'message' => 'The columns does not exist.',
+                    'title' => 'Update Sections Error',
+                    'message' => 'The sections does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -262,12 +262,12 @@ class ColumnsController {
             $blockStyleDetails = $this->blockStyleModel->getBlockStyle($blockStyleID);
             $blockStyleName = $blockStyleDetails['block_style_name'] ?? '';
 
-            $this->columnsModel->updateColumns($columnsID, $columnsName, $description, $blockStyleID, $blockStyleName, $userID);
+            $this->sectionsModel->updateSections($sectionsID, $sectionsName, $description, $blockStyleID, $blockStyleName, $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Update Columns Success',
-                'message' => 'The columns has been updated successfully.',
+                'title' => 'Update Sections Success',
+                'message' => 'The sections has been updated successfully.',
                 'messageType' => 'success'
             ];
             
@@ -294,33 +294,33 @@ class ColumnsController {
 
     # -------------------------------------------------------------
     #
-    # Function: publishColumns
+    # Function: publishSections
     # Description: 
-    # Publish the columns if it exists; otherwise, return an error message.
+    # Publish the sections if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function publishColumns() {
+    public function publishSections() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['columns_id']) && !empty($_POST['columns_id'])) {
+        if (isset($_POST['sections_id']) && !empty($_POST['sections_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $columnsID = htmlspecialchars($_POST['columns_id'], ENT_QUOTES, 'UTF-8');
+            $sectionsID = htmlspecialchars($_POST['sections_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkColumnsExist = $this->columnsModel->checkColumnsExist($columnsID);
-            $total = $checkColumnsExist['total'] ?? 0;
+            $checkSectionsExist = $this->sectionsModel->checkSectionsExist($sectionsID);
+            $total = $checkSectionsExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Publish Columns Error',
-                    'message' => 'The columns does not exist.',
+                    'title' => 'Publish Sections Error',
+                    'message' => 'The sections does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -328,12 +328,12 @@ class ColumnsController {
                 exit;
             }
 
-            $this->columnsModel->updateColumnsPublishStatus($columnsID, 'Yes', $userID);
+            $this->sectionsModel->updateSectionsPublishStatus($sectionsID, 'Yes', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Publish Columns Success',
-                'message' => 'The columns has been published successfully.',
+                'title' => 'Publish Sections Success',
+                'message' => 'The sections has been published successfully.',
                 'messageType' => 'success'
             ];
             
@@ -360,33 +360,33 @@ class ColumnsController {
 
     # -------------------------------------------------------------
     #
-    # Function: unpublishColumns
+    # Function: unpublishSections
     # Description: 
-    # Publish the columns if it exists; otherwise, return an error message.
+    # Publish the sections if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function unpublishColumns() {
+    public function unpublishSections() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['columns_id']) && !empty($_POST['columns_id'])) {
+        if (isset($_POST['sections_id']) && !empty($_POST['sections_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $columnsID = htmlspecialchars($_POST['columns_id'], ENT_QUOTES, 'UTF-8');
+            $sectionsID = htmlspecialchars($_POST['sections_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkColumnsExist = $this->columnsModel->checkColumnsExist($columnsID);
-            $total = $checkColumnsExist['total'] ?? 0;
+            $checkSectionsExist = $this->sectionsModel->checkSectionsExist($sectionsID);
+            $total = $checkSectionsExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Unpublish Columns Error',
-                    'message' => 'The columns does not exist.',
+                    'title' => 'Unpublish Sections Error',
+                    'message' => 'The sections does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -394,12 +394,12 @@ class ColumnsController {
                 exit;
             }
 
-            $this->columnsModel->updateColumnsPublishStatus($columnsID, 'No', $userID);
+            $this->sectionsModel->updateSectionsPublishStatus($sectionsID, 'No', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Unpublish Columns Success',
-                'message' => 'The columns has been unpublished successfully.',
+                'title' => 'Unpublish Sections Success',
+                'message' => 'The sections has been unpublished successfully.',
                 'messageType' => 'success'
             ];
             
@@ -426,32 +426,32 @@ class ColumnsController {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteColumns
+    # Function: deleteSections
     # Description: 
-    # Delete the columns if it exists; otherwise, return an error message.
+    # Delete the sections if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function deleteColumns() {
+    public function deleteSections() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['columns_id']) && !empty($_POST['columns_id'])) {
-            $columnsID = htmlspecialchars($_POST['columns_id'], ENT_QUOTES, 'UTF-8');
+        if (isset($_POST['sections_id']) && !empty($_POST['sections_id'])) {
+            $sectionsID = htmlspecialchars($_POST['sections_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkColumnsExist = $this->columnsModel->checkColumnsExist($columnsID);
-            $total = $checkColumnsExist['total'] ?? 0;
+            $checkSectionsExist = $this->sectionsModel->checkSectionsExist($sectionsID);
+            $total = $checkSectionsExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Delete Columns Error',
-                    'message' => 'The columns does not exist.',
+                    'title' => 'Delete Sections Error',
+                    'message' => 'The sections does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -459,12 +459,12 @@ class ColumnsController {
                 exit;
             }
 
-            $this->columnsModel->deleteColumns($columnsID);
+            $this->sectionsModel->deleteSections($sectionsID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete Columns Success',
-                'message' => 'The columns has been deleted successfully.',
+                'title' => 'Delete Sections Success',
+                'message' => 'The sections has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -487,36 +487,36 @@ class ColumnsController {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteMultipleColumns
+    # Function: deleteMultipleSections
     # Description: 
-    # Delete the selected columnss if it exists; otherwise, skip it.
+    # Delete the selected sectionss if it exists; otherwise, skip it.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function deleteMultipleColumns() {
+    public function deleteMultipleSections() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['columns_id']) && !empty($_POST['columns_id'])) {
-            $columnsIDs = $_POST['columns_id'];
+        if (isset($_POST['sections_id']) && !empty($_POST['sections_id'])) {
+            $sectionsIDs = $_POST['sections_id'];
     
-            foreach($columnsIDs as $columnsID){
-                $checkColumnsExist = $this->columnsModel->checkColumnsExist($columnsID);
-                $total = $checkColumnsExist['total'] ?? 0;
+            foreach($sectionsIDs as $sectionsID){
+                $checkSectionsExist = $this->sectionsModel->checkSectionsExist($sectionsID);
+                $total = $checkSectionsExist['total'] ?? 0;
 
                 if($total > 0){
-                    $this->columnsModel->deleteColumns($columnsID);
+                    $this->sectionsModel->deleteSections($sectionsID);
                 }
             }
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete Multiple Columnss Success',
-                'message' => 'The selected columnss have been deleted successfully.',
+                'title' => 'Delete Multiple Sectionss Success',
+                'message' => 'The selected sectionss have been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -543,33 +543,33 @@ class ColumnsController {
 
     # -------------------------------------------------------------
     #
-    # Function: getColumnsDetails
+    # Function: getSectionsDetails
     # Description: 
-    # Handles the retrieval of columns details.
+    # Handles the retrieval of sections details.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function getColumnsDetails() {
+    public function getSectionsDetails() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
     
-        if (isset($_POST['columns_id']) && !empty($_POST['columns_id'])) {
+        if (isset($_POST['sections_id']) && !empty($_POST['sections_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $columnsID = htmlspecialchars($_POST['columns_id'], ENT_QUOTES, 'UTF-8');
+            $sectionsID = htmlspecialchars($_POST['sections_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkColumnsExist = $this->columnsModel->checkColumnsExist($columnsID);
-            $total = $checkColumnsExist['total'] ?? 0;
+            $checkSectionsExist = $this->sectionsModel->checkSectionsExist($sectionsID);
+            $total = $checkSectionsExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Get Columns Details Error',
-                    'message' => 'The columns does not exist.',
+                    'title' => 'Get Sections Details Error',
+                    'message' => 'The sections does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -577,14 +577,14 @@ class ColumnsController {
                 exit;
             }
     
-            $columnsDetails = $this->columnsModel->getColumns($columnsID);
+            $sectionsDetails = $this->sectionsModel->getSections($sectionsID);
 
             $response = [
                 'success' => true,
-                'columnsName' => $columnsDetails['columns_name'] ?? null,
-                'description' => $columnsDetails['description'] ?? null,
-                'blockStyleID' => $columnsDetails['block_style_id'] ?? '',
-                'blockStyleName' => $columnsDetails['block_style_name'] ?? ''
+                'sectionsName' => $sectionsDetails['sections_name'] ?? null,
+                'description' => $sectionsDetails['description'] ?? null,
+                'blockStyleID' => $sectionsDetails['block_style_id'] ?? '',
+                'blockStyleName' => $sectionsDetails['block_style_name'] ?? ''
             ];
 
             echo json_encode($response);
@@ -610,11 +610,11 @@ require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../columns/model/columns-model.php';
+require_once '../../sections/model/sections-model.php';
 require_once '../../block-style/model/block-style-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new ColumnsController(new ColumnsModel(new DatabaseModel), new BlockStyleModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new SectionsController(new SectionsModel(new DatabaseModel), new BlockStyleModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>
