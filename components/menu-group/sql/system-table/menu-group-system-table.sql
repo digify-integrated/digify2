@@ -14,8 +14,19 @@ CREATE TABLE menu_group (
 
 CREATE INDEX menu_group_index_menu_group_id ON menu_group(menu_group_id);
 
-INSERT INTO menu_group (menu_group_name, app_module_id, app_module_name, order_sequence, last_log_by) VALUES ('Technical', 1, 'Settings', 100, '1');
-INSERT INTO menu_group (menu_group_name, app_module_id, app_module_name, order_sequence, last_log_by) VALUES ('Administration', 1, 'Settings', 1, '1');
-INSERT INTO menu_group (menu_group_name, app_module_id, app_module_name, order_sequence, last_log_by) VALUES ('Configurations', 1, 'Settings', 50, '1');
+INSERT INTO menu_group (menu_group_id, menu_group_name, app_module_id, app_module_name, order_sequence, last_log_by) VALUES
+(1, 'Technical', 1, 'Settings', 100, 2),
+(2, 'Administration', 1, 'Settings', 5, 2),
+(3, 'Configurations', 1, 'Settings', 50, 2),
+(4, 'Profile', 1, 'Settings', 1, 2),
+(5, 'Employees', 2, 'Employees', 1, 2),
+(6, 'Employee Configurations', 2, 'Employees', 23, 2),
+(7, 'Customers', 3, 'Customer', 3, 2),
+(8, 'Websites', 4, 'Website Studio', 1, 2),
+(9, 'Website Configurations', 4, 'Website Studio', 90, 2),
+(10, 'Website Elements', 4, 'Website Studio', 2, 2),
+(11, 'Booking', 5, 'CRM', 1, 2),
+(12, 'Customer Service', 5, 'CRM', 3, 2),
+(13, 'Marketing Centre', 5, 'CRM', 13, 2);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

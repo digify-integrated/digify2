@@ -22,35 +22,81 @@ CREATE TABLE menu_item (
 CREATE INDEX menu_item_index_menu_item_id ON menu_item(menu_item_id);
 CREATE INDEX menu_item_index_app_module_id ON menu_item(app_module_id);
 
-
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('App Module', 'app-module.php', 'ti ti-box', 1, 'Technical', 1, 'Settings', '', '', 1, 1);
-
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('General Settings', 'general-settings.php', 'ti ti-settings', 1, 'Technical', 1, 'Settings', '', '', 7, 1);
-
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Users & Companies', '', 'ti ti-users', 2, 'Administration', 1, 'Settings', '', '', 21, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('User Account', 'user-account.php', '', 2, 'Administration', 1, 'Settings', 3, 'Users & Companies', 21, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Company', 'company.php', '', 2, 'Administration', 1, 'Settings', 3, 'Users & Companies', 3, 1);
-
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Role', 'role.php', 'ti ti-hierarchy-2', 2, 'Administration', 1, 'Settings', '', '', 3, 1);
-
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('User Interface', '', 'ti ti-layout-sidebar', 1, 'Technical', 1, 'Settings', '', '', 16, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Menu Group', 'menu-group.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 1, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Menu Item', 'menu-item.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 2, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('System Action', 'system-action.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 2, 1);
-
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Localization', '', 'ti ti-map-pin', 1, 'Technical', 1, 'Settings', '', '', 12, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('City', 'city.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 12, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Country', 'country.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 13, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('State', 'state.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 19, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Currency', 'currency.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 14, 1);
-
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('File Configuration', '', 'ti ti-file-symlink', 1, 'Technical', 1, 'Settings', '', '', 6, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Upload Setting', 'upload-setting.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 21, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('File Type', 'file-type.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 6, 1);
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('File Extension', 'file-extension.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 7, 1);
-
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Email Setting', 'email-setting.php', 'ti ti-mail-forward', 1, 'Technical', 1, 'Settings', '', '', 5, 1);
-
-INSERT INTO menu_item (menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES ('Notification Setting', 'notification-setting.php', 'ti ti-bell', 1, 'Technical', 1, 'Settings', '', '', 14, 1);
+INSERT INTO menu_item (menu_item_id, menu_item_name, menu_item_url, menu_item_icon, menu_group_id, menu_group_name, app_module_id, app_module_name, parent_id, parent_name, order_sequence, last_log_by) VALUES
+(1, 'App Module', 'app-module.php', 'ti ti-box', 1, 'Technical', 1, 'Settings', 0, '', 1, 2),
+(2, 'General Settings', 'general-settings.php', 'ti ti-settings', 1, 'Technical', 1, 'Settings', 0, '', 7, 2),
+(3, 'Users & Companies', '', 'ti ti-users', 2, 'Administration', 1, 'Settings', 0, '', 21, 2),
+(4, 'User Account', 'user-account.php', '', 2, 'Administration', 1, 'Settings', 3, 'Users & Companies', 21, 2),
+(5, 'Company', 'company.php', '', 2, 'Administration', 1, 'Settings', 3, 'Users & Companies', 3, 2),
+(6, 'Role', 'role.php', 'ti ti-sitemap', 2, 'Administration', 1, 'Settings', NULL, NULL, 3, 2),
+(7, 'User Interface', '', 'ti ti-layout-sidebar', 1, 'Technical', 1, 'Settings', NULL, NULL, 16, 2),
+(8, 'Menu Group', 'menu-group.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 1, 2),
+(9, 'Menu Item', 'menu-item.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 2, 2),
+(10, 'System Action', 'system-action.php', '', 1, 'Technical', 1, 'Settings', 7, 'User Interface', 2, 2),
+(11, 'Localization', '', 'ti ti-map-pin', 1, 'Technical', 1, 'Settings', 0, '', 12, 2),
+(12, 'City', 'city.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 12, 2),
+(13, 'Country', 'country.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 13, 2),
+(14, 'State', 'state.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 19, 2),
+(15, 'Currency', 'currency.php', '', 1, 'Technical', 1, 'Settings', 11, 'Localization', 14, 2),
+(16, 'File Configuration', '', 'ti ti-file-symlink', 1, 'Technical', 1, 'Settings', 0, '', 6, 2),
+(17, 'Upload Setting', 'upload-setting.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 21, 2),
+(18, 'File Type', 'file-type.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 6, 2),
+(19, 'File Extension', 'file-extension.php', '', 1, 'Technical', 1, 'Settings', 16, 'File Configuration', 7, 2),
+(20, 'Email Setting', 'email-setting.php', 'ti ti-mail-forward', 1, 'Technical', 1, 'Settings', 0, '', 5, 2),
+(21, 'Notification Setting', 'notification-setting.php', 'ti ti-bell', 1, 'Technical', 1, 'Settings', 0, '', 14, 2),
+(22, 'Account Setting', 'account-setting.php', 'ti ti-tool', 4, 'Profile', 1, 'Settings', 0, NULL, 1, 2),
+(23, 'Employee', 'employee.php', 'ti ti-users', 5, 'Employees', 2, 'Employees', NULL, NULL, 1, 2),
+(24, 'Department', 'department.php', 'ti ti-hierarchy-2', 6, 'Employee Configurations', 2, 'Employees', NULL, NULL, 4, 2),
+(25, 'Work Location', 'work-location.php', 'ti ti-map-pin', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 23, 2),
+(26, 'Work Schedule', 'work-schedule.php', '', 6, 'Employee Configurations', 2, 'Employees', 31, 'Scheduling', 1, 2),
+(27, 'Employment Type', 'employment-type.php', 'ti ti-briefcase', 6, 'Employee Configurations', 2, 'Employees', NULL, NULL, 5, 2),
+(28, 'Departure Reason', 'departure-reason.php', 'ti ti-user-minus', 6, 'Employee Configurations', 2, 'Employees', NULL, NULL, 5, 2),
+(29, 'Job Position', 'job-position.php', 'ti ti-id', 6, 'Employee Configurations', 2, 'Employees', NULL, NULL, 10, 2),
+(30, 'Schedule Type', 'schedule-type.php', '', 6, 'Employee Configurations', 2, 'Employees', 31, 'Scheduling', 2, 2),
+(31, 'Scheduling', '', 'ti ti-calendar-time', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 24, 2),
+(32, 'Contact Info Type', 'contact-information-type.php', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 46, 'Contact Information', 3, 2),
+(33, 'ID Type', 'id-type.php', 'ti ti-id', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 9, 2),
+(34, 'Bank', 'bank.php', 'ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 48, 'Banking Configuration', 2, 2),
+(35, 'Bank Account Type', 'bank-account-type.php', 'ti ti-building-community', 3, 'Configurations', 1, 'Settings', 48, 'Banking Configuration', 2, 2),
+(36, 'Relation', 'relation.php', 'ti ti-social', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 18, 2),
+(37, 'Educational Stage', 'educational-stage.php', 'ti ti-school', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 5, 2),
+(38, 'Language', 'language.php', 'ti ti-language', 3, 'Configurations', 1, 'Settings', 47, 'Language Configurations', 12, 2),
+(39, 'Language Proficiency', 'language-proficiency.php', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', 47, 'Language Settings', 12, 2),
+(40, 'Civil Status', 'civil-status.php', 'ti ti-chart-circles', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 3, 2),
+(41, 'Gender', 'gender.php', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 7, 2),
+(42, 'Blood Type', 'blood-type.php', 'ti ti-droplet-filled', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 2, 2),
+(43, 'Religion', 'religion.php', 'ti ti-building-church', 3, 'Configurations', 1, 'Settings', 45, 'User Identity', 18, 2),
+(44, 'Address Type', 'address-type.php', 'ti ti-map-2', 3, 'Configurations', 1, 'Settings', 46, 'Contact Information', 1, 2),
+(45, 'User Identity', '', 'ti ti-friends', 3, 'Configurations', 1, 'Settings', 0, NULL, 21, 2),
+(46, 'Contact Information', '', 'ti ti-device-mobile', 3, 'Configurations', 1, 'Settings', 0, NULL, 3, 2),
+(47, 'Language Settings', '', 'ti ti-messages', 3, 'Configurations', 1, 'Settings', NULL, NULL, 12, 2),
+(48, 'Banking Configuration', '', ' ti ti-building-bank', 3, 'Configurations', 1, 'Settings', 0, NULL, 2, 2),
+(49, 'Employment Location Type', 'employment-location-type.php', 'ti ti-map-2', 6, 'Employee Configurations', 2, 'Employees', 0, NULL, 5, 2),
+(50, 'Customer', 'customer.php', ' ti ti-users', 7, 'Customers', 3, 'Customer', 0, NULL, 3, 2),
+(51, 'My Addresses', 'customer-address.php', 'ti ti-map-pin', 4, 'Profile', 1, 'Settings', NULL, NULL, 13, 2),
+(52, 'Employee Address', 'employee-address.php', ' ti ti-map-pin', 4, 'Profile', 1, 'Settings', 0, NULL, 5, 2),
+(53, ' Banks & Cards', 'banks-and-cards.php', 'ti ti-credit-card', 4, 'Profile', 1, 'Settings', 0, NULL, 2, 2),
+(54, 'Website', 'website.php', 'ti ti-world', 8, 'Websites', 4, 'Website Studio', NULL, NULL, 13, 2),
+(55, 'Block Type', 'block-type.php', 'ti ti-puzzle', 9, 'Website Configurations', 4, 'Website Studio', 0, NULL, 2, 2),
+(56, 'Block Style', 'block-style.php', 'ti ti-tools', 9, 'Website Configurations', 4, 'Website Studio', NULL, NULL, 2, 2),
+(57, 'Accordion', 'accordion.php', 'ti ti-layout-navbar', 10, 'Website Elements', 4, 'Website Studio', NULL, NULL, 1, 2),
+(58, 'Call to Action', 'call-to-action.php', 'ti ti-speakerphone', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, 2),
+(59, 'Carousel', 'carousel.php', 'ti ti-layout-sidebar', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, 2),
+(60, 'Client', 'client.php', 'ti ti-users', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, 2),
+(61, 'Contact Form', 'contact-form.php', 'ti ti-forms', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, 2),
+(62, 'Content Carousel', 'content-carousel.php', 'ti ti-layout-align-right', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 3, 2),
+(63, 'Footer', 'footer.php', 'ti ti-layout-bottombar', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 6, 2),
+(64, 'Header', 'header.php', 'ti ti-layout-navbar', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 8, 2),
+(65, 'Image Gallery', 'image-gallery.php', 'ti ti-photo', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 9, 2),
+(66, 'Page Title', 'page-title.php', 'ti ti-browser', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 16, 2),
+(67, 'Pricing Table', 'pricing-table.php', 'ti ti-ad-2', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 16, 2),
+(68, 'Process Step', 'process-step.php', 'ti ti-step-into', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 16, 2),
+(69, 'Services Box', 'services-box.php', 'ti ti-subtask', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 19, 2),
+(70, 'Slider', 'slider.php', 'ti ti-slideshow', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 19, 2),
+(71, 'Testimonial', 'testimonial.php', 'ti ti-message-dots', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 20, 2),
+(72, 'Sections', 'sections.php', 'ti ti-section', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 19, 2),
+(73, 'My Bookings', 'my-bookings.php', 'ti ti-calendar-time', 11, 'Booking', 5, 'CRM', 0, NULL, 1, 2),
+(74, 'Customer Inquiry', 'customer-inquiry.php', 'ti ti-messages', 12, 'Customer Service', 5, 'CRM', 0, NULL, 3, 2),
+(75, 'Vouchers', 'vouchers.php', 'ti ti-discount-2', 13, 'Marketing Centre', 5, 'CRM', 0, NULL, 22, 2);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

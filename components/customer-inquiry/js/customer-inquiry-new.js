@@ -2,36 +2,46 @@
     'use strict';
 
     $(function() {
-        generateDropdownOptions('block style options');
-
         if($('#customer-inquiry-form').length){
-            servicesBoxForm();
+            customerInquiryForm();
         }
     });
 })(jQuery);
 
-function servicesBoxForm(){
+function customerInquiryForm(){
     $('#customer-inquiry-form').validate({
         rules: {
-            customer_inquiry_name: {
+            customer_name: {
                 required: true
             },
-            block_style_id: {
+            phone: {
                 required: true
             },
-            description: {
+            email: {
+                required: true
+            },
+            subject: {
+                required: true
+            },
+            message: {
                 required: true
             }
         },
         messages: {
-            customer_inquiry_name: {
+            customer_name: {
                 required: 'Enter the display name'
             },
-            block_style_id: {
-                required: 'Choose the block style'
+            phone: {
+                required: 'Enter the phone'
             },
-            description: {
-                required: 'Enter the description'
+            email: {
+                required: 'Enter the email'
+            },
+            subject: {
+                required: 'Enter the subject'
+            },
+            message: {
+                required: 'Enter the message'
             }
         },
         errorPlacement: function(error, element) {
@@ -70,7 +80,7 @@ function servicesBoxForm(){
                 success: function (response) {
                     if (response.success) {
                         setNotification(response.title, response.message, response.messageType);
-                        window.location = page_link + '&id=' + response.servicesBoxID;
+                        window.location = page_link + '&id=' + response.customerInquiryID;
                     }
                     else {
                         if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -97,36 +107,4 @@ function servicesBoxForm(){
             return false;
         }
     });
-}
-
-function generateDropdownOptions(type){
-    switch (type) {
-        case 'block style options':
-            var block_type_id = '13';
-            
-            $.ajax({
-                url: 'components/block-style/view/_block_style_generation.php',
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    type : type,
-                    block_type_id : block_type_id
-                },
-                success: function(response) {
-                    $('#block_style_id').select2({
-                        data: response
-                    }).on('change', function (e) {
-                        $(this).valid()
-                    });
-                },
-                error: function(xhr, status, error) {
-                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
-                    if (xhr.responseText) {
-                        fullErrorMessage += `, Response: ${xhr.responseText}`;
-                    }
-                    showErrorDialog(fullErrorMessage);
-                }
-            });
-            break;
-    }
 }

@@ -10,4 +10,12 @@ CREATE TABLE civil_status (
 
 CREATE INDEX civil_status_index_civil_status_id ON civil_status(civil_status_id);
 
+INSERT INTO civil_status (civil_status_id, civil_status_name, last_log_by)
+VALUES 
+(1, 'Single', 1),
+(2, 'Married', 1),
+(3, 'Divorced', 1),
+(4, 'Widowed', 1),
+(5, 'Separated', 1);
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */

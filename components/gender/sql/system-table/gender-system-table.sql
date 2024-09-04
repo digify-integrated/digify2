@@ -10,4 +10,10 @@ CREATE TABLE gender (
 
 CREATE INDEX gender_index_gender_id ON gender(gender_id);
 
+INSERT INTO gender (gender_id, gender_name, last_log_by)
+VALUES 
+(1, 'Male', 1),
+(2, 'Female', 1),
+(3, 'Non-binary', 1);
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */

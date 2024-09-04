@@ -3,19 +3,17 @@ session_start();
 
 # -------------------------------------------------------------
 #
-# Function: ServicesBoxController
+# Function: CustomerInquiryController
 # Description: 
-# The Customer InquiryController class handles carousel related operations and interactions.
+# The CustomerInquiryController class handles customer inquiry related operations and interactions.
 #
 # Parameters: None
 #
 # Returns: None
 #
 # -------------------------------------------------------------
-class ServicesBoxController {
-    private $servicesBoxModel;
-    private $blockStyleModel;
-    private $uploadSettingModel;
+class CustomerInquiryController {
+    private $customerInquiryModel;
     private $authenticationModel;
     private $securityModel;
 
@@ -23,23 +21,19 @@ class ServicesBoxController {
     #
     # Function: __construct
     # Description: 
-    # The constructor initializes the object with the provided servicesBoxModel, AuthenticationModel and SecurityModel instances.
+    # The constructor initializes the object with the provided customerInquiryModel, AuthenticationModel and SecurityModel instances.
     # These instances are used for customer inquiry related, user related operations and security related operations, respectively.
     #
     # Parameters:
-    # - @param ServicesBoxModel $servicesBoxModel     The servicesBoxModel instance for customer inquiry related operations.
-    # - @param BlockStyleModel $blockStyleModel     The blockStyleModel instance for block style related operations.
-    # - @param UploadSettingModel $uploadSettingModel     The UploadSettingModel instance for upload setting operations.
+    # - @param CustomerInquiryModel $customerInquiryModel     The customerInquiryModel instance for customer inquiry related operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(ServicesBoxModel $servicesBoxModel, BlockStyleModel $blockStyleModel, UploadSettingModel $uploadSettingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
-        $this->servicesBoxModel = $servicesBoxModel;
-        $this->blockStyleModel = $blockStyleModel;
-        $this->uploadSettingModel = $uploadSettingModel;
+    public function __construct(CustomerInquiryModel $customerInquiryModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+        $this->customerInquiryModel = $customerInquiryModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
     }
@@ -128,34 +122,28 @@ class ServicesBoxController {
 
             switch ($transaction) {
                 case 'add customer inquiry':
-                    $this->addServicesBox();
+                    $this->addCustomerInquiry();
                     break;
                 case 'update customer inquiry':
-                    $this->updateServicesBox();
-                    break;
-                case 'save customer inquiry item':
-                    $this->saveServicesBoxItem();
+                    $this->updateCustomerInquiry();
                     break;
                 case 'get customer inquiry details':
-                    $this->getServicesBoxDetails();
+                    $this->getCustomerInquiryDetails();
                     break;
-                case 'get customer inquiry item details':
-                    $this->getServicesBoxItemDetails();
+                case 'tag customer inquiry as in-progress':
+                    $this->tagCustomerInquiryAsInProgress();
                     break;
-                case 'publish customer inquiry':
-                    $this->publishServicesBox();
+                case 'tag customer inquiry as resolved':
+                    $this->tagCustomerInquiryAsResolved();
                     break;
-                case 'unpublish customer inquiry':
-                    $this->unpublishServicesBox();
+                case 'tag customer inquiry as closed':
+                    $this->tagCustomerInquiryAsClosed();
                     break;
                 case 'delete customer inquiry':
-                    $this->deleteServicesBox();
-                    break;
-                case 'delete customer inquiry item':
-                    $this->deleteServicesBoxItem();
+                    $this->deleteCustomerInquiry();
                     break;
                 case 'delete multiple customer inquiry':
-                    $this->deleteMultipleServicesBox();
+                    $this->deleteMultipleCustomerInquiry();
                     break;
                 default:
                     $response = [
@@ -178,7 +166,7 @@ class ServicesBoxController {
 
     # -------------------------------------------------------------
     #
-    # Function: addServicesBox
+    # Function: addCustomerInquiry
     # Description: 
     # Inserts a customer inquiry.
     #
@@ -187,25 +175,24 @@ class ServicesBoxController {
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function addServicesBox() {
+    public function addCustomerInquiry() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['customer_inquiry_name']) && !empty($_POST['customer_inquiry_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
+        if (isset($_POST['customer_name']) && !empty($_POST['customer_name']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['subject']) && !empty($_POST['subject']) && isset($_POST['message']) && !empty($_POST['message'])) {
             $userID = $_SESSION['user_account_id'];
-            $servicesBoxName = $_POST['customer_inquiry_name'];
-            $blockStyleID = htmlspecialchars($_POST['block_style_id'], ENT_QUOTES, 'UTF-8');
-            $description = $_POST['description'];
-
-            $blockStyleDetails = $this->blockStyleModel->getBlockStyle($blockStyleID);
-            $blockStyleName = $blockStyleDetails['block_style_name'] ?? '';
+            $customerName = $_POST['customer_name'];
+            $phone = $_POST['phone'];
+            $email = $_POST['email'];
+            $subject = $_POST['subject'];
+            $message = $_POST['message'];
         
-            $servicesBoxID = $this->servicesBoxModel->insertServicesBox($servicesBoxName, $description, $blockStyleID, $blockStyleName, $userID);
+            $customerInquiryID = $this->customerInquiryModel->insertCustomerInquiry($customerName, $email, $phone, $subject, $message, $userID);
     
             $response = [
                 'success' => true,
-                'servicesBoxID' => $this->securityModel->encryptData($servicesBoxID),
+                'customerInquiryID' => $this->securityModel->encryptData($customerInquiryID),
                 'title' => 'Insert Customer Inquiry Success',
                 'message' => 'The customer inquiry has been inserted successfully.',
                 'messageType' => 'success'
@@ -234,7 +221,7 @@ class ServicesBoxController {
 
     # -------------------------------------------------------------
     #
-    # Function: updateServicesBox
+    # Function: updateCustomerInquiry
     # Description: 
     # Updates the customer inquiry if it exists; otherwise, return an error message.
     #
@@ -243,20 +230,22 @@ class ServicesBoxController {
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function updateServicesBox() {
+    public function updateCustomerInquiry() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
         
-        if (isset($_POST['customer_inquiry_name']) && !empty($_POST['customer_inquiry_name']) && isset($_POST['block_style_id']) && !empty($_POST['block_style_id']) && isset($_POST['description']) && !empty($_POST['description'])) {
+        if (isset($_POST['customer_name']) && !empty($_POST['customer_name']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['subject']) && !empty($_POST['subject']) && isset($_POST['message']) && !empty($_POST['message'])) {
             $userID = $_SESSION['user_account_id'];
-            $servicesBoxID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
-            $servicesBoxName = $_POST['customer_inquiry_name'];
-            $blockStyleID = htmlspecialchars($_POST['block_style_id'], ENT_QUOTES, 'UTF-8');
-            $description = $_POST['description'];
+            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $customerName = $_POST['customer_name'];
+            $phone = $_POST['phone'];
+            $email = $_POST['email'];
+            $subject = $_POST['subject'];
+            $message = $_POST['message'];
         
-            $checkServicesBoxExist = $this->servicesBoxModel->checkServicesBoxExist($servicesBoxID);
-            $total = $checkServicesBoxExist['total'] ?? 0;
+            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
+            $total = $checkCustomerInquiryExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
@@ -271,10 +260,7 @@ class ServicesBoxController {
                 exit;
             }
 
-            $blockStyleDetails = $this->blockStyleModel->getBlockStyle($blockStyleID);
-            $blockStyleName = $blockStyleDetails['block_style_name'] ?? '';
-
-            $this->servicesBoxModel->updateServicesBox($servicesBoxID, $servicesBoxName, $description, $blockStyleID, $blockStyleName, $userID);
+            $this->customerInquiryModel->updateCustomerInquiry($customerInquiryID, $customerName, $email, $phone, $subject, $message, $userID);
                 
             $response = [
                 'success' => true,
@@ -301,362 +287,37 @@ class ServicesBoxController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
-    #   Save methods
+    #   Tag methods
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
     #
-    # Function: saveServicesBoxItem
+    # Function: tagCustomerInquiryAsInProgress
     # Description: 
-    # Updates the customer inquiry if it exists; otherwise, insert.
+    # Tag the customer inquiry if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function saveServicesBoxItem() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-        
-        if (isset($_POST['customer_inquiry_item_id']) && isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id']) && isset($_POST['order_sequence']) && !empty($_POST['order_sequence'])) {
-            $userID = $_SESSION['user_account_id'];
-            $servicesBoxItemID = htmlspecialchars($_POST['customer_inquiry_item_id'], ENT_QUOTES, 'UTF-8');
-            $servicesBoxID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
-            $servicesBoxTitle = $_POST['customer_inquiry_title'];
-            $servicesBoxHeading = $_POST['customer_inquiry_heading'];
-            $servicesBoxParagraph = $_POST['customer_inquiry_paragraph'];
-            $callToActionButtonText = $_POST['call_to_action_button_text'];
-            $callToActionButtonLink = $_POST['call_to_action_button_link'];
-            $orderSequence = $_POST['order_sequence'];
-        
-            $checkServicesBoxExist = $this->servicesBoxModel->checkServicesBoxExist($servicesBoxID);
-            $total = $checkServicesBoxExist['total'] ?? 0;
-
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'notExist' => true,
-                    'title' => 'Save Customer Inquiry Item Error',
-                    'message' => 'The customer inquiry does not exist.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-
-            $checkServicesBoxItemExist = $this->servicesBoxModel->checkServicesBoxItemExist($servicesBoxItemID);
-            $total = $checkServicesBoxItemExist['total'] ?? 0;
-
-            if($total > 0){
-                $servicesBoxImageFileName = $_FILES['customer_inquiry_image']['name'];
-                $servicesBoxImageFileSize = $_FILES['customer_inquiry_image']['size'];
-                $servicesBoxImageFileError = $_FILES['customer_inquiry_image']['error'];
-                $servicesBoxImageTempName = $_FILES['customer_inquiry_image']['tmp_name'];
-                $servicesBoxImageFileExtension = explode('.', $servicesBoxImageFileName);
-                $servicesBoxImageActualFileExtension = strtolower(end($servicesBoxImageFileExtension));
-
-                if (!empty($servicesBoxImageFileName) && $servicesBoxImageFileSize > 0) {
-                    $uploadSetting = $this->uploadSettingModel->getUploadSetting(5);
-                    $maxFileSize = $uploadSetting['max_file_size'];
-        
-                    $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(5);
-                    $allowedFileExtensions = [];
-        
-                    foreach ($uploadSettingFileExtension as $row) {
-                        $allowedFileExtensions[] = $row['file_extension'];
-                    }
-        
-                    if (!in_array($servicesBoxImageActualFileExtension, $allowedFileExtensions)) {
-                        $response = [
-                            'success' => false,
-                            'title' => 'Update Customer Inquiry Item Error',
-                            'message' => 'The file uploaded is not supported.',
-                            'messageType' => 'error'
-                        ];
-                        
-                        echo json_encode($response);
-                        exit;
-                    }
-                    
-                    if(empty($servicesBoxImageTempName)){
-                        $response = [
-                            'success' => false,
-                            'title' => 'Update Customer Inquiry Item Error',
-                            'message' => 'Please choose the customer inquiry item.',
-                            'messageType' => 'error'
-                        ];
-                        
-                        echo json_encode($response);
-                        exit;
-                    }
-                    
-                    if($servicesBoxImageFileError){
-                        $response = [
-                            'success' => false,
-                            'title' => 'Update Customer Inquiry Item Error',
-                            'message' => 'An error occurred while uploading the file.',
-                            'messageType' => 'error'
-                        ];
-                        
-                        echo json_encode($response);
-                        exit;
-                    }
-                    
-                    if($servicesBoxImageFileSize > ($maxFileSize * 1024)){
-                        $response = [
-                            'success' => false,
-                            'title' => 'Update Customer Inquiry Item Error',
-                            'message' => 'The file exceeds the maximum allowed size of ' . number_format($maxFileSize) . ' kb.',
-                            'messageType' => 'error'
-                        ];
-                        
-                        echo json_encode($response);
-                        exit;
-                    }
-        
-                    $fileName = $this->securityModel->generateFileName();
-                    $fileNew = $fileName . '.' . $servicesBoxImageActualFileExtension;
-                    
-                    define('PROJECT_BASE_DIR', dirname(__DIR__));
-                    define('CAROUSEL_IMAGE_DIR', 'image/');
-        
-                    $directory = PROJECT_BASE_DIR. '/'. CAROUSEL_IMAGE_DIR. $servicesBoxID. '/';
-                    $fileDestination = $directory. $fileNew;
-                    $filePath = './components/customer-inquiry/image/'. $servicesBoxID . '/' . $fileNew;
-        
-                    $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
-        
-                    if(!$directoryChecker){
-                        $response = [
-                            'success' => false,
-                            'title' => 'Update Customer Inquiry Item Error',
-                            'message' => $directoryChecker,
-                            'messageType' => 'error'
-                        ];
-                        
-                        echo json_encode($response);
-                        exit;
-                    }
-
-                    $servicesBoxItemDetails = $this->servicesBoxModel->getServicesBoxItem($servicesBoxItemID);
-                    $servicesBoxImagePath = !empty($servicesBoxItemDetails['customer_inquiry_image']) ? str_replace('./components/', '../../', $servicesBoxItemDetails['customer_inquiry_image']) : null;
-
-                    if(file_exists($servicesBoxImagePath)){
-                        if (!unlink($servicesBoxImagePath)) {
-                            $response = [
-                                'success' => false,
-                                'title' => 'Update Customer Inquiry Item Error',
-                                'message' => 'The customer inquiry item cannot be deleted due to an error.',
-                                'messageType' => 'error'
-                            ];
-                            
-                            echo json_encode($response);
-                            exit;
-                        }
-                    }
-
-                    if(!move_uploaded_file($servicesBoxImageTempName, $fileDestination)){
-                        $response = [
-                            'success' => false,
-                            'title' => 'Update Customer Inquiry Item Error',
-                            'message' => 'The customer inquiry item cannot be uploaded due to an error.',
-                            'messageType' => 'error'
-                        ];
-                        
-                        echo json_encode($response);
-                        exit;           
-                    }  
-
-                    $this->servicesBoxModel->updateServicesBoxItem($servicesBoxItemID, $servicesBoxID, $servicesBoxTitle, $servicesBoxHeading, $servicesBoxParagraph, $callToActionButtonText, $callToActionButtonLink, $filePath, $orderSequence, $userID);
-                    
-                    $response = [
-                        'success' => true,
-                        'title' => 'Update Customer Inquiry Item Success',
-                        'message' => 'The customer inquiry item has been inserted successfully.',
-                        'messageType' => 'success'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;   
-                } 
-                else {
-                    $this->servicesBoxModel->updateServicesBoxItem($servicesBoxItemID, $servicesBoxID, $servicesBoxTitle, $servicesBoxHeading, $servicesBoxParagraph, $callToActionButtonText, $callToActionButtonLink, '', $orderSequence, $userID);
-
-                    $response = [
-                        'success' => true,
-                        'title' => 'Update Customer Inquiry Item Success',
-                        'message' => 'The customer inquiry item has been inserted successfully.',
-                        'messageType' => 'success'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;   
-                }
-            }
-            else{
-                $servicesBoxImageFileName = $_FILES['customer_inquiry_image']['name'];
-                $servicesBoxImageFileSize = $_FILES['customer_inquiry_image']['size'];
-                $servicesBoxImageFileError = $_FILES['customer_inquiry_image']['error'];
-                $servicesBoxImageTempName = $_FILES['customer_inquiry_image']['tmp_name'];
-                $servicesBoxImageFileExtension = explode('.', $servicesBoxImageFileName);
-                $servicesBoxImageActualFileExtension = strtolower(end($servicesBoxImageFileExtension));
-    
-                $uploadSetting = $this->uploadSettingModel->getUploadSetting(5);
-                $maxFileSize = $uploadSetting['max_file_size'];
-    
-                $uploadSettingFileExtension = $this->uploadSettingModel->getUploadSettingFileExtension(5);
-                $allowedFileExtensions = [];
-    
-                foreach ($uploadSettingFileExtension as $row) {
-                    $allowedFileExtensions[] = $row['file_extension'];
-                }
-    
-                if (!in_array($servicesBoxImageActualFileExtension, $allowedFileExtensions)) {
-                    $response = [
-                        'success' => false,
-                        'title' => 'Insert Customer Inquiry Item Error',
-                        'message' => 'The file uploaded is not supported.',
-                        'messageType' => 'error'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;
-                }
-                
-                if(empty($servicesBoxImageTempName)){
-                    $response = [
-                        'success' => false,
-                        'title' => 'Insert Customer Inquiry Item Error',
-                        'message' => 'Please choose the customer inquiry item.',
-                        'messageType' => 'error'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;
-                }
-                
-                if($servicesBoxImageFileError){
-                    $response = [
-                        'success' => false,
-                        'title' => 'Insert Customer Inquiry Item Error',
-                        'message' => 'An error occurred while uploading the file.',
-                        'messageType' => 'error'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;
-                }
-                
-                if($servicesBoxImageFileSize > ($maxFileSize * 1024)){
-                    $response = [
-                        'success' => false,
-                        'title' => 'Insert Customer Inquiry Item Error',
-                        'message' => 'The file exceeds the maximum allowed size of ' . number_format($maxFileSize) . ' kb.',
-                        'messageType' => 'error'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;
-                }
-    
-                $fileName = $this->securityModel->generateFileName();
-                $fileNew = $fileName . '.' . $servicesBoxImageActualFileExtension;
-                
-                define('PROJECT_BASE_DIR', dirname(__DIR__));
-                define('CAROUSEL_IMAGE_DIR', 'image/');
-    
-                $directory = PROJECT_BASE_DIR. '/'. CAROUSEL_IMAGE_DIR. $servicesBoxID. '/';
-                $fileDestination = $directory. $fileNew;
-                $filePath = './components/customer-inquiry/image/'. $servicesBoxID . '/' . $fileNew;
-    
-                $directoryChecker = $this->securityModel->directoryChecker(str_replace('./', '../../', $directory));
-    
-                if(!$directoryChecker){
-                    $response = [
-                        'success' => false,
-                        'title' => 'Insert Customer Inquiry Item Error',
-                        'message' => $directoryChecker,
-                        'messageType' => 'error'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;
-                }
-
-                if(!move_uploaded_file($servicesBoxImageTempName, $fileDestination)){
-                    $response = [
-                        'success' => false,
-                        'title' => 'Insert Customer Inquiry Item Error',
-                        'message' => 'The customer inquiry item cannot be uploaded due to an error.',
-                        'messageType' => 'error'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;           
-                }    
-
-                $this->servicesBoxModel->insertServicesBoxItem($servicesBoxID, $servicesBoxTitle, $servicesBoxHeading, $servicesBoxParagraph, $callToActionButtonText, $callToActionButtonLink, $filePath, $orderSequence, $userID);
-                
-                $response = [
-                    'success' => true,
-                    'title' => 'Insert Customer Inquiry Item Success',
-                    'message' => 'The customer inquiry item has been inserted successfully.',
-                    'messageType' => 'success'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #   Publish methods
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: publishServicesBox
-    # Description: 
-    # Publish the customer inquiry if it exists; otherwise, return an error message.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function publishServicesBox() {
+    public function tagCustomerInquiryAsInProgress() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $servicesBoxID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkServicesBoxExist = $this->servicesBoxModel->checkServicesBoxExist($servicesBoxID);
-            $total = $checkServicesBoxExist['total'] ?? 0;
+            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
+            $total = $checkCustomerInquiryExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Publish Customer Inquiry Error',
+                    'title' => 'Tag Customer Inquiry As In-Progress Error',
                     'message' => 'The customer inquiry does not exist.',
                     'messageType' => 'error'
                 ];
@@ -665,12 +326,12 @@ class ServicesBoxController {
                 exit;
             }
 
-            $this->servicesBoxModel->updateServicesBoxPublishStatus($servicesBoxID, 'Yes', $userID);
+            $this->customerInquiryModel->updateCustomerInquiryStatus($customerInquiryID, 'In-Progress', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Publish Customer Inquiry Success',
-                'message' => 'The customer inquiry has been published successfully.',
+                'title' => 'Tag Customer Inquiry As In-Progress Success',
+                'message' => 'The customer inquiry has been tagged as in-progress successfully.',
                 'messageType' => 'success'
             ];
             
@@ -692,37 +353,33 @@ class ServicesBoxController {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
-    #   Publish methods
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
     #
-    # Function: unpublishServicesBox
+    # Function: tagCustomerInquiryAsResolved
     # Description: 
-    # Publish the customer inquiry if it exists; otherwise, return an error message.
+    # Tag the customer inquiry if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function unpublishServicesBox() {
+    public function tagCustomerInquiryAsResolved() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $servicesBoxID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkServicesBoxExist = $this->servicesBoxModel->checkServicesBoxExist($servicesBoxID);
-            $total = $checkServicesBoxExist['total'] ?? 0;
+            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
+            $total = $checkCustomerInquiryExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Unpublish Customer Inquiry Error',
+                    'title' => 'Tag Customer Inquiry As Resolved Error',
                     'message' => 'The customer inquiry does not exist.',
                     'messageType' => 'error'
                 ];
@@ -731,12 +388,74 @@ class ServicesBoxController {
                 exit;
             }
 
-            $this->servicesBoxModel->updateServicesBoxPublishStatus($servicesBoxID, 'No', $userID);
+            $this->customerInquiryModel->updateCustomerInquiryStatus($customerInquiryID, 'Resolved', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Unpublish Customer Inquiry Success',
-                'message' => 'The customer inquiry has been unpublished successfully.',
+                'title' => 'Tag Customer Inquiry As Resolved Success',
+                'message' => 'The customer inquiry has been tagged as resolved successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: tagCustomerInquiryAsClosed
+    # Description: 
+    # Tag the customer inquiry if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function tagCustomerInquiryAsClosed() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
+            $total = $checkCustomerInquiryExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Tag Customer Inquiry As Closed Error',
+                    'message' => 'The customer inquiry does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->customerInquiryModel->updateCustomerInquiryStatus($customerInquiryID, 'Closed', $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Tag Customer Inquiry As Closed Success',
+                'message' => 'The customer inquiry has been tagged as closed successfully.',
                 'messageType' => 'success'
             ];
             
@@ -763,7 +482,7 @@ class ServicesBoxController {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteServicesBox
+    # Function: deleteCustomerInquiry
     # Description: 
     # Delete the customer inquiry if it exists; otherwise, return an error message.
     #
@@ -772,16 +491,16 @@ class ServicesBoxController {
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function deleteServicesBox() {
+    public function deleteCustomerInquiry() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
-            $servicesBoxID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkServicesBoxExist = $this->servicesBoxModel->checkServicesBoxExist($servicesBoxID);
-            $total = $checkServicesBoxExist['total'] ?? 0;
+            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
+            $total = $checkCustomerInquiryExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
@@ -796,27 +515,7 @@ class ServicesBoxController {
                 exit;
             }
 
-            $servicesBoxItemByCourselDetails = $this->servicesBoxModel->getServicesBoxItemByServicesBoxID($servicesBoxID);
-
-            foreach ($servicesBoxItemByCourselDetails as $row) {
-                $servicesBoxImagePath = !empty($row['customer_inquiry_image']) ? str_replace('./components/', '../../', $row['customer_inquiry_image']) : null;
-
-                if(file_exists($servicesBoxImagePath)){
-                    if (!unlink($servicesBoxImagePath)) {
-                        $response = [
-                            'success' => false,
-                            'title' => 'Delete Customer Inquiry Item Error',
-                            'message' => 'The customer inquiry item cannot be deleted due to an error.',
-                            'messageType' => 'error'
-                        ];
-                        
-                        echo json_encode($response);
-                        exit;
-                    }
-                }
-            }
-
-            $this->servicesBoxModel->deleteServicesBox($servicesBoxID);
+            $this->customerInquiryModel->deleteCustomerInquiry($customerInquiryID);
                 
             $response = [
                 'success' => true,
@@ -844,134 +543,36 @@ class ServicesBoxController {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteServicesBoxItem
+    # Function: deleteMultipleCustomerInquiry
     # Description: 
-    # Delete the customer inquiry if it exists; otherwise, return an error message.
+    # Delete the selected customer inquiries if it exists; otherwise, skip it.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function deleteServicesBoxItem() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-
-        if (isset($_POST['customer_inquiry_item_id']) && !empty($_POST['customer_inquiry_item_id'])) {
-            $servicesBoxItemID = htmlspecialchars($_POST['customer_inquiry_item_id'], ENT_QUOTES, 'UTF-8');
-        
-            $checkServicesBoxItemExist = $this->servicesBoxModel->checkServicesBoxItemExist($servicesBoxItemID);
-            $total = $checkServicesBoxItemExist['total'] ?? 0;
-
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'title' => 'Delete Customer Inquiry Item Error',
-                    'message' => 'The customer inquiry item does not exist.',
-                    'messageType' => 'error'
-                ];
-                
-                echo json_encode($response);
-                exit;
-            }
-
-            $servicesBoxItemDetails = $this->servicesBoxModel->getServicesBoxItem($servicesBoxItemID);
-            $servicesBoxImagePath = !empty($servicesBoxItemDetails['customer_inquiry_image']) ? str_replace('./components/', '../../', $servicesBoxItemDetails['customer_inquiry_image']) : null;
-
-
-            if(file_exists($servicesBoxImagePath)){
-                if (!unlink($servicesBoxImagePath)) {
-                    $response = [
-                        'success' => false,
-                        'title' => 'Delete Customer Inquiry Item Error',
-                        'message' => 'The customer inquiry item cannot be deleted due to an error.',
-                        'messageType' => 'error'
-                    ];
-                    
-                    echo json_encode($response);
-                    exit;
-                }
-            }
-
-            $this->servicesBoxModel->deleteServicesBoxItem($servicesBoxItemID);
-                
-            $response = [
-                'success' => true,
-                'title' => 'Delete Customer Inquiry Item Success',
-                'message' => 'The customer inquiry item has been deleted successfully.',
-                'messageType' => 'success'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: deleteMultipleServicesBox
-    # Description: 
-    # Delete the selected customer inquirys if it exists; otherwise, skip it.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function deleteMultipleServicesBox() {
+    public function deleteMultipleCustomerInquiry() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
-            $servicesBoxIDs = $_POST['customer_inquiry_id'];
+            $customerInquiryIDs = $_POST['customer_inquiry_id'];
     
-            foreach($servicesBoxIDs as $servicesBoxID){
-                $checkServicesBoxExist = $this->servicesBoxModel->checkServicesBoxExist($servicesBoxID);
-                $total = $checkServicesBoxExist['total'] ?? 0;
+            foreach($customerInquiryIDs as $customerInquiryID){
+                $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
+                $total = $checkCustomerInquiryExist['total'] ?? 0;
 
                 if($total > 0){
-                    $servicesBoxItemByCourselDetails = $this->servicesBoxModel->getServicesBoxItemByServicesBoxID($servicesBoxID);
-
-                    foreach ($servicesBoxItemByCourselDetails as $row) {
-                        $servicesBoxImagePath = !empty($row['customer_inquiry_image']) ? str_replace('./components/', '../../', $row['customer_inquiry_image']) : null;
-
-                        if(file_exists($servicesBoxImagePath)){
-                            if (!unlink($servicesBoxImagePath)) {
-                                $response = [
-                                    'success' => false,
-                                    'title' => 'Delete Customer Inquiry Item Error',
-                                    'message' => 'The customer inquiry item cannot be deleted due to an error.',
-                                    'messageType' => 'error'
-                                ];
-                                
-                                echo json_encode($response);
-                                exit;
-                            }
-                        }
-                    }
-
-                    $this->servicesBoxModel->deleteServicesBox($servicesBoxID);
+                    $this->customerInquiryModel->deleteCustomerInquiry($customerInquiryID);
                 }
             }
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete Multiple Customer Inquirys Success',
-                'message' => 'The selected customer inquirys have been deleted successfully.',
+                'title' => 'Delete Multiple Customer Inquiries Success',
+                'message' => 'The selected customer inquiries have been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -998,7 +599,7 @@ class ServicesBoxController {
 
     # -------------------------------------------------------------
     #
-    # Function: getServicesBoxDetails
+    # Function: getCustomerInquiryDetails
     # Description: 
     # Handles the retrieval of customer inquiry details.
     #
@@ -1007,17 +608,17 @@ class ServicesBoxController {
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function getServicesBoxDetails() {
+    public function getCustomerInquiryDetails() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
     
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $servicesBoxID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkServicesBoxExist = $this->servicesBoxModel->checkServicesBoxExist($servicesBoxID);
-            $total = $checkServicesBoxExist['total'] ?? 0;
+            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
+            $total = $checkCustomerInquiryExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
@@ -1032,78 +633,25 @@ class ServicesBoxController {
                 exit;
             }
     
-            $servicesBoxDetails = $this->servicesBoxModel->getServicesBox($servicesBoxID);
+            $customerInquiryDetails = $this->customerInquiryModel->getCustomerInquiry($customerInquiryID);
+            $inquiryStatus = $customerInquiryDetails['inquiry_status'];
 
-            $response = [
-                'success' => true,
-                'servicesBoxName' => $servicesBoxDetails['customer_inquiry_name'] ?? null,
-                'description' => $servicesBoxDetails['description'] ?? null,
-                'blockStyleID' => $servicesBoxDetails['block_style_id'] ?? '',
-                'blockStyleName' => $servicesBoxDetails['block_style_name'] ?? ''
+            $badgeClasses = [
+                'Pending' => 'text-bg-info',
+                'In-Progress' => 'text-bg-warning',
+                'Resolved' => 'text-bg-success',
             ];
-
-            echo json_encode($response);
-            exit;
-        }
-        else{
-            $response = [
-                'success' => false,
-                'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
-                'messageType' => 'error'
-            ];
-            
-            echo json_encode($response);
-            exit;
-        }
-    }
-    # -------------------------------------------------------------
-
-    # -------------------------------------------------------------
-    #
-    # Function: getServicesBoxItemDetails
-    # Description: 
-    # Handles the retrieval of customer inquiry item details.
-    #
-    # Parameters: None
-    #
-    # Returns: Array
-    #
-    # -------------------------------------------------------------
-    public function getServicesBoxItemDetails() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return;
-        }
-    
-        if (isset($_POST['customer_inquiry_item_id']) && !empty($_POST['customer_inquiry_item_id'])) {
-            $userID = $_SESSION['user_account_id'];
-            $servicesBoxItemID = htmlspecialchars($_POST['customer_inquiry_item_id'], ENT_QUOTES, 'UTF-8');
-
-            $checkServicesBoxItemExist = $this->servicesBoxModel->checkServicesBoxItemExist($servicesBoxItemID);
-            $total = $checkServicesBoxItemExist['total'] ?? 0;
-
-            if($total === 0){
-                $response = [
-                    'success' => false,
-                    'title' => 'Get Customer Inquiry Item Details Error',
-                    'message' => 'The customer inquiry item does not exist.',
-                    'messageType' => 'error'
-                ];
                 
-                echo json_encode($response);
-                exit;
-            }
-    
-            $servicesBoxItemDetails = $this->servicesBoxModel->getServicesBoxItem($servicesBoxItemID);
+            $inquiryStatusBadge = '<span class="badge rounded-pill ' . ($badgeClasses[$inquiryStatus] ?? 'text-bg-dark') . '">' . $inquiryStatus . '</span>';
 
             $response = [
                 'success' => true,
-                'servicesBoxTitle' => $servicesBoxItemDetails['customer_inquiry_title'] ?? null,
-                'servicesBoxHeading' => $servicesBoxItemDetails['customer_inquiry_heading'] ?? null,
-                'servicesBoxParagraph' => $servicesBoxItemDetails['customer_inquiry_paragraph'] ?? null,
-                'callToActionButtonText' => $servicesBoxItemDetails['call_to_action_button_text'] ?? null,
-                'callToActionButtonLink' => $servicesBoxItemDetails['call_to_action_button_link'] ?? null,
-                'orderSequence' => $servicesBoxItemDetails['order_sequence'] ?? null,
+                'customerName' => $customerInquiryDetails['customer_name'] ?? null,
+                'email' => $customerInquiryDetails['email'] ?? null,
+                'phone' => $customerInquiryDetails['phone'] ?? null,
+                'subject' => $customerInquiryDetails['subject'] ?? null,
+                'message' => $customerInquiryDetails['message'] ?? null,
+                'inquiryStatusBadge' => $inquiryStatusBadge
             ];
 
             echo json_encode($response);
@@ -1130,11 +678,9 @@ require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
 require_once '../../customer-inquiry/model/customer-inquiry-model.php';
-require_once '../../block-style/model/block-style-model.php';
-require_once '../../upload-setting/model/upload-setting-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new ServicesBoxController(new ServicesBoxModel(new DatabaseModel), new BlockStyleModel(new DatabaseModel), new UploadSettingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new CustomerInquiryController(new CustomerInquiryModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>

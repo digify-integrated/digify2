@@ -2,132 +2,83 @@ DELIMITER //
 
 /* Check Stored Procedure */
 
-CREATE PROCEDURE checkServicesBoxExist(IN p_customer_inquiry_id INT)
+CREATE PROCEDURE checkCustomerInquiryExist(IN p_customer_inquiry_id INT)
 BEGIN
 	SELECT COUNT(*) AS total
     FROM customer_inquiry
     WHERE customer_inquiry_id = p_customer_inquiry_id;
 END //
 
-CREATE PROCEDURE checkServicesBoxItemExist(IN p_customer_inquiry_item_id INT)
-BEGIN
-	SELECT COUNT(*) AS total
-    FROM customer_inquiry_item
-    WHERE customer_inquiry_item_id = p_customer_inquiry_item_id;
-END //
-
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
 
-CREATE PROCEDURE insertServicesBox(IN p_customer_inquiry_name VARCHAR(100), IN p_description VARCHAR(100), IN p_block_style_id INT, IN p_block_style_name VARCHAR(100), IN p_last_log_by INT, OUT p_customer_inquiry_id INT)
+CREATE PROCEDURE insertCustomerInquiry(IN p_customer_name VARCHAR(500), IN p_email VARCHAR(500), IN p_phone VARCHAR(50), IN p_subject VARCHAR(500), IN p_message LONGTEXT, IN p_last_log_by INT, OUT p_customer_inquiry_id INT)
 BEGIN
-    INSERT INTO customer_inquiry (customer_inquiry_name, description, block_style_id, block_style_name, last_log_by) 
-	VALUES(p_customer_inquiry_name, p_description, p_block_style_id, p_block_style_name, p_last_log_by);
-	
-    SET p_customer_inquiry_id = LAST_INSERT_ID();
-END //
+    INSERT INTO customer_inquiry (customer_name, email, phone, subject, message, last_log_by) 
+	VALUES(p_customer_name, p_email, p_phone, p_subject, p_message, p_last_log_by);
 
-CREATE PROCEDURE insertServicesBoxItem(IN p_customer_inquiry_id INT, IN p_customer_inquiry_title VARCHAR(500), IN p_customer_inquiry_heading VARCHAR(500), IN p_customer_inquiry_paragraph LONGTEXT, IN p_call_to_action_button_text VARCHAR(100), IN p_call_to_action_button_link VARCHAR(500), IN p_customer_inquiry_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
-BEGIN
-    INSERT INTO customer_inquiry_item (customer_inquiry_id, customer_inquiry_title, customer_inquiry_heading, customer_inquiry_paragraph, call_to_action_button_text, call_to_action_button_link, customer_inquiry_image, order_sequence, last_log_by) 
-	VALUES(p_customer_inquiry_id, p_customer_inquiry_title, p_customer_inquiry_heading, p_customer_inquiry_paragraph, p_call_to_action_button_text, p_call_to_action_button_link, p_customer_inquiry_image, p_order_sequence, p_last_log_by);
+     SET p_customer_inquiry_id = LAST_INSERT_ID();
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Update Stored Procedure */
 
-CREATE PROCEDURE updateServicesBox(IN p_customer_inquiry_id INT, IN p_customer_inquiry_name VARCHAR(100), IN p_description VARCHAR(100), IN p_block_style_id INT, IN p_block_style_name VARCHAR(100), IN p_last_log_by INT)
+CREATE PROCEDURE updateCustomerInquiry(IN p_customer_inquiry_id INT, IN p_customer_name VARCHAR(500), IN p_email VARCHAR(500), IN p_phone VARCHAR(50), IN p_subject VARCHAR(500), IN p_message LONGTEXT, IN p_last_log_by INT)
 BEGIN
     UPDATE customer_inquiry
-    SET customer_inquiry_name = p_customer_inquiry_name,
-        description = p_description,
-        block_style_id = p_block_style_id,
-        block_style_name = p_block_style_name,
+    SET customer_name = p_customer_name,
+        email = p_email,
+        phone = p_phone,
+        subject = p_subject,
+        message = p_message,
         last_log_by = p_last_log_by
     WHERE customer_inquiry_id = p_customer_inquiry_id;
 END //
 
-CREATE PROCEDURE updateServicesBoxPublishStatus(IN p_customer_inquiry_id INT, IN p_publish_status VARCHAR(5), IN p_last_log_by INT)
-BEGIN
-    UPDATE customer_inquiry
-    SET publish_status = p_publish_status,
-        last_log_by = p_last_log_by
-    WHERE customer_inquiry_id = p_customer_inquiry_id;
-END //
-
-CREATE PROCEDURE updateServicesBoxItem(IN p_customer_inquiry_item_id INT, IN p_customer_inquiry_id INT, IN p_customer_inquiry_title VARCHAR(500), IN p_customer_inquiry_heading VARCHAR(500), IN p_customer_inquiry_paragraph LONGTEXT, IN p_call_to_action_button_text VARCHAR(100), IN p_call_to_action_button_link VARCHAR(500), IN p_customer_inquiry_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
-BEGIN
-    IF p_customer_inquiry_image IS NOT NULL AND p_customer_inquiry_image != '' THEN
-        UPDATE customer_inquiry_item
-        SET customer_inquiry_id = p_customer_inquiry_id,
-            customer_inquiry_title = p_customer_inquiry_title,
-            customer_inquiry_heading = p_customer_inquiry_heading,
-            customer_inquiry_paragraph = p_customer_inquiry_paragraph,
-            call_to_action_button_text = p_call_to_action_button_text,
-            call_to_action_button_link = p_call_to_action_button_link,
-            customer_inquiry_image = p_customer_inquiry_image,
-            order_sequence = p_order_sequence,
+CREATE PROCEDURE updateCustomerInquiryStatus(IN p_customer_inquiry_id INT, IN p_inquiry_status VARCHAR(50), IN p_last_log_by INT)
+BEGIN    
+    IF p_inquiry_status = 'In-Progress' THEN
+        UPDATE customer_inquiry
+        SET inquiry_status = p_inquiry_status,
+            in_progress_date = NOW(),
+            in_progress_by = p_last_log_by,
             last_log_by = p_last_log_by
-        WHERE customer_inquiry_item_id = p_customer_inquiry_item_id;
+        WHERE customer_inquiry_id = p_customer_inquiry_id;
+    ELSEIF p_inquiry_status = 'Resolved' THEN
+        UPDATE customer_inquiry
+        SET inquiry_status = p_inquiry_status,
+            resolved_date = NOW(),
+            resolved_by = p_last_log_by,
+            last_log_by = p_last_log_by
+        WHERE customer_inquiry_id = p_customer_inquiry_id;
     ELSE
-        UPDATE customer_inquiry_item
-        SET customer_inquiry_id = p_customer_inquiry_id,
-            customer_inquiry_title = p_customer_inquiry_title,
-            customer_inquiry_heading = p_customer_inquiry_heading,
-            customer_inquiry_paragraph = p_customer_inquiry_paragraph,
-            call_to_action_button_text = p_call_to_action_button_text,
-            call_to_action_button_link = p_call_to_action_button_link,
-            order_sequence = p_order_sequence,
+        UPDATE customer_inquiry
+        SET inquiry_status = p_inquiry_status,
+            closed_date = NOW(),
+            closed_by = p_last_log_by,
             last_log_by = p_last_log_by
-        WHERE customer_inquiry_item_id = p_customer_inquiry_item_id;
-    END IF;   
+        WHERE customer_inquiry_id = p_customer_inquiry_id;
+    END IF;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Delete Stored Procedure */
 
-CREATE PROCEDURE deleteServicesBox(IN p_customer_inquiry_id INT)
+CREATE PROCEDURE deleteCustomerInquiry(IN p_customer_inquiry_id INT)
 BEGIN
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-    END;
-
-    START TRANSACTION;
-
-    DELETE FROM customer_inquiry_item WHERE customer_inquiry_id = p_customer_inquiry_id;
     DELETE FROM customer_inquiry WHERE customer_inquiry_id = p_customer_inquiry_id;
-
-    COMMIT;
-END //
-
-CREATE PROCEDURE deleteServicesBoxItem(IN p_customer_inquiry_item_id INT)
-BEGIN
-   DELETE FROM customer_inquiry_item WHERE customer_inquiry_item_id = p_customer_inquiry_item_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Get Stored Procedure */
 
-CREATE PROCEDURE getServicesBox(IN p_customer_inquiry_id INT)
+CREATE PROCEDURE getCustomerInquiry(IN p_customer_inquiry_id INT)
 BEGIN
 	SELECT * FROM customer_inquiry
-	WHERE customer_inquiry_id = p_customer_inquiry_id;
-END //
-
-CREATE PROCEDURE getServicesBoxItem(IN p_customer_inquiry_item_id INT)
-BEGIN
-	SELECT * FROM customer_inquiry_item
-	WHERE customer_inquiry_item_id = p_customer_inquiry_item_id;
-END //
-
-CREATE PROCEDURE getServicesBoxItemByServicesBoxID(IN p_customer_inquiry_id INT)
-BEGIN
-	SELECT * FROM customer_inquiry_item
 	WHERE customer_inquiry_id = p_customer_inquiry_id;
 END //
 
@@ -135,17 +86,10 @@ END //
 
 /* Generate Stored Procedure */
 
-CREATE PROCEDURE generateServicesBoxTable()
+CREATE PROCEDURE generateCustomerInquiryTable()
 BEGIN
-    SELECT customer_inquiry_id, customer_inquiry_name, description, publish_status
+    SELECT customer_inquiry_id, customer_name, email, phone, subject, message, inquiry_status, created_date
     FROM customer_inquiry;
-END //
-
-CREATE PROCEDURE generateServicesBoxItemTable(IN p_customer_inquiry_id INT)
-BEGIN
-    SELECT customer_inquiry_item_id, customer_inquiry_title, customer_inquiry_heading, customer_inquiry_paragraph, call_to_action_button_text, call_to_action_button_link, customer_inquiry_image, order_sequence 
-    FROM customer_inquiry_item
-    WHERE customer_inquiry_id = p_customer_inquiry_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

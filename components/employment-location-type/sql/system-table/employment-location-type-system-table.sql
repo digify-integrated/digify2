@@ -10,4 +10,16 @@ CREATE TABLE employment_location_type (
 
 CREATE INDEX employment_location_type_index_employment_location_type_id ON employment_location_type(employment_location_type_id);
 
+INSERT INTO employment_location_type (employment_location_type_id, employment_location_type_name, last_log_by)
+VALUES 
+(1, 'Head Office', 1),
+(2, 'Branch Office', 1),
+(3, 'Remote Work', 1),
+(4, 'Client Site', 1),
+(5, 'Factory', 1),
+(6, 'Warehouse', 1),
+(7, 'Retail Store', 1),
+(8, 'Home Office', 1),
+(9, 'Field Work', 1);
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */

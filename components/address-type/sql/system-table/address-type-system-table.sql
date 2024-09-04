@@ -10,4 +10,11 @@ CREATE TABLE address_type (
 
 CREATE INDEX address_type_index_address_type_id ON address_type(address_type_id);
 
+INSERT INTO address_type (address_type_id, address_type_name, last_log_by) VALUES
+(1, 'Home Address', 1),
+(2, 'Billing Address', 1),
+(3, 'Mailing Address', 1),
+(4, 'Shipping Address', 1),
+(5, 'Work Address', 1);
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */

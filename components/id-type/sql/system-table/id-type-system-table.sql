@@ -10,4 +10,11 @@ CREATE TABLE id_type (
 
 CREATE INDEX id_type_index_id_type_id ON id_type(id_type_id);
 
+INSERT INTO id_type (id_type_id, id_type_name, last_log_by)
+VALUES 
+(1, 'National ID', 1),
+(2, 'Passport', 1),
+(3, 'Driver License', 1),
+(4, 'State ID', 1);
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */

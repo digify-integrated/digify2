@@ -3,7 +3,7 @@
 
     $(function() {
         if($('#customer-inquiry-table').length){
-            servicesBoxTable('#customer-inquiry-table');
+            customerInquiryTable('#customer-inquiry-table');
         }
 
         $(document).on('click','.delete-customer-inquiry',function() {
@@ -76,8 +76,8 @@
     
             if(customer_inquiry_id.length > 0){
                 Swal.fire({
-                    title: 'Confirm Multiple Customer Inquiryes Deletion',
-                    text: 'Are you sure you want to delete these customer inquiryes?',
+                    title: 'Confirm Multiple Customer Inquiries Deletion',
+                    text: 'Are you sure you want to delete these customer inquiries?',
                     icon: 'warning',
                     showCancelButton: !0,
                     confirmButtonText: 'Delete',
@@ -129,7 +129,7 @@
                 });
             }
             else{
-                showNotification('Deletion Multiple Customer Inquiryes Error', 'Please select the customer inquiryes you wish to delete.', 'danger');
+                showNotification('Deletion Multiple Customer Inquiries Error', 'Please select the customer inquiries you wish to delete.', 'danger');
             }
         });
 
@@ -140,7 +140,7 @@
     });
 })(jQuery);
 
-function servicesBoxTable(datatable_name, buttons = false, show_all = false){
+function customerInquiryTable(datatable_name, buttons = false, show_all = false){
     toggleHideActionDropdown();
 
     const type = 'customer inquiry table';
@@ -151,16 +151,20 @@ function servicesBoxTable(datatable_name, buttons = false, show_all = false){
 
     const column = [ 
         { 'data' : 'CHECK_BOX' },
-        { 'data' : 'customer_inquiry_NAME' },
-        { 'data' : 'PUBLISH_STATUS' },
+        { 'data' : 'CUSTOMER' },
+        { 'data' : 'MESSAGE' },
+        { 'data' : 'INQUIRY_DATE' },
+        { 'data' : 'INQUIRY_STATUS' },
         { 'data' : 'ACTION' }
     ];
 
     const column_definition = [
         { 'width': '1%','bSortable': false, 'aTargets': 0 },
         { 'width': 'auto', 'aTargets': 1 },
-        { 'width': '20%', 'aTargets': 2 },
-        { 'width': '15%','bSortable': false, 'aTargets': 3 }
+        { 'width': 'auto', 'aTargets': 2 },
+        { 'width': 'auto', 'aTargets': 3 },
+        { 'width': 'auto', 'aTargets': 4 },
+        { 'width': '15%','bSortable': false, 'aTargets': 5 }
     ];
 
     const length_menu = show_all ? [[-1], ['All']] : [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']];

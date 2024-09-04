@@ -10,4 +10,9 @@ CREATE TABLE schedule_type (
 
 CREATE INDEX schedule_type_index_schedule_type_id ON schedule_type(schedule_type_id);
 
+INSERT INTO schedule_type (schedule_type_id, schedule_type_name, last_log_by) VALUES
+(1, 'Fixed', 2),
+(2, 'Flexible', 2),
+(3, 'Shifting', 2);
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */

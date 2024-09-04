@@ -11,24 +11,40 @@
             <div class="card-body">
                 <form id="customer-inquiry-form" method="post" action="#">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-12">
                             <div class="mb-3">
-                                <label class="form-label" for="customer_inquiry_name">Display Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control maxlength" id="customer_inquiry_name" name="customer_inquiry_name" maxlength="100" autocomplete="off">
+                                <label class="form-label" for="customer_name">Customer Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="customer_name" name="customer_name" maxlength="500" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label class="form-label" for="phone">Phone <span class="text-danger">*</span></label>
+                            <div class="mb-3">
+                                <input type="text" class="form-control maxlength" id="phone" name="phone" maxlength="50" autocomplete="off">
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <label class="form-label" for="block_style_id">Block Style <span class="text-danger">*</span></label>
+                            <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
                             <div class="mb-3">
-                                <select id="block_style_id" name="block_style_id" class="select2 form-control"></select>
+                                <input type="email" class="form-control maxlength" id="email" name="email" maxlength="500" autocomplete="off">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
-                                <label class="form-label" for="description">Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control maxlength" id="description" name="description" maxlength="500" rows="5"></textarea>
+                                <label class="form-label" for="subject">Subject <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control maxlength" id="subject" name="subject" maxlength="500" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-0">
+                                <label class="form-label" for="message">Message <span class="text-danger">*</span></label>
+                                <textarea class="form-control maxlength" id="message" name="message" maxlength="5000" rows="5"></textarea>
                             </div>
                         </div>
                     </div>

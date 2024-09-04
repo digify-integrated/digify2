@@ -74,7 +74,7 @@ BEGIN
             order_sequence = p_order_sequence,
             last_log_by = p_last_log_by
         WHERE client_item_id = p_client_item_id;
-    END IF;   
+    END IF;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
