@@ -120,7 +120,8 @@ END //
 CREATE PROCEDURE getClientItemByClientID(IN p_client_id INT)
 BEGIN
 	SELECT * FROM client_item
-	WHERE client_id = p_client_id;
+	WHERE client_id = p_client_id
+    ORDER BY order_sequence;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

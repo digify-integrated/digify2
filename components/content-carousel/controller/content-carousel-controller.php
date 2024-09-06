@@ -5,7 +5,7 @@ session_start();
 #
 # Function: ContentCarouselController
 # Description: 
-# The Content CarouselController class handles carousel related operations and interactions.
+# The Content CarouselController class handles content carousel related operations and interactions.
 #
 # Parameters: None
 #

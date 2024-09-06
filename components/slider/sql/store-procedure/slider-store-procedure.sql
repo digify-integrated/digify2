@@ -132,7 +132,8 @@ END //
 CREATE PROCEDURE getSliderItemBySliderID(IN p_slider_id INT)
 BEGIN
 	SELECT * FROM slider_item
-	WHERE slider_id = p_slider_id;
+	WHERE slider_id = p_slider_id
+    ORDER BY order_sequence;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

@@ -136,7 +136,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                                                 </div>
                                             </div>',
                     'CALL_TO_ACTION' => '<a href="'. $callToActionButtonLink .'" target="_blank">'. $callToActionButtonText .'</a>',
-                    'SERVICES_BOX_IMAGE' => '<a href="'. $servicesBoxImage .'" target="_blank"><img src="'. $servicesBoxImage .'" alt="modernize-img" class="rounded-1 img-fluid mb-9"></a>',
+                    'SERVICES_BOX_IMAGE' => '<a href="'. $servicesBoxImage .'" target="_blank"><img src="'. $servicesBoxImage .'" alt="modernize-img" width="100" height="100" class="rounded-1 img-fluid mb-9"></a>',
                     'ORDER_SEQUENCE' => $orderSequence,
                     'ACTION' => '<div class="action-btn">
                                     '. $updateButton .'

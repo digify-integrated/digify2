@@ -128,7 +128,8 @@ END //
 CREATE PROCEDURE getServicesBoxItemByServicesBoxID(IN p_services_box_id INT)
 BEGIN
 	SELECT * FROM services_box_item
-	WHERE services_box_id = p_services_box_id;
+	WHERE services_box_id = p_services_box_id
+    ORDER BY order_sequence;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

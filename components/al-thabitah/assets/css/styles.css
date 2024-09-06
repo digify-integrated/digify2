@@ -144,6 +144,26 @@ footer p {
     background-color: #25d366 !important;
 }
 
+.social-facebook {
+    background-color: #3b5998 !important;
+}
+
+.social-instagram {
+    background-color: #405DE6 !important;
+}
+
+.social-youtube {
+    background-color: red !important;
+}
+
+.social-tiktok {
+    background-color: #ff0050 !important;
+}
+
+.tiktok:hover {
+    color: #ff0050 !important;
+}
+
 @media (max-width: 1399px) {
     .xl-h-180px {
         height: 180px;

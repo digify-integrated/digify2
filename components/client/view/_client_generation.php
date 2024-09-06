@@ -123,7 +123,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                 }
 
                 $response[] = [
-                    'CLIENT_LOGO' => '<a href="'. $clientLogo .'" target="_blank"><img src="'. $clientLogo .'" alt="modernize-img" class="rounded-1 img-fluid mb-9"></a>',
+                    'CLIENT_LOGO' => '<a href="'. $clientLogo .'" target="_blank"><img src="'. $clientLogo .'" width="100" height="100" alt="modernize-img" class="rounded-1 img-fluid mb-9"></a>',
                     'CLIENT_URL' => '<a href="' . $clientURL . '" target="_blank">' . $clientURL . '</a>',
                     'ORDER_SEQUENCE' => $orderSequence,
                     'ACTION' => '<div class="action-btn">

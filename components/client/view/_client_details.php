@@ -153,7 +153,7 @@
                         <div class="col-lg-12">
                             <div class="mb-3">
                                 <label class="form-label" for="client_url">Client URL</label>
-                                <input type="url" class="form-control maxlength" id="client_url" name="client_url" maxlength="500" autocomplete="off">
+                                <input type="text" class="form-control maxlength" id="client_url" name="client_url" maxlength="500" autocomplete="off">
                             </div>
                         </div>
                     </div>

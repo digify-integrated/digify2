@@ -21,9 +21,9 @@ class ContentCarouselModel {
     # Description: Updates the content carousel.
     #
     # Parameters:
-    # - $p_content_carousel_id (int): The carousel ID.
-    # - $p_content_carousel_name (string): The carousel name.
-    # - $p_description (string): The carousel description.
+    # - $p_content_carousel_id (int): The content carousel ID.
+    # - $p_content_carousel_name (string): The content carousel name.
+    # - $p_description (string): The content carousel description.
     # - $p_block_style_id (string): The block style ID.
     # - $p_block_style_name (string): The block style name.
     # - $p_last_log_by (int): The last logged user.
@@ -49,11 +49,11 @@ class ContentCarouselModel {
     # Description: Updates the content carousel item.
     #
     # Parameters:
-    # - $p_content_carousel_item_id (int): The carousel item ID.
-    # - $p_content_carousel_id (int): The carousel ID.
-    # - $p_content_carousel_title (string): The carousel title.
-    # - $p_content_carousel_heading (string): The carousel heading.
-    # - $p_content_carousel_paragraph (string): The carousel paragraph.
+    # - $p_content_carousel_item_id (int): The content carousel item ID.
+    # - $p_content_carousel_id (int): The content carousel ID.
+    # - $p_content_carousel_title (string): The content carousel title.
+    # - $p_content_carousel_heading (string): The content carousel heading.
+    # - $p_content_carousel_paragraph (string): The content carousel paragraph.
     # - $p_call_to_action_button_1_text (string): The call-to-action button 1 text.
     # - $p_call_to_action_button_1_link (string): The call-to-action button 1 link.
     # - $p_call_to_action_button_2_text (string): The call-to-action button 2 text.
@@ -146,10 +146,10 @@ class ContentCarouselModel {
     # Description: Inserts the content carousel item.
     #
     # Parameters:
-    # - $p_content_carousel_id (int): The carousel ID.
-    # - $p_content_carousel_title (string): The carousel title.
-    # - $p_content_carousel_heading (string): The carousel heading.
-    # - $p_content_carousel_paragraph (string): The carousel paragraph.
+    # - $p_content_carousel_id (int): The content carousel ID.
+    # - $p_content_carousel_title (string): The content carousel title.
+    # - $p_content_carousel_heading (string): The content carousel heading.
+    # - $p_content_carousel_paragraph (string): The content carousel paragraph.
     # - $p_call_to_action_button_1_text (string): The call-to-action button 1 text.
     # - $p_call_to_action_button_1_link (string): The call-to-action button 1 link.
     # - $p_call_to_action_button_2_text (string): The call-to-action button 2 text.
