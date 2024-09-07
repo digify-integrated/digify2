@@ -136,7 +136,7 @@ a {
 }
 
 a:hover {
-    color: var(--base-color) !important;
+    color: var(--base-color);
 }
 
 p {
@@ -3447,7 +3447,7 @@ textarea:focus {
     z-index: 9;
     text-align: center;
     border: 2px solid rgba(23, 23, 23, .2);
-    border-top-color: rgba(23, 23, 23, .7);
+    border-top-color: var(--base-color);
     border-radius: 50%;
     animation: rotation 1.5s infinite linear
 }
@@ -17361,204 +17361,208 @@ canvas {
 
 .elements-social .behance-square:hover,
 .elements-social .behance:hover {
-    color: #1769ff !important;
+    color: #1769ff;
 }
 
 .elements-social .blogger:hover {
-    color: #ff8000 !important;
+    color: #ff8000;
 }
 
 .elements-social .codepen:hover {
-    color: #0ebeff !important;
+    color: #0ebeff;
 }
 
 .elements-social .deviantart:hover {
-    color: #05cc47 !important;
+    color: #05cc47;
 }
 
 .elements-social .digg:hover {
-    color: #262626 !important;
+    color: #262626;
 }
 
 .elements-social .dribbble:hover {
-    color: #ea4c89 !important;
+    color: #ea4c89;
 }
 
 .elements-social .delicious:hover {
-    color: #205cc0 !important;
+    color: #205cc0;
 }
 
 .elements-social .email:hover {
-    color: #7d7d7d !important;
+    color: #7d7d7d;
 }
 
 .elements-social .facebook-square:hover,
 .elements-social .facebook:hover {
-    color: #3b5998 !important;
+    color: #3b5998;
 }
 
 .elements-social .flickr:hover {
-    color: #ff0084 !important;
+    color: #ff0084;
 }
 
 .elements-social .flipboard:hover {
-    color: #e12828 !important;
+    color: #e12828;
 }
 
 .elements-social .github:hover {
-    color: #4078c0 !important;
+    color: #4078c0;
 }
 
 .elements-social .google:hover {
-    color: #dc4a38 !important;
+    color: #dc4a38;
 }
 
 .elements-social .google-plus:hover {
-    color: #dd4b39 !important;
+    color: #dd4b39;
 }
 
 .elements-social .instagram:hover {
-    color: #405DE6 !important;
+    color: #405DE6;
 }
 
 .elements-social .jsfiddle:hover {
-    color: #0084FF !important;
+    color: #0084FF;
 }
 
 .elements-social .linkedin:hover {
-    color: #0077b5 !important;
+    color: #0077b5;
 }
 
 .elements-social .livejournal:hover {
-    color: #00b0ea !important;
+    color: #00b0ea;
 }
 
 .elements-social .medium:hover {
-    color: #00ab6c !important;
+    color: #00ab6c;
 }
 
 .elements-social .meneame:hover {
-    color: #ff6400 !important;
+    color: #ff6400;
 }
 
 .elements-social .mailru:hover {
-    color: #168de2 !important;
+    color: #168de2;
 }
 
 .elements-social .odnoklassniki:hover {
-    color: #d7772d !important;
+    color: #d7772d;
 }
 
 .elements-social .paypal:hover {
-    color: #003087 !important;
+    color: #003087;
+}
+
+.elements-social .tiktok:hover {
+    color: #ff0050;
 }
 
 .elements-social .pinterest-p:hover,
 .elements-social .pinterest:hover {
-    color: #CB2027 !important;
+    color: #CB2027;
 }
 
 .elements-social .print:hover {
-    color: #222 !important;
+    color: #222;
 }
 
 .elements-social .reddit-square:hover,
 .elements-social .reddit:hover {
-    color: #ff4500 !important;
+    color: #ff4500;
 }
 
 .elements-social .rss:hover {
-    color: #f2890a !important;
+    color: #f2890a;
 }
 
 .elements-social .skype:hover {
-    color: #00aff0 !important;
+    color: #00aff0;
 }
 
 .elements-social .slack:hover {
-    color: #6ecadc !important;
+    color: #6ecadc;
 }
 
 .elements-social .snapchat:hover {
-    color: #fffc00 !important;
+    color: #fffc00;
 }
 
 .elements-social .soundcloud:hover {
-    color: #f80 !important;
+    color: #f80;
 }
 
 .elements-social .spotify:hover {
-    color: #1db954 !important;
+    color: #1db954;
 }
 
 .elements-social .sms:hover {
-    color: #ffbd00 !important;
+    color: #ffbd00;
 }
 
 .elements-social .sharethis:hover {
-    color: #95D03A !important;
+    color: #95D03A;
 }
 
 .elements-social .stack-overflow:hover {
-    color: #f48024 !important;
+    color: #f48024;
 }
 
 .elements-social .stumbleupon:hover {
-    color: #eb4924 !important;
+    color: #eb4924;
 }
 
 .elements-social .telegram:hover {
-    color: #08c !important;
+    color: #08c;
 }
 
 .elements-social .trello:hover {
-    color: #0079bf !important;
+    color: #0079bf;
 }
 
 .elements-social .tumblr:hover {
-    color: #32506d !important;
+    color: #32506d;
 }
 
 .elements-social .twitch:hover {
-    color: #6441a5 !important;
+    color: #6441a5;
 }
 
 .elements-social .twitter-square:hover,
 .elements-social .twitter:hover {
-    color: #00aced !important;
+    color: #00aced;
 }
 
 .elements-social .vimeo:hover {
-    color: #1ab7ea !important;
+    color: #1ab7ea;
 }
 
 .elements-social .vine:hover {
-    color: #00bf8f !important;
+    color: #00bf8f;
 }
 
 .elements-social .vk:hover {
-    color: #4c6c91 !important;
+    color: #4c6c91;
 }
 
 .elements-social .wordpress:hover {
-    color: #21759b !important;
+    color: #21759b;
 }
 
 .elements-social .weibo:hover {
-    color: #f93 !important;
+    color: #f93;
 }
 
 .elements-social .whatsapp:hover {
-    color: #25d366 !important;
+    color: #25d366;
 }
 
 .elements-social .xing:hover {
-    color: #1a7576 !important;
+    color: #1a7576;
 }
 
 .elements-social .youtube-play:hover,
 .elements-social .youtube:hover {
-    color: red !important;
+    color: red;
 }
 
 .elements-social ul {
@@ -17982,6 +17986,10 @@ canvas {
 
 .social-icon-style-04 ul li a.instagram span {
     background-color: #405DE6
+}
+
+.social-icon-style-04 ul li a.tiktok span {
+    background-color: #ff0050
 }
 
 .social-icon-style-04 ul li a.jsfiddle span {

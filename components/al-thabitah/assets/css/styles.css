@@ -52,7 +52,7 @@ header .btn.btn-box-shadow.btn-base-color,
 }
 header .btn.btn-box-shadow.btn-base-color:hover,
 .btn.btn-box-shadow.btn-base-color:hover {
-    color: var(--dark-gray);
+    color: var(--dark-gray) !important;
 }
 header .btn.btn-small {
     font-size: 15px; 
@@ -162,6 +162,10 @@ footer p {
 
 .tiktok:hover {
     color: #ff0050 !important;
+}
+
+.text-primary-hover:hover {
+    color: var(--base-color) !important;
 }
 
 @media (max-width: 1399px) {

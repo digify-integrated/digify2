@@ -49,7 +49,7 @@ echo $footerBlockStyleDetails['block_container'] ?? null;
             </a>
         </div>
         <div class="buy-theme social-tiktok">
-            <a href="https://wa.me/971561652741" target="_blank">
+            <a href="https://www.tiktok.com/@althabitahcleaningservic?_t=8ohEkhilfXA&_r=1" target="_blank">
                 <div class="theme-wrapper">
                     <div>
                         <i class="fa-brands instagrap fa-tiktok text-light fs-15 me-0 buy-theme-normal"></i>
@@ -58,7 +58,7 @@ echo $footerBlockStyleDetails['block_container'] ?? null;
             </a>
         </div>
         <div class="buy-theme social-instagram">
-            <a href="https://wa.me/971561652741" target="_blank">
+            <a href="https://www.instagram.com/althabitah.cleaningservices/" target="_blank">
                 <div class="theme-wrapper">
                     <div>
                         <i class="fa-brands instagram fa-instagram text-light fs-15 me-0 buy-theme-normal"></i>
@@ -67,7 +67,7 @@ echo $footerBlockStyleDetails['block_container'] ?? null;
             </a>
         </div>
         <div class="buy-theme social-youtube">
-            <a href="https://wa.me/971561652741" target="_blank">
+            <a href="https://www.youtube.com/channel/UCbzw6RiqwngeeruQwGi58-A" target="_blank">
                 <div class="theme-wrapper">
                     <div>
                         <i class="fa-brands youtube fa-youtube text-light fs-15 me-0 buy-theme-normal"></i>
@@ -76,7 +76,7 @@ echo $footerBlockStyleDetails['block_container'] ?? null;
             </a>
         </div>
         <div class="buy-theme social-facebook">
-            <a href="https://wa.me/971561652741" target="_blank">
+            <a href="https://www.facebook.com/profile.php?id=100095104812245&mibextid=LQQJ4d" target="_blank">
                 <div class="theme-wrapper">
                     <div>
                         <i class="fa-brands whatsapp fa-facebook text-light fs-15 me-0 buy-theme-normal"></i>
