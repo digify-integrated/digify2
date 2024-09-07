@@ -77,8 +77,7 @@
                         <thead class="text-dark">
                             <tr>
                                 <th>Services Box Item</th>
-                                <th>Call-to-Action Button 1</th>
-                                <th>Call-to-Action Button 2</th>
+                                <th>Call-to-Action Button </th>
                                 <th>Image</th>
                                 <th>Order Sequence</th>
                                 <th>Actions</th>

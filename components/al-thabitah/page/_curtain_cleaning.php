@@ -1,5 +1,5 @@
 <!-- start page title -->
-        <section class="top-space-margin page-title-big-typography cover-background pt-0 pb-0" style="background-image: url(./assets/images/services/curtain-cleaning-01.jpg)">
+        <section class="top-space-margin page-title-big-typography cover-background pt-0 pb-0" style="background-image: url(./components/al-thabitah/assets/images/services/curtain-cleaning-01.jpg)">
             <div class="container">
                 <div class="row align-items-center justify-content-center small-screen">
                     <div class="col-xl-5 col-sm-8 page-title-double-large text-center" data-anime='{ "el": "childs", "opacity": [0, 1], "translateY": [30, 0], "duration": 600, "staggervalue": 300, "easing": "easeOutQuad" }'>
@@ -16,12 +16,12 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4 pe-5 order-2 order-lg-1 lg-pe-3 md-pe-15px" data-anime='{ "el": "childs", "translateY": [50, 0], "opacity": [0,1], "duration": 1200, "delay": 0, "staggervalue": 150, "easing": "easeOutQuad" }'>
-                        <?php require_once('./view/_services_shortcut.php'); ?>
+                        #{SERVICES_SHORTCUT}
                     </div>
                     <div class="col-lg-8 order-1 order-lg-2 md-mb-50px" data-anime='{ "el": "childs", "translateY": [50, 0], "opacity": [0,1], "duration": 1200, "delay": 0, "staggervalue": 150, "easing": "easeOutQuad" }'>
                         <h4 class="text-dark-gray fw-700 ls-minus-1px mb-20px d-block">Curtain Cleaning</h4>
                         <p>Bring elegance back to your windows with AL THABITAH’s Curtain Cleaning Service. Our team carefully cleans and revitalizes your curtains, removing dust, stains, and allergens while preserving fabric quality. We use gentle yet effective methods that are safe for all curtain types, leaving them looking fresh and well-maintained. Whether it’s light sheers or heavy drapes, trust AL THABITAH to keep your curtains in perfect condition, enhancing the beauty of your space.</p>
-                        <div class="cover-background p-7 border-radius-6px mb-60px md-mb-40px d-flex justify-content-end align-items-end sm-h-500px" style="background-image: url(./assets/images/services/curtain-cleaning-02.jpg)">
+                        <div class="cover-background p-7 border-radius-6px mb-60px md-mb-40px d-flex justify-content-end align-items-end sm-h-500px" style="background-image: url(./components/al-thabitah/assets/images/services/curtain-cleaning-02.jpg)">
                             <div class="bg-white box-shadow-quadruple-large border-radius-4px w-50 lg-w-55 sm-w-100 overflow-hidden">
                                 <div class="p-40px lg-p-25px last-paragraph-no-margin">
                                     <span class="fs-22 text-dark-gray fw-700 mb-10px d-block">Professional Cleaning</span>

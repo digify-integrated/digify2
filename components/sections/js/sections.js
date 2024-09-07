@@ -76,8 +76,8 @@
     
             if(sections_id.length > 0){
                 Swal.fire({
-                    title: 'Confirm Multiple Sections Deletion',
-                    text: 'Are you sure you want to delete these sections?',
+                    title: 'Confirm Multiple Sectionss Deletion',
+                    text: 'Are you sure you want to delete these sectionss?',
                     icon: 'warning',
                     showCancelButton: !0,
                     confirmButtonText: 'Delete',
@@ -129,7 +129,7 @@
                 });
             }
             else{
-                showNotification('Deletion Multiple Sections Error', 'Please select the sections you wish to delete.', 'danger');
+                showNotification('Deletion Multiple Sectionss Error', 'Please select the sectionss you wish to delete.', 'danger');
             }
         });
 
@@ -151,7 +151,7 @@ function sectionsTable(datatable_name, buttons = false, show_all = false){
 
     const column = [ 
         { 'data' : 'CHECK_BOX' },
-        { 'data' : 'CONTACT_FORM_NAME' },
+        { 'data' : 'SECTIONS_NAME' },
         { 'data' : 'PUBLISH_STATUS' },
         { 'data' : 'ACTION' }
     ];
@@ -187,7 +187,7 @@ function sectionsTable(datatable_name, buttons = false, show_all = false){
         'dom': 'Brtip',
         'lengthChange': false,
         'order': [[ 1, 'asc' ]],
-        'sections' : column,
+        'columns' : column,
         'fnDrawCallback': function( oSettings ) {
             readjustDatatableColumn();
         },

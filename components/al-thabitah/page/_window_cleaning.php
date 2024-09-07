@@ -1,5 +1,5 @@
 <!-- start page title -->
-        <section class="top-space-margin page-title-big-typography cover-background pt-0 pb-0" style="background-image: url(./assets/images/services/window-cleaning-01.jpg)">
+        <section class="top-space-margin page-title-big-typography cover-background pt-0 pb-0" style="background-image: url(./components/al-thabitah/assets/images/services/window-cleaning-01.jpg)">
             <div class="container">
                 <div class="row align-items-center justify-content-center small-screen">
                     <div class="col-xl-5 col-sm-8 page-title-double-large text-center" data-anime='{ "el": "childs", "opacity": [0, 1], "translateY": [30, 0], "duration": 600, "staggervalue": 300, "easing": "easeOutQuad" }'>
@@ -16,12 +16,12 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4 pe-5 order-2 order-lg-1 lg-pe-3 md-pe-15px" data-anime='{ "el": "childs", "translateY": [50, 0], "opacity": [0,1], "duration": 1200, "delay": 0, "staggervalue": 150, "easing": "easeOutQuad" }'>
-                        <?php require_once('./view/_services_shortcut.php'); ?>
+                        #{SERVICES_SHORTCUT}
                     </div>
                     <div class="col-lg-8 order-1 order-lg-2 md-mb-50px" data-anime='{ "el": "childs", "translateY": [50, 0], "opacity": [0,1], "duration": 1200, "delay": 0, "staggervalue": 150, "easing": "easeOutQuad" }'>
                         <h4 class="text-dark-gray fw-700 ls-minus-1px mb-20px d-block">Window Cleaning</h4>
                         <p>Let the sunshine in with AL THABITAH's Window Cleaning Service. Our expert team is dedicated to making your windows sparkle, enhancing the beauty and brightness of your space. Using professional-grade equipment and techniques, we ensure streak-free results for a flawless finish. From high-rise buildings to residential homes, no window is too big or too small for our thorough cleaning approach. Say goodbye to dirt, dust, and grime, and hello to crystal-clear views. Experience the clarity and cleanliness with AL THABITAH's Window Cleaning Service today.</p>
-                        <div class="cover-background p-7 border-radius-6px mb-60px md-mb-40px d-flex justify-content-end align-items-end sm-h-500px" style="background-image: url(./assets/images/services/window-cleaning-02.jpg)">
+                        <div class="cover-background p-7 border-radius-6px mb-60px md-mb-40px d-flex justify-content-end align-items-end sm-h-500px" style="background-image: url(./components/al-thabitah/assets/images/services/window-cleaning-02.jpg)">
                             <div class="bg-white box-shadow-quadruple-large border-radius-4px w-50 lg-w-55 sm-w-100 overflow-hidden">
                                 <div class="p-40px lg-p-25px last-paragraph-no-margin">
                                     <span class="fs-22 text-dark-gray fw-700 mb-10px d-block">Professional Cleaning</span>

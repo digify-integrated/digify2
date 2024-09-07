@@ -28,7 +28,7 @@ BEGIN
     SET p_testimonial_id = LAST_INSERT_ID();
 END //
 
-CREATE PROCEDURE insertTestimonialItem(IN p_testimonial_id INT, IN p_testimonial_client VARCHAR(500), IN p_testimonial_title VARCHAR(500), IN p_testimonial_paragraph LONGTEXT, IN p_rating INT, IN p_testimonial_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
+CREATE PROCEDURE insertTestimonialItem(IN p_testimonial_id INT, IN p_testimonial_client VARCHAR(500), IN p_testimonial_title VARCHAR(500), IN p_testimonial_paragraph LONGTEXT, IN p_rating FLOAT, IN p_testimonial_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
 BEGIN
     INSERT INTO testimonial_item (testimonial_id, testimonial_client, testimonial_title, testimonial_paragraph, rating, testimonial_image, order_sequence, last_log_by) 
 	VALUES(p_testimonial_id, p_testimonial_client, p_testimonial_title, p_testimonial_paragraph, p_rating, p_testimonial_image, p_order_sequence, p_last_log_by);
@@ -57,7 +57,7 @@ BEGIN
     WHERE testimonial_id = p_testimonial_id;
 END //
 
-CREATE PROCEDURE updateTestimonialItem(IN p_testimonial_item_id INT, IN p_testimonial_id INT, IN p_testimonial_client VARCHAR(500), IN p_testimonial_title VARCHAR(500), IN p_testimonial_paragraph LONGTEXT, IN p_rating INT, IN p_testimonial_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
+CREATE PROCEDURE updateTestimonialItem(IN p_testimonial_item_id INT, IN p_testimonial_id INT, IN p_testimonial_client VARCHAR(500), IN p_testimonial_title VARCHAR(500), IN p_testimonial_paragraph LONGTEXT, IN p_rating FLOAT, IN p_testimonial_image VARCHAR(500), IN p_order_sequence INT, IN p_last_log_by INT)
 BEGIN
     IF p_testimonial_image IS NOT NULL AND p_testimonial_image != '' THEN
         UPDATE testimonial_item
@@ -126,7 +126,8 @@ END //
 CREATE PROCEDURE getTestimonialItemByTestimonialID(IN p_testimonial_id INT)
 BEGIN
 	SELECT * FROM testimonial_item
-	WHERE testimonial_id = p_testimonial_id;
+	WHERE testimonial_id = p_testimonial_id
+    ORDER BY order_sequence;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

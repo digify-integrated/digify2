@@ -151,7 +151,7 @@ function footerTable(datatable_name, buttons = false, show_all = false){
 
     const column = [ 
         { 'data' : 'CHECK_BOX' },
-        { 'data' : 'CONTACT_FORM_NAME' },
+        { 'data' : 'FOOTER_NAME' },
         { 'data' : 'PUBLISH_STATUS' },
         { 'data' : 'ACTION' }
     ];

@@ -1,5 +1,5 @@
 <!-- start page title -->
-        <section class="top-space-margin page-title-big-typography cover-background pt-0 pb-0" style="background-image: url(./assets/images/title/title-contact-us-01.jpg)">
+        <section class="top-space-margin page-title-big-typography cover-background pt-0 pb-0" style="background-image: url(./components/al-thabitah/assets/images/title/title-contact-us-01.jpg)">
             <div class="container">
                 <div class="row align-items-center justify-content-center small-screen">
                     <div class="col-xl-5 col-sm-8 page-title-double-large text-center" data-anime='{ "el": "childs", "opacity": [0, 1], "translateY": [30, 0], "duration": 600, "staggervalue": 300, "easing": "easeOutQuad" }'>
@@ -50,7 +50,7 @@
         </section>
         <!-- end section -->
         <!-- start section --> 
-         <section class="position-relative one-half-screen sm-small-screen overflow-hidden border border-radius-top-lr lg-border-radius-0px" data-parallax-background-ratio="0.5" style="background-image: url(./assets/images/title/title-contact-us-02.jpg)">
+         <section class="position-relative one-half-screen sm-small-screen overflow-hidden border border-radius-top-lr lg-border-radius-0px" data-parallax-background-ratio="0.5" style="background-image: url(./components/al-thabitah/assets/images/title/title-contact-us-02.jpg)">
             <div class="opacity-light bg-dark-gray"></div>
             <div class="fs-225 ls-minus-10px alt-font text-base-color fw-600 position-absolute left-minus-25px bottom-minus-50px sm-ls-minus-5px sm-bottom-minus-20px sm-fs-200 xs-left-minus-10px xs-fs-130">contact</div>
         </section>

@@ -58,7 +58,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $response[] = [
                     'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $footerID .'">',
-                    'CONTACT_FORM_NAME' => '<div class="d-flex align-items-center">
+                    'FOOTER_NAME' => '<div class="d-flex align-items-center">
                                                 <div class="ms-3">
                                                     <div class="user-meta-info">
                                                         <h6 class="user-name mb-0">'. $footerName .'</h6>

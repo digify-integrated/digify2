@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-sections d-flex align-items-center">
+            <div class="card-header d-flex align-items-center">
                 <h5 class="card-title mb-0">Sections</h5>
                 <div class="card-actions cursor-pointer ms-auto d-flex button-group">
                     <button type="submit" form="sections-form" class="btn btn-success mb-0" id="submit-data">Save</button>
