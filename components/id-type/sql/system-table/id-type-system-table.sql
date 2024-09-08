@@ -10,11 +10,18 @@ CREATE TABLE id_type (
 
 CREATE INDEX id_type_index_id_type_id ON id_type(id_type_id);
 
-INSERT INTO id_type (id_type_id, id_type_name, last_log_by)
+INSERT INTO id_type (id_type_name) 
 VALUES 
-(1, 'National ID', 1),
-(2, 'Passport', 1),
-(3, 'Driver License', 1),
-(4, 'State ID', 1);
-
+('Emirates ID'),
+('UAE Passport'),
+('Residence Visa'),
+('Driving License'),
+('Health Insurance Card'),
+('Labor Card'),
+('Trade License'),
+('National ID Card'),
+('GCC ID Card'),
+('Military ID Card'),
+('Police ID Card'),
+('Government Employee ID Card');
 /* ----------------------------------------------------------------------------------------------------------------------------- */
