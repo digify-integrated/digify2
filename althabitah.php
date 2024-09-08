@@ -83,17 +83,43 @@
 // Google Translate API endpoint
 const API_URL = 'https://translation.googleapis.com/language/translate/v2?key=AIzaSyDtaHoYl8ZWzeO2_sinZAxV9INtNogyWhg'; // Replace with your actual API key
 
-// Translate text using the Google Translate API
-function translateText(text, sourceLang, targetLang) {
+// Save selected language in session storage with expiration
+function saveSelectedLanguage(language) {
+    const now = new Date();
+    const expiryTime = now.getTime() + (24 * 60 * 60 * 1000); // 24 hours in milliseconds
+    const languageData = { language, expiry: expiryTime };
+    sessionStorage.setItem('selectedLanguage', JSON.stringify(languageData));
+}
+
+// Retrieve the selected language from session storage, if valid
+function getSelectedLanguage() {
+    const languageData = JSON.parse(sessionStorage.getItem('selectedLanguage'));
+    if (languageData) {
+        const now = new Date().getTime();
+        if (now < languageData.expiry) {
+            return languageData.language;
+        } else {
+            sessionStorage.removeItem('selectedLanguage'); // Remove expired language setting
+        }
+    }
+    return null; // Default if no valid language is found
+}
+
+// Remove selected language from session storage
+function clearSelectedLanguage() {
+    sessionStorage.removeItem('selectedLanguage');
+}
+
+// Translate multiple texts using the Google Translate API
+function translateTexts(texts, sourceLang, targetLang) {
     return new Promise((resolve, reject) => {
-        // Prevent translating to the same language
         if (sourceLang === targetLang) {
-            resolve(text);
+            resolve(texts); // No translation needed
             return;
         }
 
         const data = {
-            q: text,
+            q: texts,
             target: targetLang,
             source: sourceLang,
             format: 'text'
@@ -105,90 +131,147 @@ function translateText(text, sourceLang, targetLang) {
             data: JSON.stringify(data),
             contentType: 'application/json',
             success: function (response) {
-                resolve(response.data.translations[0].translatedText);
+                const translations = response.data.translations.map(t => t.translatedText);
+                resolve(translations);
             },
             error: function (xhr, status, error) {
-                console.error("Error translating text:", xhr.responseText);
+                console.error("Error translating texts:", xhr.responseText);
                 reject(error);
             }
         });
     });
 }
 
-// Check if an element or any of its parents has the 'not-translate' class
+// Function to check if an element or any of its parents has the 'not-translate' class
 function hasNotTranslateClass(element) {
     return element.closest('.not-translate') !== null;
 }
 
-// Function to recursively translate text nodes and placeholders
+// Retrieve translations from localStorage or create a new object if not available
+function getTranslationMemory(targetLang) {
+    return JSON.parse(localStorage.getItem(`translationMemory_${targetLang}`)) || {};
+}
+
+// Save translations to localStorage with a language-specific key
+function saveTranslationMemory(targetLang, memory) {
+    localStorage.setItem(`translationMemory_${targetLang}`, JSON.stringify(memory));
+}
+
+// Function to translate text nodes and placeholders in batches
 async function translateTextNodesAndPlaceholders(element, sourceLang, targetLang) {
-    const translationMemory = JSON.parse(localStorage.getItem('translationMemory')) || {};
+    let translationMemory = getTranslationMemory(targetLang); // Retrieve language-specific translation memory
+    const textsToTranslate = [];
+    const elementsToTranslate = [];
 
     const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
 
-    // Translate text nodes
+    // Collect text nodes for translation
     while (walker.nextNode()) {
         const textNode = walker.currentNode;
         const parentElement = textNode.parentElement;
         const originalText = textNode.nodeValue.trim();
 
-        // Skip translation if the element or any of its parents has the 'not-translate' class
-        if (hasNotTranslateClass(parentElement)) continue;
+        if (hasNotTranslateClass(parentElement) || !originalText) continue; // Skip non-translatable elements
 
-        if (originalText && !translationMemory[originalText]) {
-            try {
-                const translatedText = await translateText(originalText, sourceLang, targetLang);
-                textNode.nodeValue = translatedText; // Update text node
-                translationMemory[originalText] = translatedText;
-            } catch (error) {
-                console.error("Translation error:", error);
-            }
-        } else if (translationMemory[originalText]) {
+        if (!translationMemory[originalText]) {
+            textsToTranslate.push(originalText);
+            elementsToTranslate.push(textNode);
+        } else {
             textNode.nodeValue = translationMemory[originalText]; // Use cached translation
         }
     }
 
-    // Translate placeholder text for input elements
+    // Collect placeholder texts for input elements
     const inputElements = element.querySelectorAll('input[placeholder], textarea[placeholder]');
     for (const input of inputElements) {
         const originalPlaceholder = input.placeholder.trim();
 
-        // Skip translation for elements with .not-translate class or their parents
-        if (hasNotTranslateClass(input)) continue;
+        if (hasNotTranslateClass(input) || !originalPlaceholder) continue; // Skip non-translatable elements
 
-        if (originalPlaceholder && !translationMemory[originalPlaceholder]) {
-            try {
-                const translatedPlaceholder = await translateText(originalPlaceholder, sourceLang, targetLang);
-                input.placeholder = translatedPlaceholder; // Update placeholder
-                translationMemory[originalPlaceholder] = translatedPlaceholder;
-            } catch (error) {
-                console.error("Translation error:", error);
-            }
-        } else if (translationMemory[originalPlaceholder]) {
+        if (!translationMemory[originalPlaceholder]) {
+            textsToTranslate.push(originalPlaceholder);
+            elementsToTranslate.push(input);
+        } else {
             input.placeholder = translationMemory[originalPlaceholder]; // Use cached translation
         }
     }
 
-    // Store translations in localStorage
-    localStorage.setItem('translationMemory', JSON.stringify(translationMemory));
+    // Batch translate texts
+    if (textsToTranslate.length > 0) {
+        try {
+            const translatedTexts = await translateTexts(textsToTranslate, sourceLang, targetLang);
+
+            translatedTexts.forEach((translatedText, index) => {
+                const element = elementsToTranslate[index];
+                if (element.nodeType === Node.TEXT_NODE) {
+                    element.nodeValue = translatedText; // Update text node
+                } else if (element.placeholder !== undefined) {
+                    element.placeholder = translatedText; // Update placeholder
+                }
+                // Update cache with translated text
+                translationMemory[textsToTranslate[index]] = translatedText;
+            });
+
+            saveTranslationMemory(targetLang, translationMemory); // Save updated memory
+        } catch (error) {
+            console.error("Batch translation error:", error);
+        }
+    }
+}
+
+// Function to reset the page to English without re-translation
+function resetToEnglish() {
+    clearSelectedLanguage(); // Clear saved language setting
+    $('html').attr('lang', 'en'); // Set HTML language attribute to English
+    clearTranslationMemory(); // Clear translation memory
+    location.reload(); // Reload the page to reset to default English text
+}
+
+// Function to clear all translation caches (for debugging or reset)
+function clearTranslationMemory() {
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('translationMemory_')) {
+            localStorage.removeItem(key);
+        }
+    });
+    console.log('All translation memories cleared.');
 }
 
 // Function to translate all text nodes and placeholders on the page
 function translatePage(sourceLang, targetLang) {
     const bodyElement = document.body; // Start from the body element
-    translateTextNodesAndPlaceholders(bodyElement, sourceLang, targetLang); // Translate text nodes and placeholders
+
+    if (targetLang === 'en') {
+        resetToEnglish(); // Reset to English without re-translation
+    } else {
+        translateTextNodesAndPlaceholders(bodyElement, sourceLang, targetLang); // Translate text nodes and placeholders
+    }
 }
 
 // Event listener for language selection change
 $('#language').on('change', function () {
     const selectedLang = $(this).val();
     const currentLang = $('html').attr('lang') || 'en'; // Default to English if not set
-    translatePage(currentLang, selectedLang); // Translate page from current language to selected language
-    $('html').attr('lang', selectedLang); // Update the HTML language attribute
+    console.log('Translating from:', currentLang, 'to:', selectedLang);
+
+    if (selectedLang === 'en') {
+        resetToEnglish(); // Reset to English
+    } else {
+        saveSelectedLanguage(selectedLang); // Save the selected language
+        translatePage(currentLang, selectedLang); // Translate page from current language to selected language
+        $('html').attr('lang', selectedLang); // Update the HTML language attribute
+    }
 });
 
-
-
+// On page load, check if there is a stored language and use it as default
+$(document).ready(function() {
+    const storedLang = getSelectedLanguage();
+    if (storedLang && storedLang !== 'en') {
+        $('html').attr('lang', storedLang); // Set the stored language as default
+        translatePage('en', storedLang); // Translate page to stored language
+        $('#language').val(storedLang); // Update the dropdown to reflect the stored language
+    }
+});
         </script>
 
     </body>
