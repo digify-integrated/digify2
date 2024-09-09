@@ -168,6 +168,11 @@ footer p {
     color: var(--base-color) !important;
 }
 
+.error {
+    color: #e65656;
+    font-size: 12px;
+}
+
 @media (max-width: 1399px) {
     .xl-h-180px {
         height: 180px;

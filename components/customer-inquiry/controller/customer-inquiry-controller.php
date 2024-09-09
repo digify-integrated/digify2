@@ -121,6 +121,9 @@ class CustomerInquiryController {
             $transaction = isset($_POST['transaction']) ? $_POST['transaction'] : null;
 
             switch ($transaction) {
+                case 'add customer inquiry form':
+                    $this->addCustomerInquiryForm();
+                    break;
                 case 'add customer inquiry':
                     $this->addCustomerInquiry();
                     break;
@@ -162,6 +165,54 @@ class CustomerInquiryController {
 
     # -------------------------------------------------------------
     #   Add methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: addCustomerInquiryForm
+    # Description: 
+    # Inserts a customer inquiry.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function addCustomerInquiryForm() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['customer_name']) && !empty($_POST['customer_name']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['subject']) && !empty($_POST['subject']) && isset($_POST['message']) && !empty($_POST['message'])) {
+            $userID = $_SESSION['user_account_id'];
+            $customerName = $_POST['customer_name'];
+            $phone = $_POST['phone'];
+            $email = $_POST['email'];
+            $subject = $_POST['subject'];
+            $message = $_POST['message'];
+        
+            $this->customerInquiryModel->insertCustomerInquiry($customerName, $email, $phone, $subject, $message, $userID);
+    
+            $response = [
+                'success' => false,
+                'title' => 'Customer Inquiry Submission Success',
+                'message' => 'The customer inquiry has been submission successfully.'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------

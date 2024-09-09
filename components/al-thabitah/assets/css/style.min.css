@@ -9783,7 +9783,7 @@ header.sticky .navbar.disable-fixed {
     z-index: 9;
     text-align: left;
     margin: 0;
-    min-width: 140px
+    min-width: 160px
 }
 
 .header-language-icon .header-language .language-dropdown li a {

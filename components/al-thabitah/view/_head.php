@@ -15,4 +15,17 @@
         <link rel="stylesheet" href="./components/al-thabitah/assets/css/style.min.css"/>
         <link rel="stylesheet" href="./components/al-thabitah/assets/css/responsive.min.css"/>
         <link rel="stylesheet" href="./components/al-thabitah/assets/css/styles.css"/>
-    </head>
+        <?php
+            if(isset($_GET['page']) && !empty($_GET['page'])){
+                $page = $_GET['page'];
+        
+                switch ($page) {
+                    case 'booking':
+                    case 'contact_us':
+                        echo '<link rel="stylesheet" href="./assets/libs/sweetalert2/dist/sweetalert2.min.css">';
+                        break;
+                }
+            }
+        ?>
+    
+</head>

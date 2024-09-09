@@ -1,153 +1,252 @@
 (function ($) {
-  'use strict';
-
-  $(function () {
-      const orderSummaryTableBody = document.querySelector('.your-order-table tbody');
-
-      function updateOrderSummary() {
-          const accordionItems = document.querySelectorAll('.accordion-item');
-          const orderSummaryData = [];
-
-          accordionItems.forEach((accordionItem) => {
-              const accordionItemId = accordionItem.querySelector('.accordion-collapse').id.replace('-accordion', '');
-              let productData = null;
-
-              // Define variables for inputs
-              const frequencySelect = accordionItem.querySelector(`#${accordionItemId}-frequency`);
-              const durationSelect = accordionItem.querySelector(`#${accordionItemId}-duration`);
-              const numberOfSeatsInput = accordionItem.querySelector(`#${accordionItemId}-number-of-seats`);
-              const metersInput = accordionItem.querySelector(`#${accordionItemId}-meters`);
-
-              // Deep, Regular, Office, Flat, Hospital Cleaning
-              if (['deep-cleaning', 'regular-cleaning', 'office-cleaning', 'flat-cleaning', 'hospital-cleaning'].includes(accordionItemId)) {
-                  if (frequencySelect && durationSelect && frequencySelect.value && durationSelect.value) {
-                      const totalAmount = parseFloat(durationSelect.value) * 25;
-                      productData = {
-                          id: accordionItemId,
-                          name: accordionItemId.replace(/-/g, ' ').replace(/(^|\s)\S/g, (letter) => letter.toUpperCase()),
-                          frequency: frequencySelect.value,
-                          duration: `${durationSelect.value} ${durationSelect.value === '1' ? 'Hour' : 'Hours'}`,
-                          totalAmount: totalAmount.toFixed(2).toLocaleString('en-US')
-                      };
-                  }
-              }
-
-              // Sofa Cleaning
-              if (accordionItemId === 'sofa-cleaning' && numberOfSeatsInput && numberOfSeatsInput.value > 0) {
-                  const totalAmount = parseFloat(numberOfSeatsInput.value) * 20;
-                  productData = {
-                      id: accordionItemId,
-                      name: 'Sofa Cleaning',
-                      numberOfSeats: numberOfSeatsInput.value,
-                      totalAmount: totalAmount.toFixed(2).toLocaleString('en-US')
-                  };
-              }
-
-              // Mattress, Curtain, Carpet Cleaning
-              if (['mattress-cleaning', 'curtain-cleaning', 'carpet-cleaning'].includes(accordionItemId) && metersInput && metersInput.value > 0) {
-                  const totalAmount = parseFloat(metersInput.value) * 15;
-                  productData = {
-                      id: accordionItemId,
-                      name: accordionItemId.replace(/-/g, ' ').replace(/(^|\s)\S/g, (letter) => letter.toUpperCase()),
-                      meters: metersInput.value,
-                      totalAmount: totalAmount.toFixed(2).toLocaleString('en-US')
-                  };
-              }
-
-              if (productData) {
-                  orderSummaryData.push(productData);
-              }
-          });
-
-          // Update the order summary table without destroying other rows
-          renderOrderSummary(orderSummaryData);
-
-          // Update the total amount
-          updateTotalAmount(orderSummaryData);
-      }
-
-      function renderOrderSummary(orderSummaryData) {
-          // Remove existing product rows
-          const existingProductRows = orderSummaryTableBody.querySelectorAll('.product');
-          existingProductRows.forEach(row => row.remove());
-
-          // Add updated product rows
-          orderSummaryData.forEach((product) => {
-              const tableRow = document.createElement('tr');
-              tableRow.classList.add('product');
-
-              const productThumbnailCell = document.createElement('td');
-              productThumbnailCell.classList.add('product-thumbnail');
-
-              const productNameLink = document.createElement('a');
-              productNameLink.href = 'javascript:void(0);';
-              productNameLink.classList.add('text-dark-gray', 'fw-500', 'd-block', 'lh-initial');
-              productNameLink.textContent = product.name;
-
-              productThumbnailCell.appendChild(productNameLink);
-
-              // Additional details based on the product type
-              if (product.numberOfSeats) {
-                  const seatsSpan = document.createElement('span');
-                  seatsSpan.classList.add('fs-14', 'd-block');
-                  seatsSpan.textContent = `Number of seats: ${product.numberOfSeats}`;
-                  productThumbnailCell.appendChild(seatsSpan);
-              }
-
-              if (product.meters) {
-                  const metersSpan = document.createElement('span');
-                  metersSpan.classList.add('fs-14', 'd-block');
-                  metersSpan.textContent = `Meters: ${product.meters}`;
-                  productThumbnailCell.appendChild(metersSpan);
-              }
-
-              if (product.frequency) {
-                  const frequencySpan = document.createElement('span');
-                  frequencySpan.classList.add('fs-14', 'd-block');
-                  frequencySpan.textContent = `Frequency: ${product.frequency}`;
-                  productThumbnailCell.appendChild(frequencySpan);
-              }
-
-              if (product.duration) {
-                  const durationSpan = document.createElement('span');
-                  durationSpan.classList.add('fs-14', 'd-block');
-                  durationSpan.textContent = `Duration: ${product.duration}`;
-                  productThumbnailCell.appendChild(durationSpan);
-              }
-
-              const productPriceCell = document.createElement('td');
-              productPriceCell.classList.add('product-price');
-              productPriceCell.textContent = `${product.totalAmount} AED`;
-              productPriceCell.setAttribute('data-title', 'Price');
-
-              tableRow.appendChild(productThumbnailCell);
-              tableRow.appendChild(productPriceCell);
-
-              // Insert the new row before the total amount row
-              orderSummaryTableBody.insertBefore(tableRow, orderSummaryTableBody.querySelector('.total-amount'));
-          });
-      }
-
-      function updateTotalAmount(orderSummaryData) {
-        const totalAmount = orderSummaryData.reduce((total, product) => total + parseFloat(product.totalAmount.replace(/,/g, '')), 0);
-    
-        const totalAmountRow = document.querySelector('.total-amount');
-        if (totalAmountRow) {
-            totalAmountRow.innerHTML = `
-                <th class="fw-600 text-dark-gray alt-font">Total</th>
-                <td data-title="Total">
-                    <h6 class="d-block fw-700 mb-0 text-dark-gray alt-font">${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} AED</h6>
-                </td>
-            `;
+    'use strict';
+  
+    $(function () {
+        if($('#contact-us-form').length){
+            contactUsForm();
         }
-    }
 
-      // Add event listeners to the form fields
-      document.querySelectorAll('select, input').forEach((formField) => {
-          formField.addEventListener('change', updateOrderSummary);
-      });
-
-      // Initialize the order summary
-      updateOrderSummary();
-  });
+        // Google Translate API endpoint
+        const API_URL = 'https://translation.googleapis.com/language/translate/v2?key=AIzaSyDtaHoYl8ZWzeO2_sinZAxV9INtNogyWhg'; // Replace with your actual API key
+        const MAX_BATCH_SIZE = 128; // Maximum number of text segments per request
+    
+        // Save selected language in session storage with expiration
+        function saveSelectedLanguage(language, title) {
+            const expiryTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+            sessionStorage.setItem('selectedLanguage', JSON.stringify({ language, expiry: expiryTime }));
+            sessionStorage.setItem('selectedTitle', JSON.stringify({ title, expiry: expiryTime }));
+        }
+    
+        // Retrieve and validate the selected language from session storage
+        function getSessionItem(key) {
+            const item = JSON.parse(sessionStorage.getItem(key));
+            if (item && Date.now() < item.expiry) return item;
+            sessionStorage.removeItem(key); // Remove expired item
+            return null;
+        }
+    
+        // Retrieve or clear translation memory from local storage
+        function manageTranslationMemory(targetLang, memory = null) {
+            const storageKey = `translationMemory_${targetLang}`;
+            if (memory) localStorage.setItem(storageKey, JSON.stringify(memory));
+            else return JSON.parse(localStorage.getItem(storageKey)) || {};
+        }
+    
+        // Translate multiple texts using the Google Translate API in batches
+        async function translateTexts(texts, sourceLang, targetLang) {
+            if (!targetLang || sourceLang === targetLang) return texts;
+    
+            const allTranslations = [];
+            const batches = [];
+    
+            for (let i = 0; i < texts.length; i += MAX_BATCH_SIZE) {
+                batches.push(texts.slice(i, i + MAX_BATCH_SIZE));
+            }
+    
+            for (const batch of batches) {
+                try {
+                    const response = await $.ajax({
+                    type: 'POST',
+                    url: API_URL,
+                    data: JSON.stringify({ q: batch, target: targetLang, source: sourceLang, format: 'text' }),
+                    contentType: 'application/json'
+                    });
+        
+                    const translations = response.data.translations.map(t => t.translatedText);
+                    allTranslations.push(...translations);
+                } catch (error) {
+                    console.error("Error translating texts:", error);
+                    throw error;
+                }
+            }
+    
+            return allTranslations;
+        }
+    
+        // Function to translate text nodes and placeholders in batches
+        async function translateTextNodesAndPlaceholders(element, sourceLang, targetLang) {
+            const translationMemory = manageTranslationMemory(targetLang);
+            const textsToTranslate = [];
+            const elementsToTranslate = [];
+    
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+    
+            while (walker.nextNode()) {
+                const textNode = walker.currentNode;
+                const parentElement = textNode.parentElement;
+                const originalText = textNode.nodeValue.trim();
+        
+                if (!originalText || parentElement.closest('.not-translate')) continue; // Skip non-translatable elements
+        
+                if (!translationMemory[originalText]) {
+                    textsToTranslate.push(originalText);
+                    elementsToTranslate.push(textNode);
+                } else {
+                    textNode.nodeValue = translationMemory[originalText]; // Use cached translation
+                }
+            }
+    
+            const inputElements = element.querySelectorAll('input[placeholder], textarea[placeholder]');
+            inputElements.forEach(input => {
+                const originalPlaceholder = input.placeholder.trim();
+        
+                if (!originalPlaceholder || input.closest('.not-translate')) return; // Skip non-translatable elements
+        
+                if (!translationMemory[originalPlaceholder]) {
+                    textsToTranslate.push(originalPlaceholder);
+                    elementsToTranslate.push(input);
+                } else {
+                    input.placeholder = translationMemory[originalPlaceholder]; // Use cached translation
+                }
+            });
+    
+            if (textsToTranslate.length > 0) {
+                try {
+                    const translatedTexts = await translateTexts(textsToTranslate, sourceLang, targetLang);
+        
+                    translatedTexts.forEach((translatedText, index) => {
+                        const element = elementsToTranslate[index];
+                        if (element.nodeType === Node.TEXT_NODE) {
+                            element.nodeValue = translatedText;
+                        } else {
+                            element.placeholder = translatedText;
+                        }
+                        translationMemory[textsToTranslate[index]] = translatedText; // Update cache
+                    });
+        
+                    manageTranslationMemory(targetLang, translationMemory); // Save updated memory
+                } catch (error) {
+                    console.error("Batch translation error:", error);
+                }
+            }
+        }
+    
+        // Function to clear all translation caches
+        function clearTranslationMemory() {
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('translationMemory_')) localStorage.removeItem(key);
+            });
+            console.log('All translation memories cleared.');
+        }
+    
+        // Function to translate the entire page
+        function translatePage(sourceLang, targetLang) {
+            if (targetLang === 'en') {
+                resetToEnglish();
+            } else {
+                translateTextNodesAndPlaceholders(document.body, sourceLang, targetLang);
+            }
+        }
+    
+        // Function to reset the page to English
+        function resetToEnglish() {
+            sessionStorage.removeItem('selectedLanguage');
+            $('html').attr('lang', 'en');
+            clearTranslationMemory();
+            location.reload();
+        }
+    
+        // Event listener for language selection
+        $('.language-selector').on('click', function () {
+            const selectedLang = $(this).data('language');
+            const selectedTitle = $(this).data('title');
+            const currentLang = $('html').attr('lang') || 'en';
+    
+            console.log('Translating from:', currentLang, 'to:', selectedLang);
+    
+            if (selectedLang === 'en') {
+                resetToEnglish();
+            } else {
+                $('#current-language-text').text(selectedTitle);
+                saveSelectedLanguage(selectedLang, selectedTitle);
+                translatePage(currentLang, selectedLang);
+                $('html').attr('lang', selectedLang);
+            }
+        });
+    
+            // Initialize the page with the stored language if available
+            const storedLang = getSessionItem('selectedLanguage')?.language;
+            const storedTitle = getSessionItem('selectedTitle')?.title;
+            if (storedLang && storedLang !== 'en') {
+                $('html').attr('lang', storedLang);
+                translatePage('en', storedLang);
+                $('#current-language-text').text(storedTitle);
+            }
+    });
 })(jQuery);
+  
+
+function contactUsForm(){
+    $('#contact-us-form').validate({
+        rules: {
+            customer_name: {
+                required: true
+            },
+            email: {
+                required: true
+            },
+            phone: {
+                required: true
+            },
+            subject: {
+                required: true
+            },
+            message: {
+                required: true
+            }
+        },
+        messages: {
+            customer_name: {
+                required: 'Enter your name'
+            },
+            email: {
+                required: 'Enter your email'
+            },
+            phone: {
+                required: 'Enter your phone'
+            },
+            subject: {
+                required: 'Enter your subject'
+            },
+            message: {
+                required: 'Enter your message'
+            }
+        },
+        submitHandler: function(form) {
+            const transaction = 'add customer inquiry form';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/customer-inquiry/controller/customer-inquiry-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-customer-inquiry');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: response.title,
+                            text: response.message,
+                            icon: 'success'
+                        });
+
+                        resetModalForm('contact-us-form');
+                    }
+                    else {
+                        Swal.fire({
+                            title: response.title,
+                            text: response.message,
+                            icon: 'error'
+                        });
+                    }
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-customer-inquiry');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
