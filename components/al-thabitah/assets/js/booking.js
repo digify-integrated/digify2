@@ -2,8 +2,8 @@
     'use strict';
   
     $(function () {
-        if($('#contact-us-form').length){
-            contactUsForm();
+        if($('#booking-form').length){
+            bookingForm();
         }
 
         $(document).on('change','#booking_date',function() {
@@ -14,52 +14,126 @@
     });
 })(jQuery);
 
-function contactUsForm(){
-    $('#contact-us-form').validate({
+function bookingForm(){
+    $('#booking-form').validate({
         rules: {
-            customer_name: {
+            service: {
                 required: true
             },
-            email: {
+            booking_date: {
+                required: true
+            },
+            booking_time: {
+                required: true
+            },
+            number_of_professionals: {
+                required: true
+            },
+            number_of_hours: {
+                required: true
+            },
+            nationality: {
+                required: true
+            },
+            first_name: {
+                required: true
+            },
+            last_name: {
+                required: true
+            },
+            address: {
                 required: true
             },
             phone: {
                 required: true
             },
-            subject: {
+            email_address: {
                 required: true
             },
-            message: {
-                required: true
+            frequency: {
+                required: function() {
+                    var service = document.getElementById('service').value;
+                    return service === 'Deep Cleaning' || service === 'Regular Cleaning' || service === 'Office Cleaning' || service === 'Flat Cleaning' || service === 'Hospital Cleaning';
+                }
+            },
+            duration: {
+                required: function() {
+                    var service = document.getElementById('service').value;
+                    return service === 'Deep Cleaning' || service === 'Regular Cleaning' || service === 'Office Cleaning' || service === 'Flat Cleaning' || service === 'Hospital Cleaning';
+                }
+            },
+            number_of_seats: {
+                required: function() {
+                    var service = document.getElementById('service').value;
+                    return service === 'Sofa Cleaning';
+                }
+            },
+            meters: {
+                required: function() {
+                    var service = document.getElementById('service').value;
+                    return service === 'Mattress Cleaning' || service === 'Curtain Cleaning' || service === 'Carpet Cleaning';
+                }
             }
         },
         messages: {
-            customer_name: {
-                required: 'Enter your name'
+            service: {
+                required: 'Choose the service'
             },
-            email: {
-                required: 'Enter your email'
+            booking_date: {
+                required: 'Choose the booking date'
+            },
+            booking_time: {
+                required: 'Choose the booking time'
+            },
+            number_of_professionals: {
+                required: 'Choose the number of professionals'
+            },
+            number_of_hours: {
+                required: 'Choose the number of hours'
+            },
+            nationality: {
+                required: 'Choose the nationality'
+            },
+            first_name: {
+                required: 'Enter your first name'
+            },
+            last_name: {
+                required: 'Enter your last name'
+            },
+            address: {
+                required: 'Enter your address'
             },
             phone: {
-                required: 'Enter your phone'
+                required: 'Enter your phone number'
             },
-            subject: {
-                required: 'Enter your subject'
+            email_address: {
+                required: 'Enter your email address'
             },
-            message: {
-                required: 'Enter your message'
+            frequency: {
+                required: 'Enter the frequency'
+            },
+            duration: {
+                required: 'Enter the duration'
+            },
+            number_of_seats: {
+                required: 'Enter the number of seats'
+            },
+            meters: {
+                required: 'Enter the meters'
             }
         },
         submitHandler: function(form) {
-            const transaction = 'add customer inquiry form';
+            const transaction = 'add booking';
+            const mode_of_payment = $('input[name="mode_of_payment"]:checked').val();
+            const discount_code = $('#discount_code').val(); 
           
             $.ajax({
                 type: 'POST',
-                url: 'components/customer-inquiry/controller/customer-inquiry-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction,
+                url: 'components/booking/controller/booking-form-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&discount_code=' + discount_code + '&mode_of_payment=' + mode_of_payment,
                 dataType: 'json',
                 beforeSend: function() {
-                    disableFormSubmitButton('submit-customer-inquiry');
+                    disableFormSubmitButton('submit-booking');
                 },
                 success: function (response) {
                     if (response.success) {
@@ -69,7 +143,7 @@ function contactUsForm(){
                             icon: 'success'
                         });
 
-                        resetModalForm('contact-us-form');
+                        resetModalForm('booking-form');
                     }
                     else {
                         Swal.fire({
@@ -80,7 +154,7 @@ function contactUsForm(){
                     }
                 },
                 complete: function() {
-                    enableFormSubmitButton('submit-customer-inquiry');
+                    enableFormSubmitButton('submit-booking');
                 }
             });
         
@@ -301,7 +375,7 @@ function handleServiceChange() {
                 }
     
                 document.getElementById('discount-type').value = discountType;
-                document.getElementById('discount-rate').value = discountAmount;
+                document.getElementById('discount-rate').value = response.discount_amount;
                 discountAmountInput.value = discountAmount.toFixed(2);
                 updateDiscount(); 
                 updateBookingAmounts();

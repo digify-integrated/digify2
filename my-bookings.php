@@ -9,6 +9,7 @@
     <?php require_once('components/global/view/_head.php'); ?>
     <link rel="stylesheet" href="./assets/libs/datatables.net-bs5/css/dataTables.bootstrap5.min.css" />
     <link rel="stylesheet" href="./assets/libs/select2/dist/css/select2.min.css">
+    <link rel="stylesheet" href="./assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 </head>
 <body>
     <?php require_once('components/global/view/_preloader.php'); ?>
@@ -22,13 +23,13 @@
                         require_once('components/global/view/_breadcrumbs.php'); 
 
                         if($newRecord){
-                            require_once('components/my-bookings/view/_my_bookings_new.php');
+                            require_once('components/booking/view/_booking_new.php');
                         }
                         else if(!empty($detailID)){
-                            require_once('components/my-bookings/view/_my_bookings_details.php');
+                            require_once('components/booking/view/_booking_details.php');
                         }
                         else{
-                            #require_once('components/my-bookings/view/_my_bookings.php');
+                            require_once('components/booking/view/_booking.php');
                         }
                     ?>
                 </div>
@@ -47,18 +48,21 @@
     <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.full.min.js"></script>
     <script src="./assets/libs/select2/dist/js/select2.min.js"></script>
+    <script src="./assets/js/extra-libs/moment/moment.min.js"></script>
+    <script src="./assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+
 
     <?php
-        $scriptLink = 'my-bookings.js';
+        $scriptLink = 'booking.js';
 
         if($newRecord){
-            $scriptLink = 'my-bookings-new.js';
+            $scriptLink = 'booking-new.js';
         }
         else if(!empty($detailID)){
-            $scriptLink = 'my-bookings-details.js';
+            $scriptLink = 'booking-details.js';
         }
 
-        echo '<script src="./components/my-bookings/js/'. $scriptLink .'?v=' . rand() .'"></script>';
+        echo '<script src="./components/booking/js/'. $scriptLink .'?v=' . rand() .'"></script>';
     ?>
 </body>
 

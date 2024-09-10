@@ -93,70 +93,70 @@
                                     <label class="mb-10px" for="number_of_professionals">How many professionals do you need? <span class="text-red">*</span></label>
                                     <select class="form-control" id="number_of_professionals" name="number_of_professionals">
                                         <option value="">--</option>
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                        <option>6</option>
-                                        <option>7</option>
-                                        <option>8</option>
-                                        <option>9</option>
-                                        <option>10</option>
-                                        <option>11</option>
-                                        <option>12</option>
-                                        <option>13</option>
-                                        <option>14</option>
-                                        <option>15</option>
-                                        <option>16</option>
-                                        <option>17</option>
-                                        <option>18</option>
-                                        <option>19</option>
-                                        <option>20</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
                                     </select>
                                 </div>
                                 <div class="col-12 mb-20px">
                                     <label class="mb-10px" for="number_of_hours">How many hours should they stay? <span class="text-red">*</span></label>
                                     <select class="form-control" id="number_of_hours" name="number_of_hours">
                                         <option value="">--</option>
-                                        <option>1 Hour</option>
-                                        <option>2 Hours</option>
-                                        <option>3 Hours</option>
-                                        <option>4 Hours</option>
-                                        <option>5 Hours</option>
-                                        <option>6 Hours</option>
-                                        <option>7 Hours</option>
-                                        <option>8 Hours</option>
+                                        <option value="1">1 Hour</option>
+                                        <option value="2">2 Hours</option>
+                                        <option value="3">3 Hours</option>
+                                        <option value="4">4 Hours</option>
+                                        <option value="5">5 Hours</option>
+                                        <option value="6">6 Hours</option>
+                                        <option value="7">7 Hours</option>
+                                        <option value="8">8 Hours</option>
                                     </select>
                                 </div>
                                 <div class="col-12 mb-20px">
                                     <label class="mb-10px" for="nationality">Choose your professional nationality <span class="text-red">*</span></label>
                                     <select class="form-control" id="nationality" name="nationality">
                                         <option value="">--</option>
-                                        <option>African</option>
-                                        <option>Filipino</option>
-                                        <option>Nepali</option>
+                                        <option value="African">African</option>
+                                        <option value="Filipino">Filipino</option>
+                                        <option value="Nepali">Nepali</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-20px">
                                     <label class="mb-10px" for="first_name">First name <span class="text-red">*</span></label>
-                                    <input class="border-radius-4px" id="first_name" name="first_name" type="text" aria-label="text">
+                                    <input class="border-radius-4px" id="first_name" name="first_name" type="text" aria-label="text" autocomplete="off">
                                 </div>
                                 <div class="col-md-6 mb-20px">
                                     <label class="mb-10px" for="last_name">Last name <span class="text-red">*</span></label>
-                                    <input class="border-radius-4px" id="last_name" name="last_name" type="text" aria-label="text">
+                                    <input class="border-radius-4px" id="last_name" name="last_name" type="text" aria-label="text" autocomplete="off">
                                 </div>
                                 <div class="col-md-12 mb-20px">
                                     <label class="mb-10px" for="address">Address <span class="text-red">*</span></label>
-                                    <input class="border-radius-4px" id="address" name="address" type="text" aria-label="text">
+                                    <input class="border-radius-4px" id="address" name="address" type="text" aria-label="text" autocomplete="off">
                                 </div>
                                 <div class="col-6 mb-20px">
                                     <label class="mb-10px" for="phone">Phone <span class="text-red">*</span></label>
-                                    <input class="border-radius-4px" id="phone" name="phone" type="text">
+                                    <input class="border-radius-4px" id="phone" name="phone" type="text" autocomplete="off">
                                 </div>
                                 <div class="col-6 mb-20px">
                                     <label class="mb-10px" for="email_address">Email address <span class="text-red">*</span></label>
-                                    <input class="border-radius-4px" id="email_address" name="email_address" type="email">
+                                    <input class="border-radius-4px" id="email_address" name="email_address" type="email" autocomplete="off">
                                 </div>
                                 <div class="col-12">
                                     <label class="mb-10px" for="special_instructions">Do you have any special instructions?</label>
@@ -196,19 +196,19 @@
                                     <!-- start tab content -->
                                     <div class="heading active-accordion">
                                         <label class="mb-5px">
-                                            <input class="d-inline w-auto me-5px mb-0 p-0" type="radio" name="payment-option" value="Online Banking" checked="checked">
+                                            <input class="d-inline w-auto me-5px mb-0 p-0" type="radio" name="mode_of_payment" value="Online Banking" checked="checked">
                                             <span class="d-inline-block text-dark-gray fw-500">Online Banking</span>
                                             <a class="accordion-toggle" data-bs-toggle="collapse" data-bs-parent="#accordion-style-05" href="#style-5-collapse-1"></a>
                                         </label> 
                                     </div>
                                     <div id="style-5-collapse-1" class="collapse show" data-bs-parent="#accordion-style-05">
-                                        <div class="p-25px bg-very-light-gray mt-20px mb-20px fs-14 lh-24">Make your payment directly into our bank account. Please use your booking ID as the payment reference.</div>
+                                        <div class="p-25px bg-very-light-gray mt-20px mb-20px fs-14 lh-24">Make your payment directly into our bank account.</div>
                                     </div>
                                     <!-- end tab content -->
                                     <!-- start tab content -->
                                     <div class="heading active-accordion">
                                         <label class="mb-5px">
-                                            <input class="d-inline w-auto me-5px mb-0 p-0" type="radio" name="payment-option"> 
+                                            <input class="d-inline w-auto me-5px mb-0 p-0" type="radio" name="mode_of_payment" value="Cash"> 
                                             <span class="d-inline-block text-dark-gray fw-500">Cash</span> 
                                             <a class="accordion-toggle" data-bs-toggle="collapse" data-bs-parent="#accordion-style-05" href="#style-5-collapse-3"></a>
                                         </label>
@@ -248,11 +248,11 @@
                                     <span class="box fs-14 lh-24">I have agree to the website <a href="#" class="text-decoration-line-bottom text-dark-gray fw-500">terms and conditions.</a></span>
                                 </label>
                             </div>
-                            <a href="#" class="btn btn-base-color btn-extra-large btn-switch-text btn-round-edge btn-box-shadow w-100 text-transform-none mt-30px">
+                            <button type="submit" form="booking-form" class="btn btn-base-color btn-extra-large btn-switch-text btn-round-edge btn-box-shadow w-100 text-transform-none mt-30px" id="submit-booking">
                                 <span>
                                     <span class="btn-double-text" data-text="Place order">Place order</span>
                                 </span>
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

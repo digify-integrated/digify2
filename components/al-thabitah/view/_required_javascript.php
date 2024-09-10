@@ -18,7 +18,8 @@
             case 'contact_us':
                 echo '<script src="./assets/libs/jquery-validation/dist/jquery.validate.min.js"></script>
                       <script src="./components/global/js/global.js?v='. rand() .'"></script>
-                      <script src="./assets/libs/sweetalert2/dist/sweetalert2.min.js"></script>';
+                      <script src="./assets/libs/sweetalert2/dist/sweetalert2.min.js"></script>
+                      <script src="./components/al-thabitah/assets/js/contact-us.js?v='. rand() .'"></script>';
                 break;
         }
     }

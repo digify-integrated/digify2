@@ -3,17 +3,17 @@ session_start();
 
 # -------------------------------------------------------------
 #
-# Function: CustomerInquiryController
+# Function: BookingController
 # Description: 
-# The CustomerInquiryController class handles customer inquiry related operations and interactions.
+# The BookingController class handles booking related operations and interactions.
 #
 # Parameters: None
 #
 # Returns: None
 #
 # -------------------------------------------------------------
-class CustomerInquiryController {
-    private $customerInquiryModel;
+class BookingController {
+    private $bookingModel;
     private $authenticationModel;
     private $securityModel;
 
@@ -21,19 +21,19 @@ class CustomerInquiryController {
     #
     # Function: __construct
     # Description: 
-    # The constructor initializes the object with the provided customerInquiryModel, AuthenticationModel and SecurityModel instances.
-    # These instances are used for customer inquiry related, user related operations and security related operations, respectively.
+    # The constructor initializes the object with the provided bookingModel, AuthenticationModel and SecurityModel instances.
+    # These instances are used for booking related, user related operations and security related operations, respectively.
     #
     # Parameters:
-    # - @param CustomerInquiryModel $customerInquiryModel     The customerInquiryModel instance for customer inquiry related operations.
+    # - @param BookingModel $bookingModel     The bookingModel instance for booking related operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(CustomerInquiryModel $customerInquiryModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
-        $this->customerInquiryModel = $customerInquiryModel;
+    public function __construct(BookingModel $bookingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+        $this->bookingModel = $bookingModel;
         $this->authenticationModel = $authenticationModel;
         $this->securityModel = $securityModel;
     }
@@ -121,29 +121,29 @@ class CustomerInquiryController {
             $transaction = isset($_POST['transaction']) ? $_POST['transaction'] : null;
 
             switch ($transaction) {
-                case 'add customer inquiry':
-                    $this->addCustomerInquiry();
+                case 'add booking':
+                    $this->addBooking();
                     break;
-                case 'update customer inquiry':
-                    $this->updateCustomerInquiry();
+                case 'update booking':
+                    $this->updateBooking();
                     break;
-                case 'get customer inquiry details':
-                    $this->getCustomerInquiryDetails();
+                case 'get booking details':
+                    $this->getBookingDetails();
                     break;
-                case 'tag customer inquiry as in-progress':
-                    $this->tagCustomerInquiryAsInProgress();
+                case 'tag booking as in-progress':
+                    $this->tagBookingAsInProgress();
                     break;
-                case 'tag customer inquiry as resolved':
-                    $this->tagCustomerInquiryAsResolved();
+                case 'tag booking as resolved':
+                    $this->tagBookingAsResolved();
                     break;
-                case 'tag customer inquiry as closed':
-                    $this->tagCustomerInquiryAsClosed();
+                case 'tag booking as closed':
+                    $this->tagBookingAsClosed();
                     break;
-                case 'delete customer inquiry':
-                    $this->deleteCustomerInquiry();
+                case 'delete booking':
+                    $this->deleteBooking();
                     break;
-                case 'delete multiple customer inquiry':
-                    $this->deleteMultipleCustomerInquiry();
+                case 'delete multiple booking':
+                    $this->deleteMultipleBooking();
                     break;
                 default:
                     $response = [
@@ -166,16 +166,16 @@ class CustomerInquiryController {
 
     # -------------------------------------------------------------
     #
-    # Function: addCustomerInquiry
+    # Function: addBooking
     # Description: 
-    # Inserts a customer inquiry.
+    # Inserts a booking.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function addCustomerInquiry() {
+    public function addBooking() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
@@ -188,13 +188,13 @@ class CustomerInquiryController {
             $subject = $_POST['subject'];
             $message = $_POST['message'];
         
-            $customerInquiryID = $this->customerInquiryModel->insertCustomerInquiry($customerName, $email, $phone, $subject, $message, $userID);
+            $bookingID = $this->bookingModel->insertBooking($customerName, $email, $phone, $subject, $message, $userID);
     
             $response = [
                 'success' => true,
-                'customerInquiryID' => $this->securityModel->encryptData($customerInquiryID),
-                'title' => 'Insert Customer Inquiry Success',
-                'message' => 'The customer inquiry has been inserted successfully.',
+                'bookingID' => $this->securityModel->encryptData($bookingID),
+                'title' => 'Insert Booking Success',
+                'message' => 'The booking has been inserted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -221,38 +221,38 @@ class CustomerInquiryController {
 
     # -------------------------------------------------------------
     #
-    # Function: updateCustomerInquiry
+    # Function: updateBooking
     # Description: 
-    # Updates the customer inquiry if it exists; otherwise, return an error message.
+    # Updates the booking if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function updateCustomerInquiry() {
+    public function updateBooking() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
         
         if (isset($_POST['customer_name']) && !empty($_POST['customer_name']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['subject']) && !empty($_POST['subject']) && isset($_POST['message']) && !empty($_POST['message'])) {
             $userID = $_SESSION['user_account_id'];
-            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
             $customerName = $_POST['customer_name'];
             $phone = $_POST['phone'];
             $email = $_POST['email'];
             $subject = $_POST['subject'];
             $message = $_POST['message'];
         
-            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
-            $total = $checkCustomerInquiryExist['total'] ?? 0;
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Update Customer Inquiry Error',
-                    'message' => 'The customer inquiry does not exist.',
+                    'title' => 'Update Booking Error',
+                    'message' => 'The booking does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -260,12 +260,12 @@ class CustomerInquiryController {
                 exit;
             }
 
-            $this->customerInquiryModel->updateCustomerInquiry($customerInquiryID, $customerName, $email, $phone, $subject, $message, $userID);
+            $this->bookingModel->updateBooking($bookingID, $customerName, $email, $phone, $subject, $message, $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Update Customer Inquiry Success',
-                'message' => 'The customer inquiry has been updated successfully.',
+                'title' => 'Update Booking Success',
+                'message' => 'The booking has been updated successfully.',
                 'messageType' => 'success'
             ];
             
@@ -292,33 +292,33 @@ class CustomerInquiryController {
 
     # -------------------------------------------------------------
     #
-    # Function: tagCustomerInquiryAsInProgress
+    # Function: tagBookingAsInProgress
     # Description: 
-    # Tag the customer inquiry if it exists; otherwise, return an error message.
+    # Tag the booking if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function tagCustomerInquiryAsInProgress() {
+    public function tagBookingAsInProgress() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
-            $total = $checkCustomerInquiryExist['total'] ?? 0;
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Tag Customer Inquiry As In-Progress Error',
-                    'message' => 'The customer inquiry does not exist.',
+                    'title' => 'Tag Booking As In-Progress Error',
+                    'message' => 'The booking does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -326,12 +326,12 @@ class CustomerInquiryController {
                 exit;
             }
 
-            $this->customerInquiryModel->updateCustomerInquiryStatus($customerInquiryID, 'In-Progress', $userID);
+            $this->bookingModel->updateBookingStatus($bookingID, 'In-Progress', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Tag Customer Inquiry As In-Progress Success',
-                'message' => 'The customer inquiry has been tagged as in-progress successfully.',
+                'title' => 'Tag Booking As In-Progress Success',
+                'message' => 'The booking has been tagged as in-progress successfully.',
                 'messageType' => 'success'
             ];
             
@@ -354,33 +354,33 @@ class CustomerInquiryController {
 
     # -------------------------------------------------------------
     #
-    # Function: tagCustomerInquiryAsResolved
+    # Function: tagBookingAsResolved
     # Description: 
-    # Tag the customer inquiry if it exists; otherwise, return an error message.
+    # Tag the booking if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function tagCustomerInquiryAsResolved() {
+    public function tagBookingAsResolved() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
-            $total = $checkCustomerInquiryExist['total'] ?? 0;
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Tag Customer Inquiry As Resolved Error',
-                    'message' => 'The customer inquiry does not exist.',
+                    'title' => 'Tag Booking As Resolved Error',
+                    'message' => 'The booking does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -388,12 +388,12 @@ class CustomerInquiryController {
                 exit;
             }
 
-            $this->customerInquiryModel->updateCustomerInquiryStatus($customerInquiryID, 'Resolved', $userID);
+            $this->bookingModel->updateBookingStatus($bookingID, 'Resolved', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Tag Customer Inquiry As Resolved Success',
-                'message' => 'The customer inquiry has been tagged as resolved successfully.',
+                'title' => 'Tag Booking As Resolved Success',
+                'message' => 'The booking has been tagged as resolved successfully.',
                 'messageType' => 'success'
             ];
             
@@ -416,33 +416,33 @@ class CustomerInquiryController {
 
     # -------------------------------------------------------------
     #
-    # Function: tagCustomerInquiryAsClosed
+    # Function: tagBookingAsClosed
     # Description: 
-    # Tag the customer inquiry if it exists; otherwise, return an error message.
+    # Tag the booking if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function tagCustomerInquiryAsClosed() {
+    public function tagBookingAsClosed() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
-            $total = $checkCustomerInquiryExist['total'] ?? 0;
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Tag Customer Inquiry As Closed Error',
-                    'message' => 'The customer inquiry does not exist.',
+                    'title' => 'Tag Booking As Closed Error',
+                    'message' => 'The booking does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -450,12 +450,12 @@ class CustomerInquiryController {
                 exit;
             }
 
-            $this->customerInquiryModel->updateCustomerInquiryStatus($customerInquiryID, 'Closed', $userID);
+            $this->bookingModel->updateBookingStatus($bookingID, 'Closed', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Tag Customer Inquiry As Closed Success',
-                'message' => 'The customer inquiry has been tagged as closed successfully.',
+                'title' => 'Tag Booking As Closed Success',
+                'message' => 'The booking has been tagged as closed successfully.',
                 'messageType' => 'success'
             ];
             
@@ -482,32 +482,32 @@ class CustomerInquiryController {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteCustomerInquiry
+    # Function: deleteBooking
     # Description: 
-    # Delete the customer inquiry if it exists; otherwise, return an error message.
+    # Delete the booking if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function deleteCustomerInquiry() {
+    public function deleteBooking() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
-            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
         
-            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
-            $total = $checkCustomerInquiryExist['total'] ?? 0;
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Delete Customer Inquiry Error',
-                    'message' => 'The customer inquiry does not exist.',
+                    'title' => 'Delete Booking Error',
+                    'message' => 'The booking does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -515,12 +515,12 @@ class CustomerInquiryController {
                 exit;
             }
 
-            $this->customerInquiryModel->deleteCustomerInquiry($customerInquiryID);
+            $this->bookingModel->deleteBooking($bookingID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Delete Customer Inquiry Success',
-                'message' => 'The customer inquiry has been deleted successfully.',
+                'title' => 'Delete Booking Success',
+                'message' => 'The booking has been deleted successfully.',
                 'messageType' => 'success'
             ];
             
@@ -543,7 +543,7 @@ class CustomerInquiryController {
 
     # -------------------------------------------------------------
     #
-    # Function: deleteMultipleCustomerInquiry
+    # Function: deleteMultipleBooking
     # Description: 
     # Delete the selected customer inquiries if it exists; otherwise, skip it.
     #
@@ -552,20 +552,20 @@ class CustomerInquiryController {
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function deleteMultipleCustomerInquiry() {
+    public function deleteMultipleBooking() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
-            $customerInquiryIDs = $_POST['customer_inquiry_id'];
+            $bookingIDs = $_POST['customer_inquiry_id'];
     
-            foreach($customerInquiryIDs as $customerInquiryID){
-                $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
-                $total = $checkCustomerInquiryExist['total'] ?? 0;
+            foreach($bookingIDs as $bookingID){
+                $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+                $total = $checkBookingExist['total'] ?? 0;
 
                 if($total > 0){
-                    $this->customerInquiryModel->deleteCustomerInquiry($customerInquiryID);
+                    $this->bookingModel->deleteBooking($bookingID);
                 }
             }
                 
@@ -599,33 +599,33 @@ class CustomerInquiryController {
 
     # -------------------------------------------------------------
     #
-    # Function: getCustomerInquiryDetails
+    # Function: getBookingDetails
     # Description: 
-    # Handles the retrieval of customer inquiry details.
+    # Handles the retrieval of booking details.
     #
     # Parameters: None
     #
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function getCustomerInquiryDetails() {
+    public function getBookingDetails() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
     
         if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $customerInquiryID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
 
-            $checkCustomerInquiryExist = $this->customerInquiryModel->checkCustomerInquiryExist($customerInquiryID);
-            $total = $checkCustomerInquiryExist['total'] ?? 0;
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
 
             if($total === 0){
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Get Customer Inquiry Details Error',
-                    'message' => 'The customer inquiry does not exist.',
+                    'title' => 'Get Booking Details Error',
+                    'message' => 'The booking does not exist.',
                     'messageType' => 'error'
                 ];
                 
@@ -633,8 +633,8 @@ class CustomerInquiryController {
                 exit;
             }
     
-            $customerInquiryDetails = $this->customerInquiryModel->getCustomerInquiry($customerInquiryID);
-            $inquiryStatus = $customerInquiryDetails['inquiry_status'];
+            $bookingDetails = $this->bookingModel->getBooking($bookingID);
+            $inquiryStatus = $bookingDetails['inquiry_status'];
 
             $badgeClasses = [
                 'Pending' => 'text-bg-info',
@@ -646,11 +646,11 @@ class CustomerInquiryController {
 
             $response = [
                 'success' => true,
-                'customerName' => $customerInquiryDetails['customer_name'] ?? null,
-                'email' => $customerInquiryDetails['email'] ?? null,
-                'phone' => $customerInquiryDetails['phone'] ?? null,
-                'subject' => $customerInquiryDetails['subject'] ?? null,
-                'message' => $customerInquiryDetails['message'] ?? null,
+                'customerName' => $bookingDetails['customer_name'] ?? null,
+                'email' => $bookingDetails['email'] ?? null,
+                'phone' => $bookingDetails['phone'] ?? null,
+                'subject' => $bookingDetails['subject'] ?? null,
+                'message' => $bookingDetails['message'] ?? null,
                 'inquiryStatusBadge' => $inquiryStatusBadge
             ];
 
@@ -677,10 +677,10 @@ require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../customer-inquiry/model/customer-inquiry-model.php';
+require_once '../../my-bookings/model/my-bookings-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new CustomerInquiryController(new CustomerInquiryModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new BookingController(new BookingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
 $controller->handleRequest();
 
 ?>
