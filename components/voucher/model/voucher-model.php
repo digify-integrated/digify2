@@ -122,6 +122,44 @@ class VoucherModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: checkVoucherCodeExist
+    # Description: Checks if a voucher code exists.
+    #
+    # Parameters:
+    # - $p_voucher_code (string): The voucher code.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkVoucherCodeExist($p_voucher_code) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkVoucherCodeExist(:p_voucher_code)');
+        $stmt->bindValue(':p_voucher_code', $p_voucher_code, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: checkVoucherCodeValidy
+    # Description: Checks if a voucher code is valid.
+    #
+    # Parameters:
+    # - $p_voucher_code (string): The voucher code.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkVoucherCodeValidy($p_voucher_code) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkVoucherCodeValidy(:p_voucher_code)');
+        $stmt->bindValue(':p_voucher_code', $p_voucher_code, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -162,6 +200,26 @@ class VoucherModel {
     public function getVoucher($p_voucher_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getVoucher(:p_voucher_id)');
         $stmt->bindValue(':p_voucher_id', $p_voucher_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getVoucherCode
+    # Description: Retrieves the details of a voucher code.
+    #
+    # Parameters:
+    # - $p_voucher_code (string): The voucher code.
+    #
+    # Returns:
+    # - An array containing the voucher details.
+    #
+    # -------------------------------------------------------------
+    public function getVoucherCode($p_voucher_code) {
+        $stmt = $this->db->getConnection()->prepare('CALL getVoucherCode(:p_voucher_code)');
+        $stmt->bindValue(':p_voucher_code', $p_voucher_code, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

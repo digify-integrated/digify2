@@ -9,6 +9,20 @@ BEGIN
     WHERE voucher_id = p_voucher_id;
 END //
 
+CREATE PROCEDURE checkVoucherCodeExist(IN p_voucher_code VARCHAR(20))
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM voucher
+    WHERE voucher_code = p_voucher_code;
+END //
+
+CREATE PROCEDURE checkVoucherCodeValidy(IN p_voucher_code VARCHAR(20))
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM voucher
+    WHERE voucher_code = p_voucher_code AND voucher_usage_start_date <= NOW() AND voucher_usage_end_date >= NOW() AND available_voucher > 0;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
@@ -58,6 +72,12 @@ CREATE PROCEDURE getVoucher(IN p_voucher_id INT)
 BEGIN
 	SELECT * FROM voucher
 	WHERE voucher_id = p_voucher_id;
+END //
+
+CREATE PROCEDURE getVoucherCode(IN p_voucher_code VARCHAR(20))
+BEGIN
+	SELECT * FROM voucher
+	WHERE voucher_code = p_voucher_code;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

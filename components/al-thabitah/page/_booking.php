@@ -78,16 +78,15 @@
                                     <label class="mb-10px" for="booking_time">Time <span class="text-red">*</span></label>
                                     <select class="form-control" id="booking_time" name="booking_time">
                                         <option value="">--</option>
-                                        <option value="">9:00 AM</option>
-                                        <option>10:00 AM</option>
-                                        <option>11:00 AM</option>
-                                        <option>12:00 PM</option>
-                                        <option>1:00 PM</option>
-                                        <option>2:00 PM</option>
-                                        <option>3:00 PM</option>
-                                        <option>4:00 PM</option>
-                                        <option>5:00 PM</option>
-                                        <option>6:00 PM</option>
+                                        <option value="9:00 AM">9:00 AM</option>
+                                        <option value="10:00 AM">10:00 AM</option>
+                                        <option value="12:00 PM">12:00 PM</option>
+                                        <option value="1:00 PM">1:00 PM</option>
+                                        <option value="2:00 PM">2:00 PM</option>
+                                        <option value="3:00 PM">3:00 PM</option>
+                                        <option value="4:00 PM">4:00 PM</option>
+                                        <option value="5:00 PM">5:00 PM</option>
+                                        <option value="6:00 PM">6:00 PM</option>
                                     </select>
                                 </div>
                                 <div class="col-12 mb-20px">
@@ -116,7 +115,7 @@
                                         <option>20</option>
                                     </select>
                                 </div>
-                                <div class="col-6 mb-20px">
+                                <div class="col-12 mb-20px">
                                     <label class="mb-10px" for="number_of_hours">How many hours should they stay? <span class="text-red">*</span></label>
                                     <select class="form-control" id="number_of_hours" name="number_of_hours">
                                         <option value="">--</option>
@@ -130,7 +129,7 @@
                                         <option>8 Hours</option>
                                     </select>
                                 </div>
-                                <div class="col-6 mb-20px">
+                                <div class="col-12 mb-20px">
                                     <label class="mb-10px" for="nationality">Choose your professional nationality <span class="text-red">*</span></label>
                                     <select class="form-control" id="nationality" name="nationality">
                                         <option value="">--</option>
@@ -188,7 +187,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xl-4 text-end sm-mt-15px">
-                                    <a href="javasctript:void(0);" id="reset-discount" class="btn btn-small border-1 btn-round-edge btn-transparent-light-gray text-transform-none me-15px">Reset</a>
+                                    <a href="javasctript:void(0);" id="reset-discount" class="btn btn-small border-1 btn-round-edge btn-transparent-light-gray text-transform-none">Reset</a>
                                 </div>
                             </div>
                             <span class="fs-26 alt-font fw-600 text-dark-gray mb-5px d-block">Payment Method</span>
@@ -229,6 +228,8 @@
                                     </tr>
                                     <tr>
                                         <th class="w-60 fw-600 text-dark-gray alt-font">Discount Subtotal</th>
+                                        <input type="hidden" id="discount-rate">
+                                        <input type="hidden" id="discount-type">
                                         <input type="hidden" id="discount-amount">
                                         <td class="text-dark-gray fw-600" id="discount-subtotal">AED 0.00</td>
                                     </tr>

@@ -6,9 +6,9 @@
             contactUsForm();
         }
 
-        if($('#booking-form').length){
+        /*if($('#booking-form').length){
             handleServiceChange();
-        }
+        }*/
 
         // Google Translate API endpoint
         const API_URL = 'https://translation.googleapis.com/language/translate/v2?key=AIzaSyDtaHoYl8ZWzeO2_sinZAxV9INtNogyWhg'; // Replace with your actual API key
@@ -168,17 +168,16 @@
             }
         });
     
-            // Initialize the page with the stored language if available
-            const storedLang = getSessionItem('selectedLanguage')?.language;
-            const storedTitle = getSessionItem('selectedTitle')?.title;
-            if (storedLang && storedLang !== 'en') {
-                $('html').attr('lang', storedLang);
-                translatePage('en', storedLang);
-                $('#current-language-text').text(storedTitle);
-            }
+        // Initialize the page with the stored language if available
+        const storedLang = getSessionItem('selectedLanguage')?.language;
+        const storedTitle = getSessionItem('selectedTitle')?.title;
+        if (storedLang && storedLang !== 'en') {
+            $('html').attr('lang', storedLang);
+            translatePage('en', storedLang);
+            $('#current-language-text').text(storedTitle);
+        }
     });
 })(jQuery);
-  
 
 function contactUsForm(){
     $('#contact-us-form').validate({
@@ -255,21 +254,23 @@ function contactUsForm(){
     });
 }
 
-function handleServiceChange() {
+/*function handleServiceChange() {
     const serviceSelect = document.getElementById('service');
     const cleaningMaterialsSelect = document.getElementById('cleaning_materials');
     const discountAmountInput = document.getElementById('discount-amount'); // Discount amount input field
+
     const fields = {
-      frequency: document.getElementById('frequency_field'),
-      duration: document.getElementById('duration_field'),
-      seats: document.getElementById('number_of_seats_field'),
-      meters: document.getElementById('meters_field'),
+        frequency: document.getElementById('frequency_field'),
+        duration: document.getElementById('duration_field'),
+        seats: document.getElementById('number_of_seats_field'),
+        meters: document.getElementById('meters_field'),
     };
+
     const inputs = {
-      frequency: document.getElementById('frequency'),
-      duration: document.getElementById('duration'),
-      seats: document.getElementById('number_of_seats'),
-      meters: document.getElementById('meters'),
+        frequency: document.getElementById('frequency'),
+        duration: document.getElementById('duration'),
+        seats: document.getElementById('number_of_seats'),
+        meters: document.getElementById('meters'),
     };
   
     const summaryRow = document.getElementById('service-summary');
@@ -282,137 +283,136 @@ function handleServiceChange() {
     // Add event listeners to inputs to update summary on change
     Object.values(inputs).forEach(input => input.addEventListener('input', updateSummary));
     cleaningMaterialsSelect.addEventListener('change', () => {
-      updateCleaningMaterialsSummary();
-      updateBookingAmounts(); // Update booking amounts when cleaning materials change
+        updateCleaningMaterialsSummary();
+        updateBookingAmounts(); // Update booking amounts when cleaning materials change
     });
   
     discountAmountInput.addEventListener('input', updateDiscount); // Update discount on change
   
     serviceSelect.addEventListener('change', () => {
-      const selectedService = serviceSelect.value;
-  
-      const serviceGroups = {
-        cleaning: ['Deep Cleaning', 'Regular Cleaning', 'Office Cleaning', 'Flat Cleaning', 'Hospital Cleaning'],
-        sofa: ['Sofa Cleaning'],
-        specialty: ['Mattress Cleaning', 'Curtain Cleaning', 'Carpet Cleaning'],
-      };
-  
-      // Determine the group of the selected service
-      let newGroup = '';
-      if (serviceGroups.cleaning.includes(selectedService)) newGroup = 'cleaning';
-      else if (serviceGroups.sofa.includes(selectedService)) newGroup = 'sofa';
-      else if (serviceGroups.specialty.includes(selectedService)) newGroup = 'specialty';
-  
-      // Only reset fields if the service group has changed
-      if (newGroup !== currentGroup) {
-        Object.values(fields).forEach(field => field.classList.add('d-none'));
-        Object.values(inputs).forEach(input => input.value = '');
-      }
-  
-      // Display relevant fields based on the new group
-      if (newGroup === 'cleaning') {
-        fields.frequency.classList.remove('d-none');
-        fields.duration.classList.remove('d-none');
-      } else if (newGroup === 'sofa') {
-        fields.seats.classList.remove('d-none');
-      } else if (newGroup === 'specialty') {
-        fields.meters.classList.remove('d-none');
-      }
-  
-      currentGroup = newGroup;
-      updateSummary();  // Call updateSummary to ensure the summary is updated immediately after selection
-      updateBookingAmounts(); // Update booking amounts after service selection
+        const selectedService = serviceSelect.value;
+    
+        const serviceGroups = {
+            cleaning: ['Deep Cleaning', 'Regular Cleaning', 'Office Cleaning', 'Flat Cleaning', 'Hospital Cleaning'],
+            sofa: ['Sofa Cleaning'],
+            specialty: ['Mattress Cleaning', 'Curtain Cleaning', 'Carpet Cleaning'],
+        };
+    
+        // Determine the group of the selected service
+        let newGroup = '';
+        if (serviceGroups.cleaning.includes(selectedService)) newGroup = 'cleaning';
+        else if (serviceGroups.sofa.includes(selectedService)) newGroup = 'sofa';
+        else if (serviceGroups.specialty.includes(selectedService)) newGroup = 'specialty';
+    
+        // Only reset fields if the service group has changed
+        if (newGroup !== currentGroup) {
+            Object.values(fields).forEach(field => field.classList.add('d-none'));
+            Object.values(inputs).forEach(input => input.value = '');
+        }
+    
+        // Display relevant fields based on the new group
+        if (newGroup === 'cleaning') {
+            fields.frequency.classList.remove('d-none');
+            fields.duration.classList.remove('d-none');
+        } else if (newGroup === 'sofa') {
+            fields.seats.classList.remove('d-none');
+        } else if (newGroup === 'specialty') {
+            fields.meters.classList.remove('d-none');
+        }
+    
+        currentGroup = newGroup;
+        updateSummary();  // Call updateSummary to ensure the summary is updated immediately after selection
+        updateBookingAmounts(); // Update booking amounts after service selection
     });
   
     function updateSummary() {
-      const selectedService = serviceSelect.value;
-      let details = '';
-      let price = 0;
-  
-      if (selectedService === 'Sofa Cleaning') {
-        const seats = inputs.seats.value || 0;
-        details = `Number of seats: ${seats}`;
-        price = seats * 20;
-      } else if (['Deep Cleaning', 'Regular Cleaning', 'Office Cleaning', 'Flat Cleaning', 'Hospital Cleaning'].includes(selectedService)) {
-        const frequency = inputs.frequency.value || 'N/A';
-        const duration = inputs.duration.value || 0;
-        details = `Frequency: ${frequency}<br/>Duration: ${duration} hours`;
-        price = duration * 25;
-      } else if (selectedService === 'Mattress Cleaning') {
-        const meters = inputs.meters.value || 0;
-        details = `Meters: ${meters}`;
-        price = meters * 15;
-      }
-  
-      // Update the service summary row
-      summaryRow.innerHTML = `
-        <td class="product-thumbnail">
-          <a href="javascript:void(0);" class="text-dark-gray fw-500 d-block lh-initial" id="service-name-summary">${selectedService}</a>
-          <span class="fs-14 d-block" id="service-details">${details}</span>
-        </td>
-        <td class="product-price" data-title="Price">AED ${price.toFixed(2)}</td>
-      `;
-  
-      updateBookingAmounts(); // Update booking amounts whenever the service changes
+        const selectedService = serviceSelect.value;
+        let details = '';
+        let price = 0;
+    
+        if (selectedService === 'Sofa Cleaning') {
+            const seats = inputs.seats.value || 0;
+            details = `Number of seats: ${seats}`;
+            price = seats * 20;
+        } else if (['Deep Cleaning', 'Regular Cleaning', 'Office Cleaning', 'Flat Cleaning', 'Hospital Cleaning'].includes(selectedService)) {
+            const frequency = inputs.frequency.value || 'N/A';
+            const duration = inputs.duration.value || 0;
+            details = `Frequency: ${frequency}<br/>Duration: ${duration} hours`;
+            price = duration * 25;
+        } else if (selectedService === 'Mattress Cleaning') {
+            const meters = inputs.meters.value || 0;
+            details = `Meters: ${meters}`;
+            price = meters * 15;
+        }
+    
+        // Update the service summary row
+        summaryRow.innerHTML = `
+            <td class="product-thumbnail">
+            <a href="javascript:void(0);" class="text-dark-gray fw-500 d-block lh-initial" id="service-name-summary">${selectedService}</a>
+            <span class="fs-14 d-block" id="service-details">${details}</span>
+            </td>
+            <td class="product-price" data-title="Price">AED ${price.toFixed(2)}</td>
+        `;
+    
+        updateBookingAmounts(); // Update booking amounts whenever the service changes
     }
   
     function updateCleaningMaterialsSummary() {
-      const cleaningMaterials = cleaningMaterialsSelect.value;
-      let price = 0;
-  
-      // Only show price if "Yes" is selected
-      if (cleaningMaterials === 'Yes') {
-        price = 10; // Set price to 10 AED if "Yes" is selected
-        cleaningMaterialsSummaryRow.innerHTML = `
-          <td class="product-thumbnail">
-            <a href="javascript:void(0);" class="text-dark-gray fw-500 d-block lh-initial">Cleaning Materials</a>
-          </td>
-          <td class="product-price" data-title="Price">AED ${price.toFixed(2)}</td>
-        `;
-      } else {
-        cleaningMaterialsSummaryRow.innerHTML = ''; // Clear the summary if "No" is selected
-      }
-  
-      updateBookingAmounts(); // Update booking amounts when cleaning materials change
+        const cleaningMaterials = cleaningMaterialsSelect.value;
+        let price = 0;
+    
+        // Only show price if "Yes" is selected
+        if (cleaningMaterials === 'Yes') {
+            price = 10; // Set price to 10 AED if "Yes" is selected
+            cleaningMaterialsSummaryRow.innerHTML = `
+            <td class="product-thumbnail">
+                <a href="javascript:void(0);" class="text-dark-gray fw-500 d-block lh-initial">Cleaning Materials</a>
+            </td>
+            <td class="product-price" data-title="Price">AED ${price.toFixed(2)}</td>
+            `;
+        } else {
+            cleaningMaterialsSummaryRow.innerHTML = ''; // Clear the summary if "No" is selected
+        }
+    
+        updateBookingAmounts(); // Update booking amounts when cleaning materials change
     }
   
     function updateBookingAmounts() {
-      let servicePrice = 0;
-      let materialsPrice = 0;
-  
-      // Calculate service price from the current summary
-      if (summaryRow.innerHTML.includes('product-price')) {
-        const servicePriceText = summaryRow.querySelector('.product-price').textContent;
-        servicePrice = parseFloat(servicePriceText.replace('AED ', '')) || 0;
-      }
-  
-      // Calculate cleaning materials price
-      if (cleaningMaterialsSummaryRow.innerHTML.includes('product-price')) {
-        const materialsPriceText = cleaningMaterialsSummaryRow.querySelector('.product-price').textContent;
-        materialsPrice = parseFloat(materialsPriceText.replace('AED ', '')) || 0;
-      }
-  
-      // Calculate booking subtotal
-      const bookingSubtotal = servicePrice + materialsPrice;
-      bookingSubtotalElement.textContent = `AED ${bookingSubtotal.toFixed(2)}`;
-  
-      // Calculate total booking amount
-      const discount = parseFloat(discountAmountInput.value) || 0;
-      const totalBookingAmount = bookingSubtotal - discount;
-      totalBookingAmountElement.textContent = `AED ${totalBookingAmount.toFixed(2)}`;
-  
-      // Update discount subtotal display
-      updateDiscount();
+        let servicePrice = 0;
+        let materialsPrice = 0;
+    
+        // Calculate service price from the current summary
+        if (summaryRow.innerHTML.includes('product-price')) {
+            const servicePriceText = summaryRow.querySelector('.product-price').textContent;
+            servicePrice = parseFloat(servicePriceText.replace('AED ', '')) || 0;
+        }
+    
+        // Calculate cleaning materials price
+        if (cleaningMaterialsSummaryRow.innerHTML.includes('product-price')) {
+            const materialsPriceText = cleaningMaterialsSummaryRow.querySelector('.product-price').textContent;
+            materialsPrice = parseFloat(materialsPriceText.replace('AED ', '')) || 0;
+        }
+    
+        // Calculate booking subtotal
+        const bookingSubtotal = servicePrice + materialsPrice;
+        bookingSubtotalElement.textContent = `AED ${bookingSubtotal.toFixed(2)}`;
+    
+        // Calculate total booking amount
+        const discount = parseFloat(discountAmountInput.value) || 0;
+        const totalBookingAmount = bookingSubtotal - discount;
+        totalBookingAmountElement.textContent = `AED ${totalBookingAmount.toFixed(2)}`;
+    
+        // Update discount subtotal display
+        updateDiscount();
     }
   
     function updateDiscount() {
-      const discount = parseFloat(discountAmountInput.value) || 0;
-      if(discount > 0){
-        discountSubtotalElement.textContent = `- AED ${discount.toFixed(2)}`; // Update discount amount
-      }
-      else{
-        discountSubtotalElement.textContent = `AED 0.00`; // Update discount amount
-      }
+        const discount = parseFloat(discountAmountInput.value) || 0;
+        if(discount > 0){
+            discountSubtotalElement.textContent = `- AED ${discount.toFixed(2)}`; // Update discount amount
+        }
+        else{
+            discountSubtotalElement.textContent = `AED 0.00`; // Update discount amount
+        }
     }
-  }
-  
+}*/
