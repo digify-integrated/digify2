@@ -8,6 +8,18 @@
             bookingForm();
         }
 
+        if($('#tag-for-cancellation-form').length){
+            tagForCancellationForm();
+        }
+
+        if($('#tag-as-paid-form').length){
+            tagAsPaidForm();
+        }
+
+        if($('#tag-as-refunded-form').length){
+            tagAsRefundedForm();
+        }
+
         $(document).on('change', '#service', function() {
             const selectedValue = $(this).val();
             const serviceGroups = {
@@ -308,6 +320,65 @@
             });
         });
 
+        $(document).on('click','#tag-as-refunded',function() {
+            const booking_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'tag booking payment as refunded';
+    
+            Swal.fire({
+                title: 'Confirm Booking Payment Tagging As Refunded',
+                text: 'Are you sure you want to tag this booking payment as refunded cancelled?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Refunded',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/booking/controller/booking-controller.php',
+                        dataType: 'json',
+                        data: {
+                            booking_id : booking_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                setNotification(response.title, response.message, response.messageType);
+                                window.location.reload();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
         if($('#log-notes-main').length){
             const booking_id = $('#details-id').text();
 
@@ -520,6 +591,172 @@ function bookingForm(){
     });
 }
 
+function tagForCancellationForm(){
+    $('#tag-for-cancellation-form').validate({
+        rules: {
+            cancellation_reason: {
+                required: true
+            }
+        },
+        messages: {
+            cancellation_reason: {
+                required: 'Enter the cancellation reason'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const booking_id = $('#details-id').text();
+            const transaction = 'tag booking for cancellation';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/booking/controller/booking-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&booking_id=' + booking_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-tag-for-cancellation-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        setNotification(response.title, response.message, response.messageType);
+                        window.location.reload();
+                    }
+                    else {
+                        if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-tag-for-cancellation-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function tagAsPaidForm(){
+    $('#tag-as-refunded-form').validate({
+        rules: {
+            refund_amount: {
+                required: true
+            },
+            refund_date: {
+                required: true
+            },
+            refund_reason: {
+                required: true
+            }
+        },
+        messages: {
+            refund_amount: {
+                required: 'Enter the refund amount'
+            },
+            refund_date: {
+                required: 'Choose the refund date'
+            },
+            refund_reason: {
+                required: 'Enter the refund reason'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const booking_id = $('#details-id').text();
+            const transaction = 'tag booking payment as refunded';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/booking/controller/booking-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&booking_id=' + booking_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-tag-as-refunded-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        setNotification(response.title, response.message, response.messageType);
+                        window.location.reload();
+                    }
+                    else {
+                        if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-tag-as-refunded-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
 function computeBookingAmount() {
     const service = $('#service').val();
     const duration = parseFloat($('#duration').val()) || 0;
@@ -622,6 +859,25 @@ function displayDetails(transaction){
                         $('#mode_of_payment').val(response.modeOfPayment);
                         $('#discount_type').val(response.discountType);
                         $('#discount_amount').val(response.discountAmount);
+
+                        $('#booking-reference-number-summary').text(response.bookingReferenceNumber);
+
+                        document.getElementById('payment-status-summary').innerHTML = response.paymentStatusBadge;
+                        document.getElementById('booking-status-summary').innerHTML = response.bookingStatusBadge;
+
+                        $('#transaction-date-summary').text(response.transactionDate);
+                        $('#payment-reference-number-summary').text(response.paymentReferenceNumber);
+                        $('#payment-date-summary').text(response.paymentDate);
+                        $('#discount-code-summary').text(response.discountCode);
+                        $('#in-progress-date-summary').text(response.completedDate);
+                        $('#completed-date-summary').text(response.completedDate);
+                        $('#refund-amount-summary').text(response.refundAmount);
+                        $('#refund-date-summary').text(response.refundDate);
+                        $('#cancellation-window-summary').text(response.cancellationWindow);
+                        $('#cancellation-request-date-summary').text(response.cancellationRequestDate);
+                        $('#cancellation-date-summary').text(response.cancellationDate);
+                        $('#cancellation-reason-summary').text(response.cancellationReason);
+                        $('#refund-reason-summary').text(response.refundReason);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {

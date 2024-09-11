@@ -47,6 +47,8 @@ INSERT INTO system_action (system_action_id, system_action_name, system_action_d
 (33, 'Tag Booking As In-Progress', 'Access to tag the booking as in-progress.', 1),
 (34, 'Tag Booking As Complete', 'Access to tag the booking as complete.', 1),
 (35, 'Tag Booking As For Cancellation', 'Access to tag the booking for cancellation.', 1),
-(36, 'Tag Booking As Cancelled', 'Access to tag the booking as cancelled.', 1);
+(36, 'Tag Booking As Cancelled', 'Access to tag the booking as cancelled.', 1),
+(37, 'Tag Booking Payment As Paid', 'Access to tag the booking payment as paid.', 1),
+(38, 'Tag Booking Payment As Refunded', 'Access to tag the booking payment as refunded.', 1);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

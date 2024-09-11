@@ -133,6 +133,11 @@
             }
         });
 
+        $(document).on('click','#apply-filter',function() {
+            bookingTable('#booking-table');
+            $('#filter-offcanvas').offcanvas('hide');
+        });
+
         $('#datatable-search').on('keyup', function () {
             var table = $('#booking-table').DataTable();
             table.search(this.value).draw();
@@ -145,16 +150,30 @@ function bookingTable(datatable_name, buttons = false, show_all = false){
 
     const type = 'booking table';
     const page_id = $('#page-id').val();
+    const filter_by_service = $('#filter_by_service').val();
+    const filter_by_booking_status = $('#filter_by_booking_status').val();
+    const filter_by_payment_status = $('#filter_by_payment_status').val();
+    const filter_by_mode_of_payment = $('#filter_by_mode_of_payment').val();
+    const filter_by_source_of_booking = $('#filter_by_source_of_booking').val();
+    const booking_start_date = $('#booking_start_date').val();
+    const booking_end_date = $('#booking_end_date').val();
+    const transaction_start_date = $('#transaction_start_date').val();
+    const transaction_end_date = $('#transaction_end_date').val();
+    const payment_start_date = $('#payment_start_date').val();
+    const payment_end_date = $('#payment_end_date').val();
     const page_link = document.getElementById('page-link').getAttribute('href');
 
     var settings;
 
     const column = [ 
         { 'data' : 'CHECK_BOX' },
-        { 'data' : 'CUSTOMER' },
-        { 'data' : 'MESSAGE' },
-        { 'data' : 'INQUIRY_DATE' },
-        { 'data' : 'INQUIRY_STATUS' },
+        { 'data' : 'BOOKING_REFERENCE_NUMBER' },
+        { 'data' : 'CLIENT' },
+        { 'data' : 'SERVICE' },
+        { 'data' : 'BOOKING_SCHEDULE' },
+        { 'data' : 'PAYMENT_STATUS' },
+        { 'data' : 'BOOKING_STATUS' },
+        { 'data' : 'SOURCE_OF_BOOKING' },
         { 'data' : 'ACTION' }
     ];
 
@@ -164,7 +183,10 @@ function bookingTable(datatable_name, buttons = false, show_all = false){
         { 'width': 'auto', 'aTargets': 2 },
         { 'width': 'auto', 'aTargets': 3 },
         { 'width': 'auto', 'aTargets': 4 },
-        { 'width': '15%','bSortable': false, 'aTargets': 5 }
+        { 'width': 'auto', 'aTargets': 5 },
+        { 'width': 'auto', 'aTargets': 6 },
+        { 'width': 'auto', 'aTargets': 7 },
+        { 'width': '10%','bSortable': false, 'aTargets': 8 }
     ];
 
     const length_menu = show_all ? [[-1], ['All']] : [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']];
@@ -177,6 +199,17 @@ function bookingTable(datatable_name, buttons = false, show_all = false){
             'data': {
                 'type' : type,
                 'page_id' : page_id,
+                'filter_by_service' : filter_by_service,
+                'filter_by_booking_status' : filter_by_booking_status,
+                'filter_by_payment_status' : filter_by_payment_status,
+                'filter_by_mode_of_payment' : filter_by_mode_of_payment,
+                'filter_by_source_of_booking' : filter_by_source_of_booking,
+                'booking_start_date' : booking_start_date,
+                'booking_end_date' : booking_end_date,
+                'transaction_start_date' : transaction_start_date,
+                'transaction_end_date' : transaction_end_date,
+                'payment_start_date' : payment_start_date,
+                'payment_end_date' : payment_end_date,
                 'page_link' : page_link
             },
             'dataSrc' : '',

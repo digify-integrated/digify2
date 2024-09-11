@@ -32,7 +32,30 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
         #
         # -------------------------------------------------------------
         case 'booking table':
-            $sql = $databaseModel->getConnection()->prepare('CALL generateBookingTable()');
+            $filterByService = isset($_POST['filter_by_service']) ? $_POST['filter_by_service'] : null;
+            $filterByBookingStatus = isset($_POST['filter_by_booking_status']) ? $_POST['filter_by_booking_status'] : null;
+            $filterByPaymentStatus = isset($_POST['filter_by_payment_status']) ? $_POST['filter_by_payment_status'] : null;
+            $filterByModeOfPayment = isset($_POST['filter_by_mode_of_payment']) ? $_POST['filter_by_mode_of_payment'] : null;
+            $filterBySourceOfBooking = isset($_POST['filter_by_source_of_booking']) ? $_POST['filter_by_source_of_booking'] : null;
+            $bookingStartDate = $systemModel->checkDate('empty', $_POST['booking_start_date'], '', 'Y-m-d', '');
+            $bookingEndDate = $systemModel->checkDate('empty', $_POST['booking_end_date'], '', 'Y-m-d', '');
+            $paymentStartDate = $systemModel->checkDate('empty', $_POST['payment_start_date'], '', 'Y-m-d', '');
+            $paymentEndDate = $systemModel->checkDate('empty', $_POST['payment_end_date'], '', 'Y-m-d', '');
+            $transactionStartDate = $systemModel->checkDate('empty', $_POST['transaction_start_date'], '', 'Y-m-d', '');
+            $transactionEndDate = $systemModel->checkDate('empty', $_POST['transaction_end_date'], '', 'Y-m-d', '');
+
+            $sql = $databaseModel->getConnection()->prepare('CALL generateBookingTable(:filterByService, :filterByBookingStatus, :filterByPaymentStatus, :filterByModeOfPayment, :filterBySourceOfBooking, :bookingStartDate, :bookingEndDate, :paymentStartDate, :paymentEndDate, :transactionStartDate, :transactionEndDate)');
+            $sql->bindValue(':filterByService', $filterByService, PDO::PARAM_STR);
+            $sql->bindValue(':filterByBookingStatus', $filterByBookingStatus, PDO::PARAM_STR);
+            $sql->bindValue(':filterByPaymentStatus', $filterByPaymentStatus, PDO::PARAM_STR);
+            $sql->bindValue(':filterByModeOfPayment', $filterByModeOfPayment, PDO::PARAM_STR);
+            $sql->bindValue(':filterBySourceOfBooking', $filterBySourceOfBooking, PDO::PARAM_STR);
+            $sql->bindValue(':bookingStartDate', $bookingStartDate, PDO::PARAM_STR);
+            $sql->bindValue(':bookingEndDate', $bookingEndDate, PDO::PARAM_STR);
+            $sql->bindValue(':paymentStartDate', $paymentStartDate, PDO::PARAM_STR);
+            $sql->bindValue(':paymentEndDate', $paymentEndDate, PDO::PARAM_STR);
+            $sql->bindValue(':transactionStartDate', $transactionStartDate, PDO::PARAM_STR);
+            $sql->bindValue(':transactionEndDate', $transactionEndDate, PDO::PARAM_STR);
             $sql->execute();
             $options = $sql->fetchAll(PDO::FETCH_ASSOC);
             $sql->closeCursor();
@@ -41,21 +64,34 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
             foreach ($options as $row) {
                 $bookingID = $row['booking_id'];
-                $customerName = $row['customer_name'];
-                $email = $row['email'];
+                $bookingReferenceNumber = $row['booking_reference_number'];
+                $firstName = $row['first_name'];
+                $lastName = $row['last_name'];
                 $phone = $row['phone'];
-                $subject = $row['subject'];
-                $message = $row['message'];
-                $inquiryStatus = $row['inquiry_status'];
-                $inquiryDate =  $systemModel->checkDate('summary', $row['created_date'], '', 'M d, Y', '');
+                $emailAddress = $row['email_address'];
+                $sourceOfBooking = $row['source_of_booking'];
+                $service = $row['service'];
+                $bookingDate =  $systemModel->checkDate('summary', $row['booking_date'], '', 'M d, Y', '');
+                $bookingTime = $row['booking_time'];
+                $paymentStatus = $row['payment_status'];
+                $bookingStatus = $row['booking_status'];
 
-                $badgeClasses = [
+                $bookingStatusBadgeClasses = [
                     'Pending' => 'text-bg-info',
                     'In-Progress' => 'text-bg-warning',
-                    'Resolved' => 'text-bg-success',
+                    'Completed' => 'text-bg-success',
+                    'For Cancellation' => 'text-bg-warning',
+                    'Cancelled' => 'text-bg-danger'
                 ];
-                
-                $inquiryStatusBadge = '<span class="badge rounded-pill ' . ($badgeClasses[$inquiryStatus] ?? 'text-bg-dark') . '">' . $inquiryStatus . '</span>';
+
+                $paymentStatusBadgeClasses = [
+                    'Pending' => 'text-bg-info',
+                    'Paid' => 'text-bg-success',
+                    'Refunded' => 'text-bg-warning'
+                ];
+                    
+                $bookingStatusBadge = '<span class="badge rounded-pill ' . ($bookingStatusBadgeClasses[$bookingStatus] ?? 'text-bg-dark') . '">' . $bookingStatus . '</span>';
+                $paymentStatusBadge = '<span class="badge rounded-pill ' . ($paymentStatusBadgeClasses[$paymentStatus] ?? 'text-bg-dark') . '">' . $paymentStatus . '</span>';
 
                 $bookingIDEncrypted = $securityModel->encryptData($bookingID);
 
@@ -68,25 +104,28 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
 
                 $response[] = [
                     'CHECK_BOX' => '<input class="form-check-input datatable-checkbox-children" type="checkbox" value="'. $bookingID .'">',
-                    'CUSTOMER' => '<div class="d-flex align-items-center">
+                    'BOOKING_REFERENCE_NUMBER' => $bookingReferenceNumber,
+                    'CLIENT' => '<div class="d-flex align-items-center">
                                                 <div class="ms-3">
                                                     <div class="user-meta-info">
-                                                        <h6 class="user-name mb-0">'. $customerName .'</h6>
-                                                        <p>'. $email .'</p>
+                                                        <h6 class="user-name mb-0">'. $firstName . ' ' . $lastName .'</h6>
+                                                        <p>'. $emailAddress .'</p>
                                                         <p>'. $phone .'</p>
                                                     </div>
                                                 </div>
                                             </div>',
-                    'MESSAGE' => '<div class="d-flex align-items-center">
+                    'SERVICE' => $service,
+                    'BOOKING_SCHEDULE' => '<div class="d-flex align-items-center">
                                                 <div class="ms-3">
                                                     <div class="user-meta-info">
-                                                        <h6 class="user-name mb-0">'. $subject .'</h6>
-                                                        <p>'. $message .'</p>
+                                                        <h6 class="user-name mb-0">'. $bookingDate .'</h6>
+                                                        <p>'. $bookingTime .'</p>
                                                     </div>
                                                 </div>
                                             </div>',
-                    'INQUIRY_DATE' => $inquiryDate,
-                    'INQUIRY_STATUS' => $inquiryStatusBadge,
+                    'PAYMENT_STATUS' => $paymentStatusBadge,
+                    'BOOKING_STATUS' => $bookingStatusBadge,
+                    'SOURCE_OF_BOOKING' => $sourceOfBooking,
                     'ACTION' => '<div class="action-btn">
                                     <a href="'. $pageLink .'&id='. $bookingIDEncrypted .'" class="text-info" title="View Details">
                                         <i class="ti ti-eye fs-5"></i>

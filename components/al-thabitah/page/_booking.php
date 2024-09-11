@@ -160,7 +160,7 @@
                                 </div>
                                 <div class="col-12">
                                     <label class="mb-10px" for="special_instructions">Do you have any special instructions?</label>
-                                    <textarea class="border-radius-4px" rows="5" cols="5" for="special_instructions" for="special_instructions" placeholder="Notes about your booking, e.g. special notes for the professionals."></textarea>
+                                    <textarea class="border-radius-4px" rows="5" cols="5" id="special_instructions" name="special_instructions" placeholder="Notes about your booking, e.g. special notes for the professionals."></textarea>
                                 </div>
                             </div>
                         </form>
@@ -171,56 +171,19 @@
                             <table class="w-100 total-price-table your-order-table mb-8">
                                 <tbody>
                                     <tr>
-                                        <th class="w-60 lg-w-55 xs-w-50 fw-600 text-dark-gray alt-font">Services</th>
+                                        <th class="w-60 lg-w-55 xs-w-50 fw-600 text-dark-gray alt-font">Service</th>
                                         <td class="fw-600 text-dark-gray alt-font">Total</td>
                                     </tr>
                                     <tr id="service-summary" class="product"></tr>
+                                    <tr>
+                                        <th class="w-60 lg-w-55 xs-w-50 fw-600 text-dark-gray alt-font">Add-On</th>
+                                        <td class="fw-600 text-dark-gray alt-font">Total</td>
+                                    </tr>
                                     <tr id="cleaning-materials-summary" class="product"></tr>
                                 </tbody>
                             </table>
-                            <span class="fs-26 alt-font fw-600 text-dark-gray mb-5px d-block">Discount</span>
-                            <div class="row mt-20px mb-8">
-                                <div class="col-xl-8"> 
-                                    <div class="coupon-code-panel">
-                                        <input type="text" class="bg-white border-radius-4px" id="discount_code" name="discount_code" placeholder="Discount code">
-                                        <a href="javascript:void(0);" id="apply-discount" class="btn apply-coupon-btn fs-13 fw-600 text-uppercase">Apply</a>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 text-end sm-mt-15px">
-                                    <a href="javasctript:void(0);" id="reset-discount" class="btn btn-small border-1 btn-round-edge btn-transparent-light-gray text-transform-none">Reset</a>
-                                </div>
-                            </div>
-                            <span class="fs-26 alt-font fw-600 text-dark-gray mb-5px d-block">Payment Method</span>
-                            <div class="p-40px lg-p-25px bg-white border-radius-6px box-shadow-large mt-10px mb-8  checkout-accordion">
-                                <div class="w-100" id="accordion-style-05">
-                                    <!-- start tab content -->
-                                    <div class="heading active-accordion">
-                                        <label class="mb-5px">
-                                            <input class="d-inline w-auto me-5px mb-0 p-0" type="radio" name="mode_of_payment" value="Online Banking" checked="checked">
-                                            <span class="d-inline-block text-dark-gray fw-500">Online Banking</span>
-                                            <a class="accordion-toggle" data-bs-toggle="collapse" data-bs-parent="#accordion-style-05" href="#style-5-collapse-1"></a>
-                                        </label> 
-                                    </div>
-                                    <div id="style-5-collapse-1" class="collapse show" data-bs-parent="#accordion-style-05">
-                                        <div class="p-25px bg-very-light-gray mt-20px mb-20px fs-14 lh-24">Make your payment directly into our bank account.</div>
-                                    </div>
-                                    <!-- end tab content -->
-                                    <!-- start tab content -->
-                                    <div class="heading active-accordion">
-                                        <label class="mb-5px">
-                                            <input class="d-inline w-auto me-5px mb-0 p-0" type="radio" name="mode_of_payment" value="Cash"> 
-                                            <span class="d-inline-block text-dark-gray fw-500">Cash</span> 
-                                            <a class="accordion-toggle" data-bs-toggle="collapse" data-bs-parent="#accordion-style-05" href="#style-5-collapse-3"></a>
-                                        </label>
-                                    </div>
-                                    <div id="style-5-collapse-3" class="collapse" data-bs-parent="#accordion-style-05">
-                                        <div class="p-25px bg-very-light-gray mt-20px mb-20px fs-14 lh-24">Pay with cash upon the arrival of our professionals.</div>
-                                    </div>
-                                    <!-- end tab content -->
-                                </div> 
-                            </div>
                             <span class="fs-26 alt-font fw-600 text-dark-gray mb-5px d-block">Payment Details</span>
-                            <table class="w-100 total-price-table your-order-table mb-8">
+                            <table class="w-100 total-price-table your-order-table mb-4">
                                 <tbody>
                                     <tr>
                                         <th class="w-60 fw-600 text-dark-gray alt-font">Booking Subtotal</th>
@@ -241,6 +204,47 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <span class="fs-26 alt-font fw-600 text-dark-gray mb-5px d-block">Discount</span>
+                            <div class="row mt-20px mb-8">
+                                <div class="col-xl-8"> 
+                                    <div class="coupon-code-panel">
+                                        <input type="text" class="bg-white border-radius-4px" id="discount_code" name="discount_code" placeholder="Discount code">
+                                        <a href="javascript:void(0);" id="apply-discount" class="btn apply-coupon-btn fs-13 fw-600 text-uppercase">Apply</a>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 text-end sm-mt-15px">
+                                    <a href="javasctript:void(0);" id="reset-discount" class="btn btn-small border-1 btn-round-edge btn-transparent-light-gray text-transform-none">Reset</a>
+                                </div>
+                            </div>
+                            <span class="fs-26 alt-font fw-600 text-dark-gray mb-5px d-block">Payment Method</span>
+                            <div class="p-40px lg-p-25px bg-white border-radius-6px box-shadow-large mt-10px mb-8  checkout-accordion">
+                                <div class="w-100" id="accordion-style-05">
+                                    <!-- start tab content -->
+                                    <div class="heading active-accordion">
+                                        <label class="mb-5px">
+                                            <input class="d-inline w-auto me-5px mb-0 p-0" type="radio" name="mode_of_payment" value="Stripe" checked="checked">
+                                            <span class="d-inline-block text-dark-gray fw-500">Stripe Online Payment – Fast & Secure</span>
+                                            <a class="accordion-toggle" data-bs-toggle="collapse" data-bs-parent="#accordion-style-05" href="#style-5-collapse-1"></a>
+                                        </label> 
+                                    </div>
+                                    <div id="style-5-collapse-1" class="collapse show" data-bs-parent="#accordion-style-05">
+                                        <div class="p-25px bg-very-light-gray mt-20px mb-20px fs-14 lh-24">Make your payment securely online via Stripe.</div>
+                                    </div>
+                                    <!-- end tab content -->
+                                    <!-- start tab content -->
+                                    <div class="heading active-accordion">
+                                        <label class="mb-5px">
+                                            <input class="d-inline w-auto me-5px mb-0 p-0" type="radio" name="mode_of_payment" value="Cash"> 
+                                            <span class="d-inline-block text-dark-gray fw-500">Cash</span> 
+                                            <a class="accordion-toggle" data-bs-toggle="collapse" data-bs-parent="#accordion-style-05" href="#style-5-collapse-3"></a>
+                                        </label>
+                                    </div>
+                                    <div id="style-5-collapse-3" class="collapse" data-bs-parent="#accordion-style-05">
+                                        <div class="p-25px bg-very-light-gray mt-20px mb-20px fs-14 lh-24">Pay in cash upon the arrival of our team.</div>
+                                    </div>
+                                    <!-- end tab content -->
+                                </div> 
+                            </div>
                             <p class="fs-14 lh-26">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a class="text-decoration-line-bottom text-dark-gray fw-500" href="#">privacy policy.</a></p>
                             <div class="position-relative terms-condition-box text-start d-flex align-items-center">
                                 <label>
@@ -250,7 +254,7 @@
                             </div>
                             <button type="submit" form="booking-form" class="btn btn-base-color btn-extra-large btn-switch-text btn-round-edge btn-box-shadow w-100 text-transform-none mt-30px" id="submit-booking">
                                 <span>
-                                    <span class="btn-double-text" data-text="Place order">Place order</span>
+                                    <span class="btn-double-text" id="proceed-text">Proceed to payment</span>
                                 </span>
                             </button>
                         </div>

@@ -142,6 +142,10 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "Refund Date: ", OLD.refund_date, " -> ", NEW.refund_date, "<br/>");
     END IF;
 
+    IF NEW.refund_reason <> OLD.refund_reason THEN
+        SET audit_log = CONCAT(audit_log, "Refund Reason: ", OLD.refund_reason, " -> ", NEW.refund_reason, "<br/>");
+    END IF;
+
     IF NEW.in_progress_date <> OLD.in_progress_date THEN
         SET audit_log = CONCAT(audit_log, "In-Progress Date: ", OLD.in_progress_date, " -> ", NEW.in_progress_date, "<br/>");
     END IF;

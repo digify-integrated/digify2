@@ -181,7 +181,9 @@ INSERT INTO role_system_action_permission (role_system_action_permission_id, rol
 (33, 1, 'Administrator', 31, 'Tag Booking As In-Progress', 1, 1),
 (34, 1, 'Administrator', 31, 'Tag Booking As Complete', 1, 1),
 (35, 1, 'Administrator', 31, 'Tag Booking As For Cancellation', 1, 1),
-(36, 1, 'Administrator', 31, 'Tag Booking As Cancelled', 1, 1);
+(36, 1, 'Administrator', 31, 'Tag Booking As Cancelled', 1, 1),
+(37, 1, 'Administrator', 31, 'Tag Booking As Payment As Paid', 1, 1),
+(38, 1, 'Administrator', 31, 'Tag Booking As Payment As Refunded', 1, 1);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 

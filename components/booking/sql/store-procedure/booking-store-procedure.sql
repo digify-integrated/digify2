@@ -86,19 +86,21 @@ BEGIN
     END IF;
 END //
 
-CREATE PROCEDURE updateBookingPaymentStatus(IN p_booking_id INT, IN p_payment_status VARCHAR(100), IN p_payment_reference_number VARCHAR(500), IN p_last_log_by INT)
+CREATE PROCEDURE updateBookingPaymentStatus(IN p_booking_id INT, IN p_payment_status VARCHAR(100), IN p_payment_date DATETIME, IN p_payment_reference_number VARCHAR(500), IN p_refund_amount DOUBLE, IN p_refund_date DATETIME, IN p_refund_reason LONGTEXT, IN p_last_log_by INT)
 BEGIN    
     IF p_payment_status = 'Paid' THEN
         UPDATE booking
         SET payment_status = p_payment_status,
-            payment_date = NOW(),
+            payment_date = p_payment_date,
             payment_reference_number = p_payment_reference_number,
             last_log_by = p_last_log_by
         WHERE booking_id = p_booking_id;
     ELSE
         UPDATE booking
         SET payment_status = p_payment_status,
-            refund_date = NOW(),
+            refund_amount = p_refund_amount,
+            refund_date = p_refund_date,
+            refund_reason = p_refund_reason,
             last_log_by = p_last_log_by
         WHERE booking_id = p_booking_id;
     END IF;
@@ -127,9 +129,69 @@ END //
 
 /* Generate Stored Procedure */
 
-CREATE PROCEDURE generateBookingTable(IN p_service LONGTEXT, IN p_frequency VARCHAR(500), IN p_cleaning_materials VARCHAR(10), IN p_nationality VARCHAR(500), IN p_booking_status VARCHAR(500), IN p_payment_status VARCHAR(500), IN p_mode_of_payment VARCHAR(500), IN p_booking_start_date DATE, IN p_booking_end_date DATE, IN p_payment_start_date DATE, IN p_payment_end_date DATE, IN p_refund_start_date DATE, IN p_refund_end_date DATE, IN p_in_progress_start_date DATE, IN p_in_progress_end_date DATE, IN p_completed_start_date DATE, IN p_completed_end_date DATE, IN p_cancellation_start_date DATE, IN p_cancellation_end_date DATE, IN p_transaction_start_date DATE, IN p_transaction_end_date DATE)
+CREATE PROCEDURE generateBookingTable(IN p_service VARCHAR(100), IN p_booking_status VARCHAR(100), IN p_payment_status VARCHAR(100), IN p_mode_of_payment VARCHAR(500), IN p_source_of_booking VARCHAR(50), IN p_booking_start_date DATE, IN p_booking_end_date DATE, IN p_payment_start_date DATE, IN p_payment_end_date DATE, IN p_transaction_start_date DATE, IN p_transaction_end_date DATE)
 BEGIN
+     DECLARE query VARCHAR(5000);
+    DECLARE conditionList VARCHAR(1000);
+
+    SET query = 'SELECT * FROM booking';
+    SET conditionList = ' WHERE 1';
+
+    IF p_service IS NOT NULL AND p_service <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND service = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_service));
+    END IF;
+
+    IF p_booking_status IS NOT NULL AND p_booking_status <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND booking_status = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_booking_status));
+    END IF;
+
+    IF p_payment_status IS NOT NULL AND p_payment_status <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND payment_status = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_payment_status));
+    END IF;
+
+    IF p_mode_of_payment IS NOT NULL AND p_mode_of_payment <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND mode_of_payment = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_mode_of_payment));
+    END IF;
+
+    IF p_source_of_booking IS NOT NULL AND p_source_of_booking <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND source_of_booking = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_source_of_booking));
+    END IF;
     
+    IF p_booking_start_date IS NOT NULL AND p_booking_end_date IS NOT NULL THEN
+        SET conditionList = CONCAT(conditionList, ' AND (booking_date BETWEEN ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_booking_start_date));
+        SET conditionList = CONCAT(conditionList, ' AND ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_booking_end_date));
+        SET conditionList = CONCAT(conditionList, ')');
+    END IF;
+    
+    IF p_payment_start_date IS NOT NULL AND p_payment_end_date IS NOT NULL THEN
+        SET conditionList = CONCAT(conditionList, ' AND (payment_date BETWEEN ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_payment_start_date));
+        SET conditionList = CONCAT(conditionList, ' AND ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_payment_end_date));
+        SET conditionList = CONCAT(conditionList, ')');
+    END IF;
+    
+    IF p_transaction_start_date IS NOT NULL AND p_transaction_end_date IS NOT NULL THEN
+        SET conditionList = CONCAT(conditionList, ' AND (transaction_date BETWEEN ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_transaction_start_date));
+        SET conditionList = CONCAT(conditionList, ' AND ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_transaction_end_date));
+        SET conditionList = CONCAT(conditionList, ')');
+    END IF;
+
+    SET query = CONCAT(query, conditionList);
+    SET query = CONCAT(query, ' ORDER BY booking_date DESC;');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

@@ -10,6 +10,19 @@
             updateTimeOptions()
         });
 
+        const paymentRadios = document.querySelectorAll('input[name="mode_of_payment"]');
+        const proceedText = document.getElementById('proceed-text');
+    
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                if (this.value === 'Stripe') {
+                    proceedText.textContent = 'Proceed to payment';
+                } else {
+                    proceedText.textContent = 'Place booking';
+                }
+            });
+        });
+
         handleServiceChange();
     });
 })(jQuery);
@@ -137,13 +150,30 @@ function bookingForm(){
                 },
                 success: function (response) {
                     if (response.success) {
-                        Swal.fire({
-                            title: response.title,
-                            text: response.message,
-                            icon: 'success'
-                        });
-
-                        resetModalForm('booking-form');
+                        if(response.redirectLink != ''){
+                            window.open(response.redirectLink, '_self');
+                        }
+                        else{
+                            Swal.fire({
+                                title: response.title,
+                                text: response.message,
+                                icon: 'success'
+                            });
+    
+                            resetModalForm('booking-form');
+    
+                            $('#discount_code').val('');
+                            $('#discount-rate').val('');
+                            $('#discount-type').val('');
+                            $('#discount-amount').val('');
+    
+                            $('#booking-subtotal-payment-details').text('AED 0.00');
+                            $('#discount-subtotal').text('AED 0.00');
+                            $('#total-booking-amount').text('AED 0.00');
+    
+                            document.getElementById('service-summary').innerHTML = '';
+                            document.getElementById('cleaning-materials-summary').innerHTML = '';
+                        }
                     }
                     else {
                         Swal.fire({
@@ -155,6 +185,7 @@ function bookingForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-booking');
+                    handleServiceChange()
                 }
             });
         
@@ -260,7 +291,7 @@ function handleServiceChange() {
             details = `Number of seats: ${seats}`;
             price = seats * 20;
         } else if (['Deep Cleaning', 'Regular Cleaning', 'Office Cleaning', 'Flat Cleaning', 'Hospital Cleaning'].includes(selectedService)) {
-            const frequency = inputs.frequency.value || 'N/A';
+            const frequency = inputs.frequency.value || '--';
             const duration = inputs.duration.value || 0;
             details = `Frequency: ${frequency}<br/>Duration: ${duration} hours`;
             price = duration * 25;

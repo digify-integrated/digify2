@@ -244,7 +244,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="mb-0">
-                                    <label class="form-label" for="special_instructions">Do you have any special instructions <span class="text-danger">*</span></label>
+                                    <label class="form-label" for="special_instructions">Do you have any special instructions</label>
                                     <textarea class="form-control maxlength" id="special_instructions" name="special_instructions" maxlength="5000" rows="5"></textarea>
                                 </div>
                             </div>
@@ -263,6 +263,7 @@
                                     <select class="form-control" id="mode_of_payment" name="mode_of_payment">
                                         <option value="">--</option>
                                         <option value="Online Banking">Online Banking</option>
+                                        <option value="Stripe">Stripe</option>
                                         <option value="Cash">Cash</option>
                                     </select>
                                 </div>

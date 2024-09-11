@@ -37,6 +37,7 @@ CREATE TABLE booking (
     payment_reference_number VARCHAR(500),
     payment_date DATETIME,
     refund_date DATETIME,
+    refund_reason LONGTEXT,
     in_progress_date DATETIME,
     completed_date DATETIME,
     cancellation_date DATETIME,

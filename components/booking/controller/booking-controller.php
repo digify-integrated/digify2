@@ -142,6 +142,15 @@ class BookingController {
                 case 'tag booking as cancelled':
                     $this->tagBookingAsCancelled();
                     break;
+                case 'tag booking for cancellation':
+                    $this->tagBookingForCancellation();
+                    break;
+                case 'tag booking payment as paid':
+                    $this->tagBookingPaymentAsPaid();
+                    break;
+                case 'tag booking payment as refunded':
+                    $this->tagBookingPaymentAsRefunded();
+                    break;
                 case 'delete booking':
                     $this->deleteBooking();
                     break;
@@ -183,7 +192,7 @@ class BookingController {
             return;
         }
 
-        if (isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['address']) && !empty($_POST['address']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email_address']) && !empty($_POST['email_address']) && isset($_POST['source_of_booking']) && !empty($_POST['source_of_booking']) && isset($_POST['service']) && !empty($_POST['service']) && isset($_POST['frequency']) && isset($_POST['duration']) && isset($_POST['number_of_seats']) && isset($_POST['meters']) && isset($_POST['cleaning_materials']) && isset($_POST['booking_date']) && !empty($_POST['booking_date']) && isset($_POST['booking_time']) && !empty($_POST['booking_time']) && isset($_POST['number_of_professionals']) && !empty($_POST['number_of_professionals']) && isset($_POST['number_of_hours']) && !empty($_POST['number_of_hours']) && isset($_POST['nationality']) && !empty($_POST['nationality']) && isset($_POST['special_instructions']) && isset($_POST['mode_of_payment']) && !empty($_POST['mode_of_payment']) && isset($_POST['discount_type']) && isset($_POST['discount_amount']) && isset($_POST['booking_subtotal']) && !empty($_POST['mode_of_payment']) && isset($_POST['total_discount_amount']) && isset($_POST['booking_total'])) {
+        if (isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['address']) && !empty($_POST['address']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email_address']) && !empty($_POST['email_address']) && isset($_POST['source_of_booking']) && !empty($_POST['source_of_booking']) && isset($_POST['service']) && !empty($_POST['service']) && isset($_POST['frequency']) && isset($_POST['duration']) && isset($_POST['number_of_seats']) && isset($_POST['meters']) && isset($_POST['cleaning_materials']) && isset($_POST['booking_date']) && !empty($_POST['booking_date']) && isset($_POST['booking_time']) && !empty($_POST['booking_time']) && isset($_POST['number_of_professionals']) && !empty($_POST['number_of_professionals']) && isset($_POST['number_of_hours']) && !empty($_POST['number_of_hours']) && isset($_POST['nationality']) && !empty($_POST['nationality']) && isset($_POST['special_instructions']) && isset($_POST['mode_of_payment']) && !empty($_POST['mode_of_payment']) && isset($_POST['discount_type']) && isset($_POST['discount_amount']) && isset($_POST['booking_subtotal']) && !empty($_POST['booking_subtotal']) && isset($_POST['total_discount_amount']) && isset($_POST['booking_total'])) {
             $userID = $_SESSION['user_account_id'];
             $firstName = $_POST['first_name'];
             $lastName = $_POST['last_name'];
@@ -338,7 +347,7 @@ class BookingController {
     #
     # Function: tagBookingAsInProgress
     # Description: 
-    # Tag the booking if it exists; otherwise, return an error message.
+    # Tag the booking as in-progress if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -400,7 +409,7 @@ class BookingController {
     #
     # Function: tagBookingAsCompleted
     # Description: 
-    # Tag the booking if it exists; otherwise, return an error message.
+    # Tag the booking as completed if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -462,7 +471,7 @@ class BookingController {
     #
     # Function: tagBookingAsCancelled
     # Description: 
-    # Tag the booking if it exists; otherwise, return an error message.
+    # Tag the booking as cancelled if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -524,7 +533,7 @@ class BookingController {
     #
     # Function: tagBookingForCancellation
     # Description: 
-    # Tag the booking if it exists; otherwise, return an error message.
+    # Tag the booking for cancellation if it exists; otherwise, return an error message.
     #
     # Parameters: None
     #
@@ -563,6 +572,135 @@ class BookingController {
                 'success' => true,
                 'title' => 'Tag Booking For Cancellation Success',
                 'message' => 'The booking has been tagged for cancellation successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: tagBookingPaymentAsPaid
+    # Description: 
+    # Tag the booking payment as paid if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function tagBookingPaymentAsPaid() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $paymentDate = $this->systemModel->checkDate('empty', $_POST['payment_date'], '', 'Y-m-d H:i:s', '');
+            $paymentReferenceNumber = $_POST['payment_reference_number'];
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Tag Booking Payment As Paid Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->bookingModel->updateBookingPaymentStatus($bookingID, 'Paid', $paymentDate, $paymentReferenceNumber, '', '', '', $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Tag Booking Payment As Paid Success',
+                'message' => 'The booking payment has been tagged as paid successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: tagBookingPaymentAsRefunded
+    # Description: 
+    # Tag the booking payment as refunded if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function tagBookingPaymentAsRefunded() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $refundDate = $this->systemModel->checkDate('empty', $_POST['refund_date'], '', 'Y-m-d H:i:s', '');
+            $refundAmount = $_POST['refund_amount'];
+            $refundReason = $_POST['refund_reason'];
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Tag Booking Payment As Refunded Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->bookingModel->updateBookingPaymentStatus($bookingID, 'Refunded', '', '', $refundAmount, $refundDate, $refundReason, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Tag Booking Payment As Refunded Success',
+                'message' => 'The booking payment has been tagged as refunded successfully.',
                 'messageType' => 'success'
             ];
             
@@ -818,16 +956,24 @@ class BookingController {
     
             $bookingDetails = $this->bookingModel->getBooking($bookingID);
             $bookingStatus = $bookingDetails['booking_status'];
+            $paymentStatus = $bookingDetails['payment_status'];
 
-            $badgeClasses = [
+            $bookingStatusBadgeClasses = [
                 'Pending' => 'text-bg-info',
                 'In-Progress' => 'text-bg-warning',
                 'Completed' => 'text-bg-success',
                 'For Cancellation' => 'text-bg-warning',
                 'Cancelled' => 'text-bg-danger'
             ];
+
+            $paymentStatusBadgeClasses = [
+                'Pending' => 'text-bg-info',
+                'Paid' => 'text-bg-success',
+                'Refunded' => 'text-bg-warning'
+            ];
                 
-            $bookingStatusBadge = '<span class="badge rounded-pill ' . ($badgeClasses[$bookingStatus] ?? 'text-bg-dark') . '">' . $bookingStatus . '</span>';
+            $bookingStatusBadge = '<span class="badge rounded-pill ' . ($bookingStatusBadgeClasses[$bookingStatus] ?? 'text-bg-dark') . '">' . $bookingStatus . '</span>';
+            $paymentStatusBadge = '<span class="badge rounded-pill ' . ($paymentStatusBadgeClasses[$paymentStatus] ?? 'text-bg-dark') . '">' . $paymentStatus . '</span>';
 
             $response = [
                 'success' => true,
@@ -852,7 +998,22 @@ class BookingController {
                 'discountType' => $bookingDetails['discount_type'] ?? null,
                 'discountAmount' => $bookingDetails['discount_amount'] ?? null,
                 'bookingDate' => $this->systemModel->checkDate('empty', $bookingDetails['booking_date'], '', 'm/d/Y', ''),
-                'bookingStatusBadge' => $bookingStatusBadge
+                'bookingReferenceNumber' => $bookingDetails['booking_reference_number'] ?? '--',
+                'bookingStatusBadge' => $bookingStatusBadge,
+                'paymentStatusBadge' => $paymentStatusBadge,
+                'discountCode' => !empty($bookingDetails['discount_code']) ? $bookingDetails['discount_code'] : '--',
+                'refundAmount' => number_format($bookingDetails['refund_amount'] ?? '0', 2),
+                'cancellationRequestDate' => $this->systemModel->checkDate('summary', $bookingDetails['cancellation_request_date'], '', 'M d, Y h:i:s a', ''),
+                'cancellationWindow' => $this->systemModel->checkDate('summary', $bookingDetails['cancellation_window'], '', 'M d, Y h:i:s a', ''),
+                'paymentDate' => $this->systemModel->checkDate('summary', $bookingDetails['payment_date'], '', 'M d, Y h:i:s a', ''),
+                'refundDate' => $this->systemModel->checkDate('summary', $bookingDetails['refund_date'], '', 'M d, Y h:i:s a', ''),
+                'inProgressDate' => $this->systemModel->checkDate('summary', $bookingDetails['in_progress_date'], '', 'M d, Y h:i:s a', ''),
+                'completedDate' => $this->systemModel->checkDate('summary', $bookingDetails['completed_date'], '', 'M d, Y h:i:s a', ''),
+                'cancellationDate' => $this->systemModel->checkDate('summary', $bookingDetails['cancellation_date'], '', 'M d, Y h:i:s a', ''),
+                'transactionDate' => $this->systemModel->checkDate('summary', $bookingDetails['transaction_date'], '', 'M d, Y h:i:s a', ''),
+                'cancellationReason' => $bookingDetails['cancellation_reason'] ?? '--',
+                'paymentReferenceNumber' => $bookingDetails['payment_reference_number'] ?? '--',
+                'refundReason' => $bookingDetails['refund_reason'] ?? '--',
             ];
 
             echo json_encode($response);
