@@ -177,7 +177,11 @@ INSERT INTO role_system_action_permission (role_system_action_permission_id, rol
 (29, 1, 'Administrator', 29, 'Unpublish Website Element', 1, 1),
 (30, 1, 'Administrator', 30, 'Tag Customer Inquiry As In-Progress', 1, 1),
 (31, 1, 'Administrator', 32, 'Tag Customer Inquiry As Closed', 1, 1),
-(32, 1, 'Administrator', 31, 'Tag Customer Inquiry As Resolved', 1, 1);
+(32, 1, 'Administrator', 31, 'Tag Customer Inquiry As Resolved', 1, 1),
+(33, 1, 'Administrator', 31, 'Tag Booking As In-Progress', 1, 1),
+(34, 1, 'Administrator', 31, 'Tag Booking As Complete', 1, 1),
+(35, 1, 'Administrator', 31, 'Tag Booking As For Cancellation', 1, 1),
+(36, 1, 'Administrator', 31, 'Tag Booking As Cancelled', 1, 1);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 

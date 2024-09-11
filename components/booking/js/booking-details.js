@@ -8,12 +8,72 @@
             bookingForm();
         }
 
+        $(document).on('change', '#service', function() {
+            const selectedValue = $(this).val();
+            const serviceGroups = {
+              'Deep Cleaning': 1,
+              'Regular Cleaning': 1,
+              'Office Cleaning': 1,
+              'Flat Cleaning': 1,
+              'Hospital Cleaning': 1,
+              'Sofa Cleaning': 2,
+              'Mattress Cleaning': 3,
+              'Curtain Cleaning': 3,
+              'Carpet Cleaning': 3
+            };
+          
+            const groupToShow = serviceGroups[selectedValue];
+            const groupsToHide = [1, 2, 3].filter(group => group !== groupToShow);
+          
+            groupsToHide.forEach(group => $(`#sevices-group-${group}`).addClass('d-none'));
+            $(`#sevices-group-${groupToShow}`).removeClass('d-none');
+          
+            const fieldsToReset = [
+              '#frequency',
+              '#duration',
+              '#number_of_seats',
+              '#meters'
+            ];
+          
+            fieldsToReset.forEach(field => $(field).val(''));
+
+            computeBookingAmount();
+        });
+
+        $(document).on('change', '#service', function() {
+            computeBookingAmount();
+        });
+
+        $(document).on('change', '#duration', function() {
+            computeBookingAmount();
+        });
+
+        $(document).on('change', '#number_of_seats', function() {
+            computeBookingAmount();
+        });
+
+        $(document).on('change', '#meters', function() {
+            computeBookingAmount();
+        });
+
+        $(document).on('change', '#cleaning_materials', function() {
+            computeBookingAmount();
+        });
+
+        $(document).on('change', '#discount_type', function() {
+            computeBookingAmount();
+        });
+
+        $(document).on('change', '#discount_amount', function() {
+            computeBookingAmount();
+        });
+
         $(document).on('click','#edit-details',function() {
             displayDetails('get booking details');
         });
 
         $(document).on('click','#delete-booking',function() {
-            const customer_inquiry_id = $('#details-id').text();
+            const booking_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'delete booking';
     
@@ -36,7 +96,7 @@
                         url: 'components/booking/controller/booking-controller.php',
                         dataType: 'json',
                         data: {
-                            customer_inquiry_id : customer_inquiry_id, 
+                            booking_id : booking_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -72,7 +132,7 @@
         });
 
         $(document).on('click','#tag-as-in-progress',function() {
-            const customer_inquiry_id = $('#details-id').text();
+            const booking_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             const transaction = 'tag booking as in-progress';
     
@@ -95,7 +155,7 @@
                         url: 'components/booking/controller/booking-controller.php',
                         dataType: 'json',
                         data: {
-                            customer_inquiry_id : customer_inquiry_id, 
+                            booking_id : booking_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -130,17 +190,17 @@
             });
         });
 
-        $(document).on('click','#tag-as-resolved',function() {
-            const customer_inquiry_id = $('#details-id').text();
+        $(document).on('click','#tag-as-completed',function() {
+            const booking_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'tag booking as resolved';
+            const transaction = 'tag booking as completed';
     
             Swal.fire({
-                title: 'Confirm Booking Tagging As Resolved',
-                text: 'Are you sure you want to tag this booking as resolved?',
+                title: 'Confirm Booking Tagging As Completed',
+                text: 'Are you sure you want to tag this booking as completed?',
                 icon: 'warning',
                 showCancelButton: !0,
-                confirmButtonText: 'Resolved',
+                confirmButtonText: 'Completed',
                 cancelButtonText: 'Cancel',
                 customClass: {
                     confirmButton: 'btn btn-success mt-2',
@@ -154,7 +214,7 @@
                         url: 'components/booking/controller/booking-controller.php',
                         dataType: 'json',
                         data: {
-                            customer_inquiry_id : customer_inquiry_id, 
+                            booking_id : booking_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -189,20 +249,20 @@
             });
         });
 
-        $(document).on('click','#tag-as-closed',function() {
-            const customer_inquiry_id = $('#details-id').text();
+        $(document).on('click','#tag-as-cancelled',function() {
+            const booking_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
-            const transaction = 'tag booking as closed';
+            const transaction = 'tag booking as cancelled';
     
             Swal.fire({
-                title: 'Confirm Booking Tagging As Closed',
-                text: 'Are you sure you want to tag this booking as closed?',
+                title: 'Confirm Booking Tagging As Cancelled',
+                text: 'Are you sure you want to tag this booking as cancelled?',
                 icon: 'warning',
                 showCancelButton: !0,
-                confirmButtonText: 'Closed',
+                confirmButtonText: 'Cancelled',
                 cancelButtonText: 'Cancel',
                 customClass: {
-                    confirmButton: 'btn btn-success mt-2',
+                    confirmButton: 'btn btn-danger mt-2',
                     cancelButton: 'btn btn-secondary ms-2 mt-2'
                 },
                 buttonsStyling: !1
@@ -213,7 +273,7 @@
                         url: 'components/booking/controller/booking-controller.php',
                         dataType: 'json',
                         data: {
-                            customer_inquiry_id : customer_inquiry_id, 
+                            booking_id : booking_id, 
                             transaction : transaction
                         },
                         success: function (response) {
@@ -249,21 +309,21 @@
         });
 
         if($('#log-notes-main').length){
-            const customer_inquiry_id = $('#details-id').text();
+            const booking_id = $('#details-id').text();
 
-            logNotesMain('customer_inquiry', customer_inquiry_id);
+            logNotesMain('booking', booking_id);
         }
 
         if($('#internal-notes').length){
-            const customer_inquiry_id = $('#details-id').text();
+            const booking_id = $('#details-id').text();
 
-            internalNotes('customer_inquiry', customer_inquiry_id);
+            internalNotes('booking', booking_id);
         }
 
         if($('#internal-notes-form').length){
-            const customer_inquiry_id = $('#details-id').text();
+            const booking_id = $('#details-id').text();
 
-            internalNotesForm('customer_inquiry', customer_inquiry_id);
+            internalNotesForm('booking', booking_id);
         }
     });
 })(jQuery);
@@ -271,38 +331,128 @@
 function bookingForm(){
     $('#booking-form').validate({
         rules: {
-            customer_name: {
+            first_name: {
+                required: true
+            },
+            last_name: {
+                required: true
+            },
+            address: {
                 required: true
             },
             phone: {
                 required: true
             },
-            email: {
+            email_address: {
                 required: true
             },
-            subject: {
+            source_of_booking: {
                 required: true
             },
-            message: {
+            service: {
                 required: true
-            }
+            },
+            frequency: {
+                required: function() {
+                    var service = document.getElementById('service').value;
+                    return service === 'Deep Cleaning' || service === 'Regular Cleaning' || service === 'Office Cleaning' || service === 'Flat Cleaning' || service === 'Hospital Cleaning';
+                }
+            },
+            duration: {
+                required: function() {
+                    var service = document.getElementById('service').value;
+                    return service === 'Deep Cleaning' || service === 'Regular Cleaning' || service === 'Office Cleaning' || service === 'Flat Cleaning' || service === 'Hospital Cleaning';
+                }
+            },
+            number_of_seats: {
+                required: function() {
+                    var service = document.getElementById('service').value;
+                    return service === 'Sofa Cleaning';
+                }
+            },
+            meters: {
+                required: function() {
+                    var service = document.getElementById('service').value;
+                    return service === 'Mattress Cleaning' || service === 'Curtain Cleaning' || service === 'Carpet Cleaning';
+                }
+            },
+            booking_date: {
+                required: true
+            },
+            booking_time: {
+                required: true
+            },
+            number_of_professionals: {
+                required: true
+            },
+            number_of_hours: {
+                required: true
+            },
+            nationality: {
+                required: true
+            },
+            mode_of_payment: {
+                required: true
+            },
         },
         messages: {
-            customer_name: {
-                required: 'Enter the display name'
+            first_name: {
+                required: 'Enter the first name'
+            },
+            last_name: {
+                required: 'Enter the last'
+            },
+            address: {
+                required: 'Enter the address'
             },
             phone: {
                 required: 'Enter the phone'
             },
-            email: {
-                required: 'Enter the email'
+            email_address: {
+                required: 'Enter the email address'
             },
-            subject: {
-                required: 'Enter the subject'
+            source_of_booking: {
+                required: 'Choose the booking source'
             },
-            message: {
-                required: 'Enter the message'
-            }
+            service: {
+                required: 'Choose the service'
+            },
+            frequency: {
+                required: 'Choose the frequency'
+            },
+            duration: {
+                required: 'Choose the duration'
+            },
+            number_of_seats: {
+                required: 'Enter the number of seats'
+            },
+            meters: {
+                required: 'Enter the meters'
+            },
+            booking_date: {
+                required: 'Choose the date'
+            },
+            booking_time: {
+                required: 'Choose the time'
+            },
+            number_of_professionals: {
+                required: 'Choose the number of professionals'
+            },
+            number_of_hours: {
+                required: 'Choose the number of hours'
+            },
+            nationality: {
+                required: 'Choose the nationality'
+            },
+            mode_of_payment: {
+                required: 'Choose the mode of payment'
+            },
+            discount_type: {
+                required: 'Choose the discount type'
+            },
+            discount_amount: {
+                required: 'Enter the discount amount'
+            },
         },
         errorPlacement: function(error, element) {
             showNotification('Attention Required: Error Found', error, 'error', 2000);
@@ -326,14 +476,14 @@ function bookingForm(){
             }
         },
         submitHandler: function(form) {
-            const customer_inquiry_id = $('#details-id').text();
-            const page_link = document.getElementById('page-link').getAttribute('href'); 
+            const booking_id = $('#details-id').text();
             const transaction = 'update booking';
+            const page_link = document.getElementById('page-link').getAttribute('href');
           
             $.ajax({
                 type: 'POST',
                 url: 'components/booking/controller/booking-controller.php',
-                data: $(form).serialize() + '&transaction=' + transaction + '&customer_inquiry_id=' + customer_inquiry_id,
+                data: $(form).serialize() + '&transaction=' + transaction + '&booking_id=' + booking_id,
                 dataType: 'json',
                 beforeSend: function() {
                     disableFormSubmitButton('submit-data');
@@ -342,16 +492,11 @@ function bookingForm(){
                     if (response.success) {
                         showNotification(response.title, response.message, response.messageType);
                         displayDetails('get booking details');
-                        $('#booking-modal').modal('hide');
                     }
                     else {
-                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                        if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
                             setNotification(response.title, response.message, response.messageType);
                             window.location = 'logout.php?logout';
-                        }
-                        else if (response.notExist) {
-                            setNotification(response.title, response.message, response.messageType);
-                            window.location = page_link;
                         }
                         else {
                             showNotification(response.title, response.message, response.messageType);
@@ -367,7 +512,6 @@ function bookingForm(){
                 },
                 complete: function() {
                     enableFormSubmitButton('submit-data');
-                    logNotesMain('customer_inquiry', customer_inquiry_id);
                 }
             });
         
@@ -376,10 +520,72 @@ function bookingForm(){
     });
 }
 
+function computeBookingAmount() {
+    const service = $('#service').val();
+    const duration = parseFloat($('#duration').val()) || 0;
+    const numberOfSeats = parseFloat($('#number_of_seats').val()) || 0;
+    const meters = parseFloat($('#meters').val()) || 0;
+    const cleaningMaterials = $('#cleaning_materials').val();
+    const discountType = $('#discount_type').val();
+    const discountAmount = parseFloat($('#discount_amount').val()) || 0;
+
+    const servicePrices = {
+        'Deep Cleaning': 25,
+        'Regular Cleaning': 25,
+        'Office Cleaning': 25,
+        'Flat Cleaning': 25,
+        'Hospital Cleaning': 25,
+        'Sofa Cleaning': 20,
+        'Mattress Cleaning': 15,
+        'Curtain Cleaning': 15,
+        'Carpet Cleaning': 15
+    };
+
+    let bookingSubTotal = 0;
+
+    if (service in servicePrices) {
+        if (service === 'Sofa Cleaning') {
+            bookingSubTotal = servicePrices[service] * numberOfSeats;
+        } else if (['Mattress Cleaning', 'Curtain Cleaning', 'Carpet Cleaning'].includes(service)) {
+            bookingSubTotal = servicePrices[service] * meters;
+        } else {
+            bookingSubTotal = servicePrices[service] * duration;
+        }
+    }
+
+    // Add cleaning materials cost if selected
+    if (cleaningMaterials === 'Yes') {
+        bookingSubTotal += 10;
+    }
+
+    let totalDiscountAmount = 0;
+    if (discountType === 'By Percentage') {
+        totalDiscountAmount = (discountAmount / 100) * bookingSubTotal;
+    } else if (discountType === 'Fix Amount') {
+        totalDiscountAmount = discountAmount;
+    }
+
+    // Validate discount amount
+    if (totalDiscountAmount > bookingSubTotal) {
+        totalDiscountAmount = bookingSubTotal;
+    }
+
+    const totalBookingAmount = Math.max(0, bookingSubTotal - totalDiscountAmount);
+
+    // Update the elements with the calculated values
+    $('#booking_subtotal').val(bookingSubTotal.toFixed(2));
+    $('#total_discount_amount').val(totalDiscountAmount.toFixed(2));
+    $('#booking_total').val(totalBookingAmount.toFixed(2));
+
+    $('#booking-subtotal-summary').text('AED ' + bookingSubTotal.toLocaleString('en-AE', { minimumFractionDigits: 2 }));
+    $('#discount-subtotal-summary').text((totalDiscountAmount > 0 ? '- ' : '') + 'AED ' + totalDiscountAmount.toLocaleString('en-AE', { minimumFractionDigits: 2 }));
+    $('#booking-total-summary').text('AED ' + totalBookingAmount.toLocaleString('en-AE', { minimumFractionDigits: 2 }));
+}
+
 function displayDetails(transaction){
     switch (transaction) {
         case 'get booking details':
-            var customer_inquiry_id = $('#details-id').text();
+            var booking_id = $('#details-id').text();
             const page_link = document.getElementById('page-link').getAttribute('href');
             
             $.ajax({
@@ -387,7 +593,7 @@ function displayDetails(transaction){
                 method: 'POST',
                 dataType: 'json',
                 data: {
-                    customer_inquiry_id : customer_inquiry_id, 
+                    booking_id : booking_id, 
                     transaction : transaction
                 },
                 beforeSend: function(){
@@ -395,19 +601,27 @@ function displayDetails(transaction){
                 },
                 success: function(response) {
                     if (response.success) {
-                        $('#customer_name').val(response.customerName);
+                        $('#first_name').val(response.firstName);
+                        $('#last_name').val(response.lastName);
+                        $('#address').val(response.address);
                         $('#phone').val(response.phone);
-                        $('#email').val(response.email);
-                        $('#subject').val(response.subject);
-                        $('#message').val(response.message);
-                        
-                        document.getElementById('inquiry_status_summary').innerHTML = response.inquiryStatusBadge;
-
-                        $('#customer_name_summary').text(response.customerName);
-                        $('#phone_summary').text(response.phone);
-                        $('#email_summary').text(response.email);
-                        $('#subject_summary').text(response.subject);
-                        $('#message_summary').text(response.message);
+                        $('#email_address').val(response.emailAddress);
+                        $('#source_of_booking').val(response.sourceOfBooking);
+                        $('#service').val(response.service);
+                        $('#frequency').val(response.frequency);
+                        $('#duration').val(response.duration);
+                        $('#number_of_seats').val(response.numberOfSeats);
+                        $('#meters').val(response.meters);
+                        $('#cleaning_materials').val(response.cleaningMaterials);
+                        $('#booking_date').val(response.bookingDate);
+                        $('#booking_time').val(response.bookingTime);
+                        $('#number_of_professionals').val(response.numberOfProfessionals);
+                        $('#number_of_hours').val(response.numberOfHours);
+                        $('#nationality').val(response.nationality);
+                        $('#special_instructions').val(response.specialInstructions);
+                        $('#mode_of_payment').val(response.modeOfPayment);
+                        $('#discount_type').val(response.discountType);
+                        $('#discount_amount').val(response.discountAmount);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
@@ -429,6 +643,9 @@ function displayDetails(transaction){
                         fullErrorMessage += `, Response: ${xhr.responseText}`;
                     }
                     showErrorDialog(fullErrorMessage);
+                },
+                complete: function(){
+                    computeBookingAmount();
                 }
             });
             break;

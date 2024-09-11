@@ -13,16 +13,18 @@ END //
 
 /* Insert Stored Procedure */
 
-CREATE PROCEDURE insertBooking(IN p_booking_reference_number VARCHAR(100), IN p_source_of_booking VARCHAR(50), IN p_service VARCHAR(100), IN p_frequency VARCHAR(50), IN p_duration INT, IN p_number_of_seats INT, IN p_meters INT, IN p_cleaning_materials VARCHAR(10), IN p_booking_date DATE, IN p_booking_time VARCHAR(20), IN p_number_of_hours INT, IN p_nationality VARCHAR(50), IN p_first_name VARCHAR(500), IN p_last_name VARCHAR(500), IN p_address LONGTEXT, IN p_phone VARCHAR(50), IN p_email_address VARCHAR(500), IN p_special_instructions LONGTEXT, IN p_mode_of_payment VARCHAR(50), IN p_discount_code VARCHAR(50), IN p_discount_type VARCHAR(20), IN p_discount_amount DOUBLE, IN p_total_discount_amount DOUBLE, IN p_booking_subtotal_amount DOUBLE, IN p_total_booking_amount DOUBLE, IN p_cancellation_window DATETIME, IN p_last_log_by INT)
+CREATE PROCEDURE insertBooking(IN p_booking_reference_number VARCHAR(100), IN p_source_of_booking VARCHAR(50), IN p_service VARCHAR(100), IN p_frequency VARCHAR(50), IN p_duration INT, IN p_number_of_seats INT, IN p_meters INT, IN p_cleaning_materials VARCHAR(10), IN p_booking_date DATE, IN p_booking_time VARCHAR(20), IN p_number_of_professionals INT, IN p_number_of_hours INT, IN p_nationality VARCHAR(50), IN p_first_name VARCHAR(500), IN p_last_name VARCHAR(500), IN p_address LONGTEXT, IN p_phone VARCHAR(50), IN p_email_address VARCHAR(500), IN p_special_instructions LONGTEXT, IN p_mode_of_payment VARCHAR(50), IN p_discount_code VARCHAR(50), IN p_discount_type VARCHAR(20), IN p_discount_amount DOUBLE, IN p_total_discount_amount DOUBLE, IN p_booking_subtotal_amount DOUBLE, IN p_total_booking_amount DOUBLE, IN p_cancellation_window DATETIME, IN p_last_log_by INT, OUT p_booking_id INT)
 BEGIN
-    INSERT INTO booking (booking_reference_number, source_of_booking, service, frequency, duration, number_of_seats, meters, cleaning_materials, booking_date, booking_time, number_of_hours, nationality, first_name, last_name, address, phone, email_address, special_instructions, mode_of_payment, discount_code, discount_type, discount_amount, total_discount_amount, booking_subtotal_amount, total_booking_amount, cancellation_window, last_log_by) 
-	VALUES(p_booking_reference_number, p_source_of_booking, p_service, p_frequency, p_duration, p_number_of_seats, p_meters, p_cleaning_materials, p_booking_date, p_booking_time, p_number_of_hours, p_nationality, p_first_name, p_last_name, p_address, p_phone, p_email_address, p_special_instructions, p_mode_of_payment, p_discount_code, p_discount_type, p_discount_amount, p_total_discount_amount, p_booking_subtotal_amount, p_total_booking_amount, p_cancellation_window, p_last_log_by);
+    INSERT INTO booking (booking_reference_number, source_of_booking, service, frequency, duration, number_of_seats, meters, cleaning_materials, booking_date, booking_time, number_of_professionals, number_of_hours, nationality, first_name, last_name, address, phone, email_address, special_instructions, mode_of_payment, discount_code, discount_type, discount_amount, total_discount_amount, booking_subtotal_amount, total_booking_amount, cancellation_window, last_log_by) 
+	VALUES(p_booking_reference_number, p_source_of_booking, p_service, p_frequency, p_duration, p_number_of_seats, p_meters, p_cleaning_materials, p_booking_date, p_booking_time, p_number_of_professionals, p_number_of_hours, p_nationality, p_first_name, p_last_name, p_address, p_phone, p_email_address, p_special_instructions, p_mode_of_payment, p_discount_code, p_discount_type, p_discount_amount, p_total_discount_amount, p_booking_subtotal_amount, p_total_booking_amount, p_cancellation_window, p_last_log_by);
+
+    SET p_booking_id = LAST_INSERT_ID();
 END //
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Update Stored Procedure */
 
-CREATE PROCEDURE updateBooking(IN p_booking_id INT, IN p_source_of_booking VARCHAR(50), IN p_service VARCHAR(100), IN p_frequency VARCHAR(50), IN p_duration INT, IN p_number_of_seats INT, IN p_meters INT, IN p_cleaning_materials VARCHAR(10), IN p_booking_date DATE, IN p_booking_time VARCHAR(20), IN p_number_of_hours INT, IN p_nationality VARCHAR(50), IN p_first_name VARCHAR(500), IN p_last_name VARCHAR(500), IN p_address LONGTEXT, IN p_phone VARCHAR(50), IN p_email_address VARCHAR(500), IN p_special_instructions LONGTEXT, IN p_mode_of_payment VARCHAR(50), IN p_discount_code VARCHAR(50), IN p_discount_type VARCHAR(20), IN p_discount_amount DOUBLE, IN p_total_discount_amount DOUBLE, IN p_booking_subtotal_amount DOUBLE, IN p_total_booking_amount DOUBLE, IN p_cancellation_window DATETIME, IN p_last_log_by INT)
+CREATE PROCEDURE updateBooking(IN p_booking_id INT, IN p_source_of_booking VARCHAR(50), IN p_service VARCHAR(100), IN p_frequency VARCHAR(50), IN p_duration INT, IN p_number_of_seats INT, IN p_meters INT, IN p_cleaning_materials VARCHAR(10), IN p_booking_date DATE, IN p_booking_time VARCHAR(20), IN p_number_of_professionals INT, IN p_number_of_hours INT, IN p_nationality VARCHAR(50), IN p_first_name VARCHAR(500), IN p_last_name VARCHAR(500), IN p_address LONGTEXT, IN p_phone VARCHAR(50), IN p_email_address VARCHAR(500), IN p_special_instructions LONGTEXT, IN p_mode_of_payment VARCHAR(50), IN p_discount_code VARCHAR(50), IN p_discount_type VARCHAR(20), IN p_discount_amount DOUBLE, IN p_total_discount_amount DOUBLE, IN p_booking_subtotal_amount DOUBLE, IN p_total_booking_amount DOUBLE, IN p_last_log_by INT)
 BEGIN
     UPDATE booking
     SET source_of_booking = p_source_of_booking,
@@ -34,6 +36,7 @@ BEGIN
         cleaning_materials = p_cleaning_materials, 
         booking_date = p_booking_date, 
         booking_time = p_booking_time, 
+        number_of_professionals = p_number_of_professionals, 
         number_of_hours = p_number_of_hours, 
         nationality = p_nationality, 
         first_name = p_first_name, 
@@ -48,8 +51,7 @@ BEGIN
         discount_amount = p_discount_amount, 
         total_discount_amount = p_total_discount_amount, 
         booking_subtotal_amount = p_booking_subtotal_amount, 
-        total_booking_amount = p_total_booking_amount, 
-        cancellation_window = p_cancellation_window,
+        total_booking_amount = p_total_booking_amount,
         last_log_by = p_last_log_by
     WHERE booking_id = p_booking_id;
 END //

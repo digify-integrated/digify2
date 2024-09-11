@@ -22,6 +22,16 @@
             });
         }
 
+        if($('.current-datepicker').length) {
+            $('.current-datepicker').each(function() {
+                $(this).datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    startDate: new Date() // Sets the minimum pickable date to the current date
+                });
+            });
+        }
+
         if($('.cc-inputmask').length){
             $('.cc-inputmask').each(function() {
                 $(this).inputmask('9999 9999 9999 9999');

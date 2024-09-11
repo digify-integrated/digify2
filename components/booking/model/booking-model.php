@@ -31,6 +31,7 @@ class BookingModel {
     # - $p_cleaning_materials (string): The cleaning materials.
     # - $p_booking_date (date): The booking date.
     # - $p_booking_time (string): The booking time slot.
+    # - $p_number_of_professionals (int): The number of professionals.
     # - $p_number_of_hours (int): The number of hours.
     # - $p_nationality (string): The nationality.
     # - $p_first_name (string): The first name of the customer.
@@ -46,14 +47,13 @@ class BookingModel {
     # - $p_total_discount_amount (double): The total discount amount.
     # - $p_booking_subtotal_amount (double): The booking subtotal amount.
     # - $p_total_booking_amount (double): The total booking amount.
-    # - $p_cancellation_window (datetime): The cancellation window.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateBooking($p_booking_id, $p_source_of_booking, $p_service, $p_frequency, $p_duration, $p_number_of_seats, $p_meters, $p_cleaning_materials, $p_booking_date, $p_booking_time, $p_number_of_hours, $p_nationality, $p_first_name, $p_last_name, $p_address, $p_phone, $p_email_address, $p_special_instructions, $p_mode_of_payment, $p_discount_code, $p_discount_type, $p_discount_amount, $p_total_discount_amount, $p_booking_subtotal_amount, $p_total_booking_amount, $p_cancellation_window, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateBooking(:p_booking_id, :p_source_of_booking, :p_service, :p_frequency, :p_duration, :p_number_of_seats, :p_meters, :p_cleaning_materials, :p_booking_date, :p_booking_time, :p_number_of_hours, :p_nationality, :p_first_name, :p_last_name, :p_address, :p_phone, :p_email_address, :p_special_instructions, :p_mode_of_payment, :p_discount_code, :p_discount_type, :p_discount_amount, :p_total_discount_amount, :p_booking_subtotal_amount, :p_total_booking_amount, :p_cancellation_window, :p_last_log_by');
+    public function updateBooking($p_booking_id, $p_source_of_booking, $p_service, $p_frequency, $p_duration, $p_number_of_seats, $p_meters, $p_cleaning_materials, $p_booking_date, $p_booking_time, $p_number_of_professionals, $p_number_of_hours, $p_nationality, $p_first_name, $p_last_name, $p_address, $p_phone, $p_email_address, $p_special_instructions, $p_mode_of_payment, $p_discount_code, $p_discount_type, $p_discount_amount, $p_total_discount_amount, $p_booking_subtotal_amount, $p_total_booking_amount, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateBooking(:p_booking_id, :p_source_of_booking, :p_service, :p_frequency, :p_duration, :p_number_of_seats, :p_meters, :p_cleaning_materials, :p_booking_date, :p_booking_time, :p_number_of_professionals, :p_number_of_hours, :p_nationality, :p_first_name, :p_last_name, :p_address, :p_phone, :p_email_address, :p_special_instructions, :p_mode_of_payment, :p_discount_code, :p_discount_type, :p_discount_amount, :p_total_discount_amount, :p_booking_subtotal_amount, :p_total_booking_amount, :p_last_log_by)');
         $stmt->bindValue(':p_booking_id', $p_booking_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_source_of_booking', $p_source_of_booking, PDO::PARAM_STR);
         $stmt->bindValue(':p_service', $p_service, PDO::PARAM_STR);
@@ -64,6 +64,7 @@ class BookingModel {
         $stmt->bindValue(':p_cleaning_materials', $p_cleaning_materials, PDO::PARAM_STR);
         $stmt->bindValue(':p_booking_date', $p_booking_date, PDO::PARAM_STR);
         $stmt->bindValue(':p_booking_time', $p_booking_time, PDO::PARAM_STR);
+        $stmt->bindValue(':p_number_of_professionals', $p_number_of_professionals, PDO::PARAM_INT);
         $stmt->bindValue(':p_number_of_hours', $p_number_of_hours, PDO::PARAM_INT);
         $stmt->bindValue(':p_nationality', $p_nationality, PDO::PARAM_STR);
         $stmt->bindValue(':p_first_name', $p_first_name, PDO::PARAM_STR);
@@ -79,7 +80,6 @@ class BookingModel {
         $stmt->bindValue(':p_total_discount_amount', $p_total_discount_amount, PDO::PARAM_STR);
         $stmt->bindValue(':p_booking_subtotal_amount', $p_booking_subtotal_amount, PDO::PARAM_STR);
         $stmt->bindValue(':p_total_booking_amount', $p_total_booking_amount, PDO::PARAM_STR);
-        $stmt->bindValue(':p_cancellation_window', $p_cancellation_window, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }
@@ -153,6 +153,7 @@ class BookingModel {
     # - $p_cleaning_materials (string): The cleaning materials.
     # - $p_booking_date (date): The booking date.
     # - $p_booking_time (string): The booking time slot.
+    # - $p_number_of_professionals (int): The number of professionals.
     # - $p_number_of_hours (int): The number of hours.
     # - $p_nationality (string): The nationality.
     # - $p_first_name (string): The first name of the customer.
@@ -174,8 +175,8 @@ class BookingModel {
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function insertBooking($p_booking_reference_number, $p_source_of_booking, $p_service, $p_frequency, $p_duration, $p_number_of_seats, $p_meters, $p_cleaning_materials, $p_booking_date, $p_booking_time, $p_number_of_hours, $p_nationality, $p_first_name, $p_last_name, $p_address, $p_phone, $p_email_address, $p_special_instructions, $p_mode_of_payment, $p_discount_code, $p_discount_type, $p_discount_amount, $p_total_discount_amount, $p_booking_subtotal_amount, $p_total_booking_amount, $p_cancellation_window, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL insertBooking(:p_booking_reference_number, :p_source_of_booking, :p_service, :p_frequency, :p_duration, :p_number_of_seats, :p_meters, :p_cleaning_materials, :p_booking_date, :p_booking_time, :p_number_of_hours, :p_nationality, :p_first_name, :p_last_name, :p_address, :p_phone, :p_email_address, :p_special_instructions, :p_mode_of_payment, :p_discount_code, :p_discount_type, :p_discount_amount, :p_total_discount_amount, :p_booking_subtotal_amount, :p_total_booking_amount, :p_cancellation_window, :p_last_log_by, @p_booking_id)');
+    public function insertBooking($p_booking_reference_number, $p_source_of_booking, $p_service, $p_frequency, $p_duration, $p_number_of_seats, $p_meters, $p_cleaning_materials, $p_booking_date, $p_booking_time, $p_number_of_professionals, $p_number_of_hours, $p_nationality, $p_first_name, $p_last_name, $p_address, $p_phone, $p_email_address, $p_special_instructions, $p_mode_of_payment, $p_discount_code, $p_discount_type, $p_discount_amount, $p_total_discount_amount, $p_booking_subtotal_amount, $p_total_booking_amount, $p_cancellation_window, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertBooking(:p_booking_reference_number, :p_source_of_booking, :p_service, :p_frequency, :p_duration, :p_number_of_seats, :p_meters, :p_cleaning_materials, :p_booking_date, :p_booking_time, :p_number_of_professionals, :p_number_of_hours, :p_nationality, :p_first_name, :p_last_name, :p_address, :p_phone, :p_email_address, :p_special_instructions, :p_mode_of_payment, :p_discount_code, :p_discount_type, :p_discount_amount, :p_total_discount_amount, :p_booking_subtotal_amount, :p_total_booking_amount, :p_cancellation_window, :p_last_log_by, @p_booking_id)');
         $stmt->bindValue(':p_booking_reference_number', $p_booking_reference_number, PDO::PARAM_STR);
         $stmt->bindValue(':p_source_of_booking', $p_source_of_booking, PDO::PARAM_STR);
         $stmt->bindValue(':p_service', $p_service, PDO::PARAM_STR);
@@ -186,6 +187,7 @@ class BookingModel {
         $stmt->bindValue(':p_cleaning_materials', $p_cleaning_materials, PDO::PARAM_STR);
         $stmt->bindValue(':p_booking_date', $p_booking_date, PDO::PARAM_STR);
         $stmt->bindValue(':p_booking_time', $p_booking_time, PDO::PARAM_STR);
+        $stmt->bindValue(':p_number_of_professionals', $p_number_of_professionals, PDO::PARAM_INT);
         $stmt->bindValue(':p_number_of_hours', $p_number_of_hours, PDO::PARAM_INT);
         $stmt->bindValue(':p_nationality', $p_nationality, PDO::PARAM_STR);
         $stmt->bindValue(':p_first_name', $p_first_name, PDO::PARAM_STR);

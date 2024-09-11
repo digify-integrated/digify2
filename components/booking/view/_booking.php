@@ -36,10 +36,13 @@
                                             <input class="form-check-input" id="datatable-checkbox" type="checkbox">
                                         </div>
                                     </th>
-                                    <th>Customer</th>
-                                    <th>Message</th>
-                                    <th>Inquiry Date</th>
-                                    <th>Inquiry Status</th>
+                                    <th>Booking Reference Number</th>
+                                    <th>Client Name</th>
+                                    <th>Source of Booking</th>
+                                    <th>Service</th>
+                                    <th>Booking Schedule</th>
+                                    <th>Payment Status</th>
+                                    <th>Booking Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

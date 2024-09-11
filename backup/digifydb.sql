@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2024 at 11:16 AM
+-- Generation Time: Sep 11, 2024 at 11:18 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -170,6 +170,13 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBloodTypeExist` (IN `p_blood_t
 	SELECT COUNT(*) AS total
     FROM blood_type
     WHERE blood_type_id = p_blood_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `checkBookingExist`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `checkBookingExist` (IN `p_booking_id` INT)   BEGIN
+	SELECT COUNT(*) AS total
+    FROM booking
+    WHERE booking_id = p_booking_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `checkCallToActionExist`$$
@@ -877,6 +884,11 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteBloodType`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBloodType` (IN `p_blood_type_id` INT)   BEGIN
     DELETE FROM blood_type WHERE blood_type_id = p_blood_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `deleteBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteBooking` (IN `p_booking_id` INT)   BEGIN
+    DELETE FROM booking WHERE booking_id = p_booking_id;
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteCallToAction`$$
@@ -2884,6 +2896,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getBloodType` (IN `p_blood_type_id`
 	WHERE blood_type_id = p_blood_type_id;
 END$$
 
+DROP PROCEDURE IF EXISTS `getBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getBooking` (IN `p_booking_id` INT)   BEGIN
+	SELECT * FROM booking
+	WHERE booking_id = p_booking_id;
+END$$
+
 DROP PROCEDURE IF EXISTS `getCallToAction`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getCallToAction` (IN `p_call_to_action_id` INT)   BEGIN
 	SELECT * FROM call_to_action
@@ -3521,6 +3539,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBloodType` (IN `p_blood_type_
 	VALUES(p_blood_type_name, p_last_log_by);
 	
     SET p_blood_type_id = LAST_INSERT_ID();
+END$$
+
+DROP PROCEDURE IF EXISTS `insertBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertBooking` (IN `p_booking_reference_number` VARCHAR(100), IN `p_source_of_booking` VARCHAR(50), IN `p_service` VARCHAR(100), IN `p_frequency` VARCHAR(50), IN `p_duration` INT, IN `p_number_of_seats` INT, IN `p_meters` INT, IN `p_cleaning_materials` VARCHAR(10), IN `p_booking_date` DATE, IN `p_booking_time` VARCHAR(20), IN `p_number_of_professionals` INT, IN `p_number_of_hours` INT, IN `p_nationality` VARCHAR(50), IN `p_first_name` VARCHAR(500), IN `p_last_name` VARCHAR(500), IN `p_address` LONGTEXT, IN `p_phone` VARCHAR(50), IN `p_email_address` VARCHAR(500), IN `p_special_instructions` LONGTEXT, IN `p_mode_of_payment` VARCHAR(50), IN `p_discount_code` VARCHAR(50), IN `p_discount_type` VARCHAR(20), IN `p_discount_amount` DOUBLE, IN `p_total_discount_amount` DOUBLE, IN `p_booking_subtotal_amount` DOUBLE, IN `p_total_booking_amount` DOUBLE, IN `p_cancellation_window` DATETIME, IN `p_last_log_by` INT, OUT `p_booking_id` INT)   BEGIN
+    INSERT INTO booking (booking_reference_number, source_of_booking, service, frequency, duration, number_of_seats, meters, cleaning_materials, booking_date, booking_time, number_of_professionals, number_of_hours, nationality, first_name, last_name, address, phone, email_address, special_instructions, mode_of_payment, discount_code, discount_type, discount_amount, total_discount_amount, booking_subtotal_amount, total_booking_amount, cancellation_window, last_log_by) 
+	VALUES(p_booking_reference_number, p_source_of_booking, p_service, p_frequency, p_duration, p_number_of_seats, p_meters, p_cleaning_materials, p_booking_date, p_booking_time, p_number_of_professionals, p_number_of_hours, p_nationality, p_first_name, p_last_name, p_address, p_phone, p_email_address, p_special_instructions, p_mode_of_payment, p_discount_code, p_discount_type, p_discount_amount, p_total_discount_amount, p_booking_subtotal_amount, p_total_booking_amount, p_cancellation_window, p_last_log_by);
+
+    SET p_booking_id = LAST_INSERT_ID();
 END$$
 
 DROP PROCEDURE IF EXISTS `insertCallToAction`$$
@@ -4424,6 +4450,86 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBloodType` (IN `p_blood_type_
     WHERE blood_type_id = p_blood_type_id;
 
     COMMIT;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateBooking`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBooking` (IN `p_booking_id` INT, IN `p_source_of_booking` VARCHAR(50), IN `p_service` VARCHAR(100), IN `p_frequency` VARCHAR(50), IN `p_duration` INT, IN `p_number_of_seats` INT, IN `p_meters` INT, IN `p_cleaning_materials` VARCHAR(10), IN `p_booking_date` DATE, IN `p_booking_time` VARCHAR(20), IN `p_number_of_professionals` INT, IN `p_number_of_hours` INT, IN `p_nationality` VARCHAR(50), IN `p_first_name` VARCHAR(500), IN `p_last_name` VARCHAR(500), IN `p_address` LONGTEXT, IN `p_phone` VARCHAR(50), IN `p_email_address` VARCHAR(500), IN `p_special_instructions` LONGTEXT, IN `p_mode_of_payment` VARCHAR(50), IN `p_discount_code` VARCHAR(50), IN `p_discount_type` VARCHAR(20), IN `p_discount_amount` DOUBLE, IN `p_total_discount_amount` DOUBLE, IN `p_booking_subtotal_amount` DOUBLE, IN `p_total_booking_amount` DOUBLE, IN `p_last_log_by` INT)   BEGIN
+    UPDATE booking
+    SET source_of_booking = p_source_of_booking,
+        service = p_service,
+        frequency = p_frequency,
+        duration = p_duration,
+        number_of_seats = p_number_of_seats,
+        meters = p_meters, 
+        cleaning_materials = p_cleaning_materials, 
+        booking_date = p_booking_date, 
+        booking_time = p_booking_time, 
+        number_of_professionals = p_number_of_professionals, 
+        number_of_hours = p_number_of_hours, 
+        nationality = p_nationality, 
+        first_name = p_first_name, 
+        last_name = p_last_name, 
+        address = p_address, 
+        phone = p_phone, 
+        email_address = p_email_address, 
+        special_instructions = p_special_instructions, 
+        mode_of_payment = p_mode_of_payment, 
+        discount_code = p_discount_code, 
+        discount_type = p_discount_type, 
+        discount_amount = p_discount_amount, 
+        total_discount_amount = p_total_discount_amount, 
+        booking_subtotal_amount = p_booking_subtotal_amount, 
+        total_booking_amount = p_total_booking_amount,
+        last_log_by = p_last_log_by
+    WHERE booking_id = p_booking_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateBookingPaymentStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBookingPaymentStatus` (IN `p_booking_id` INT, IN `p_payment_status` VARCHAR(100), IN `p_payment_reference_number` VARCHAR(500), IN `p_last_log_by` INT)   BEGIN    
+    IF p_payment_status = 'Paid' THEN
+        UPDATE booking
+        SET payment_status = p_payment_status,
+            payment_date = NOW(),
+            payment_reference_number = p_payment_reference_number,
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+    ELSE
+        UPDATE booking
+        SET payment_status = p_payment_status,
+            refund_date = NOW(),
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+    END IF;
+END$$
+
+DROP PROCEDURE IF EXISTS `updateBookingStatus`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBookingStatus` (IN `p_booking_id` INT, IN `p_booking_status` VARCHAR(100), IN `p_remarks` LONGTEXT, IN `p_last_log_by` INT)   BEGIN    
+    IF p_booking_status = 'In-Progress' THEN
+        UPDATE booking
+        SET booking_status = p_booking_status,
+            in_progress_date = NOW(),
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+    ELSEIF p_booking_status = 'Completed' THEN
+        UPDATE booking
+        SET booking_status = p_booking_status,
+            completed_date = NOW(),
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+    ELSEIF p_booking_status = 'For Cancellation' THEN
+        UPDATE booking
+        SET booking_status = p_booking_status,
+            cancellation_request_date = NOW(),
+            cancellation_reason = p_remarks,
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+    ELSE
+        UPDATE booking
+        SET booking_status = p_booking_status,
+            cancellation_date = NOW(),
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+    END IF;
 END$$
 
 DROP PROCEDURE IF EXISTS `updateCallToAction`$$
@@ -7244,7 +7350,27 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (287, 'voucher', 3, 'Discount Amount: 50 -> 55<br/>', 2, '2024-09-10 15:44:31', '2024-09-10 15:44:31'),
 (288, 'voucher', 3, 'Discount Amount: 55 -> 50<br/>', 2, '2024-09-10 16:42:21', '2024-09-10 16:42:21'),
 (289, 'voucher', 3, 'Discount Type: By Percentage -> Fix Amount<br/>', 2, '2024-09-10 16:44:36', '2024-09-10 16:44:36'),
-(290, 'voucher', 3, 'Discount Amount: 50 -> 100<br/>', 2, '2024-09-10 16:49:16', '2024-09-10 16:49:16');
+(290, 'voucher', 3, 'Discount Amount: 50 -> 100<br/>', 2, '2024-09-10 16:49:16', '2024-09-10 16:49:16'),
+(291, 'user_account', 2, 'Last Connection Date: 2024-09-10 14:18:53 -> 2024-09-11 08:52:20<br/>', 2, '2024-09-11 08:52:20', '2024-09-11 08:52:20'),
+(292, 'booking', 1, 'Booking created. <br/><br/>Booking Reference Number: ALTH-GZI1-RRYF<br/>Source of Booking: Website<br/>Service: Office Cleaning<br/>Frequency: One Time<br/>Duration: 2<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-11<br/>Booking Time: 6:00 PM<br/>Number of Professionals: 17<br/>Number of Hours: 3<br/>Nationality: Nepali<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Special Instructions: asd<br/>Mode of Payment: Online Banking<br/>Discount Type: Fix Amount<br/>Discount Amount: 15<br/>Total Discount Amount: 15<br/>Booking Subtotal Amount: 60<br/>Total Booking Amount: 45<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-11 16:00:00<br/>Transaction Date: 2024-09-11 14:04:38', 2, '2024-09-11 14:04:38', '2024-09-11 14:04:38'),
+(293, 'system_action', 33, 'System action created. <br/><br/>System Action Name: Tag Booking As In-Progress<br/>System Action Description: Access to tag the booking as in-progress.', 2, '2024-09-11 14:30:13', '2024-09-11 14:30:13'),
+(294, 'system_action', 34, 'System action created. <br/><br/>System Action Name: Access to tag the booking as complete.<br/>System Action Description: Access to tag the booking as complete.', 2, '2024-09-11 14:30:44', '2024-09-11 14:30:44'),
+(295, 'role_system_action_permission', 33, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Tag Booking As In-Progress<br/>Date Assigned: 2024-09-11 14:31:08', 2, '2024-09-11 14:31:08', '2024-09-11 14:31:08'),
+(296, 'role_system_action_permission', 33, 'System Action Access: 0 -> 1<br/>', 2, '2024-09-11 14:31:09', '2024-09-11 14:31:09'),
+(297, 'system_action', 34, 'System Action Name: Access to tag the booking as complete. -> Tag Booking As Complete<br/>', 2, '2024-09-11 14:31:27', '2024-09-11 14:31:27'),
+(298, 'system_action', 35, 'System action created. <br/><br/>System Action Name: Tag Booking For Cancellation<br/>System Action Description: Access to tag the booking for cancellation.', 2, '2024-09-11 14:32:24', '2024-09-11 14:32:24'),
+(299, 'role_system_action_permission', 34, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Tag Booking For Cancellation<br/>Date Assigned: 2024-09-11 14:32:28', 2, '2024-09-11 14:32:28', '2024-09-11 14:32:28'),
+(300, 'role_system_action_permission', 34, 'System Action Access: 0 -> 1<br/>', 2, '2024-09-11 14:32:29', '2024-09-11 14:32:29'),
+(301, 'system_action', 36, 'System action created. <br/><br/>System Action Name: Tag Booking As Cancelled<br/>System Action Description: Access to tag the booking as cancelled.', 2, '2024-09-11 14:33:23', '2024-09-11 14:33:23'),
+(302, 'role_system_action_permission', 35, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Tag Booking As Cancelled<br/>Date Assigned: 2024-09-11 14:33:29', 2, '2024-09-11 14:33:29', '2024-09-11 14:33:29'),
+(303, 'role_system_action_permission', 35, 'System Action Access: 0 -> 1<br/>', 2, '2024-09-11 14:33:30', '2024-09-11 14:33:30'),
+(304, 'booking', 2, 'Booking created. <br/><br/>Booking Reference Number: ALTHONHBBM4Y<br/>Source of Booking: Website<br/>Service: Office Cleaning<br/>Frequency: One Time<br/>Duration: 2<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-11<br/>Booking Time: 6:00 PM<br/>Number of Professionals: 17<br/>Number of Hours: 3<br/>Nationality: Nepali<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Special Instructions: asd<br/>Mode of Payment: Online Banking<br/>Discount Type: Fix Amount<br/>Discount Amount: 15<br/>Total Discount Amount: 15<br/>Booking Subtotal Amount: 60<br/>Total Booking Amount: 45<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-11 16:00:00<br/>Transaction Date: 2024-09-11 15:19:00', 2, '2024-09-11 15:19:00', '2024-09-11 15:19:00'),
+(305, 'booking', 3, 'Booking created. <br/><br/>Booking Reference Number: ALTHD6RBIQ97<br/>Source of Booking: Website<br/>Service: Office Cleaning<br/>Frequency: One Time<br/>Duration: 2<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-11<br/>Booking Time: 6:00 PM<br/>Number of Professionals: 17<br/>Number of Hours: 3<br/>Nationality: Nepali<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Special Instructions: asd<br/>Mode of Payment: Online Banking<br/>Discount Type: Fix Amount<br/>Discount Amount: 15<br/>Total Discount Amount: 15<br/>Booking Subtotal Amount: 60<br/>Total Booking Amount: 45<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-11 16:00:00<br/>Transaction Date: 2024-09-11 15:19:04', 2, '2024-09-11 15:19:04', '2024-09-11 15:19:04'),
+(306, 'booking', 3, 'Source of Booking: Website -> 1<br/>Service: Office Cleaning -> 1<br/>Frequency: One Time -> 1<br/>Duration: 2 -> 1<br/>Number of Seats: 0 -> 1<br/>Meters: 0 -> 1<br/>Cleaning Materials: Yes -> 1<br/>Booking Date: 2024-09-11 -> 2019-01-01<br/>Booking Time: 6:00 PM -> 1<br/>Number of Professionals: 17 -> 1<br/>Number of Hours: 3 -> 1<br/>Nationality: Nepali -> 1<br/>First Name: asd -> 1<br/>Last Name: asd -> 1<br/>Address: asd -> 1<br/>Phone: asd -> 1<br/>Email Address: asd@gmail.com -> 1<br/>Special Instructions: asd -> 1<br/>Mode of Payment: Online Banking -> 1<br/>Discount Code:  -> 1<br/>Discount Type: Fix Amount -> 1<br/>Discount Amount: 15 -> 1<br/>Total Discount Amount: 15 -> 1<br/>Booking Subtotal Amount: 60 -> 1<br/>Total Booking Amount: 45 -> 1<br/>', 1, '2024-09-11 16:17:10', '2024-09-11 16:17:10'),
+(307, 'booking', 2, 'Booking Status: Pending -> In-Progress<br/>', 2, '2024-09-11 16:55:08', '2024-09-11 16:55:08'),
+(308, 'role_system_action_permission', 36, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Tag Booking As Complete<br/>Date Assigned: 2024-09-11 16:55:51', 2, '2024-09-11 16:55:51', '2024-09-11 16:55:51'),
+(309, 'role_system_action_permission', 36, 'System Action Access: 0 -> 1<br/>', 2, '2024-09-11 16:55:52', '2024-09-11 16:55:52'),
+(310, 'booking', 2, 'Booking Status: In-Progress -> Completed<br/>', 2, '2024-09-11 17:12:04', '2024-09-11 17:12:04');
 
 -- --------------------------------------------------------
 
@@ -7755,6 +7881,368 @@ CREATE TRIGGER `blood_type_trigger_update` AFTER UPDATE ON `blood_type` FOR EACH
     IF LENGTH(audit_log) > 0 THEN
         INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
         VALUES ('blood_type', NEW.blood_type_id, audit_log, NEW.last_log_by, NOW());
+    END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking`
+--
+
+DROP TABLE IF EXISTS `booking`;
+CREATE TABLE `booking` (
+  `booking_id` int(10) UNSIGNED NOT NULL,
+  `booking_reference_number` varchar(100) NOT NULL,
+  `source_of_booking` varchar(50) NOT NULL DEFAULT 'Website',
+  `service` varchar(100) NOT NULL,
+  `frequency` varchar(50) DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
+  `number_of_seats` int(11) DEFAULT NULL,
+  `meters` int(11) DEFAULT NULL,
+  `cleaning_materials` varchar(10) NOT NULL,
+  `booking_date` date NOT NULL,
+  `booking_time` varchar(20) NOT NULL,
+  `number_of_professionals` int(11) NOT NULL,
+  `number_of_hours` int(11) NOT NULL,
+  `nationality` varchar(50) NOT NULL,
+  `first_name` varchar(500) NOT NULL,
+  `last_name` varchar(500) NOT NULL,
+  `address` longtext NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `email_address` varchar(500) NOT NULL,
+  `special_instructions` longtext DEFAULT NULL,
+  `mode_of_payment` varchar(50) DEFAULT NULL,
+  `discount_code` varchar(50) DEFAULT NULL,
+  `discount_type` varchar(20) DEFAULT NULL,
+  `discount_amount` double DEFAULT NULL,
+  `total_discount_amount` double DEFAULT NULL,
+  `booking_subtotal_amount` double DEFAULT NULL,
+  `total_booking_amount` double DEFAULT NULL,
+  `refund_amount` double DEFAULT NULL,
+  `payment_status` varchar(100) NOT NULL DEFAULT 'Pending',
+  `booking_status` varchar(100) NOT NULL DEFAULT 'Pending',
+  `cancellation_request_date` datetime DEFAULT NULL,
+  `cancellation_window` datetime DEFAULT NULL,
+  `cancellation_reason` longtext DEFAULT NULL,
+  `payment_reference_number` varchar(500) DEFAULT NULL,
+  `payment_date` datetime DEFAULT NULL,
+  `refund_date` datetime DEFAULT NULL,
+  `in_progress_date` datetime DEFAULT NULL,
+  `completed_date` datetime DEFAULT NULL,
+  `cancellation_date` datetime DEFAULT NULL,
+  `transaction_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `last_log_by` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `booking`
+--
+
+INSERT INTO `booking` (`booking_id`, `booking_reference_number`, `source_of_booking`, `service`, `frequency`, `duration`, `number_of_seats`, `meters`, `cleaning_materials`, `booking_date`, `booking_time`, `number_of_professionals`, `number_of_hours`, `nationality`, `first_name`, `last_name`, `address`, `phone`, `email_address`, `special_instructions`, `mode_of_payment`, `discount_code`, `discount_type`, `discount_amount`, `total_discount_amount`, `booking_subtotal_amount`, `total_booking_amount`, `refund_amount`, `payment_status`, `booking_status`, `cancellation_request_date`, `cancellation_window`, `cancellation_reason`, `payment_reference_number`, `payment_date`, `refund_date`, `in_progress_date`, `completed_date`, `cancellation_date`, `transaction_date`, `created_date`, `last_log_by`) VALUES
+(1, 'ALTH-GZI1-RRYF', 'Website', 'Office Cleaning', 'One Time', 2, 0, 0, 'Yes', '2024-09-11', '6:00 PM', 17, 3, 'Nepali', 'asd', 'asd', 'asd', 'asd', 'asd@gmail.com', 'asd', 'Online Banking', '', 'Fix Amount', 15, 15, 60, 45, NULL, 'Pending', 'Pending', NULL, '2024-09-11 16:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-11 14:04:38', '2024-09-11 14:04:38', 2),
+(3, 'ALTHD6RBIQ97', '1', '1', '1', 1, 1, 1, '1', '2019-01-01', '1', 1, 1, '1', '1', '1', '1', '1', '1', '1', '1', '1', '1', 1, 1, 1, 1, NULL, 'Pending', 'Pending', NULL, '2024-09-11 16:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-11 15:19:04', '2024-09-11 15:19:04', 1);
+
+--
+-- Triggers `booking`
+--
+DROP TRIGGER IF EXISTS `booking_trigger_insert`;
+DELIMITER $$
+CREATE TRIGGER `booking_trigger_insert` AFTER INSERT ON `booking` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT 'Booking created. <br/>';
+
+    IF NEW.booking_reference_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Booking Reference Number: ", NEW.booking_reference_number);
+    END IF;
+
+    IF NEW.source_of_booking <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Source of Booking: ", NEW.source_of_booking);
+    END IF;
+
+    IF NEW.service <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Service: ", NEW.service);
+    END IF;
+
+    IF NEW.frequency <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Frequency: ", NEW.frequency);
+    END IF;
+
+    IF NEW.duration <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Duration: ", NEW.duration);
+    END IF;
+
+    IF NEW.number_of_seats <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Number of Seats: ", NEW.number_of_seats);
+    END IF;
+
+    IF NEW.meters <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Meters: ", NEW.meters);
+    END IF;
+
+    IF NEW.cleaning_materials <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Cleaning Materials: ", NEW.cleaning_materials);
+    END IF;
+
+    IF NEW.booking_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Booking Date: ", NEW.booking_date);
+    END IF;
+
+    IF NEW.booking_time <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Booking Time: ", NEW.booking_time);
+    END IF;
+
+    IF NEW.number_of_professionals <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Number of Professionals: ", NEW.number_of_professionals);
+    END IF;
+
+    IF NEW.number_of_hours <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Number of Hours: ", NEW.number_of_hours);
+    END IF;
+
+    IF NEW.nationality <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Nationality: ", NEW.nationality);
+    END IF;
+
+    IF NEW.first_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>First Name: ", NEW.first_name);
+    END IF;
+
+    IF NEW.last_name <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Last Name: ", NEW.last_name);
+    END IF;
+
+    IF NEW.address <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Address: ", NEW.address);
+    END IF;
+
+    IF NEW.phone <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Phone: ", NEW.phone);
+    END IF;
+
+    IF NEW.email_address <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Email Address: ", NEW.email_address);
+    END IF;
+
+    IF NEW.special_instructions <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Special Instructions: ", NEW.special_instructions);
+    END IF;
+
+    IF NEW.mode_of_payment <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Mode of Payment: ", NEW.mode_of_payment);
+    END IF;
+
+    IF NEW.discount_code <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Discount Code: ", NEW.discount_code);
+    END IF;
+
+    IF NEW.discount_type <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Discount Type: ", NEW.discount_type);
+    END IF;
+
+    IF NEW.discount_amount <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Discount Amount: ", NEW.discount_amount);
+    END IF;
+
+    IF NEW.total_discount_amount <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Total Discount Amount: ", NEW.total_discount_amount);
+    END IF;
+
+    IF NEW.booking_subtotal_amount <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Booking Subtotal Amount: ", NEW.booking_subtotal_amount);
+    END IF;
+
+    IF NEW.total_booking_amount <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Total Booking Amount: ", NEW.total_booking_amount);
+    END IF;
+
+    IF NEW.payment_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Payment Status: ", NEW.payment_status);
+    END IF;
+
+    IF NEW.booking_status <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Booking Status: ", NEW.booking_status);
+    END IF;
+
+    IF NEW.cancellation_window <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Cancellation Window: ", NEW.cancellation_window);
+    END IF;
+
+    IF NEW.payment_reference_number <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Payment Reference Number: ", NEW.payment_reference_number);
+    END IF;
+
+    IF NEW.payment_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Payment Date: ", NEW.payment_date);
+    END IF;
+
+    IF NEW.transaction_date <> '' THEN
+        SET audit_log = CONCAT(audit_log, "<br/>Transaction Date: ", NEW.transaction_date);
+    END IF;
+
+    INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+    VALUES ('booking', NEW.booking_id, audit_log, NEW.last_log_by, NOW());
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `booking_trigger_update`;
+DELIMITER $$
+CREATE TRIGGER `booking_trigger_update` AFTER UPDATE ON `booking` FOR EACH ROW BEGIN
+    DECLARE audit_log TEXT DEFAULT '';
+
+    IF NEW.source_of_booking <> OLD.source_of_booking THEN
+        SET audit_log = CONCAT(audit_log, "Source of Booking: ", OLD.source_of_booking, " -> ", NEW.source_of_booking, "<br/>");
+    END IF;
+
+    IF NEW.service <> OLD.service THEN
+        SET audit_log = CONCAT(audit_log, "Service: ", OLD.service, " -> ", NEW.service, "<br/>");
+    END IF;
+
+    IF NEW.frequency <> OLD.frequency THEN
+        SET audit_log = CONCAT(audit_log, "Frequency: ", OLD.frequency, " -> ", NEW.frequency, "<br/>");
+    END IF;
+
+    IF NEW.duration <> OLD.duration THEN
+        SET audit_log = CONCAT(audit_log, "Duration: ", OLD.duration, " -> ", NEW.duration, "<br/>");
+    END IF;
+
+    IF NEW.number_of_seats <> OLD.number_of_seats THEN
+        SET audit_log = CONCAT(audit_log, "Number of Seats: ", OLD.number_of_seats, " -> ", NEW.number_of_seats, "<br/>");
+    END IF;
+
+    IF NEW.meters <> OLD.meters THEN
+        SET audit_log = CONCAT(audit_log, "Meters: ", OLD.meters, " -> ", NEW.meters, "<br/>");
+    END IF;
+
+    IF NEW.cleaning_materials <> OLD.cleaning_materials THEN
+        SET audit_log = CONCAT(audit_log, "Cleaning Materials: ", OLD.cleaning_materials, " -> ", NEW.cleaning_materials, "<br/>");
+    END IF;
+
+    IF NEW.booking_date <> OLD.booking_date THEN
+        SET audit_log = CONCAT(audit_log, "Booking Date: ", OLD.booking_date, " -> ", NEW.booking_date, "<br/>");
+    END IF;
+
+    IF NEW.booking_time <> OLD.booking_time THEN
+        SET audit_log = CONCAT(audit_log, "Booking Time: ", OLD.booking_time, " -> ", NEW.booking_time, "<br/>");
+    END IF;
+
+    IF NEW.number_of_professionals <> OLD.number_of_professionals THEN
+        SET audit_log = CONCAT(audit_log, "Number of Professionals: ", OLD.number_of_professionals, " -> ", NEW.number_of_professionals, "<br/>");
+    END IF;
+
+    IF NEW.number_of_hours <> OLD.number_of_hours THEN
+        SET audit_log = CONCAT(audit_log, "Number of Hours: ", OLD.number_of_hours, " -> ", NEW.number_of_hours, "<br/>");
+    END IF;
+
+    IF NEW.nationality <> OLD.nationality THEN
+        SET audit_log = CONCAT(audit_log, "Nationality: ", OLD.nationality, " -> ", NEW.nationality, "<br/>");
+    END IF;
+
+    IF NEW.first_name <> OLD.first_name THEN
+        SET audit_log = CONCAT(audit_log, "First Name: ", OLD.first_name, " -> ", NEW.first_name, "<br/>");
+    END IF;
+
+    IF NEW.last_name <> OLD.last_name THEN
+        SET audit_log = CONCAT(audit_log, "Last Name: ", OLD.last_name, " -> ", NEW.last_name, "<br/>");
+    END IF;
+
+    IF NEW.address <> OLD.address THEN
+        SET audit_log = CONCAT(audit_log, "Address: ", OLD.address, " -> ", NEW.address, "<br/>");
+    END IF;
+
+    IF NEW.phone <> OLD.phone THEN
+        SET audit_log = CONCAT(audit_log, "Phone: ", OLD.phone, " -> ", NEW.phone, "<br/>");
+    END IF;
+
+    IF NEW.email_address <> OLD.email_address THEN
+        SET audit_log = CONCAT(audit_log, "Email Address: ", OLD.email_address, " -> ", NEW.email_address, "<br/>");
+    END IF;
+
+    IF NEW.special_instructions <> OLD.special_instructions THEN
+        SET audit_log = CONCAT(audit_log, "Special Instructions: ", OLD.special_instructions, " -> ", NEW.special_instructions, "<br/>");
+    END IF;
+
+    IF NEW.mode_of_payment <> OLD.mode_of_payment THEN
+        SET audit_log = CONCAT(audit_log, "Mode of Payment: ", OLD.mode_of_payment, " -> ", NEW.mode_of_payment, "<br/>");
+    END IF;
+
+    IF NEW.discount_code <> OLD.discount_code THEN
+        SET audit_log = CONCAT(audit_log, "Discount Code: ", OLD.discount_code, " -> ", NEW.discount_code, "<br/>");
+    END IF;
+
+    IF NEW.discount_type <> OLD.discount_type THEN
+        SET audit_log = CONCAT(audit_log, "Discount Type: ", OLD.discount_type, " -> ", NEW.discount_type, "<br/>");
+    END IF;
+
+    IF NEW.discount_amount <> OLD.discount_amount THEN
+        SET audit_log = CONCAT(audit_log, "Discount Amount: ", OLD.discount_amount, " -> ", NEW.discount_amount, "<br/>");
+    END IF;
+
+    IF NEW.total_discount_amount <> OLD.total_discount_amount THEN
+        SET audit_log = CONCAT(audit_log, "Total Discount Amount: ", OLD.total_discount_amount, " -> ", NEW.total_discount_amount, "<br/>");
+    END IF;
+
+    IF NEW.booking_subtotal_amount <> OLD.booking_subtotal_amount THEN
+        SET audit_log = CONCAT(audit_log, "Booking Subtotal Amount: ", OLD.booking_subtotal_amount, " -> ", NEW.booking_subtotal_amount, "<br/>");
+    END IF;
+
+    IF NEW.total_booking_amount <> OLD.total_booking_amount THEN
+        SET audit_log = CONCAT(audit_log, "Total Booking Amount: ", OLD.total_booking_amount, " -> ", NEW.total_booking_amount, "<br/>");
+    END IF;
+
+    IF NEW.refund_amount <> OLD.refund_amount THEN
+        SET audit_log = CONCAT(audit_log, "Refund Amount: ", OLD.refund_amount, " -> ", NEW.refund_amount, "<br/>");
+    END IF;
+
+    IF NEW.payment_status <> OLD.payment_status THEN
+        SET audit_log = CONCAT(audit_log, "Payment Status: ", OLD.payment_status, " -> ", NEW.payment_status, "<br/>");
+    END IF;
+
+    IF NEW.booking_status <> OLD.booking_status THEN
+        SET audit_log = CONCAT(audit_log, "Booking Status: ", OLD.booking_status, " -> ", NEW.booking_status, "<br/>");
+    END IF;
+
+    IF NEW.cancellation_request_date <> OLD.cancellation_request_date THEN
+        SET audit_log = CONCAT(audit_log, "Cancellation Request Date: ", OLD.cancellation_request_date, " -> ", NEW.cancellation_request_date, "<br/>");
+    END IF;
+
+    IF NEW.cancellation_window <> OLD.cancellation_window THEN
+        SET audit_log = CONCAT(audit_log, "Cancellation Window: ", OLD.cancellation_window, " -> ", NEW.cancellation_window, "<br/>");
+    END IF;
+
+    IF NEW.cancellation_reason <> OLD.cancellation_reason THEN
+        SET audit_log = CONCAT(audit_log, "Cancellation Reason: ", OLD.cancellation_reason, " -> ", NEW.cancellation_reason, "<br/>");
+    END IF;
+
+    IF NEW.payment_reference_number <> OLD.payment_reference_number THEN
+        SET audit_log = CONCAT(audit_log, "Payment Reference Number: ", OLD.payment_reference_number, " -> ", NEW.payment_reference_number, "<br/>");
+    END IF;
+
+    IF NEW.payment_date <> OLD.payment_date THEN
+        SET audit_log = CONCAT(audit_log, "Payment Date: ", OLD.payment_date, " -> ", NEW.payment_date, "<br/>");
+    END IF;
+
+    IF NEW.refund_date <> OLD.refund_date THEN
+        SET audit_log = CONCAT(audit_log, "Refund Date: ", OLD.refund_date, " -> ", NEW.refund_date, "<br/>");
+    END IF;
+
+    IF NEW.in_progress_date <> OLD.in_progress_date THEN
+        SET audit_log = CONCAT(audit_log, "In-Progress Date: ", OLD.in_progress_date, " -> ", NEW.in_progress_date, "<br/>");
+    END IF;
+
+    IF NEW.completed_date <> OLD.completed_date THEN
+        SET audit_log = CONCAT(audit_log, "Completed Date: ", OLD.completed_date, " -> ", NEW.completed_date, "<br/>");
+    END IF;
+
+    IF NEW.cancellation_date <> OLD.cancellation_date THEN
+        SET audit_log = CONCAT(audit_log, "Cancellation Date: ", OLD.cancellation_date, " -> ", NEW.cancellation_date, "<br/>");
+    END IF;
+    
+    IF LENGTH(audit_log) > 0 THEN
+        INSERT INTO audit_log (table_name, reference_id, log, changed_by, changed_at) 
+        VALUES ('booking', NEW.booking_id, audit_log, NEW.last_log_by, NOW());
     END IF;
 END
 $$
@@ -13896,7 +14384,11 @@ INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`,
 (29, 1, 'Administrator', 29, 'Unpublish Website Element', 1, '2024-08-27 22:04:47', '2024-08-27 22:04:47', 2),
 (30, 1, 'Administrator', 30, 'Tag Customer Inquiry As In-Progress', 1, '2024-09-04 11:56:31', '2024-09-04 11:56:31', 2),
 (31, 1, 'Administrator', 32, 'Tag Customer Inquiry As Closed', 1, '2024-09-04 12:01:39', '2024-09-04 12:01:39', 2),
-(32, 1, 'Administrator', 31, 'Tag Customer Inquiry As Resolved', 1, '2024-09-04 13:58:01', '2024-09-04 13:58:01', 2);
+(32, 1, 'Administrator', 31, 'Tag Customer Inquiry As Resolved', 1, '2024-09-04 13:58:01', '2024-09-04 13:58:01', 2),
+(33, 1, 'Administrator', 33, 'Tag Booking As In-Progress', 1, '2024-09-11 14:31:08', '2024-09-11 14:31:08', 2),
+(34, 1, 'Administrator', 35, 'Tag Booking For Cancellation', 1, '2024-09-11 14:32:28', '2024-09-11 14:32:28', 2),
+(35, 1, 'Administrator', 36, 'Tag Booking As Cancelled', 1, '2024-09-11 14:33:29', '2024-09-11 14:33:29', 2),
+(36, 1, 'Administrator', 34, 'Tag Booking As Complete', 1, '2024-09-11 16:55:51', '2024-09-11 16:55:51', 2);
 
 --
 -- Triggers `role_system_action_permission`
@@ -14770,7 +15262,11 @@ INSERT INTO `system_action` (`system_action_id`, `system_action_name`, `system_a
 (29, 'Unpublish Website Element', 'Access to unpublish the website element.', '2024-08-27 22:04:39', 2),
 (30, 'Tag Customer Inquiry As In-Progress', 'Access to tag the customer inquiry as in-progress.', '2024-09-04 11:56:26', 2),
 (31, 'Tag Customer Inquiry As Resolved', 'Access to tag the customer inquiry as resolved.', '2024-09-04 12:01:00', 2),
-(32, 'Tag Customer Inquiry As Closed', 'Access to tag the customer inquiry as closed.', '2024-09-04 12:01:33', 2);
+(32, 'Tag Customer Inquiry As Closed', 'Access to tag the customer inquiry as closed.', '2024-09-04 12:01:33', 2),
+(33, 'Tag Booking As In-Progress', 'Access to tag the booking as in-progress.', '2024-09-11 14:30:13', 2),
+(34, 'Tag Booking As Complete', 'Access to tag the booking as complete.', '2024-09-11 14:30:44', 2),
+(35, 'Tag Booking For Cancellation', 'Access to tag the booking for cancellation.', '2024-09-11 14:32:24', 2),
+(36, 'Tag Booking As Cancelled', 'Access to tag the booking as cancelled.', '2024-09-11 14:33:23', 2);
 
 --
 -- Triggers `system_action`
@@ -15039,7 +15535,7 @@ CREATE TABLE `ui_customization_setting` (
 --
 
 INSERT INTO `ui_customization_setting` (`ui_customization_setting_id`, `user_account_id`, `sidebar_type`, `boxed_layout`, `theme`, `color_theme`, `card_border`, `created_date`, `last_log_by`) VALUES
-(1, 2, 'full', 0, 'light', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
+(1, 2, 'full', 0, 'dark', 'Blue_Theme', 1, '2024-06-26 20:28:22', 2);
 
 -- --------------------------------------------------------
 
@@ -15246,7 +15742,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-09-10 14:18:53', '2025-12-30', 'bi2hXirf%2BQ6cCo6fIklo5ax5USH5Gl41dP2lOSp5yoA%3D', '2024-09-08 19:42:32', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '4PGb%2F%2F%2BdDfTX%2FSXENsS4BCMzRI4zycGGfJ%2FR086guho%3D', 'Employee', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-09-11 08:52:20', '2025-12-30', 'bi2hXirf%2BQ6cCo6fIklo5ax5USH5Gl41dP2lOSp5yoA%3D', '2024-09-08 19:42:32', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '2qKWUt4tDlr%2BjGi%2Bngr6zta4k65u6z6clPluOsmPDds%3D', 'Employee', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -15999,6 +16495,22 @@ ALTER TABLE `blood_type`
   ADD PRIMARY KEY (`blood_type_id`),
   ADD KEY `last_log_by` (`last_log_by`),
   ADD KEY `blood_type_index_blood_type_id` (`blood_type_id`);
+
+--
+-- Indexes for table `booking`
+--
+ALTER TABLE `booking`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `last_log_by` (`last_log_by`),
+  ADD KEY `booking_index_booking_id` (`booking_id`),
+  ADD KEY `booking_index_payment_status` (`payment_status`),
+  ADD KEY `booking_index_booking_status` (`booking_status`),
+  ADD KEY `booking_index_source_of_booking` (`source_of_booking`),
+  ADD KEY `booking_index_service` (`service`),
+  ADD KEY `booking_index_mode_of_payment` (`mode_of_payment`),
+  ADD KEY `booking_index_payment_reference_number` (`payment_reference_number`),
+  ADD KEY `booking_index_booking_reference_number` (`booking_reference_number`),
+  ADD KEY `booking_index_discount_type` (`discount_type`);
 
 --
 -- Indexes for table `call_to_action`
@@ -16810,7 +17322,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=291;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=311;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -16853,6 +17365,12 @@ ALTER TABLE `block_type`
 --
 ALTER TABLE `blood_type`
   MODIFY `blood_type_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `booking`
+--
+ALTER TABLE `booking`
+  MODIFY `booking_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `call_to_action`
@@ -17236,7 +17754,7 @@ ALTER TABLE `role_permission`
 -- AUTO_INCREMENT for table `role_system_action_permission`
 --
 ALTER TABLE `role_system_action_permission`
-  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `role_user_account`
@@ -17296,7 +17814,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `system_action`
 --
 ALTER TABLE `system_action`
-  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `system_setting`
@@ -17448,6 +17966,12 @@ ALTER TABLE `block_type`
 --
 ALTER TABLE `blood_type`
   ADD CONSTRAINT `blood_type_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
+
+--
+-- Constraints for table `booking`
+--
+ALTER TABLE `booking`
+  ADD CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`last_log_by`) REFERENCES `user_account` (`user_account_id`);
 
 --
 -- Constraints for table `call_to_action`

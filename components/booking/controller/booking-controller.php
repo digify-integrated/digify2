@@ -15,6 +15,7 @@ session_start();
 class BookingController {
     private $bookingModel;
     private $authenticationModel;
+    private $systemModel;
     private $securityModel;
 
     # -------------------------------------------------------------
@@ -27,14 +28,16 @@ class BookingController {
     # Parameters:
     # - @param BookingModel $bookingModel     The bookingModel instance for booking related operations.
     # - @param AuthenticationModel $authenticationModel     The AuthenticationModel instance for user related operations.
+    # - @param SystemModel $systemModel   The SystemModel instance for system related operations.
     # - @param SecurityModel $securityModel   The SecurityModel instance for security related operations.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function __construct(BookingModel $bookingModel, AuthenticationModel $authenticationModel, SecurityModel $securityModel) {
+    public function __construct(BookingModel $bookingModel, AuthenticationModel $authenticationModel, SystemModel $systemModel, SecurityModel $securityModel) {
         $this->bookingModel = $bookingModel;
         $this->authenticationModel = $authenticationModel;
+        $this->systemModel = $systemModel;
         $this->securityModel = $securityModel;
     }
     # -------------------------------------------------------------
@@ -97,7 +100,7 @@ class BookingController {
                     'success' => false,
                     'userLocked' => true,
                     'title' => 'User Account Locked',
-                    'message' => 'Your account is currently locked. Kindly reach out to the administrator for assistance in unlocking it.',
+                    'message' => 'Your account is currently locked. Kindly reach out to the administrator for assistance $unlocking it.',
                     'messageType' => 'error'
                 ];
                 
@@ -110,7 +113,7 @@ class BookingController {
                     'success' => false,
                     'sessionExpired' => true,
                     'title' => 'Session Expired',
-                    'message' => 'Your session has expired. Please log in again to continue',
+                    'message' => 'Your session has expired. Please log $aga$to continue',
                     'messageType' => 'error'
                 ];
                 
@@ -133,11 +136,11 @@ class BookingController {
                 case 'tag booking as in-progress':
                     $this->tagBookingAsInProgress();
                     break;
-                case 'tag booking as resolved':
-                    $this->tagBookingAsResolved();
+                case 'tag booking as completed':
+                    $this->tagBookingAsCompleted();
                     break;
-                case 'tag booking as closed':
-                    $this->tagBookingAsClosed();
+                case 'tag booking as cancelled':
+                    $this->tagBookingAsCancelled();
                     break;
                 case 'delete booking':
                     $this->deleteBooking();
@@ -149,7 +152,7 @@ class BookingController {
                     $response = [
                         'success' => false,
                         'title' => 'Error: Transaction Failed',
-                        'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                        'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
                         'messageType' => 'error'
                     ];
                     
@@ -180,15 +183,37 @@ class BookingController {
             return;
         }
 
-        if (isset($_POST['customer_name']) && !empty($_POST['customer_name']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['subject']) && !empty($_POST['subject']) && isset($_POST['message']) && !empty($_POST['message'])) {
+        if (isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['address']) && !empty($_POST['address']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email_address']) && !empty($_POST['email_address']) && isset($_POST['source_of_booking']) && !empty($_POST['source_of_booking']) && isset($_POST['service']) && !empty($_POST['service']) && isset($_POST['frequency']) && isset($_POST['duration']) && isset($_POST['number_of_seats']) && isset($_POST['meters']) && isset($_POST['cleaning_materials']) && isset($_POST['booking_date']) && !empty($_POST['booking_date']) && isset($_POST['booking_time']) && !empty($_POST['booking_time']) && isset($_POST['number_of_professionals']) && !empty($_POST['number_of_professionals']) && isset($_POST['number_of_hours']) && !empty($_POST['number_of_hours']) && isset($_POST['nationality']) && !empty($_POST['nationality']) && isset($_POST['special_instructions']) && isset($_POST['mode_of_payment']) && !empty($_POST['mode_of_payment']) && isset($_POST['discount_type']) && isset($_POST['discount_amount']) && isset($_POST['booking_subtotal']) && !empty($_POST['mode_of_payment']) && isset($_POST['total_discount_amount']) && isset($_POST['booking_total'])) {
             $userID = $_SESSION['user_account_id'];
-            $customerName = $_POST['customer_name'];
+            $firstName = $_POST['first_name'];
+            $lastName = $_POST['last_name'];
+            $address = $_POST['address'];
             $phone = $_POST['phone'];
-            $email = $_POST['email'];
-            $subject = $_POST['subject'];
-            $message = $_POST['message'];
+            $emailAddress = $_POST['email_address'];
+            $sourceOfBooking = $_POST['source_of_booking'];
+            $service = $_POST['service'];
+            $frequency = $_POST['frequency'];
+            $duration = $_POST['duration'];
+            $numberOfSeats = $_POST['number_of_seats'];
+            $meters = $_POST['meters'];
+            $cleaningMaterials = $_POST['cleaning_materials'];
+            $bookingDate = $this->systemModel->checkDate('empty', $_POST['booking_date'], '', 'Y-m-d', '');
+            $bookingTime = $_POST['booking_time'];
+            $numberOfProfessionals = $_POST['number_of_professionals'];
+            $numberOfHours = $_POST['number_of_hours'];
+            $nationality = $_POST['nationality'];
+            $specialInstructions = $_POST['special_instructions'];
+            $modeOfPayment = $_POST['mode_of_payment'];
+            $discountType = $_POST['discount_type'];
+            $discountAmount = $_POST['discount_amount'];
+            $bookingSubtotal = $_POST['booking_subtotal'];
+            $totalDiscountAmount = $_POST['total_discount_amount'];
+            $bookingTotal = $_POST['booking_total'];
+
+            $bookingReferenceNumber = $this->generateBookingReferenceNumber();
+            $cancellationWindow = $this->calculateCancellationWindow(date('Y-m-d H:i:s'), $bookingDate, $bookingTime);
         
-            $bookingID = $this->bookingModel->insertBooking($customerName, $email, $phone, $subject, $message, $userID);
+            $bookingID = $this->bookingModel->insertBooking($bookingReferenceNumber, $sourceOfBooking, $service, $frequency, $duration, $numberOfSeats, $meters, $cleaningMaterials, $bookingDate, $bookingTime, $numberOfProfessionals, $numberOfHours, $nationality, $firstName, $lastName, $address, $phone, $emailAddress, $specialInstructions, $modeOfPayment, '', $discountType, $discountAmount, $totalDiscountAmount, $bookingSubtotal, $bookingTotal, $cancellationWindow, $userID);
     
             $response = [
                 'success' => true,
@@ -205,7 +230,7 @@ class BookingController {
             $response = [
                 'success' => false,
                 'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -235,14 +260,33 @@ class BookingController {
             return;
         }
         
-        if (isset($_POST['customer_name']) && !empty($_POST['customer_name']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email']) && !empty($_POST['email']) && isset($_POST['subject']) && !empty($_POST['subject']) && isset($_POST['message']) && !empty($_POST['message'])) {
+        if (isset($_POST['first_name']) && !empty($_POST['first_name']) && isset($_POST['last_name']) && !empty($_POST['last_name']) && isset($_POST['address']) && !empty($_POST['address']) && isset($_POST['phone']) && !empty($_POST['phone']) && isset($_POST['email_address']) && !empty($_POST['email_address']) && isset($_POST['source_of_booking']) && !empty($_POST['source_of_booking']) && isset($_POST['service']) && !empty($_POST['service']) && isset($_POST['frequency']) && isset($_POST['duration']) && isset($_POST['number_of_seats']) && isset($_POST['meters']) && isset($_POST['cleaning_materials']) && isset($_POST['booking_date']) && !empty($_POST['booking_date']) && isset($_POST['booking_time']) && !empty($_POST['booking_time']) && isset($_POST['number_of_professionals']) && !empty($_POST['number_of_professionals']) && isset($_POST['number_of_hours']) && !empty($_POST['number_of_hours']) && isset($_POST['nationality']) && !empty($_POST['nationality']) && isset($_POST['special_instructions']) && isset($_POST['mode_of_payment']) && !empty($_POST['mode_of_payment']) && isset($_POST['discount_type']) && isset($_POST['discount_amount']) && isset($_POST['booking_subtotal']) && !empty($_POST['mode_of_payment']) && isset($_POST['total_discount_amount']) && isset($_POST['booking_total'])) {
             $userID = $_SESSION['user_account_id'];
-            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
-            $customerName = $_POST['customer_name'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $firstName = $_POST['first_name'];
+            $lastName = $_POST['last_name'];
+            $address = $_POST['address'];
             $phone = $_POST['phone'];
-            $email = $_POST['email'];
-            $subject = $_POST['subject'];
-            $message = $_POST['message'];
+            $emailAddress = $_POST['email_address'];
+            $sourceOfBooking = $_POST['source_of_booking'];
+            $service = $_POST['service'];
+            $frequency = $_POST['frequency'];
+            $duration = $_POST['duration'];
+            $numberOfSeats = $_POST['number_of_seats'];
+            $meters = $_POST['meters'];
+            $cleaningMaterials = $_POST['cleaning_materials'];
+            $bookingDate = $this->systemModel->checkDate('empty', $_POST['booking_date'], '', 'Y-m-d', '');
+            $bookingTime = $_POST['booking_time'];
+            $numberOfProfessionals = $_POST['number_of_professionals'];
+            $numberOfHours = $_POST['number_of_hours'];
+            $nationality = $_POST['nationality'];
+            $specialInstructions = $_POST['special_instructions'];
+            $modeOfPayment = $_POST['mode_of_payment'];
+            $discountType = $_POST['discount_type'];
+            $discountAmount = $_POST['discount_amount'];
+            $bookingSubtotal = $_POST['booking_subtotal'];
+            $totalDiscountAmount = $_POST['total_discount_amount'];
+            $bookingTotal = $_POST['booking_total'];
         
             $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
             $total = $checkBookingExist['total'] ?? 0;
@@ -260,7 +304,7 @@ class BookingController {
                 exit;
             }
 
-            $this->bookingModel->updateBooking($bookingID, $customerName, $email, $phone, $subject, $message, $userID);
+            $this->bookingModel->updateBooking($bookingID, $sourceOfBooking, $service, $frequency, $duration, $numberOfSeats, $meters, $cleaningMaterials, $bookingDate, $bookingTime, $numberOfProfessionals, $numberOfHours, $nationality, $firstName, $lastName, $address, $phone, $emailAddress, $specialInstructions, $modeOfPayment, '', $discountType, $discountAmount, $totalDiscountAmount, $bookingSubtotal, $bookingTotal, $userID);
                 
             $response = [
                 'success' => true,
@@ -276,7 +320,7 @@ class BookingController {
             $response = [
                 'success' => false,
                 'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -306,9 +350,9 @@ class BookingController {
             return;
         }
 
-        if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
         
             $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
             $total = $checkBookingExist['total'] ?? 0;
@@ -326,7 +370,7 @@ class BookingController {
                 exit;
             }
 
-            $this->bookingModel->updateBookingStatus($bookingID, 'In-Progress', $userID);
+            $this->bookingModel->updateBookingStatus($bookingID, 'In-Progress', '', $userID);
                 
             $response = [
                 'success' => true,
@@ -342,7 +386,7 @@ class BookingController {
             $response = [
                 'success' => false,
                 'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -354,7 +398,7 @@ class BookingController {
 
     # -------------------------------------------------------------
     #
-    # Function: tagBookingAsResolved
+    # Function: tagBookingAsCompleted
     # Description: 
     # Tag the booking if it exists; otherwise, return an error message.
     #
@@ -363,14 +407,14 @@ class BookingController {
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function tagBookingAsResolved() {
+    public function tagBookingAsCompleted() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
         
             $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
             $total = $checkBookingExist['total'] ?? 0;
@@ -379,7 +423,7 @@ class BookingController {
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Tag Booking As Resolved Error',
+                    'title' => 'Tag Booking As Completed Error',
                     'message' => 'The booking does not exist.',
                     'messageType' => 'error'
                 ];
@@ -388,12 +432,12 @@ class BookingController {
                 exit;
             }
 
-            $this->bookingModel->updateBookingStatus($bookingID, 'Resolved', $userID);
+            $this->bookingModel->updateBookingStatus($bookingID, 'Completed', '', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Tag Booking As Resolved Success',
-                'message' => 'The booking has been tagged as resolved successfully.',
+                'title' => 'Tag Booking As Completed Success',
+                'message' => 'The booking has been tagged as completed successfully.',
                 'messageType' => 'success'
             ];
             
@@ -404,7 +448,7 @@ class BookingController {
             $response = [
                 'success' => false,
                 'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -416,7 +460,7 @@ class BookingController {
 
     # -------------------------------------------------------------
     #
-    # Function: tagBookingAsClosed
+    # Function: tagBookingAsCancelled
     # Description: 
     # Tag the booking if it exists; otherwise, return an error message.
     #
@@ -425,14 +469,14 @@ class BookingController {
     # Returns: Array
     #
     # -------------------------------------------------------------
-    public function tagBookingAsClosed() {
+    public function tagBookingAsCancelled() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
-        if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
         
             $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
             $total = $checkBookingExist['total'] ?? 0;
@@ -441,7 +485,7 @@ class BookingController {
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Tag Booking As Closed Error',
+                    'title' => 'Tag Booking As Cancelled Error',
                     'message' => 'The booking does not exist.',
                     'messageType' => 'error'
                 ];
@@ -450,12 +494,12 @@ class BookingController {
                 exit;
             }
 
-            $this->bookingModel->updateBookingStatus($bookingID, 'Closed', $userID);
+            $this->bookingModel->updateBookingStatus($bookingID, 'Cancelled', '', $userID);
                 
             $response = [
                 'success' => true,
-                'title' => 'Tag Booking As Closed Success',
-                'message' => 'The booking has been tagged as closed successfully.',
+                'title' => 'Tag Booking As Cancelled Success',
+                'message' => 'The booking has been tagged as cancelled successfully.',
                 'messageType' => 'success'
             ];
             
@@ -466,7 +510,70 @@ class BookingController {
             $response = [
                 'success' => false,
                 'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: tagBookingForCancellation
+    # Description: 
+    # Tag the booking if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function tagBookingForCancellation() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $cancellationReason = $_POST['cancellation_reason'];
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Tag Booking For Cancellation Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->bookingModel->updateBookingStatus($bookingID, 'For Cancellation', $cancellationReason, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Tag Booking For Cancellation Success',
+                'message' => 'The booking has been tagged for cancellation successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -496,8 +603,8 @@ class BookingController {
             return;
         }
 
-        if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
-            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
         
             $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
             $total = $checkBookingExist['total'] ?? 0;
@@ -531,7 +638,7 @@ class BookingController {
             $response = [
                 'success' => false,
                 'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -557,8 +664,8 @@ class BookingController {
             return;
         }
 
-        if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
-            $bookingIDs = $_POST['customer_inquiry_id'];
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
+            $bookingIDs = $_POST['booking_id'];
     
             foreach($bookingIDs as $bookingID){
                 $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
@@ -583,13 +690,89 @@ class BookingController {
             $response = [
                 'success' => false,
                 'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
             echo json_encode($response);
             exit;
         }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Custom methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: calculateCancellationWindow
+    # Description: 
+    # Handles the calculation of cancellation window.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function calculateCancellationWindow($transactionDateTime, $bookingDate, $bookingTime) {
+        // Convert the booking date and time to a DateTime object
+        $bookingDateTime = new DateTime($bookingDate . ' ' . $bookingTime);
+    
+        // Convert the transaction date and time to a DateTime object
+        $transactionDateTime = new DateTime($transactionDateTime);
+    
+        // Calculate the difference in hours between the transaction time and the booking time
+        $interval = $transactionDateTime->diff($bookingDateTime);
+        $hoursDifference = ($interval->days * 24) + $interval->h;
+    
+        // Determine the cancellation window datetime
+        if ($hoursDifference > 24) {
+            // Cancellation window is 24 hours before the booking datetime
+            $cancellationWindow = clone $bookingDateTime;
+            $cancellationWindow->modify('-24 hours');
+        } elseif ($hoursDifference >= 2) {
+            // Cancellation window is 2 hours before the booking datetime for same-day bookings
+            $cancellationWindow = clone $bookingDateTime;
+            $cancellationWindow->modify('-2 hours');
+        } else {
+            // No cancellation allowed if less than 2 hours remain
+            return "No cancellation allowed";
+        }
+    
+        return $cancellationWindow->format('Y-m-d H:i:s');
+    }    
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: generateBookingReferenceNumber
+    # Description: 
+    # Handles the generation of booking reference number.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function generateBookingReferenceNumber($length = 8) {
+        // Define the prefix for the booking reference number
+        $prefix = 'ALTH';
+        
+        // Define the characters to use in the booking reference
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $charactersLength = strlen($characters);
+        $bookingReferenceNumber = '';
+        
+        // Generate a random part of the booking reference
+        for ($i = 0; $i < $length; $i++) {
+            $bookingReferenceNumber .= $characters[rand(0, $charactersLength - 1)];
+        }
+        
+        // Combine the prefix with the reference number
+        $finalReference = $prefix . $bookingReferenceNumber;
+        
+        return $finalReference;
     }
     # -------------------------------------------------------------
 
@@ -613,9 +796,9 @@ class BookingController {
             return;
         }
     
-        if (isset($_POST['customer_inquiry_id']) && !empty($_POST['customer_inquiry_id'])) {
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
             $userID = $_SESSION['user_account_id'];
-            $bookingID = htmlspecialchars($_POST['customer_inquiry_id'], ENT_QUOTES, 'UTF-8');
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
 
             $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
             $total = $checkBookingExist['total'] ?? 0;
@@ -634,24 +817,42 @@ class BookingController {
             }
     
             $bookingDetails = $this->bookingModel->getBooking($bookingID);
-            $inquiryStatus = $bookingDetails['inquiry_status'];
+            $bookingStatus = $bookingDetails['booking_status'];
 
             $badgeClasses = [
                 'Pending' => 'text-bg-info',
                 'In-Progress' => 'text-bg-warning',
-                'Resolved' => 'text-bg-success',
+                'Completed' => 'text-bg-success',
+                'For Cancellation' => 'text-bg-warning',
+                'Cancelled' => 'text-bg-danger'
             ];
                 
-            $inquiryStatusBadge = '<span class="badge rounded-pill ' . ($badgeClasses[$inquiryStatus] ?? 'text-bg-dark') . '">' . $inquiryStatus . '</span>';
+            $bookingStatusBadge = '<span class="badge rounded-pill ' . ($badgeClasses[$bookingStatus] ?? 'text-bg-dark') . '">' . $bookingStatus . '</span>';
 
             $response = [
                 'success' => true,
-                'customerName' => $bookingDetails['customer_name'] ?? null,
-                'email' => $bookingDetails['email'] ?? null,
+                'sourceOfBooking' => $bookingDetails['source_of_booking'] ?? null,
+                'service' => $bookingDetails['service'] ?? null,
+                'frequency' => $bookingDetails['frequency'] ?? null,
+                'duration' => $bookingDetails['duration'] ?? null,
+                'numberOfSeats' => $bookingDetails['number_of_seats'] ?? null,
+                'meters' => $bookingDetails['meters'] ?? null,
+                'cleaningMaterials' => $bookingDetails['cleaning_materials'] ?? null,
+                'bookingTime' => $bookingDetails['booking_time'] ?? null,
+                'numberOfProfessionals' => $bookingDetails['number_of_professionals'] ?? null,
+                'numberOfHours' => $bookingDetails['number_of_hours'] ?? null,
+                'nationality' => $bookingDetails['nationality'] ?? null,
+                'firstName' => $bookingDetails['first_name'] ?? null,
+                'lastName' => $bookingDetails['last_name'] ?? null,
+                'address' => $bookingDetails['address'] ?? null,
                 'phone' => $bookingDetails['phone'] ?? null,
-                'subject' => $bookingDetails['subject'] ?? null,
-                'message' => $bookingDetails['message'] ?? null,
-                'inquiryStatusBadge' => $inquiryStatusBadge
+                'emailAddress' => $bookingDetails['email_address'] ?? null,
+                'specialInstructions' => $bookingDetails['special_instructions'] ?? null,
+                'modeOfPayment' => $bookingDetails['mode_of_payment'] ?? null,
+                'discountType' => $bookingDetails['discount_type'] ?? null,
+                'discountAmount' => $bookingDetails['discount_amount'] ?? null,
+                'bookingDate' => $this->systemModel->checkDate('empty', $bookingDetails['booking_date'], '', 'm/d/Y', ''),
+                'bookingStatusBadge' => $bookingStatusBadge
             ];
 
             echo json_encode($response);
@@ -661,7 +862,7 @@ class BookingController {
             $response = [
                 'success' => false,
                 'title' => 'Error: Transaction Failed',
-                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -677,10 +878,10 @@ require_once '../../global/config/config.php';
 require_once '../../global/model/database-model.php';
 require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
-require_once '../../my-bookings/model/my-bookings-model.php';
+require_once '../../booking/model/booking-model.php';
 require_once '../../authentication/model/authentication-model.php';
 
-$controller = new BookingController(new BookingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SecurityModel());
+$controller = new BookingController(new BookingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SystemModel(), new SecurityModel());
 $controller->handleRequest();
 
 ?>

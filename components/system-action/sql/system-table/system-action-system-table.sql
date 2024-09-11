@@ -43,6 +43,10 @@ INSERT INTO system_action (system_action_id, system_action_name, system_action_d
 (29, 'Unpublish Website Element', 'Access to unpublish the website element.', 1),
 (30, 'Tag Customer Inquiry As In-Progress', 'Access to tag the customer inquiry as in-progress.', 1),
 (31, 'Tag Customer Inquiry As Resolved', 'Access to tag the customer inquiry as resolved.', 1),
-(32, 'Tag Customer Inquiry As Closed', 'Access to tag the customer inquiry as closed.', 1);
+(32, 'Tag Customer Inquiry As Closed', 'Access to tag the customer inquiry as closed.', 1),
+(33, 'Tag Booking As In-Progress', 'Access to tag the booking as in-progress.', 1),
+(34, 'Tag Booking As Complete', 'Access to tag the booking as complete.', 1),
+(35, 'Tag Booking As For Cancellation', 'Access to tag the booking for cancellation.', 1),
+(36, 'Tag Booking As Cancelled', 'Access to tag the booking as cancelled.', 1);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

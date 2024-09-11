@@ -56,7 +56,30 @@
                     <hr class="m-0" />
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                <div class="mb-3">
+                                    <label class="form-label" for="source_of_booking">Source of Booking <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="source_of_booking" name="source_of_booking">
+                                        <option value="">--</option>
+                                        <optgroup label="Online Sources">
+                                            <option value="Website">Website</option>
+                                            <option value="Facebook">Facebook</option>
+                                            <option value="Youtube">Youtube</option>
+                                            <option value="Instagram">Instagram</option>
+                                            <option value="Tiktok">Tiktok</option>
+                                            <option value="Whatsapp">Whatsapp</option>
+                                            <option value="Email">Email</option>
+                                        </optgroup>
+                                        <optgroup label="Offline Sources">
+                                            <option value="Phone Call">Phone Call</option>
+                                            <option value="Walk-in">Walk-in</option>
+                                            <option value="Referrals">Referrals</option>
+                                            <option value="Word of mouth">Word of mouth</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label" for="service">Service <span class="text-danger">*</span></label>
                                     <select class="form-control" id="service" name="service">
@@ -94,12 +117,14 @@
                                     <label class="form-label" for="duration">Duration <span class="text-danger">*</span></label>
                                     <select class="form-control" id="duration" name="duration">
                                         <option value="">--</option>
-                                        <option value="One Time">One Time</option>
-                                        <option value="Weekly">Weekly</option>
-                                        <option value="Monthly">Monthly</option>
-                                        <option value="Yearly">Yearly</option>
-                                        <option value="Every Other Week">Every Other Week</option>
-                                        <option value="Every 4 Weeks">Every 4 Weeks</option>
+                                        <option value="1">1 Hour</option>
+                                        <option value="2">2 Hours</option>
+                                        <option value="3">3 Hours</option>
+                                        <option value="4">4 Hours</option>
+                                        <option value="5">5 Hours</option>
+                                        <option value="6">6 Hours</option>
+                                        <option value="7">7 Hours</option>
+                                        <option value="8">8 Hours</option>
                                     </select>
                                 </div>
                             </div>
@@ -134,7 +159,7 @@
                                 <div class="mb-3">
                                     <label class="form-label" for="booking_date">Date <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control regular-datepicker" id="booking_date" name="booking_date" autocomplete="off"/>
+                                        <input type="text" class="form-control current-datepicker" id="booking_date" name="booking_date" autocomplete="off"/>
                                         <span class="input-group-text">
                                             <i class="ti ti-calendar fs-5"></i>
                                         </span>
@@ -143,7 +168,7 @@
                             </div>
                             <div class="col-lg-4">
                                 <div class="mb-3">
-                                    <label class="form-label" for="booking_time">Time<span class="text-danger">*</span></label>
+                                    <label class="form-label" for="booking_time">Time <span class="text-danger">*</span></label>
                                     <select class="form-control" id="booking_time" name="booking_time">
                                         <option value="">--</option>
                                         <option value="9:00 AM">9:00 AM</option>
@@ -270,6 +295,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="mb-3">
+                                    <input type="hidden" id="booking_subtotal" name="booking_subtotal">
                                     <h6 class="mb-0 fs-4 fw-semibold text-end" id="booking-subtotal-summary">AED 0.00</h6>
                                 </div>
                             </div>
@@ -282,6 +308,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="mb-3">
+                                    <input type="hidden" id="total_discount_amount" name="total_discount_amount">
                                     <h6 class="mb-0 fs-4 fw-semibold text-end" id="discount-subtotal-summary">AED 0.00</h6>
                                 </div>
                             </div>
@@ -294,6 +321,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <div class="mb-3">
+                                <input type="hidden" id="booking_total" name="booking_total">
                                     <h6 class="mb-0 fs-4 fw-semibold text-end" id="booking-total-summary">AED 0.00</h6>
                                 </div>
                             </div>
