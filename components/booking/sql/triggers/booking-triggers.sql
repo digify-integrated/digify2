@@ -106,6 +106,10 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "Total Booking Amount: ", OLD.total_booking_amount, " -> ", NEW.total_booking_amount, "<br/>");
     END IF;
 
+    IF NEW.payment_amount <> OLD.payment_amount THEN
+        SET audit_log = CONCAT(audit_log, "Payment Amount: ", OLD.payment_amount, " -> ", NEW.payment_amount, "<br/>");
+    END IF;
+
     IF NEW.refund_amount <> OLD.refund_amount THEN
         SET audit_log = CONCAT(audit_log, "Refund Amount: ", OLD.refund_amount, " -> ", NEW.refund_amount, "<br/>");
     END IF;
@@ -138,12 +142,32 @@ BEGIN
         SET audit_log = CONCAT(audit_log, "Payment Date: ", OLD.payment_date, " -> ", NEW.payment_date, "<br/>");
     END IF;
 
-    IF NEW.refund_date <> OLD.refund_date THEN
-        SET audit_log = CONCAT(audit_log, "Refund Date: ", OLD.refund_date, " -> ", NEW.refund_date, "<br/>");
+    IF NEW.booking_for_cancellation_rejection_date <> OLD.booking_for_cancellation_rejection_date THEN
+        SET audit_log = CONCAT(audit_log, "For Cancellation Rejection Date: ", OLD.booking_for_cancellation_rejection_date, " -> ", NEW.booking_for_cancellation_rejection_date, "<br/>");
     END IF;
 
-    IF NEW.refund_reason <> OLD.refund_reason THEN
-        SET audit_log = CONCAT(audit_log, "Refund Reason: ", OLD.refund_reason, " -> ", NEW.refund_reason, "<br/>");
+    IF NEW.booking_for_cancellation_rejection_reason <> OLD.booking_for_cancellation_rejection_reason THEN
+        SET audit_log = CONCAT(audit_log, "For Cancellation Rejection Reason: ", OLD.booking_for_cancellation_rejection_reason, " -> ", NEW.booking_for_cancellation_rejection_reason, "<br/>");
+    END IF;
+
+    IF NEW.for_refund_date <> OLD.for_refund_date THEN
+        SET audit_log = CONCAT(audit_log, "For Refund Date: ", OLD.for_refund_date, " -> ", NEW.for_refund_date, "<br/>");
+    END IF;
+
+    IF NEW.for_refund_reason <> OLD.for_refund_reason THEN
+        SET audit_log = CONCAT(audit_log, "For Refund Reason: ", OLD.for_refund_reason, " -> ", NEW.for_refund_reason, "<br/>");
+    END IF;
+
+    IF NEW.for_refund_rejection_date <> OLD.for_refund_rejection_date THEN
+        SET audit_log = CONCAT(audit_log, "For Refund Rejection Date: ", OLD.for_refund_rejection_date, " -> ", NEW.for_refund_rejection_date, "<br/>");
+    END IF;
+
+    IF NEW.for_refund_rejection_reason <> OLD.for_refund_rejection_reason THEN
+        SET audit_log = CONCAT(audit_log, "For Refund Rejection Reason: ", OLD.for_refund_rejection_reason, " -> ", NEW.for_refund_rejection_reason, "<br/>");
+    END IF;
+
+    IF NEW.refund_date <> OLD.refund_date THEN
+        SET audit_log = CONCAT(audit_log, "Refund Date: ", OLD.refund_date, " -> ", NEW.refund_date, "<br/>");
     END IF;
 
     IF NEW.in_progress_date <> OLD.in_progress_date THEN

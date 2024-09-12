@@ -29,7 +29,7 @@
                             require_once('components/booking/view/_booking_details.php');
                         }
                         else{
-                            require_once('components/booking/view/_booking.php');
+                            require_once('components/booking/view/_refund_approval.php');
                         }
                     ?>
                 </div>

@@ -28,6 +28,7 @@ CREATE TABLE booking (
     total_discount_amount DOUBLE,
     booking_subtotal_amount DOUBLE,
     total_booking_amount DOUBLE,
+    payment_amount DOUBLE,
     refund_amount DOUBLE,
     payment_status VARCHAR(100) NOT NULL DEFAULT 'Pending', /* Pending, Paid, Refunded */
     booking_status VARCHAR(100) NOT NULL DEFAULT 'Pending', /* Pending, In-Progress, Completed, For Cancellation, Cancelled */
@@ -36,8 +37,13 @@ CREATE TABLE booking (
     cancellation_reason LONGTEXT,
     payment_reference_number VARCHAR(500),
     payment_date DATETIME,
+    booking_for_cancellation_rejection_date DATETIME,
+    booking_for_cancellation_rejection_reason LONGTEXT,
+    for_refund_date DATETIME,
+    for_refund_reason LONGTEXT,
+    for_refund_rejection_date DATETIME,
+    for_refund_rejection_reason LONGTEXT,
     refund_date DATETIME,
-    refund_reason LONGTEXT,
     in_progress_date DATETIME,
     completed_date DATETIME,
     cancellation_date DATETIME,

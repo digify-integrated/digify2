@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 11, 2024 at 06:53 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Sep 12, 2024 at 11:28 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -1668,6 +1668,126 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBloodTypeTable` ()   BEGIN
 	SELECT blood_type_id, blood_type_name 
     FROM blood_type 
     ORDER BY blood_type_id;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateBookingCancellationTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBookingCancellationTable` (IN `p_service` VARCHAR(100), IN `p_payment_status` VARCHAR(100), IN `p_mode_of_payment` VARCHAR(500), IN `p_source_of_booking` VARCHAR(50), IN `p_booking_start_date` DATE, IN `p_booking_end_date` DATE, IN `p_payment_start_date` DATE, IN `p_payment_end_date` DATE, IN `p_transaction_start_date` DATE, IN `p_transaction_end_date` DATE)   BEGIN
+     DECLARE query VARCHAR(5000);
+    DECLARE conditionList VARCHAR(1000);
+
+    SET query = 'SELECT * FROM booking';
+    SET conditionList = ' WHERE booking_status = "For Cancellation"';
+
+    IF p_service IS NOT NULL AND p_service <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND service = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_service));
+    END IF;
+
+    IF p_payment_status IS NOT NULL AND p_payment_status <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND payment_status = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_payment_status));
+    END IF;
+
+    IF p_mode_of_payment IS NOT NULL AND p_mode_of_payment <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND mode_of_payment = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_mode_of_payment));
+    END IF;
+
+    IF p_source_of_booking IS NOT NULL AND p_source_of_booking <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND source_of_booking = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_source_of_booking));
+    END IF;
+    
+    IF p_booking_start_date IS NOT NULL AND p_booking_end_date IS NOT NULL THEN
+        SET conditionList = CONCAT(conditionList, ' AND (booking_date BETWEEN ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_booking_start_date));
+        SET conditionList = CONCAT(conditionList, ' AND ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_booking_end_date));
+        SET conditionList = CONCAT(conditionList, ')');
+    END IF;
+    
+    IF p_payment_start_date IS NOT NULL AND p_payment_end_date IS NOT NULL THEN
+        SET conditionList = CONCAT(conditionList, ' AND (payment_date BETWEEN ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_payment_start_date));
+        SET conditionList = CONCAT(conditionList, ' AND ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_payment_end_date));
+        SET conditionList = CONCAT(conditionList, ')');
+    END IF;
+    
+    IF p_transaction_start_date IS NOT NULL AND p_transaction_end_date IS NOT NULL THEN
+        SET conditionList = CONCAT(conditionList, ' AND (transaction_date BETWEEN ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_transaction_start_date));
+        SET conditionList = CONCAT(conditionList, ' AND ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_transaction_end_date));
+        SET conditionList = CONCAT(conditionList, ')');
+    END IF;
+
+    SET query = CONCAT(query, conditionList);
+    SET query = CONCAT(query, ' ORDER BY booking_date DESC;');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
+DROP PROCEDURE IF EXISTS `generateBookingRefundTable`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `generateBookingRefundTable` (IN `p_service` VARCHAR(100), IN `p_booking_status` VARCHAR(100), IN `p_mode_of_payment` VARCHAR(500), IN `p_source_of_booking` VARCHAR(50), IN `p_booking_start_date` DATE, IN `p_booking_end_date` DATE, IN `p_payment_start_date` DATE, IN `p_payment_end_date` DATE, IN `p_transaction_start_date` DATE, IN `p_transaction_end_date` DATE)   BEGIN
+     DECLARE query VARCHAR(5000);
+    DECLARE conditionList VARCHAR(1000);
+
+    SET query = 'SELECT * FROM booking';
+    SET conditionList = ' WHERE payment_status = "For Refund"';
+
+    IF p_service IS NOT NULL AND p_service <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND service = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_service));
+    END IF;
+
+    IF p_booking_status IS NOT NULL AND p_booking_status <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND booking_status = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_booking_status));
+    END IF;
+
+    IF p_mode_of_payment IS NOT NULL AND p_mode_of_payment <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND mode_of_payment = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_mode_of_payment));
+    END IF;
+
+    IF p_source_of_booking IS NOT NULL AND p_source_of_booking <> '' THEN
+        SET conditionList = CONCAT(conditionList, ' AND source_of_booking = ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_source_of_booking));
+    END IF;
+    
+    IF p_booking_start_date IS NOT NULL AND p_booking_end_date IS NOT NULL THEN
+        SET conditionList = CONCAT(conditionList, ' AND (booking_date BETWEEN ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_booking_start_date));
+        SET conditionList = CONCAT(conditionList, ' AND ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_booking_end_date));
+        SET conditionList = CONCAT(conditionList, ')');
+    END IF;
+    
+    IF p_payment_start_date IS NOT NULL AND p_payment_end_date IS NOT NULL THEN
+        SET conditionList = CONCAT(conditionList, ' AND (payment_date BETWEEN ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_payment_start_date));
+        SET conditionList = CONCAT(conditionList, ' AND ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_payment_end_date));
+        SET conditionList = CONCAT(conditionList, ')');
+    END IF;
+    
+    IF p_transaction_start_date IS NOT NULL AND p_transaction_end_date IS NOT NULL THEN
+        SET conditionList = CONCAT(conditionList, ' AND (transaction_date BETWEEN ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_transaction_start_date));
+        SET conditionList = CONCAT(conditionList, ' AND ');
+        SET conditionList = CONCAT(conditionList, QUOTE(p_transaction_end_date));
+        SET conditionList = CONCAT(conditionList, ')');
+    END IF;
+
+    SET query = CONCAT(query, conditionList);
+    SET query = CONCAT(query, ' ORDER BY booking_date DESC;');
+
+    PREPARE stmt FROM query;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
 END$$
 
 DROP PROCEDURE IF EXISTS `generateBookingTable`$$
@@ -4550,20 +4670,39 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBooking` (IN `p_booking_id` I
 END$$
 
 DROP PROCEDURE IF EXISTS `updateBookingPaymentStatus`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBookingPaymentStatus` (IN `p_booking_id` INT, IN `p_payment_status` VARCHAR(100), IN `p_payment_date` DATETIME, IN `p_payment_reference_number` VARCHAR(500), IN `p_refund_amount` DOUBLE, IN `p_refund_date` DATETIME, IN `p_refund_reason` LONGTEXT, IN `p_last_log_by` INT)   BEGIN    
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBookingPaymentStatus` (IN `p_booking_id` INT, IN `p_payment_status` VARCHAR(100), IN `p_payment_amount` DOUBLE, IN `p_payment_date` DATETIME, IN `p_payment_reference_number` VARCHAR(500), IN `p_refund_amount` DOUBLE, IN `p_remarks` LONGTEXT, IN `p_last_log_by` INT)   BEGIN    
     IF p_payment_status = 'Paid' THEN
         UPDATE booking
         SET payment_status = p_payment_status,
+            payment_amount = p_payment_amount,
             payment_date = p_payment_date,
             payment_reference_number = p_payment_reference_number,
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+    ELSEIF p_payment_status = 'For Refund' THEN
+        UPDATE booking
+        SET payment_status = p_payment_status,
+            refund_amount = p_refund_amount,
+            for_refund_date = NOW(),
+            for_refund_reason = p_remarks,
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+    ELSEIF p_payment_status = 'Rejected' THEN
+        UPDATE booking
+        SET payment_status = p_payment_status,
+            for_refund_rejection_date = NOW(),
+            for_refund_rejection_reason = p_remarks,
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+
+        UPDATE booking
+        SET payment_status = 'Paid',
             last_log_by = p_last_log_by
         WHERE booking_id = p_booking_id;
     ELSE
         UPDATE booking
         SET payment_status = p_payment_status,
-            refund_amount = p_refund_amount,
-            refund_date = p_refund_date,
-            refund_reason = p_refund_reason,
+            refund_date = NOW(),
             last_log_by = p_last_log_by
         WHERE booking_id = p_booking_id;
     END IF;
@@ -4588,6 +4727,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `updateBookingStatus` (IN `p_booking
         SET booking_status = p_booking_status,
             cancellation_request_date = NOW(),
             cancellation_reason = p_remarks,
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+    ELSEIF p_booking_status = 'Rejected' THEN
+        UPDATE booking
+        SET booking_status = p_booking_status,
+            booking_for_cancellation_rejection_date = NOW(),
+            booking_for_cancellation_rejection_reason = p_remarks,
+            last_log_by = p_last_log_by
+        WHERE booking_id = p_booking_id;
+
+        UPDATE booking
+        SET booking_status = 'Pending',
             last_log_by = p_last_log_by
         WHERE booking_id = p_booking_id;
     ELSE
@@ -7464,7 +7615,76 @@ INSERT INTO `audit_log` (`audit_log_id`, `table_name`, `reference_id`, `log`, `c
 (333, 'booking', 12, 'Payment Status: Pending -> Paid<br/>', 1, '2024-09-12 00:30:25', '2024-09-12 00:30:25'),
 (334, 'booking', 13, 'Booking created. <br/><br/>Booking Reference Number: ALTHYGGJKWVU<br/>Source of Booking: Website<br/>Service: Deep Cleaning<br/>Frequency: One Time<br/>Duration: 2<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-12<br/>Booking Time: 10:00 AM<br/>Number of Professionals: 17<br/>Number of Hours: 3<br/>Nationality: African<br/>First Name: asdasda<br/>Last Name: asd<br/>Address: asd<br/>Phone: asdasd<br/>Email Address: asd@gmail.com<br/>Special Instructions: asdasd<br/>Mode of Payment: Stripe<br/>Discount Code: ALTHABITAHSEPT2024<br/>Discount Type: Fix Amount<br/>Discount Amount: 10<br/>Total Discount Amount: 10<br/>Booking Subtotal Amount: 60<br/>Total Booking Amount: 50<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-12 08:00:00<br/>Transaction Date: 2024-09-12 00:33:09', 1, '2024-09-12 00:33:09', '2024-09-12 00:33:09'),
 (335, 'booking', 13, 'Payment Status: Pending -> Paid<br/>', 1, '2024-09-12 00:33:44', '2024-09-12 00:33:44'),
-(336, 'booking', 14, 'Booking created. <br/><br/>Booking Reference Number: ALTHQA9S53KD<br/>Source of Booking: Website<br/>Service: Regular Cleaning<br/>Frequency: Monthly<br/>Duration: 3<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-19<br/>Booking Time: 10:00 AM<br/>Number of Professionals: 3<br/>Number of Hours: 5<br/>Nationality: Filipino<br/>First Name: asdas<br/>Last Name: asda<br/>Address: asd<br/>Phone: asds<br/>Email Address: asd@gmail.com<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 85<br/>Total Booking Amount: 85<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-18 10:00:00<br/>Transaction Date: 2024-09-12 00:38:37', 1, '2024-09-12 00:38:37', '2024-09-12 00:38:37');
+(336, 'booking', 14, 'Booking created. <br/><br/>Booking Reference Number: ALTHQA9S53KD<br/>Source of Booking: Website<br/>Service: Regular Cleaning<br/>Frequency: Monthly<br/>Duration: 3<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-19<br/>Booking Time: 10:00 AM<br/>Number of Professionals: 3<br/>Number of Hours: 5<br/>Nationality: Filipino<br/>First Name: asdas<br/>Last Name: asda<br/>Address: asd<br/>Phone: asds<br/>Email Address: asd@gmail.com<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 85<br/>Total Booking Amount: 85<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-18 10:00:00<br/>Transaction Date: 2024-09-12 00:38:37', 1, '2024-09-12 00:38:37', '2024-09-12 00:38:37'),
+(337, 'system_action', 39, 'System action created. <br/><br/>System Action Name: Tag Booking For Cancellation As Rejected<br/>System Action Description: Access to tag the booking for cancellation as rejected.', 2, '2024-09-12 09:11:47', '2024-09-12 09:11:47'),
+(338, 'role_system_action_permission', 39, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Tag Booking For Cancellation As Rejected<br/>Date Assigned: 2024-09-12 09:11:52', 2, '2024-09-12 09:11:52', '2024-09-12 09:11:52'),
+(339, 'role_system_action_permission', 39, 'System Action Access: 0 -> 1<br/>', 2, '2024-09-12 09:11:55', '2024-09-12 09:11:55'),
+(340, 'system_action', 40, 'System action created. <br/><br/>System Action Name: Tag Booking Payment For Refund<br/>System Action Description: Access to tag the booking payment as refunded.', 2, '2024-09-12 09:12:23', '2024-09-12 09:12:23'),
+(341, 'role_system_action_permission', 40, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Tag Booking Payment For Refund<br/>Date Assigned: 2024-09-12 09:12:27', 2, '2024-09-12 09:12:27', '2024-09-12 09:12:27'),
+(342, 'role_system_action_permission', 40, 'System Action Access: 0 -> 1<br/>', 2, '2024-09-12 09:12:28', '2024-09-12 09:12:28'),
+(343, 'system_action', 41, 'System action created. <br/><br/>System Action Name: Tag Booking Payment For Refund As Rejected<br/>System Action Description: Access to tag the booking payment for refund as rejected.', 2, '2024-09-12 09:17:02', '2024-09-12 09:17:02'),
+(344, 'role_system_action_permission', 41, 'Role system action permission created. <br/><br/>Role Name: Administrator<br/>System Action Name: Tag Booking Payment For Refund As Rejected<br/>Date Assigned: 2024-09-12 09:17:07', 2, '2024-09-12 09:17:07', '2024-09-12 09:17:07'),
+(345, 'role_system_action_permission', 41, 'System Action Access: 0 -> 1<br/>', 2, '2024-09-12 09:17:07', '2024-09-12 09:17:07'),
+(346, 'booking', 1, 'Booking created. <br/><br/>Booking Reference Number: ALTH432EICPU<br/>Source of Booking: Instagram<br/>Service: Regular Cleaning<br/>Frequency: One Time<br/>Duration: 3<br/>Cleaning Materials: No<br/>Booking Date: 2024-09-19<br/>Booking Time: 12:00 PM<br/>Number of Professionals: 16<br/>Number of Hours: 2<br/>Nationality: Nepali<br/>First Name: teas<br/>Last Name: dasd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Special Instructions: asd<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 75<br/>Total Booking Amount: 75<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-18 12:00:00<br/>Transaction Date: 2024-09-12 10:01:36', 2, '2024-09-12 10:01:36', '2024-09-12 10:01:36'),
+(347, 'booking', 1, 'Booking Status: Pending -> For Cancellation<br/>', 2, '2024-09-12 10:16:24', '2024-09-12 10:16:24'),
+(348, 'booking', 1, 'Booking Status: For Cancellation -> Rejected<br/>', 2, '2024-09-12 10:17:37', '2024-09-12 10:17:37'),
+(349, 'booking', 1, 'Payment Status: Pending -> Paid<br/>', 2, '2024-09-12 10:21:54', '2024-09-12 10:21:54'),
+(350, 'booking', 1, 'Booking created. <br/><br/>Booking Reference Number: ALTH5YT649XZ<br/>Source of Booking: Website<br/>Service: Office Cleaning<br/>Frequency: Weekly<br/>Duration: 2<br/>Cleaning Materials: No<br/>Booking Date: 2024-09-19<br/>Booking Time: 1:00 PM<br/>Number of Professionals: 16<br/>Number of Hours: 6<br/>Nationality: Filipino<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Special Instructions: asd<br/>Mode of Payment: Online Banking<br/>Booking Subtotal Amount: 50<br/>Total Booking Amount: 50<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-18 13:00:00<br/>Transaction Date: 2024-09-12 12:31:34', 2, '2024-09-12 12:31:34', '2024-09-12 12:31:34'),
+(351, 'booking', 1, 'Payment Status: Pending -> Paid<br/>', 2, '2024-09-12 12:32:07', '2024-09-12 12:32:07'),
+(352, 'booking', 1, 'Payment Status: Paid -> For Refund<br/>', 2, '2024-09-12 12:33:42', '2024-09-12 12:33:42'),
+(353, 'booking', 1, 'Payment Status: For Refund -> Rejected<br/>', 2, '2024-09-12 13:03:16', '2024-09-12 13:03:16'),
+(354, 'booking', 1, 'Booking Status: Pending -> In-Progress<br/>', 2, '2024-09-12 13:12:54', '2024-09-12 13:12:54'),
+(355, 'booking', 1, 'Booking Status: In-Progress -> Completed<br/>', 2, '2024-09-12 13:12:58', '2024-09-12 13:12:58'),
+(356, 'booking', 2, 'Booking created. <br/><br/>Booking Reference Number: ALTH9R4LQC8J<br/>Source of Booking: Facebook<br/>Service: Flat Cleaning<br/>Frequency: Monthly<br/>Duration: 5<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-19<br/>Booking Time: 1:00 PM<br/>Number of Professionals: 14<br/>Number of Hours: 1<br/>Nationality: Nepali<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Special Instructions: as<br/>Mode of Payment: Online Banking<br/>Booking Subtotal Amount: 135<br/>Total Booking Amount: 135<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-18 13:00:00<br/>Transaction Date: 2024-09-12 13:13:19', 2, '2024-09-12 13:13:19', '2024-09-12 13:13:19'),
+(357, 'booking', 2, 'Payment Status: Pending -> Paid<br/>', 2, '2024-09-12 13:16:45', '2024-09-12 13:16:45'),
+(358, 'booking', 2, 'Payment Status: Paid -> For Refund<br/>', 2, '2024-09-12 13:16:52', '2024-09-12 13:16:52'),
+(359, 'booking', 2, 'Payment Status: For Refund -> Refunded<br/>', 2, '2024-09-12 13:19:23', '2024-09-12 13:19:23'),
+(360, 'booking', 2, 'Booking Status: Pending -> For Cancellation<br/>', 2, '2024-09-12 13:19:34', '2024-09-12 13:19:34'),
+(361, 'booking', 2, 'Booking Status: For Cancellation -> Rejected<br/>', 2, '2024-09-12 13:20:21', '2024-09-12 13:20:21'),
+(362, 'booking', 2, 'Booking Status: Rejected -> In-Progress<br/>', 2, '2024-09-12 13:21:32', '2024-09-12 13:21:32'),
+(363, 'booking', 2, 'Booking Status: In-Progress -> Completed<br/>', 2, '2024-09-12 14:05:26', '2024-09-12 14:05:26'),
+(364, 'booking', 3, 'Booking created. <br/><br/>Booking Reference Number: ALTHAGFEMPJ7<br/>Source of Booking: Facebook<br/>Service: Office Cleaning<br/>Frequency: Monthly<br/>Duration: 3<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-25<br/>Booking Time: 6:00 PM<br/>Number of Professionals: 17<br/>Number of Hours: 4<br/>Nationality: Nepali<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Special Instructions: as<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 85<br/>Total Booking Amount: 85<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-24 18:00:00<br/>Transaction Date: 2024-09-12 14:12:52', 2, '2024-09-12 14:12:52', '2024-09-12 14:12:52'),
+(365, 'booking', 3, 'Booking Status: Pending -> For Cancellation<br/>', 2, '2024-09-12 14:13:00', '2024-09-12 14:13:00'),
+(366, 'booking', 3, 'Booking Status: For Cancellation -> Rejected<br/>', 2, '2024-09-12 14:13:10', '2024-09-12 14:13:10'),
+(367, 'booking', 3, 'Booking Status: Rejected -> Pending<br/>', 2, '2024-09-12 14:13:10', '2024-09-12 14:13:10'),
+(368, 'booking', 3, 'Booking Status: Pending -> For Cancellation<br/>Cancellation Request Date: 2024-09-12 14:13:00 -> 2024-09-12 14:13:29<br/>Cancellation Reason: asd -> asds<br/>', 2, '2024-09-12 14:13:29', '2024-09-12 14:13:29'),
+(369, 'booking', 3, 'Booking Status: For Cancellation -> Cancelled<br/>', 2, '2024-09-12 14:13:39', '2024-09-12 14:13:39'),
+(370, 'booking', 3, 'Payment Status: Pending -> Paid<br/>', 2, '2024-09-12 14:22:14', '2024-09-12 14:22:14'),
+(371, 'booking', 3, 'Payment Status: Paid -> For Refund<br/>', 2, '2024-09-12 14:22:29', '2024-09-12 14:22:29'),
+(372, 'booking', 3, 'Payment Status: For Refund -> Rejected<br/>', 2, '2024-09-12 14:22:33', '2024-09-12 14:22:33'),
+(373, 'booking', 3, 'Payment Status: Rejected -> Paid<br/>', 2, '2024-09-12 14:22:33', '2024-09-12 14:22:33'),
+(374, 'booking', 3, 'Payment Status: Paid -> For Refund<br/>For Refund Date: 2024-09-12 14:22:29 -> 2024-09-12 14:22:38<br/>', 2, '2024-09-12 14:22:38', '2024-09-12 14:22:38'),
+(375, 'booking', 3, 'Payment Status: For Refund -> Refunded<br/>', 2, '2024-09-12 14:22:41', '2024-09-12 14:22:41'),
+(376, 'menu_item', 76, 'Menu Item created. <br/><br/>Menu Item Name: Booking Cancellation Approval<br/>Menu Item URL: booking-cancellation-approval.php<br/>Menu Item Icon: ti ti-check<br/>Menu Group Name: Booking<br/>App Module: CRM<br/>Order Sequence: 2', 2, '2024-09-12 14:36:22', '2024-09-12 14:36:22'),
+(377, 'role_permission', 81, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Booking Cancellation Approval<br/>Date Assigned: 2024-09-12 14:36:32', 2, '2024-09-12 14:36:32', '2024-09-12 14:36:32'),
+(378, 'role_permission', 81, 'Read Access: 0 -> 1<br/>', 2, '2024-09-12 14:36:34', '2024-09-12 14:36:34'),
+(379, 'menu_item', 77, 'Menu Item created. <br/><br/>Menu Item Name: Booking Refund Approval<br/>Menu Item URL: booking-refund-approval.php<br/>Menu Item Icon: ti ti-check<br/>Menu Group Name: Booking<br/>App Module: CRM<br/>Order Sequence: 3', 2, '2024-09-12 14:36:58', '2024-09-12 14:36:58'),
+(380, 'menu_item', 77, 'Menu Item Name: Booking Refund Approval -> Refund Approval<br/>Menu Item URL: booking-refund-approval.php -> refund-approval.php<br/>', 2, '2024-09-12 14:43:26', '2024-09-12 14:43:26'),
+(381, 'role_permission', 81, 'Menu Item: Booking Cancellation Approval -> Cancellation Approval<br/>', 2, '2024-09-12 14:43:34', '2024-09-12 14:43:34'),
+(382, 'menu_item', 76, 'Menu Item Name: Booking Cancellation Approval -> Cancellation Approval<br/>Menu Item URL: booking-cancellation-approval.php -> cancellation-approval.php<br/>', 2, '2024-09-12 14:43:34', '2024-09-12 14:43:34'),
+(383, 'role_permission', 82, 'Role permission created. <br/><br/>Role Name: Administrator<br/>Menu Item Name: Refund Approval<br/>Date Assigned: 2024-09-12 14:43:44', 2, '2024-09-12 14:43:44', '2024-09-12 14:43:44'),
+(384, 'role_permission', 82, 'Read Access: 0 -> 1<br/>', 2, '2024-09-12 14:43:46', '2024-09-12 14:43:46'),
+(385, 'menu_item', 77, 'Menu Item Icon: ti ti-check -> ti ti-arrow-back-up<br/>', 2, '2024-09-12 14:44:21', '2024-09-12 14:44:21'),
+(386, 'menu_item', 76, 'Menu Item Icon: ti ti-check -> ti ti-calendar-off<br/>', 2, '2024-09-12 14:45:12', '2024-09-12 14:45:12'),
+(387, 'booking', 4, 'Booking created. <br/><br/>Booking Reference Number: ALTHNUOHULT4<br/>Source of Booking: Youtube<br/>Service: Hospital Cleaning<br/>Frequency: Weekly<br/>Duration: 3<br/>Cleaning Materials: No<br/>Booking Date: 2024-09-26<br/>Booking Time: 12:00 PM<br/>Number of Professionals: 15<br/>Number of Hours: 6<br/>Nationality: African<br/>First Name: asd<br/>Last Name: asd<br/>Address: ads<br/>Phone: ad<br/>Email Address: asd@gmail.com<br/>Mode of Payment: Online Banking<br/>Booking Subtotal Amount: 75<br/>Total Booking Amount: 75<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-25 12:00:00<br/>Transaction Date: 2024-09-12 15:27:46', 2, '2024-09-12 15:27:46', '2024-09-12 15:27:46'),
+(388, 'booking', 4, 'Booking Status: Pending -> For Cancellation<br/>', 2, '2024-09-12 15:27:50', '2024-09-12 15:27:50'),
+(389, 'booking', 4, 'Payment Status: Pending -> Paid<br/>', 2, '2024-09-12 15:28:38', '2024-09-12 15:28:38'),
+(390, 'booking', 4, 'Payment Status: Paid -> For Refund<br/>', 2, '2024-09-12 15:28:43', '2024-09-12 15:28:43'),
+(391, 'booking', 4, 'Booking Status: For Cancellation -> Rejected<br/>', 2, '2024-09-12 15:29:10', '2024-09-12 15:29:10'),
+(392, 'booking', 4, 'Booking Status: Rejected -> Pending<br/>', 2, '2024-09-12 15:29:10', '2024-09-12 15:29:10'),
+(393, 'booking', 5, 'Booking created. <br/><br/>Booking Reference Number: ALTHF3TAFCVP<br/>Source of Booking: Website<br/>Service: Deep Cleaning<br/>Frequency: Weekly<br/>Duration: 8<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-13<br/>Booking Time: 10:00 AM<br/>Number of Professionals: 14<br/>Number of Hours: 4<br/>Nationality: Filipino<br/>First Name: ads<br/>Last Name: as<br/>Address: ad<br/>Phone: ad<br/>Email Address: asd@gmail.com<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 210<br/>Total Booking Amount: 210<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-13 08:00:00<br/>Transaction Date: 2024-09-12 15:40:47', 1, '2024-09-12 15:40:47', '2024-09-12 15:40:47'),
+(394, 'booking', 5, 'Payment Status: Pending -> Paid<br/>', 1, '2024-09-12 15:41:33', '2024-09-12 15:41:33'),
+(395, 'booking', 6, 'Booking created. <br/><br/>Booking Reference Number: ALTHKE6P2I3G<br/>Source of Booking: Website<br/>Service: Regular Cleaning<br/>Frequency: Monthly<br/>Duration: 4<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-13<br/>Booking Time: 1:00 PM<br/>Number of Professionals: 5<br/>Number of Hours: 3<br/>Nationality: Filipino<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 110<br/>Total Booking Amount: 110<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-13 11:00:00<br/>Transaction Date: 2024-09-12 15:59:14', 1, '2024-09-12 15:59:14', '2024-09-12 15:59:14'),
+(396, 'booking', 6, 'Payment Status: Pending -> Paid<br/>', 1, '2024-09-12 15:59:48', '2024-09-12 15:59:48'),
+(397, 'booking', 7, 'Booking created. <br/><br/>Booking Reference Number: ALTHS24WE3FM<br/>Source of Booking: Website<br/>Service: Regular Cleaning<br/>Frequency: One Time<br/>Duration: 4<br/>Cleaning Materials: No<br/>Booking Date: 2099-08-08<br/>Booking Time: 2:00 PM<br/>Number of Professionals: 15<br/>Number of Hours: 1<br/>Nationality: Filipino<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 100<br/>Total Booking Amount: 100<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2099-08-07 14:00:00<br/>Transaction Date: 2024-09-12 16:01:56', 1, '2024-09-12 16:01:56', '2024-09-12 16:01:56'),
+(398, 'booking', 7, 'Payment Status: Pending -> Paid<br/>', 1, '2024-09-12 16:02:20', '2024-09-12 16:02:20'),
+(399, 'booking', 7, 'Payment Status: Paid -> For Refund<br/>', 2, '2024-09-12 16:51:03', '2024-09-12 16:51:03'),
+(400, 'booking', 7, 'Payment Status: For Refund -> Refunded<br/>', 2, '2024-09-12 16:51:16', '2024-09-12 16:51:16'),
+(401, 'booking', 4, 'Payment Status: For Refund -> Refunded<br/>', 2, '2024-09-12 17:02:31', '2024-09-12 17:02:31'),
+(402, 'booking', 8, 'Booking created. <br/><br/>Booking Reference Number: ALTHI8J0FMQW<br/>Source of Booking: Website<br/>Service: Regular Cleaning<br/>Frequency: Weekly<br/>Duration: 4<br/>Cleaning Materials: Yes<br/>Booking Date: 2099-12-31<br/>Booking Time: 10:00 AM<br/>Number of Professionals: 15<br/>Number of Hours: 2<br/>Nationality: Nepali<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Special Instructions: asd<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 110<br/>Total Booking Amount: 110<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2099-12-30 10:00:00<br/>Transaction Date: 2024-09-12 17:08:53', 1, '2024-09-12 17:08:53', '2024-09-12 17:08:53'),
+(403, 'booking', 8, 'Payment Status: Pending -> Paid<br/>', 1, '2024-09-12 17:09:13', '2024-09-12 17:09:13'),
+(404, 'booking', 9, 'Booking created. <br/><br/>Booking Reference Number: ALTH2YDGIMAC<br/>Source of Booking: Website<br/>Service: Deep Cleaning<br/>Frequency: Yearly<br/>Duration: 4<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-30<br/>Booking Time: 1:00 PM<br/>Number of Professionals: 18<br/>Number of Hours: 2<br/>Nationality: Nepali<br/>First Name: as<br/>Last Name: dasd<br/>Address: asd<br/>Phone: asd<br/>Email Address: asd@gmail.com<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 110<br/>Total Booking Amount: 110<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-29 13:00:00<br/>Transaction Date: 2024-09-12 17:20:24', 1, '2024-09-12 17:20:24', '2024-09-12 17:20:24'),
+(405, 'booking', 10, 'Booking created. <br/><br/>Booking Reference Number: ALTHCTSYHCPC<br/>Source of Booking: Website<br/>Service: Deep Cleaning<br/>Frequency: One Time<br/>Duration: 4<br/>Cleaning Materials: Yes<br/>Booking Date: 2024-09-13<br/>Booking Time: 10:00 AM<br/>Number of Professionals: 5<br/>Number of Hours: 3<br/>Nationality: African<br/>First Name: asd<br/>Last Name: asd<br/>Address: asd<br/>Phone: asd<br/>Email Address: ads@gmail.com<br/>Mode of Payment: Stripe<br/>Booking Subtotal Amount: 110<br/>Total Booking Amount: 110<br/>Payment Status: Pending<br/>Booking Status: Pending<br/>Cancellation Window: 2024-09-13 08:00:00<br/>Transaction Date: 2024-09-12 17:22:22', 1, '2024-09-12 17:22:22', '2024-09-12 17:22:22');
 
 -- --------------------------------------------------------
 
@@ -8015,6 +8235,7 @@ CREATE TABLE `booking` (
   `total_discount_amount` double DEFAULT NULL,
   `booking_subtotal_amount` double DEFAULT NULL,
   `total_booking_amount` double DEFAULT NULL,
+  `payment_amount` double DEFAULT NULL,
   `refund_amount` double DEFAULT NULL,
   `payment_status` varchar(100) NOT NULL DEFAULT 'Pending',
   `booking_status` varchar(100) NOT NULL DEFAULT 'Pending',
@@ -8023,8 +8244,13 @@ CREATE TABLE `booking` (
   `cancellation_reason` longtext DEFAULT NULL,
   `payment_reference_number` varchar(500) DEFAULT NULL,
   `payment_date` datetime DEFAULT NULL,
+  `booking_for_cancellation_rejection_date` datetime DEFAULT NULL,
+  `booking_for_cancellation_rejection_reason` longtext DEFAULT NULL,
+  `for_refund_date` datetime DEFAULT NULL,
+  `for_refund_reason` longtext DEFAULT NULL,
+  `for_refund_rejection_date` datetime DEFAULT NULL,
+  `for_refund_rejection_reason` longtext DEFAULT NULL,
   `refund_date` datetime DEFAULT NULL,
-  `refund_reason` longtext DEFAULT NULL,
   `in_progress_date` datetime DEFAULT NULL,
   `completed_date` datetime DEFAULT NULL,
   `cancellation_date` datetime DEFAULT NULL,
@@ -8037,19 +8263,17 @@ CREATE TABLE `booking` (
 -- Dumping data for table `booking`
 --
 
-INSERT INTO `booking` (`booking_id`, `booking_reference_number`, `source_of_booking`, `service`, `frequency`, `duration`, `number_of_seats`, `meters`, `cleaning_materials`, `booking_date`, `booking_time`, `number_of_professionals`, `number_of_hours`, `nationality`, `first_name`, `last_name`, `address`, `phone`, `email_address`, `special_instructions`, `mode_of_payment`, `discount_code`, `discount_type`, `discount_amount`, `total_discount_amount`, `booking_subtotal_amount`, `total_booking_amount`, `refund_amount`, `payment_status`, `booking_status`, `cancellation_request_date`, `cancellation_window`, `cancellation_reason`, `payment_reference_number`, `payment_date`, `refund_date`, `refund_reason`, `in_progress_date`, `completed_date`, `cancellation_date`, `transaction_date`, `created_date`, `last_log_by`) VALUES
-(1, 'ALTH-GZI1-RRYF', 'Website', 'Office Cleaning', 'One Time', 2, 0, 0, 'Yes', '2024-09-11', '6:00 PM', 17, 3, 'Nepali', 'asd', 'asd', 'asd', 'asd', 'asd@gmail.com', 'asd', 'Online Banking', '', 'Fix Amount', 15, 15, 60, 45, NULL, 'Refunded', 'Cancelled', '2024-09-11 21:04:47', '2024-09-11 16:00:00', 'asd', 'asdasdas', '2024-09-11 00:00:00', '2024-09-11 22:10:51', NULL, NULL, NULL, '2024-09-11 21:45:20', '2024-09-11 14:04:38', '2024-09-11 14:04:38', 2),
-(4, 'ALTH08SGE3T6', 'Facebook', 'Deep Cleaning', 'Weekly', 3, 0, 0, 'Yes', '2024-09-12', '12:00 PM', 15, 3, 'Filipino', 'test', 'test', 'test', 'test', 'test@gmail.com', 'none', 'Online Banking', '', 'By Percentage', 10, 8.5, 85, 76.5, 12, 'Refunded', 'Pending', NULL, '2024-09-12 10:00:00', NULL, 'asd', '2024-09-04 00:00:00', '2024-09-11 00:00:00', '12', NULL, NULL, NULL, '2024-09-11 22:26:54', '2024-09-11 22:26:54', 2),
-(5, 'ALTHB5SHZOBW', 'Website', 'Regular Cleaning', 'Weekly', 1, 0, 0, 'Yes', '2024-09-12', '12:00 PM', 3, 4, 'Filipino', 'asd', 'asd', 'asd', 'asd', 'asd@test.com', 'asdasd', 'Stripe', 'ALTHABITAHSEPT2024', 'Fix Amount', 10, 10, 25, 15, NULL, 'Pending', 'Pending', NULL, '2024-09-12 10:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-11 23:04:35', '2024-09-11 23:04:35', 1),
-(6, 'ALTHAUPCAIT5', 'Website', 'Deep Cleaning', 'Weekly', 7, 0, 0, 'Yes', '2024-09-12', '2:00 PM', 15, 5, 'Filipino', 'asdasd', 'asd', 'asd', 'asd', 'asd@asd.com', 'asdasdasd', 'Stripe', 'ALTHABITAHSEPT2024', 'Fix Amount', 10, 10, 175, 165, NULL, 'Pending', 'Pending', NULL, '2024-09-12 12:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-11 23:07:55', '2024-09-11 23:07:55', 1),
-(7, 'ALTHKGF8J37I', 'Website', 'Office Cleaning', 'Weekly', 3, 0, 0, 'Yes', '2024-09-12', '10:00 AM', 16, 4, 'Filipino', 'asdasd', 'asda', 'asdasd', 'ada', 'asd@asd.com', 'adadasd', 'Stripe', 'ALTHABITAHSEPT2024', 'Fix Amount', 10, 10, 75, 65, NULL, 'Pending', 'Pending', NULL, '2024-09-12 08:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-11 23:13:47', '2024-09-11 23:13:47', 1),
-(8, 'ALTHEWYVSDYP', 'Website', 'Office Cleaning', 'One Time', 3, 0, 0, 'Yes', '2024-09-13', '2:00 PM', 4, 5, 'Filipino', 'asdas', 'asd', 'asd', 'asd', 'asd@gmail.com', '', 'Stripe', 'ALTHABITAHSEPT2024', 'Fix Amount', 10, 10, 85, 75, NULL, 'Pending', 'Pending', NULL, '2024-09-12 14:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 00:13:14', '2024-09-12 00:13:14', 1),
-(9, 'ALTHZO52QE6P', 'Website', 'Office Cleaning', 'One Time', 3, 0, 0, 'Yes', '2024-09-13', '2:00 PM', 4, 5, 'Filipino', 'asdas', 'asd', 'asd', 'asd', 'asd@gmail.com', '', 'Stripe', 'ALTHABITAHSEPT2024', 'Fix Amount', 10, 10, 85, 75, NULL, 'Pending', 'Pending', NULL, '2024-09-12 14:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 00:18:43', '2024-09-12 00:18:43', 1),
-(10, 'ALTHYANWYE1M', 'Website', 'Office Cleaning', 'One Time', 3, 0, 0, 'Yes', '2024-09-13', '2:00 PM', 4, 5, 'Filipino', 'asdas', 'asd', 'asd', 'asd', 'asd@gmail.com', '', 'Stripe', 'ALTHABITAHSEPT2024', 'Fix Amount', 10, 10, 85, 75, NULL, 'Pending', 'Pending', NULL, '2024-09-12 14:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 00:18:56', '2024-09-12 00:18:56', 1),
-(11, 'ALTHZ8CB78PS', 'Website', 'Office Cleaning', 'One Time', 3, 0, 0, 'Yes', '2024-09-13', '2:00 PM', 4, 5, 'Filipino', 'asdas', 'asd', 'asd', 'asd', 'asd@gmail.com', '', 'Stripe', 'ALTHABITAHSEPT2024', 'Fix Amount', 10, 10, 85, 75, NULL, 'Pending', 'Pending', NULL, '2024-09-12 14:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 00:20:46', '2024-09-12 00:20:46', 1),
-(12, 'ALTH2N2JD6EM', 'Website', 'Office Cleaning', 'Yearly', 5, 0, 0, 'Yes', '2099-12-31', '9:00 AM', 16, 3, 'Filipino', 'asd', 'asd', 'asd', 'asd', 'asd@gmail.com', '', 'Stripe', 'ALTHABITAHSEPT2024', 'Fix Amount', 10, 10, 135, 125, NULL, 'Paid', 'Pending', NULL, '2099-12-30 09:00:00', NULL, 'pi_3PxtPE011037BG0D1efD9YnV', '2024-09-12 00:30:25', NULL, NULL, NULL, NULL, NULL, '2024-09-12 00:26:45', '2024-09-12 00:26:45', 1),
-(13, 'ALTHYGGJKWVU', 'Website', 'Deep Cleaning', 'One Time', 2, 0, 0, 'Yes', '2024-09-12', '10:00 AM', 17, 3, 'African', 'asdasda', 'asd', 'asd', 'asdasd', 'asd@gmail.com', 'asdasd', 'Stripe', 'ALTHABITAHSEPT2024', 'Fix Amount', 10, 10, 60, 50, NULL, 'Paid', 'Pending', NULL, '2024-09-12 08:00:00', NULL, 'pi_3PxtU7011037BG0D0eCyWstg', '2024-09-12 00:33:44', NULL, NULL, NULL, NULL, NULL, '2024-09-12 00:33:09', '2024-09-12 00:33:09', 1),
-(14, 'ALTHQA9S53KD', 'Website', 'Regular Cleaning', 'Monthly', 3, 0, 0, 'Yes', '2024-09-19', '10:00 AM', 3, 5, 'Filipino', 'asdas', 'asda', 'asd', 'asds', 'asd@gmail.com', '', 'Stripe', '', NULL, 0, 0, 85, 85, NULL, 'Pending', 'Pending', NULL, '2024-09-18 10:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 00:38:37', '2024-09-12 00:38:37', 1);
+INSERT INTO `booking` (`booking_id`, `booking_reference_number`, `source_of_booking`, `service`, `frequency`, `duration`, `number_of_seats`, `meters`, `cleaning_materials`, `booking_date`, `booking_time`, `number_of_professionals`, `number_of_hours`, `nationality`, `first_name`, `last_name`, `address`, `phone`, `email_address`, `special_instructions`, `mode_of_payment`, `discount_code`, `discount_type`, `discount_amount`, `total_discount_amount`, `booking_subtotal_amount`, `total_booking_amount`, `payment_amount`, `refund_amount`, `payment_status`, `booking_status`, `cancellation_request_date`, `cancellation_window`, `cancellation_reason`, `payment_reference_number`, `payment_date`, `booking_for_cancellation_rejection_date`, `booking_for_cancellation_rejection_reason`, `for_refund_date`, `for_refund_reason`, `for_refund_rejection_date`, `for_refund_rejection_reason`, `refund_date`, `in_progress_date`, `completed_date`, `cancellation_date`, `transaction_date`, `created_date`, `last_log_by`) VALUES
+(1, 'ALTH5YT649XZ', 'Website', 'Office Cleaning', 'Weekly', 2, 0, 0, 'No', '2024-09-19', '1:00 PM', 16, 6, 'Filipino', 'asd', 'asd', 'asd', 'asd', 'asd@gmail.com', 'asd', 'Online Banking', '', '', 0, 0, 50, 50, 123, 12, 'Rejected', 'Completed', NULL, '2024-09-18 13:00:00', NULL, '123123', '2024-09-12 00:00:00', NULL, NULL, '2024-09-12 12:33:42', 'asd', '2024-09-12 13:03:16', 'asdasd', NULL, '2024-09-12 13:12:54', '2024-09-12 13:12:58', NULL, '2024-09-12 12:31:34', '2024-09-12 12:31:34', 2),
+(2, 'ALTH9R4LQC8J', 'Facebook', 'Flat Cleaning', 'Monthly', 5, 0, 0, 'Yes', '2024-09-19', '1:00 PM', 14, 1, 'Nepali', 'asd', 'asd', 'asd', 'asd', 'asd@gmail.com', 'as', 'Online Banking', '', '', 0, 0, 135, 135, 12, 123, 'Refunded', 'Completed', '2024-09-12 13:19:34', '2024-09-18 13:00:00', 'asd', '12', '2024-09-13 00:00:00', '2024-09-12 13:20:21', 'asd', '2024-09-12 13:16:52', '123', NULL, NULL, '2024-09-12 13:19:23', '2024-09-12 13:21:32', '2024-09-12 14:05:26', NULL, '2024-09-12 13:13:19', '2024-09-12 13:13:19', 2),
+(3, 'ALTHAGFEMPJ7', 'Facebook', 'Office Cleaning', 'Monthly', 3, 0, 0, 'Yes', '2024-09-25', '6:00 PM', 17, 4, 'Nepali', 'asd', 'asd', 'asd', 'asd', 'asd@gmail.com', 'as', 'Stripe', '', '', 0, 0, 85, 85, 12, 12, 'Refunded', 'Cancelled', '2024-09-12 14:13:29', '2024-09-24 18:00:00', 'asds', '12', '2024-09-12 00:00:00', '2024-09-12 14:13:10', 'asdasd', '2024-09-12 14:22:38', '12', '2024-09-12 14:22:33', '12', '2024-09-12 14:22:41', NULL, NULL, '2024-09-12 14:13:39', '2024-09-12 14:12:52', '2024-09-12 14:12:52', 2),
+(4, 'ALTHNUOHULT4', 'Youtube', 'Hospital Cleaning', 'Weekly', 3, 0, 0, 'No', '2024-09-26', '12:00 PM', 15, 6, 'African', 'asd', 'asd', 'ads', 'ad', 'asd@gmail.com', '', 'Online Banking', '', '', 0, 0, 75, 75, 123, 1231, 'Refunded', 'Pending', '2024-09-12 15:27:50', '2024-09-25 12:00:00', 'asd', '123', '2024-09-12 00:00:00', '2024-09-12 15:29:10', 'asd', '2024-09-12 15:28:43', 'asd', NULL, NULL, '2024-09-12 17:02:31', NULL, NULL, NULL, '2024-09-12 15:27:46', '2024-09-12 15:27:46', 2),
+(5, 'ALTHF3TAFCVP', 'Website', 'Deep Cleaning', 'Weekly', 8, 0, 0, 'Yes', '2024-09-13', '10:00 AM', 14, 4, 'Filipino', 'ads', 'as', 'ad', 'ad', 'asd@gmail.com', '', 'Stripe', '', NULL, 0, 0, 210, 210, 2024, NULL, 'Paid', 'Pending', NULL, '2024-09-13 08:00:00', NULL, '', '0000-00-00 00:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 15:40:47', '2024-09-12 15:40:47', 1),
+(6, 'ALTHKE6P2I3G', 'Website', 'Regular Cleaning', 'Monthly', 4, 0, 0, 'Yes', '2024-09-13', '1:00 PM', 5, 3, 'Filipino', 'asd', 'asd', 'asd', 'asd', 'asd@gmail.com', '', 'Stripe', '', NULL, 0, 0, 110, 110, 120, NULL, 'Paid', 'Pending', NULL, '2024-09-13 11:00:00', NULL, 'pi_3Py7vL011037BG0D0mJPSMzp', '2024-09-12 15:59:48', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 15:59:14', '2024-09-12 15:59:14', 1),
+(7, 'ALTHS24WE3FM', 'Website', 'Regular Cleaning', 'One Time', 4, 0, 0, 'No', '2099-08-08', '2:00 PM', 15, 1, 'Filipino', 'asd', 'asd', 'asd', 'asd', 'asd@gmail.com', '', 'Stripe', '', NULL, 0, 0, 100, 100, 100, 80, 'Refunded', 'Pending', NULL, '2099-08-07 14:00:00', NULL, 'pi_3Py7xn011037BG0D0R3z1sJw', '2024-09-12 16:02:20', NULL, NULL, '2024-09-12 16:51:03', 'asdasd', NULL, NULL, '2024-09-12 16:51:16', NULL, NULL, NULL, '2024-09-12 16:01:56', '2024-09-12 16:01:56', 2),
+(8, 'ALTHI8J0FMQW', 'Website', 'Regular Cleaning', 'Weekly', 4, 0, 0, 'Yes', '2099-12-31', '10:00 AM', 15, 2, 'Nepali', 'asd', 'asd', 'asd', 'asd', 'asd@gmail.com', 'asd', 'Stripe', '', NULL, 0, 0, 110, 110, 120, NULL, 'Paid', 'Pending', NULL, '2099-12-30 10:00:00', NULL, 'pi_3Py90W011037BG0D1RigBqGe', '2024-09-12 17:09:13', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 17:08:53', '2024-09-12 17:08:53', 1),
+(9, 'ALTH2YDGIMAC', 'Website', 'Deep Cleaning', 'Yearly', 4, 0, 0, 'Yes', '2024-09-30', '1:00 PM', 18, 2, 'Nepali', 'as', 'dasd', 'asd', 'asd', 'asd@gmail.com', '', 'Stripe', '', NULL, 0, 0, 110, 110, NULL, NULL, 'Pending', 'Pending', NULL, '2024-09-29 13:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 17:20:24', '2024-09-12 17:20:24', 1),
+(10, 'ALTHCTSYHCPC', 'Website', 'Deep Cleaning', 'One Time', 4, 0, 0, 'Yes', '2024-09-13', '10:00 AM', 5, 3, 'African', 'asd', 'asd', 'asd', 'asd', 'ads@gmail.com', '', 'Stripe', '', NULL, 0, 0, 110, 110, NULL, NULL, 'Pending', 'Pending', NULL, '2024-09-13 08:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-12 17:22:22', '2024-09-12 17:22:22', 1);
 
 --
 -- Triggers `booking`
@@ -8297,6 +8521,10 @@ CREATE TRIGGER `booking_trigger_update` AFTER UPDATE ON `booking` FOR EACH ROW B
         SET audit_log = CONCAT(audit_log, "Total Booking Amount: ", OLD.total_booking_amount, " -> ", NEW.total_booking_amount, "<br/>");
     END IF;
 
+    IF NEW.payment_amount <> OLD.payment_amount THEN
+        SET audit_log = CONCAT(audit_log, "Payment Amount: ", OLD.payment_amount, " -> ", NEW.payment_amount, "<br/>");
+    END IF;
+
     IF NEW.refund_amount <> OLD.refund_amount THEN
         SET audit_log = CONCAT(audit_log, "Refund Amount: ", OLD.refund_amount, " -> ", NEW.refund_amount, "<br/>");
     END IF;
@@ -8329,12 +8557,32 @@ CREATE TRIGGER `booking_trigger_update` AFTER UPDATE ON `booking` FOR EACH ROW B
         SET audit_log = CONCAT(audit_log, "Payment Date: ", OLD.payment_date, " -> ", NEW.payment_date, "<br/>");
     END IF;
 
-    IF NEW.refund_date <> OLD.refund_date THEN
-        SET audit_log = CONCAT(audit_log, "Refund Date: ", OLD.refund_date, " -> ", NEW.refund_date, "<br/>");
+    IF NEW.booking_for_cancellation_rejection_date <> OLD.booking_for_cancellation_rejection_date THEN
+        SET audit_log = CONCAT(audit_log, "For Cancellation Rejection Date: ", OLD.booking_for_cancellation_rejection_date, " -> ", NEW.booking_for_cancellation_rejection_date, "<br/>");
     END IF;
 
-    IF NEW.refund_reason <> OLD.refund_reason THEN
-        SET audit_log = CONCAT(audit_log, "Refund Reason: ", OLD.refund_reason, " -> ", NEW.refund_reason, "<br/>");
+    IF NEW.booking_for_cancellation_rejection_reason <> OLD.booking_for_cancellation_rejection_reason THEN
+        SET audit_log = CONCAT(audit_log, "For Cancellation Rejection Reason: ", OLD.booking_for_cancellation_rejection_reason, " -> ", NEW.booking_for_cancellation_rejection_reason, "<br/>");
+    END IF;
+
+    IF NEW.for_refund_date <> OLD.for_refund_date THEN
+        SET audit_log = CONCAT(audit_log, "For Refund Date: ", OLD.for_refund_date, " -> ", NEW.for_refund_date, "<br/>");
+    END IF;
+
+    IF NEW.for_refund_reason <> OLD.for_refund_reason THEN
+        SET audit_log = CONCAT(audit_log, "For Refund Reason: ", OLD.for_refund_reason, " -> ", NEW.for_refund_reason, "<br/>");
+    END IF;
+
+    IF NEW.for_refund_rejection_date <> OLD.for_refund_rejection_date THEN
+        SET audit_log = CONCAT(audit_log, "For Refund Rejection Date: ", OLD.for_refund_rejection_date, " -> ", NEW.for_refund_rejection_date, "<br/>");
+    END IF;
+
+    IF NEW.for_refund_rejection_reason <> OLD.for_refund_rejection_reason THEN
+        SET audit_log = CONCAT(audit_log, "For Refund Rejection Reason: ", OLD.for_refund_rejection_reason, " -> ", NEW.for_refund_rejection_reason, "<br/>");
+    END IF;
+
+    IF NEW.refund_date <> OLD.refund_date THEN
+        SET audit_log = CONCAT(audit_log, "Refund Date: ", OLD.refund_date, " -> ", NEW.refund_date, "<br/>");
     END IF;
 
     IF NEW.in_progress_date <> OLD.in_progress_date THEN
@@ -10167,6 +10415,7 @@ DELIMITER ;
 DROP TRIGGER IF EXISTS `customer_bank_account_trigger_update`;
 DELIMITER $$
 CREATE TRIGGER `customer_bank_account_trigger_update` AFTER UPDATE ON `customer_bank_account` FOR EACH ROW BEGIN
+
     DECLARE audit_log TEXT DEFAULT '';
 
     IF NEW.bank_name <> OLD.bank_name THEN
@@ -13331,7 +13580,9 @@ INSERT INTO `menu_item` (`menu_item_id`, `menu_item_name`, `menu_item_url`, `men
 (72, 'Sections', 'sections.php', 'ti ti-section', 10, 'Website Elements', 4, 'Website Studio', 0, NULL, 19, '2024-09-02 21:53:55', 2),
 (73, 'My Bookings', 'my-bookings.php', 'ti ti-calendar-time', 11, 'Booking', 5, 'CRM', 0, NULL, 1, '2024-09-02 22:31:14', 2),
 (74, 'Customer Inquiry', 'customer-inquiry.php', 'ti ti-messages', 12, 'Customer Service', 5, 'CRM', 0, NULL, 3, '2024-09-03 15:35:40', 2),
-(75, 'Voucher', 'voucher.php', 'ti ti-discount-2', 13, 'Marketing Centre', 5, 'CRM', NULL, NULL, 22, '2024-09-03 15:39:55', 2);
+(75, 'Voucher', 'voucher.php', 'ti ti-discount-2', 13, 'Marketing Centre', 5, 'CRM', NULL, NULL, 22, '2024-09-03 15:39:55', 2),
+(76, 'Cancellation Approval', 'cancellation-approval.php', 'ti ti-calendar-off', 11, 'Booking', 5, 'CRM', 0, NULL, 2, '2024-09-12 14:36:22', 2),
+(77, 'Refund Approval', 'refund-approval.php', 'ti ti-arrow-back-up', 11, 'Booking', 5, 'CRM', 0, NULL, 3, '2024-09-12 14:36:58', 2);
 
 --
 -- Triggers `menu_item`
@@ -14358,7 +14609,9 @@ INSERT INTO `role_permission` (`role_permission_id`, `role_id`, `role_name`, `me
 (77, 1, 'Administrator', 72, 'Sections', 1, 1, 1, 1, '2024-09-02 21:54:07', '2024-09-02 21:54:07', 2),
 (78, 1, 'Administrator', 73, 'My Bookings', 1, 1, 1, 1, '2024-09-02 22:31:18', '2024-09-02 22:31:18', 2),
 (79, 1, 'Administrator', 74, 'Customer Inquiry', 1, 1, 1, 1, '2024-09-03 15:35:44', '2024-09-03 15:35:44', 2),
-(80, 1, 'Administrator', 75, 'Voucher', 1, 1, 1, 1, '2024-09-03 15:39:59', '2024-09-03 15:39:59', 2);
+(80, 1, 'Administrator', 75, 'Voucher', 1, 1, 1, 1, '2024-09-03 15:39:59', '2024-09-03 15:39:59', 2),
+(81, 1, 'Administrator', 76, 'Cancellation Approval', 1, 0, 0, 0, '2024-09-12 14:36:32', '2024-09-12 14:36:32', 2),
+(82, 1, 'Administrator', 77, 'Refund Approval', 1, 0, 0, 0, '2024-09-12 14:43:44', '2024-09-12 14:43:44', 2);
 
 --
 -- Triggers `role_permission`
@@ -14499,7 +14752,10 @@ INSERT INTO `role_system_action_permission` (`role_system_action_permission_id`,
 (35, 1, 'Administrator', 36, 'Tag Booking As Cancelled', 1, '2024-09-11 14:33:29', '2024-09-11 14:33:29', 2),
 (36, 1, 'Administrator', 34, 'Tag Booking As Complete', 1, '2024-09-11 16:55:51', '2024-09-11 16:55:51', 2),
 (37, 1, 'Administrator', 37, 'Tag Booking Payment As Paid', 1, '2024-09-11 21:52:14', '2024-09-11 21:52:14', 2),
-(38, 1, 'Administrator', 38, 'Tag Booking Payment As Refunded', 1, '2024-09-11 21:52:36', '2024-09-11 21:52:36', 2);
+(38, 1, 'Administrator', 38, 'Tag Booking Payment As Refunded', 1, '2024-09-11 21:52:36', '2024-09-11 21:52:36', 2),
+(39, 1, 'Administrator', 39, 'Tag Booking For Cancellation As Rejected', 1, '2024-09-12 09:11:52', '2024-09-12 09:11:52', 2),
+(40, 1, 'Administrator', 40, 'Tag Booking Payment For Refund', 1, '2024-09-12 09:12:27', '2024-09-12 09:12:27', 2),
+(41, 1, 'Administrator', 41, 'Tag Booking Payment For Refund As Rejected', 1, '2024-09-12 09:17:07', '2024-09-12 09:17:07', 2);
 
 --
 -- Triggers `role_system_action_permission`
@@ -15379,7 +15635,10 @@ INSERT INTO `system_action` (`system_action_id`, `system_action_name`, `system_a
 (35, 'Tag Booking For Cancellation', 'Access to tag the booking for cancellation.', '2024-09-11 14:32:24', 2),
 (36, 'Tag Booking As Cancelled', 'Access to tag the booking as cancelled.', '2024-09-11 14:33:23', 2),
 (37, 'Tag Booking Payment As Paid', 'Access to tag the booking payment as paid.', '2024-09-11 21:51:17', 2),
-(38, 'Tag Booking Payment As Refunded', 'Access to tag the booking payment as refunded', '2024-09-11 21:52:30', 2);
+(38, 'Tag Booking Payment As Refunded', 'Access to tag the booking payment as refunded', '2024-09-11 21:52:30', 2),
+(39, 'Tag Booking For Cancellation As Rejected', 'Access to tag the booking for cancellation as rejected.', '2024-09-12 09:11:47', 2),
+(40, 'Tag Booking Payment For Refund', 'Access to tag the booking payment as refunded.', '2024-09-12 09:12:23', 2),
+(41, 'Tag Booking Payment For Refund As Rejected', 'Access to tag the booking payment for refund as rejected.', '2024-09-12 09:17:02', 2);
 
 --
 -- Triggers `system_action`
@@ -15855,7 +16114,7 @@ CREATE TABLE `user_account` (
 
 INSERT INTO `user_account` (`user_account_id`, `file_as`, `email`, `username`, `password`, `profile_picture`, `locked`, `active`, `last_failed_login_attempt`, `failed_login_attempts`, `last_connection_date`, `password_expiry_date`, `reset_token`, `reset_token_expiry_date`, `receive_notification`, `two_factor_auth`, `otp`, `otp_expiry_date`, `failed_otp_attempts`, `last_password_change`, `account_lock_duration`, `last_password_reset`, `multiple_session`, `session_token`, `user_type`, `user_verified`, `linked_id`, `registration_date`, `registration_verification_token`, `registration_verification_token_expiry_date`, `registration_verification_date`, `created_date`, `last_log_by`) VALUES
 (1, 'CGMI Bot', 'cgmibot.317@gmail.com', 'cgmibot', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-12-30', NULL, NULL, 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', NULL, 'Administrator', 'Yes', NULL, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 1),
-(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/tQag.png', 'No', 'Yes', NULL, 0, '2024-09-11 08:52:20', '2025-12-30', 'bi2hXirf%2BQ6cCo6fIklo5ax5USH5Gl41dP2lOSp5yoA%3D', '2024-09-08 19:42:32', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '2qKWUt4tDlr%2BjGi%2Bngr6zta4k65u6z6clPluOsmPDds%3D', 'Employee', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
+(2, 'Administrator', 'lawrenceagulto.317@gmail.com', 'ldagulto', 'RYHObc8sNwIxdPDNJwCsO8bXKZJXYx7RjTgEWMC17FY%3D', './components/user-account/image/profile_image/2/HjQG.jpg', 'No', 'Yes', NULL, 0, '2024-09-11 08:52:20', '2025-12-30', 'bi2hXirf%2BQ6cCo6fIklo5ax5USH5Gl41dP2lOSp5yoA%3D', '2024-09-08 19:42:32', 'Yes', 'No', NULL, NULL, 0, NULL, 0, NULL, 'Yes', '2qKWUt4tDlr%2BjGi%2Bngr6zta4k65u6z6clPluOsmPDds%3D', 'Employee', 'Yes', 1, NULL, NULL, NULL, NULL, '2024-08-21 09:45:47', 2),
 (9, 'lawrence agulto', 'agulto.lawrence03@gmail.com', 'leagulto', 'ZvLL2Oyok4HT%2BUDzKdB%2FgxZ15dVtJw7JuCzGgpajvZo%3D', NULL, 'No', 'Yes', NULL, 0, '2024-08-21 14:29:13', '2025-02-17', NULL, NULL, 'Yes', 'Yes', 'tXnO3NAhko8MWIZccZ8h9PfP5B08gpJN6Ok8GWr8BpM%3D', '2024-08-21 14:33:54', 0, '2024-08-21 10:18:07', 0, NULL, 'Yes', 'VA9Cx%2BGNgqIFnfRr1ELLQa0tpucWRD%2FROsSoE2w86ao%3D', 'Customer', 'No', 9, '2024-08-21 10:18:07', 'vnB5ikMYmgudd9ds%2Bk3a2jnx49pv0Fca7e4E9LTPVzY%3D', '2023-08-21 14:25:07', '2024-08-21 14:25:07', '2024-08-21 10:18:07', 1),
 (10, 'maricris agulto', 'marishein.fashion@gmail.com', 'magulto', 'f5z8%2FE1Kyk4ybslTTF5cAXGmU2qHu9jdPFROv69rtvI%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 14:34:24', 0, NULL, 'Yes', NULL, 'Customer', 'Yes', 10, '2024-08-21 14:34:24', 'D6b%2BPZ%2BmA4vcaq1BgIuiNN%2FI%2BBxNV7UC5cWaWdbrGgI%3D', '2023-08-22 11:58:52', '2024-08-22 11:58:52', '2024-08-21 14:34:24', 2),
 (11, 'test', 'test@gmail.com', 'test', '1ocWXcUotbhscsy175q3TBr7XmZW2qVZFrLP2a6jnuM%3D', NULL, 'No', 'Yes', NULL, 0, NULL, '2025-02-17', NULL, NULL, 'Yes', 'Yes', NULL, NULL, 0, '2024-08-21 16:48:18', 0, NULL, 'Yes', NULL, 'Guest', 'Yes', NULL, NULL, NULL, '2023-08-21 16:58:36', '2024-08-21 16:58:36', '2024-08-21 16:48:18', 1),
@@ -17435,7 +17694,7 @@ ALTER TABLE `app_module`
 -- AUTO_INCREMENT for table `audit_log`
 --
 ALTER TABLE `audit_log`
-  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=337;
+  MODIFY `audit_log_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=406;
 
 --
 -- AUTO_INCREMENT for table `bank`
@@ -17483,7 +17742,7 @@ ALTER TABLE `blood_type`
 -- AUTO_INCREMENT for table `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `booking_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `booking_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `call_to_action`
@@ -17783,7 +18042,7 @@ ALTER TABLE `menu_group`
 -- AUTO_INCREMENT for table `menu_item`
 --
 ALTER TABLE `menu_item`
-  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `menu_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `notification_setting`
@@ -17861,13 +18120,13 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `role_permission`
 --
 ALTER TABLE `role_permission`
-  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `role_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT for table `role_system_action_permission`
 --
 ALTER TABLE `role_system_action_permission`
-  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `role_system_action_permission_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `role_user_account`
@@ -17927,7 +18186,7 @@ ALTER TABLE `state`
 -- AUTO_INCREMENT for table `system_action`
 --
 ALTER TABLE `system_action`
-  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `system_action_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `system_setting`

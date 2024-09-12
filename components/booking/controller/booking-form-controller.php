@@ -167,8 +167,6 @@ class BookingController {
             $bookingIDEncrypted = $this->securityModel->encryptData($bookingID);
     
             if($modeOfPayment == 'Cash'){
-                // ADD A VOUCHER AVAILABILITY UPDATE
-
                 $response = [
                     'success' => true,
                     'redirectLink' => null,
@@ -181,15 +179,10 @@ class BookingController {
                 exit;
             }
             else{
-                $stripe_secret_key = "sk_test_51PnZXm011037BG0D6xoUVs8ivANxguIc4KN9sK5ndjWrSbXcFn1nXDkgg7oL2glDfuyg2DYDxu8AVE9O55yWXW2Z00LNpVfEuu";
-
-                \Stripe\Stripe::setApiKey($stripe_secret_key);
+                \Stripe\Stripe::setApiKey(STRIPE_API_KEY);
 
                 // Calculate total amount after discount
                 $serviceTotal = $serviceSubTotal;
-                if ($cleaningMaterials === 'Yes') {
-                    $serviceTotal += 10; // 10 AED for cleaning materials
-                }
 
                 // Apply the discount
                 $serviceTotal -= $totalDiscountAmount; 

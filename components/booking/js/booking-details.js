@@ -12,8 +12,20 @@
             tagForCancellationForm();
         }
 
+        if($('#tag-for-cancellation-as-rejected-form').length){
+            tagForCancellationAsRejectedForm();
+        }
+
         if($('#tag-as-paid-form').length){
             tagAsPaidForm();
+        }
+
+        if($('#tag-for-refund-form').length){
+            tagForRefundForm();
+        }
+
+        if($('#tag-for-refund-as-rejected-form').length){
+            tagForRefundAsRejectedForm();
         }
 
         if($('#tag-as-refunded-form').length){
@@ -49,10 +61,6 @@
           
             fieldsToReset.forEach(field => $(field).val(''));
 
-            computeBookingAmount();
-        });
-
-        $(document).on('change', '#service', function() {
             computeBookingAmount();
         });
 
@@ -327,7 +335,7 @@
     
             Swal.fire({
                 title: 'Confirm Booking Payment Tagging As Refunded',
-                text: 'Are you sure you want to tag this booking payment as refunded cancelled?',
+                text: 'Are you sure you want to tag this booking payment as refunded?',
                 icon: 'warning',
                 showCancelButton: !0,
                 confirmButtonText: 'Refunded',
@@ -668,28 +676,16 @@ function tagForCancellationForm(){
     });
 }
 
-function tagAsPaidForm(){
-    $('#tag-as-refunded-form').validate({
+function tagForCancellationAsRejectedForm(){
+    $('#tag-for-cancellation-as-rejected-form').validate({
         rules: {
-            refund_amount: {
-                required: true
-            },
-            refund_date: {
-                required: true
-            },
-            refund_reason: {
+            booking_for_cancellation_rejection_reason: {
                 required: true
             }
         },
         messages: {
-            refund_amount: {
-                required: 'Enter the refund amount'
-            },
-            refund_date: {
-                required: 'Choose the refund date'
-            },
-            refund_reason: {
-                required: 'Enter the refund reason'
+            booking_for_cancellation_rejection_reason: {
+                required: 'Enter the rejection reason'
             }
         },
         errorPlacement: function(error, element) {
@@ -715,7 +711,7 @@ function tagAsPaidForm(){
         },
         submitHandler: function(form) {
             const booking_id = $('#details-id').text();
-            const transaction = 'tag booking payment as refunded';
+            const transaction = 'tag booking for cancellation as rejected';
           
             $.ajax({
                 type: 'POST',
@@ -723,7 +719,7 @@ function tagAsPaidForm(){
                 data: $(form).serialize() + '&transaction=' + transaction + '&booking_id=' + booking_id,
                 dataType: 'json',
                 beforeSend: function() {
-                    disableFormSubmitButton('submit-tag-as-refunded-data');
+                    disableFormSubmitButton('submit-tag-for-cancellation-as-rejected-data');
                 },
                 success: function (response) {
                     if (response.success) {
@@ -748,7 +744,256 @@ function tagAsPaidForm(){
                     showErrorDialog(fullErrorMessage);
                 },
                 complete: function() {
-                    enableFormSubmitButton('submit-tag-as-refunded-data');
+                    enableFormSubmitButton('submit-tag-for-cancellation-as-rejected-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function tagAsPaidForm(){
+    $('#tag-as-paid-form').validate({
+        rules: {
+            payment_amount: {
+                required: true
+            },
+            payment_date: {
+                required: true
+            },
+            payment_reference_number: {
+                required: true
+            }
+        },
+        messages: {
+            payment_amount: {
+                required: 'Choose the payment date'
+            },
+            payment_date: {
+                required: 'Choose the payment date'
+            },
+            payment_reference_number: {
+                required: 'Enter the payment reference number'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const booking_id = $('#details-id').text();
+            const transaction = 'tag booking payment as paid';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/booking/controller/booking-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&booking_id=' + booking_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-tag-as-paid-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        setNotification(response.title, response.message, response.messageType);
+                        window.location.reload();
+                    }
+                    else {
+                        if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-tag-as-paid-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function tagForRefundForm(){
+    $('#tag-for-refund-form').validate({
+        rules: {
+            for_refund_reason: {
+                required: true
+            },
+            refund_amount: {
+                required: true
+            }
+        },
+        messages: {
+            for_refund_reason: {
+                required: 'Enter the refund reason'
+            },
+            refund_amount: {
+                required: 'Enter the refund amount'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const booking_id = $('#details-id').text();
+            const transaction = 'tag booking payment for refund';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/booking/controller/booking-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&booking_id=' + booking_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-tag-for-refund-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        setNotification(response.title, response.message, response.messageType);
+                        window.location.reload();
+                    }
+                    else {
+                        if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-tag-for-refund-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
+function tagForRefundAsRejectedForm(){
+    $('#tag-for-refund-as-rejected-form').validate({
+        rules: {
+            for_refund_rejection_reason: {
+                required: true
+            }
+        },
+        messages: {
+            for_refund_rejection_reason: {
+                required: 'Enter the rejection reason'
+            }
+        },
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const booking_id = $('#details-id').text();
+            const transaction = 'tag booking payment for refund as rejected';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/booking/controller/booking-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&booking_id=' + booking_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-tag-for-refund-as-rejected-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        setNotification(response.title, response.message, response.messageType);
+                        window.location.reload();
+                    }
+                    else {
+                        if (response.isInactive || response.notExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-tag-for-refund-as-rejected-data');
                 }
             });
         
@@ -844,12 +1089,12 @@ function displayDetails(transaction){
                         $('#phone').val(response.phone);
                         $('#email_address').val(response.emailAddress);
                         $('#source_of_booking').val(response.sourceOfBooking);
-                        $('#service').val(response.service);
-                        $('#frequency').val(response.frequency);
-                        $('#duration').val(response.duration);
-                        $('#number_of_seats').val(response.numberOfSeats);
-                        $('#meters').val(response.meters);
-                        $('#cleaning_materials').val(response.cleaningMaterials);
+                        $('#service').val(response.service).trigger('change').trigger('input');
+                        $('#frequency').val(response.frequency).trigger('change').trigger('input');
+                        $('#duration').val(response.duration).trigger('change').trigger('input');
+                        $('#number_of_seats').val(response.numberOfSeats).trigger('change').trigger('input');
+                        $('#meters').val(response.meters).trigger('change').trigger('input');
+                        $('#cleaning_materials').val(response.cleaningMaterials).trigger('change').trigger('input');
                         $('#booking_date').val(response.bookingDate);
                         $('#booking_time').val(response.bookingTime);
                         $('#number_of_professionals').val(response.numberOfProfessionals);
@@ -869,7 +1114,7 @@ function displayDetails(transaction){
                         $('#payment-reference-number-summary').text(response.paymentReferenceNumber);
                         $('#payment-date-summary').text(response.paymentDate);
                         $('#discount-code-summary').text(response.discountCode);
-                        $('#in-progress-date-summary').text(response.completedDate);
+                        $('#in-progress-date-summary').text(response.inProgressDate);
                         $('#completed-date-summary').text(response.completedDate);
                         $('#refund-amount-summary').text(response.refundAmount);
                         $('#refund-date-summary').text(response.refundDate);
@@ -877,7 +1122,14 @@ function displayDetails(transaction){
                         $('#cancellation-request-date-summary').text(response.cancellationRequestDate);
                         $('#cancellation-date-summary').text(response.cancellationDate);
                         $('#cancellation-reason-summary').text(response.cancellationReason);
-                        $('#refund-reason-summary').text(response.refundReason);
+
+                        $('#payment-amount-summary').text(response.paymentAmount);
+                        $('#for-refund-date-summary').text(response.refundReason);
+                        $('#for-refund-reason-summary').text(response.forRefundReason);
+                        $('#for-refund-rejection-date-summary').text(response.forRefundRejectionDate);
+                        $('#for-refund-rejection-reason-summary').text(response.forRefundRejectionReason);
+                        $('#for-cancellation-rejection-date-summary').text(response.refundReason);
+                        $('#for-cancellation-rejection-reason-summary').text(response.refundReason);
                     } 
                     else {
                         if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {

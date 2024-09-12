@@ -103,6 +103,7 @@ define('BASE_USER_ACCOUNT_DURATION', 1);
 define('DEFAULT_SESSION_INACTIVITY', 30);
 define('DEFAULT_PASSWORD_RECOVERY_LINK', 'http://localhost/modernize/password-reset.php?id=');
 define('ALLOW_REGISTRATION', 'No');
+define('STRIPE_API_KEY', 'sk_test_51PnZXm011037BG0D6xoUVs8ivANxguIc4KN9sK5ndjWrSbXcFn1nXDkgg7oL2glDfuyg2DYDxu8AVE9O55yWXW2Z00LNpVfEuu');
 
 # -------------------------------------------------------------
 ?>

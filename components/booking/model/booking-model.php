@@ -117,25 +117,25 @@ class BookingModel {
     # Parameters:
     # - $p_booking_id (int): The booking ID.
     # - $p_payment_status (string): The payment status.
+    # - $p_payment_amount (double): The payment amount.
     # - $p_payment_date (datetime): The payment date.
     # - $p_payment_reference_number (string): The payment reference number.
     # - $p_refund_amount (double): The refund amount.
-    # - $p_refund_date (datetime): The refund date.
     # - $p_refund_reason (string): The refund reason.
     # - $p_last_log_by (int): The last logged user.
     #
     # Returns: None
     #
     # -------------------------------------------------------------
-    public function updateBookingPaymentStatus($p_booking_id, $p_payment_status, $p_payment_date, $p_payment_reference_number, $p_refund_amount, $p_refund_date, $p_refund_reason, $p_last_log_by) {
-        $stmt = $this->db->getConnection()->prepare('CALL updateBookingPaymentStatus(:p_booking_id, :p_payment_status, :p_payment_date, :p_payment_reference_number, :p_refund_amount, :p_refund_date, :p_refund_reason, :p_last_log_by)');
+    public function updateBookingPaymentStatus($p_booking_id, $p_payment_status, $p_payment_amount, $p_payment_date, $p_payment_reference_number, $p_refund_amount, $p_remarks, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateBookingPaymentStatus(:p_booking_id, :p_payment_status, :p_payment_amount, :p_payment_date, :p_payment_reference_number, :p_refund_amount, :p_remarks, :p_last_log_by)');
         $stmt->bindValue(':p_booking_id', $p_booking_id, PDO::PARAM_INT);
         $stmt->bindValue(':p_payment_status', $p_payment_status, PDO::PARAM_STR);
+        $stmt->bindValue(':p_payment_amount', $p_payment_amount, PDO::PARAM_STR);
         $stmt->bindValue(':p_payment_date', $p_payment_date, PDO::PARAM_STR);
         $stmt->bindValue(':p_payment_reference_number', $p_payment_reference_number, PDO::PARAM_STR);
         $stmt->bindValue(':p_refund_amount', $p_refund_amount, PDO::PARAM_STR);
-        $stmt->bindValue(':p_refund_date', $p_refund_date, PDO::PARAM_STR);
-        $stmt->bindValue(':p_refund_reason', $p_refund_reason, PDO::PARAM_STR);
+        $stmt->bindValue(':p_remarks', $p_remarks, PDO::PARAM_STR);
         $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
         $stmt->execute();
     }

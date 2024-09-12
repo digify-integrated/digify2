@@ -9,6 +9,9 @@
     $tagBookingAsCancelled = $globalModel->checkSystemActionAccessRights($userID, 36);
     $tagBookingPaymentAsPaid = $globalModel->checkSystemActionAccessRights($userID, 37);
     $tagBookingPaymentAsRefunded = $globalModel->checkSystemActionAccessRights($userID, 38);
+    $tagBookingForCancellationAsRejected = $globalModel->checkSystemActionAccessRights($userID, 39);
+    $tagBookingPaymentForRefund = $globalModel->checkSystemActionAccessRights($userID, 40);
+    $tagBookingPaymentForRefundAsRejected = $globalModel->checkSystemActionAccessRights($userID, 41);
 
     if(isset($_GET['id'])){
         $bookingDetails = $bookingModel->getBooking($detailID, null);
@@ -16,11 +19,12 @@
         $paymentStatus = $bookingDetails['payment_status'];
 
         $disabled = '';
-        if($bookingStatus != 'Pending'){
+        if($bookingStatus != 'Pending' || $paymentStatus == 'Refunded'){
             $disabled = 'disabled';
         }
     }
 ?>
+
 <div class="row">
     <div class="col-12">
         <form id="booking-form" method="post" action="#">
@@ -34,7 +38,7 @@
                                 <?php
                                     echo $createAccess['total'] > 0 ? '<li><a class="dropdown-item" href="'. $pageLink .'&new">Create Booking</a></li>' : '';
 
-                                    if($bookingStatus == 'Pending' && $tagBookingAsInProgress['total'] > 0){
+                                    if(($bookingStatus == 'Pending' || $bookingStatus == 'Rejected') && $tagBookingAsInProgress['total'] > 0){
                                         echo '<li><button class="dropdown-item" type="button" id="tag-as-in-progress">Tag As In-Progress</button></li>';
                                     }
 
@@ -50,12 +54,24 @@
                                         echo '<li><button class="dropdown-item" type="button" id="tag-as-cancelled">Tag As Cancelled</button></li>';
                                     }
 
+                                    if($bookingStatus == 'For Cancellation' && $tagBookingForCancellationAsRejected['total'] > 0){
+                                        echo '<li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#tag-for-cancellation-as-rejected-modal">Tag For Cancellation As Rejected</button></li>';
+                                    }
+
                                     if($paymentStatus == 'Pending' && $tagBookingPaymentAsPaid['total'] > 0){
                                         echo '<li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#tag-as-paid-modal">Tag As Paid</button></li>';
                                     }
 
-                                    if($paymentStatus == 'Paid' && $tagBookingPaymentAsRefunded['total'] > 0){
-                                        echo '<li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#tag-as-refunded-modal">Tag As Refunded</button></li>';
+                                    if($paymentStatus == 'Paid' && $tagBookingPaymentForRefund['total'] > 0){
+                                        echo '<li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#tag-for-refund-modal">Tag For Refund</button></li>';
+                                    }
+
+                                    if($paymentStatus == 'For Refund' && $tagBookingPaymentAsRefunded['total'] > 0){
+                                        echo '<li><button class="dropdown-item" type="button" id="tag-as-refunded">Tag As Refunded</button></li>';
+                                    }
+
+                                    if($paymentStatus == 'For Refund' && $tagBookingPaymentForRefundAsRejected['total'] > 0){
+                                        echo '<li><button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#tag-for-refund-as-rejected-modal">Tag For Refund As Rejected</button></li>';
                                     }
 
                                     echo $deleteAccess['total'] > 0 ? '<li><button class="dropdown-item" type="button" id="delete-booking">Delete Booking</button></li>' : '';
@@ -456,6 +472,18 @@
                             <div class="row">
                                 <div class="col-lg-7">
                                     <div class="mb-3">
+                                        <p class="mb-0 fs-3">Payment Amount</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-3 fw-semibold" id="payment-amount-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="mb-3">
                                         <p class="mb-0 fs-3">Payment Reference Number</p>
                                     </div>
                                 </div>
@@ -501,8 +529,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
                             <div class="row">
                                 <div class="col-lg-7">
                                     <div class="mb-3">
@@ -527,6 +553,32 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-3">For Refund Date</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-refund-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-3">For Refund Reason</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-refund-reason-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-7">
                                     <div class="mb-3">
@@ -542,12 +594,24 @@
                             <div class="row">
                                 <div class="col-lg-7">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">Refund Reason</p>
+                                        <p class="mb-0 fs-3">For Refund Rejection Date</p>
                                     </div>
                                 </div>
                                 <div class="col-lg-5">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="refund-reason-summary">--</h6>
+                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-refund-rejection-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-3">For Refund Rejection Reason</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-refund-rejection-reason-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
@@ -584,6 +648,30 @@
                                 <div class="col-lg-5">
                                     <div class="mb-3">
                                         <h6 class="mb-0 fs-3 fw-semibold" id="cancellation-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-3">For Cancellation Rejection Date</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-cancellation-rejection-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-3">For Cancellation Rejection Reason</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-5">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-cancellation-rejection-reason-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
@@ -634,6 +722,33 @@
     </div>
 </div>
 
+<div id="tag-for-cancellation-as-rejected-modal" class="modal fade" tabindex="-1" aria-labelledby="tag-for-cancellation-as-rejected-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-8">Tag For Cancellation As Rejected</h5>
+                <button type="button" class="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="tag-for-cancellation-as-rejected-form" method="post" action="#">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-0">
+                                <label class="form-label" for="booking_for_cancellation_rejection_reason">Rejection Reason <span class="text-danger">*</span></label>
+                                <textarea class="form-control maxlength" id="booking_for_cancellation_rejection_reason" name="booking_for_cancellation_rejection_reason" maxlength="5000" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="tag-for-cancellation-as-rejected-form" class="btn btn-success" id="submit-tag-for-cancellation-as-rejected-data">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="tag-as-paid-modal" class="modal fade" tabindex="-1" aria-labelledby="tag-as-paid-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
@@ -643,6 +758,14 @@
             </div>
             <div class="modal-body">
                 <form id="tag-as-paid-form" method="post" action="#">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-3">
+                                <label class="form-label" for="payment_amount">Payment Amount <span class="text-danger">*</span></label>
+                                <input class="form-control" name="payment_amount" id="payment_amount" type="number" min="0.01" step="0.01">
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
@@ -674,15 +797,15 @@
     </div>
 </div>
 
-<div id="tag-as-refunded-modal" class="modal fade" tabindex="-1" aria-labelledby="tag-as-refunded-modal" aria-hidden="true">
+<div id="tag-for-refund-modal" class="modal fade" tabindex="-1" aria-labelledby="tag-for-refund-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-r">
         <div class="modal-content">
             <div class="modal-header border-bottom">
-                <h5 class="modal-title fw-8">Tag As Refunded</h5>
+                <h5 class="modal-title fw-8">Tag For Refund</h5>
                 <button type="button" class="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="tag-as-refunded-form" method="post" action="#">
+                <form id="tag-for-refund-form" method="post" action="#">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="mb-3">
@@ -693,22 +816,9 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="mb-3">
-                                <label class="form-label" for="refund_date">Refund Date <span class="text-danger">*</span></label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control regular-datepicker" id="refund_date" name="refund_date" autocomplete="off"/>
-                                    <span class="input-group-text">
-                                        <i class="ti ti-calendar fs-5"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
                             <div class="mb-0">
-                                <label class="form-label" for="refund_reason">Refund Reason <span class="text-danger">*</span></label>
-                                <textarea class="form-control maxlength" id="refund_reason" name="refund_reason" maxlength="5000" rows="5"></textarea>
+                                <label class="form-label" for="for_refund_reason">Refund Reason <span class="text-danger">*</span></label>
+                                <textarea class="form-control maxlength" id="for_refund_reason" name="for_refund_reason" maxlength="5000" rows="5"></textarea>
                             </div>
                         </div>
                     </div>
@@ -716,7 +826,34 @@
             </div>
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="tag-as-refunded-form" class="btn btn-success" id="submit-tag-as-refunded-data">Save changes</button>
+                <button type="submit" form="tag-for-refund-form" class="btn btn-success" id="submit-tag-for-refund-data">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="tag-for-refund-as-rejected-modal" class="modal fade" tabindex="-1" aria-labelledby="tag-for-refund-as-rejected-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-8">Tag For Refund As Rejected</h5>
+                <button type="button" class="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="tag-for-refund-as-rejected-form" method="post" action="#">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="mb-0">
+                                <label class="form-label" for="for_refund_rejection_reason">Rejection Reason <span class="text-danger">*</span></label>
+                                <textarea class="form-control maxlength" id="for_refund_rejection_reason" name="for_refund_rejection_reason" maxlength="5000" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="tag-for-refund-as-rejected-form" class="btn btn-success" id="submit-tag-for-refund-as-rejected-data">Save changes</button>
             </div>
         </div>
     </div>

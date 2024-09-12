@@ -145,8 +145,17 @@ class BookingController {
                 case 'tag booking for cancellation':
                     $this->tagBookingForCancellation();
                     break;
+                case 'tag booking for cancellation as rejected':
+                    $this->tagBookingForCancellationAsRejected();
+                    break;
                 case 'tag booking payment as paid':
                     $this->tagBookingPaymentAsPaid();
+                    break;
+                case 'tag booking payment for refund':
+                    $this->tagBookingPaymentForRefund();
+                    break;
+                case 'tag booking payment for refund as rejected':
+                    $this->tagBookingPaymentForRefundAsRejected();
                     break;
                 case 'tag booking payment as refunded':
                     $this->tagBookingPaymentAsRefunded();
@@ -594,6 +603,69 @@ class BookingController {
 
     # -------------------------------------------------------------
     #
+    # Function: tagBookingForCancellationAsRejected
+    # Description: 
+    # Tag the booking for cancellation as rejected if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function tagBookingForCancellationAsRejected() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $bookingForCancellationRejectionReason = $_POST['booking_for_cancellation_rejection_reason'];
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Tag Booking For Cancellation As Rejected Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->bookingModel->updateBookingStatus($bookingID, 'Rejected', $bookingForCancellationRejectionReason, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Tag Booking For Cancellation As Rejected Success',
+                'message' => 'The booking has been tagged for cancellation successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: tagBookingPaymentAsPaid
     # Description: 
     # Tag the booking payment as paid if it exists; otherwise, return an error message.
@@ -613,6 +685,7 @@ class BookingController {
             $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
             $paymentDate = $this->systemModel->checkDate('empty', $_POST['payment_date'], '', 'Y-m-d H:i:s', '');
             $paymentReferenceNumber = $_POST['payment_reference_number'];
+            $paymentAmount = $_POST['payment_amount'];
         
             $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
             $total = $checkBookingExist['total'] ?? 0;
@@ -630,12 +703,154 @@ class BookingController {
                 exit;
             }
 
-            $this->bookingModel->updateBookingPaymentStatus($bookingID, 'Paid', $paymentDate, $paymentReferenceNumber, '', '', '', $userID);
-                
+            $this->bookingModel->updateBookingPaymentStatus($bookingID, 'Paid', $paymentAmount, $paymentDate, $paymentReferenceNumber, '', '', $userID);
+
             $response = [
                 'success' => true,
                 'title' => 'Tag Booking Payment As Paid Success',
                 'message' => 'The booking payment has been tagged as paid successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: tagBookingPaymentForRefund
+    # Description: 
+    # Tag the booking payment for refund if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function tagBookingPaymentForRefund() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $refundAmount = $_POST['refund_amount'];
+            $forRefundReason = $_POST['for_refund_reason'];
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Tag Booking Payment For Refund Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $bookingDetails = $this->bookingModel->getBooking($bookingID);
+            $paymentAmount = $bookingDetails['payment_amount'] ?? 0;
+
+            if($refundAmount > $paymentAmount){
+                $response = [
+                    'success' => false,
+                    'title' => 'Tag Booking Payment For Refund Error',
+                    'message' => 'The refund amount cannot be greater than the payment amount.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->bookingModel->updateBookingPaymentStatus($bookingID, 'For Refund', '', '', '', $refundAmount, $forRefundReason, $userID);
+
+            $response = [
+                'success' => true,
+                'title' => 'Tag Booking Payment For Refund Success',
+                'message' => 'The booking payment has been tagged as for refund successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: tagBookingPaymentForRefundAsRejected
+    # Description: 
+    # Tag the booking payment for refund as rejected if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function tagBookingPaymentForRefundAsRejected() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $forRefundRejectionReason = $_POST['for_refund_rejection_reason'];
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Tag Booking For Cancellation As Rejected Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->bookingModel->updateBookingPaymentStatus($bookingID, 'Rejected', '', '', '', '', $forRefundRejectionReason, $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Tag Booking For Cancellation As Rejected Success',
+                'message' => 'The booking has been tagged for cancellation successfully.',
                 'messageType' => 'success'
             ];
             
@@ -675,9 +890,6 @@ class BookingController {
         if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
             $userID = $_SESSION['user_account_id'];
             $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
-            $refundDate = $this->systemModel->checkDate('empty', $_POST['refund_date'], '', 'Y-m-d H:i:s', '');
-            $refundAmount = $_POST['refund_amount'];
-            $refundReason = $_POST['refund_reason'];
         
             $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
             $total = $checkBookingExist['total'] ?? 0;
@@ -695,7 +907,36 @@ class BookingController {
                 exit;
             }
 
-            $this->bookingModel->updateBookingPaymentStatus($bookingID, 'Refunded', '', '', $refundAmount, $refundDate, $refundReason, $userID);
+            $bookingDetails = $this->bookingModel->getBooking($bookingID);
+            $modeOfPayment = $bookingDetails['mode_of_payment'] ?? null;
+            $refundAmount = $bookingDetails['refund_amount'] ?? 0;
+            $paymentReferenceNumber = $bookingDetails['payment_reference_number'] ?? null;
+
+            if($modeOfPayment == 'Stripe'){
+                \Stripe\Stripe::setApiKey(STRIPE_API_KEY);
+
+                if(!empty($paymentReferenceNumber)){
+                    // Create the refund
+                    $refund = \Stripe\Refund::create([
+                        'payment_intent' => $paymentReferenceNumber,
+                        'amount' => $refundAmount * 100, // Convert to cents or the smallest currency unit
+                    ]);
+
+                    if ($refund->status != 'succeeded') {
+                        $response = [
+                            'success' => false,
+                            'title' => 'Tag Booking Payment As Refunded Error',
+                            'message' => 'The refund could not be processed. Please try again later.',
+                            'messageType' => 'error'
+                        ];
+
+                        echo json_encode($response);
+                        exit;
+                    }
+                }
+            }
+
+            $this->bookingModel->updateBookingPaymentStatus($bookingID, 'Refunded', '', '', '', '', '', $userID);
                 
             $response = [
                 'success' => true,
@@ -963,13 +1204,16 @@ class BookingController {
                 'In-Progress' => 'text-bg-warning',
                 'Completed' => 'text-bg-success',
                 'For Cancellation' => 'text-bg-warning',
+                'Rejected' => 'text-bg-danger',
                 'Cancelled' => 'text-bg-danger'
             ];
 
             $paymentStatusBadgeClasses = [
                 'Pending' => 'text-bg-info',
                 'Paid' => 'text-bg-success',
-                'Refunded' => 'text-bg-warning'
+                'For Refund' => 'text-bg-warning',
+                'Rejected' => 'text-bg-danger',
+                'Refunded' => 'text-bg-danger'
             ];
                 
             $bookingStatusBadge = '<span class="badge rounded-pill ' . ($bookingStatusBadgeClasses[$bookingStatus] ?? 'text-bg-dark') . '">' . $bookingStatus . '</span>';
@@ -1013,7 +1257,11 @@ class BookingController {
                 'transactionDate' => $this->systemModel->checkDate('summary', $bookingDetails['transaction_date'], '', 'M d, Y h:i:s a', ''),
                 'cancellationReason' => $bookingDetails['cancellation_reason'] ?? '--',
                 'paymentReferenceNumber' => $bookingDetails['payment_reference_number'] ?? '--',
-                'refundReason' => $bookingDetails['refund_reason'] ?? '--',
+                'forRefundReason' => $bookingDetails['for_refund_reason'] ?? '--',
+                'forRefundRejectionReason' => $bookingDetails['for_refund_rejection_reason'] ?? '--',
+                'paymentAmount' => number_format($bookingDetails['payment_amount'] ?? '0', 2),
+                'forRefundDate' => $this->systemModel->checkDate('summary', $bookingDetails['for_refund_date'], '', 'M d, Y h:i:s a', ''),
+                'forRefundRejectionDate' => $this->systemModel->checkDate('summary', $bookingDetails['for_refund_rejection_date'], '', 'M d, Y h:i:s a', ''),
             ];
 
             echo json_encode($response);
@@ -1041,6 +1289,7 @@ require_once '../../global/model/security-model.php';
 require_once '../../global/model/system-model.php';
 require_once '../../booking/model/booking-model.php';
 require_once '../../authentication/model/authentication-model.php';
+require_once '../../../assets/libs/stripe-php-master/init.php';
 
 $controller = new BookingController(new BookingModel(new DatabaseModel), new AuthenticationModel(new DatabaseModel), new SystemModel(), new SecurityModel());
 $controller->handleRequest();

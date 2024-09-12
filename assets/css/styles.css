@@ -35046,7 +35046,7 @@ body .apexcharts-tooltip-title {
 }
 @media (min-width: 992px) {
     .datatables .table-responsive {
-        overflow-x: visible;
+        overflow-x: auto;
     }
 }
 .table-responsive .dataTables_wrapper .dataTables_length select {
