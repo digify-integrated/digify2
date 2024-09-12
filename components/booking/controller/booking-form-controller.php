@@ -110,9 +110,9 @@ class BookingController {
             $emailAddress = $_POST['email_address'];
             $service = $_POST['service'];
             $frequency = $_POST['frequency'];
-            $duration = $_POST['duration'];
-            $numberOfSeats = $_POST['number_of_seats'];
-            $meters = $_POST['meters'];
+            $duration = isset($_POST['duration']) && $_POST['duration'] !== '' ? (int)$_POST['duration'] : 0;
+            $numberOfSeats = isset($_POST['number_of_seats']) && $_POST['number_of_seats'] !== '' ? (int)$_POST['number_of_seats'] : 0;
+            $meters = isset($_POST['meters']) && $_POST['meters'] !== '' ? (int)$_POST['meters'] : 0;
             $cleaningMaterials = $_POST['cleaning_materials'];
             $bookingDate = $this->systemModel->checkDate('empty', $_POST['booking_date'], '', 'Y-m-d', '');
             $bookingTime = $_POST['booking_time'];
@@ -250,8 +250,8 @@ class BookingController {
                 // Create the checkout session with the constructed line items
                 $checkout_session = \Stripe\Checkout\Session::create([
                     "mode" => "payment",
-                    "success_url" => "http://localhost/digify2/components/al-thabitah/page/_booking_success.php?session_id={CHECKOUT_SESSION_ID}&booking_id=" . $bookingIDEncrypted,
-                    "cancel_url" => "http://localhost/digify2/althabitah.php?page=booking",
+                    "success_url" => "http://digify.x10.bz/components/al-thabitah/page/_booking_success.php?session_id={CHECKOUT_SESSION_ID}&booking_id=" . $bookingIDEncrypted,
+                    "cancel_url" => "http://digify.x10.bz/althabitah.php?page=booking",
                     "locale" => "auto",
                     "line_items" => $line_items
                 ]);

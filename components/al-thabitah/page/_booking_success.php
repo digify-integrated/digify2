@@ -26,10 +26,10 @@
                 $paymentAmount = $payment_intent->amount / 100; // Convert from cents to dollars (or the equivalent for your currency)
                 
                 // Update the booking status with the payment amount
-                $bookingModel->updateBookingPaymentStatus($bookingID, 'Paid', $paymentAmount, date('Y-m-d H:i:s'), $paymentReferenceNumber, '', '', '1');
+                $bookingModel->updateBookingPaymentStatus($bookingID, 'Paid', $paymentAmount, date('Y-m-d H:i:s'), $paymentReferenceNumber, '0.00', '', '1');
                 
                 // Redirect upon successful payment
-                header('Location:http://localhost/digify2/althabitah.php?page=booking');
+                header('Location:http://digify.x10.bz/althabitah.php?page=booking');
                 exit;
             }
         } catch (Exception $e) {
