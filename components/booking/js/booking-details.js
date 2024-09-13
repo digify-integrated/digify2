@@ -614,14 +614,19 @@
                 const match = decodedText.match(regex);
 
                 if (match && match[1]) {
-                    document.getElementById('empid-output').innerText = match[1]; // Display EMPID
+                    // Play beep sound
+                    const beepSound = document.getElementById('beep-sound');
+                    if (beepSound) {
+                        beepSound.play();
+                    }
+
+                    startEndJob(match[1]);
                 }
 
                 stopQRCodeScanner(); // Stop scanning after extraction
             };
 
             const qrCodeErrorCallback = function(errorMessage) {
-                // Debugging: Print any errors in the console
                 console.error(`QR Code Scan Error: ${errorMessage}`);
             };
 
@@ -654,6 +659,7 @@
         function stopQRCodeScanner() {
             if (html5QrCode) {
                 html5QrCode.stop().then(() => {
+                    $('#scan-qr-modal').modal('hide');
                     console.log('QR Code scanning stopped.');
                 }).catch(err => {
                     console.error('Unable to stop scanning:', err);
@@ -1420,6 +1426,48 @@ function computeBookingAmount() {
     $('#booking-subtotal-summary').text('AED ' + bookingSubTotal.toLocaleString('en-AE', { minimumFractionDigits: 2 }));
     $('#discount-subtotal-summary').text((totalDiscountAmount > 0 ? '- ' : '') + 'AED ' + totalDiscountAmount.toLocaleString('en-AE', { minimumFractionDigits: 2 }));
     $('#booking-total-summary').text('AED ' + totalBookingAmount.toLocaleString('en-AE', { minimumFractionDigits: 2 }));
+}
+
+function startEndJob(employee_id){
+    const booking_id = $('#details-id').text();
+    const transaction = 'start end job';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/booking/controller/booking-controller.php',
+        dataType: 'json',
+        data: {
+            booking_id : booking_id, 
+            employee_id : employee_id, 
+            transaction : transaction
+        },
+        success: function (response) {
+            if (response.success) {
+                showNotification(response.title, response.message, response.messageType);
+                bookingPersonnelList();
+            }
+            else {
+                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                    setNotification(response.title, response.message, response.messageType);
+                    window.location = 'logout.php?logout';
+                }
+                else if (response.notExist) {
+                    setNotification(response.title, response.message, response.messageType);
+                    window.location = page_link;
+                }
+                else {
+                    showNotification(response.title, response.message, response.messageType);
+                }
+            }
+        },
+        error: function(xhr, status, error) {
+            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+            if (xhr.responseText) {
+                fullErrorMessage += `, Response: ${xhr.responseText}`;
+            }
+            showErrorDialog(fullErrorMessage);
+        }
+    });
 }
 
 function displayDetails(transaction){

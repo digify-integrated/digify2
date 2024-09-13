@@ -699,11 +699,30 @@ END //
 
 CREATE PROCEDURE generateEmployeeBookingOptions(IN p_booking_id INT)
 BEGIN
-    SELECT employee_id, full_name
-    FROM employee 
-    WHERE employee_id NOT IN (SELECT employee_id FROM booking_personnel WHERE booking_id = p_booking_id)
-    AND employment_status = 'Active'
-    ORDER BY full_name;
+    SELECT e.employee_id, e.full_name
+    FROM employee e
+    WHERE e.employment_status = 'Active'
+    AND (
+        -- Employee is not yet assigned to the specific booking_id
+        e.employee_id NOT IN (
+            SELECT bp.employee_id 
+            FROM booking_personnel bp
+            WHERE bp.booking_id = p_booking_id
+        )
+        AND
+        -- Employee is not assigned to any other ongoing booking
+        e.employee_id NOT IN (
+            SELECT bp.employee_id 
+            FROM booking_personnel bp
+            JOIN booking b ON bp.booking_id = b.booking_id
+            WHERE bp.job_start_date IS NOT NULL
+            AND bp.job_end_date IS NULL
+            AND b.booking_status != 'Cancelled'
+            AND bp.booking_id != p_booking_id
+        )
+    )
+    ORDER BY e.full_name;
 END //
+
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

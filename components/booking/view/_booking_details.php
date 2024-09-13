@@ -702,8 +702,15 @@
                 <div class="card-body d-flex align-items-center">
                     <h5 class="card-title mb-0">Assigned Personnel</h5>
                     <div class="card-actions cursor-pointer ms-auto d-flex button-group">
-                        <button type="button" class="btn btn-success mb-0" data-bs-toggle="modal" data-bs-target="#personnel-assignment-modal" id="assign-personnel">Assign Personnel</button>
-                        <button type="button" class="btn btn-warning mb-0" data-bs-toggle="modal" data-bs-target="#scan-qr-modal">Scan QR</button>
+                        <?php
+                            if($bookingStatus == 'Pending' || $bookingStatus == 'In-Progress'){
+                                echo '<button type="button" class="btn btn-success mb-0" data-bs-toggle="modal" data-bs-target="#personnel-assignment-modal" id="assign-personnel">Assign Personnel</button>';
+                            }
+
+                            if($bookingStatus == 'In-Progress' || $bookingStatus == 'Completed'){
+                                echo '<button type="button" class="btn btn-warning mb-0" data-bs-toggle="modal" data-bs-target="#scan-qr-modal">Scan QR</button>';
+                            }
+                        ?>
                     </div>
                 </div>
                 <hr class="m-0" />
@@ -911,6 +918,7 @@
                 <button type="button" class="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="qr-scanner-container">
+                <audio id="beep-sound" src="./assets/audio/scanner-sound.mp3"></audio>
                 <div id="qr-reader" class="w-100"></div>
             </div>
             <div class="modal-footer border-top">

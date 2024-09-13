@@ -599,66 +599,28 @@ function previewImage(input, image) {
     }
 }
 
-function generateEmployeeQRCode(employeeID, name, phone, email) { 
+function generateEmployeeQRCode(employeeID, name, phone, email) {
     // Format the vCard string
-    var vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nEMPID:${employeeID}\nTEL:${phone}\nEMAIL:${email}\nEND:VCARD`;
+    let vCardData = `BEGIN:VCARD\nVERSION:3.0`;
+
+    if (name) vCardData += `\nFN:${name}`;
+    if (employeeID) vCardData += `\nEMPID:${employeeID}`;
+    if (phone) vCardData += `\nTEL;TYPE=WORK,VOICE:${phone}`;
+    if (email) vCardData += `\nEMAIL;TYPE=WORK:${email}`;
+
+    vCardData += `\nEND:VCARD`;
 
     // Clear any previous QR code
-    document.getElementById("qr-code-container").innerHTML = "";
+    const qrCodeContainer = document.getElementById("qr-code-container");
+    qrCodeContainer.innerHTML = "";
 
-    // Generate the QR code in a hidden container
-    var qrCodeContainer = document.createElement("div");
-    document.getElementById("qr-code-container").appendChild(qrCodeContainer);
-
-    var qrCode = new QRCode(qrCodeContainer, {
+    // Generate the QR code
+    const qrCode = new QRCode(qrCodeContainer, {
         text: vCardData,
-        width: 400,
-        height: 400,
+        width: 350,
+        height: 350,
         colorDark: "#000000",
         colorLight: "#ffffff",
         correctLevel: QRCode.CorrectLevel.H
     });
-
-    // Use a timeout to ensure the QR code is fully generated before modifying it
-    setTimeout(function () {
-        var qrCodeImage = qrCodeContainer.querySelector('img');
-
-        if (qrCodeImage) {
-            // Create a canvas to modify the QR code
-            var canvas = document.createElement("canvas");
-            var context = canvas.getContext("2d");
-            canvas.width = 400;
-            canvas.height = 400;
-
-            // Draw the QR code onto the canvas
-            context.drawImage(qrCodeImage, 0, 0, 400, 400);
-
-            // Create a clear space in the center
-            var centerSize = 100; // Size of the clear space for the logo
-            var centerX = (canvas.width - centerSize) / 2;
-            var centerY = (canvas.height - centerSize) / 2;
-
-            // Draw a white rectangle in the center to create a clear space
-            context.fillStyle = "#ffffff";
-            context.fillRect(centerX, centerY, centerSize, centerSize);
-
-            // Load the logo image
-            var logo = new Image();
-            logo.src = './components/al-thabitah/assets/images/logo-02.png'; // Replace with your logo image path
-
-            logo.onload = function () {
-                // Calculate the position for the logo
-                var logoPositionX = centerX;
-                var logoPositionY = centerY;
-                var logoSize = centerSize;
-
-                // Draw the logo on the canvas
-                context.drawImage(logo, logoPositionX, logoPositionY, logoSize, logoSize);
-
-                // Display the final QR code with the logo
-                document.getElementById("qr-code-container").innerHTML = ""; // Clear any existing content
-                document.getElementById("qr-code-container").appendChild(canvas); // Add the new canvas with the logo
-            };
-        } 
-    }, 500);
 }

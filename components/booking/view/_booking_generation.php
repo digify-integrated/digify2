@@ -428,7 +428,7 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
                         $deleteButton = '<button class="btn btn-danger w-100 unassign-personnel" data-booking-personnel-id="'. $bookingPersonnelID .'">Unassign</button>';
                     }
 
-                    if($bookingStatus == 'Pending' || $bookingStatus == 'In-Progress' || $bookingStatus == 'Completed'){
+                    if($bookingStatus == 'In-Progress' || $bookingStatus == 'Completed'){
                         if(empty($jobStartDate) && empty($jobEndDate)){
                             $jobButton = '<button class="btn btn-success mb-3 w-100 start-job" data-booking-personnel-id="'. $bookingPersonnelID .'">Start Job</button>';
                         }

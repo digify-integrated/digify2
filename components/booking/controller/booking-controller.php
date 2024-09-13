@@ -166,6 +166,9 @@ class BookingController {
                 case 'unassign booking personnel':
                     $this->unassignBookingPersonnel();
                     break;
+                case 'start end job':
+                    $this->startEndJob();
+                    break;
                 case 'start job':
                     $this->startJob();
                     break;
@@ -1255,8 +1258,26 @@ class BookingController {
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'Start Booking Personnel Job Time Error',
+                    'title' => 'Start Booking Personnel Job Error',
                     'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $bookingPersonnelDetails = $this->bookingModel->getBookingPersonnel($bookingPersonnelID);
+            $employeeID = $bookingPersonnelDetails['employee_id'] ?? null;
+            
+            $checkBookingPersonnelAvailability = $this->bookingModel->checkBookingPersonnelAvailability($bookingID, $employeeID);
+            $total = $checkBookingPersonnelAvailability['total'] ?? 0;
+
+            if($total > 0){
+                $response = [
+                    'success' => false,
+                    'title' => 'Start Booking Personnel Job Error',
+                    'message' => 'The selected personnel is already assigned to another ongoing job.',
                     'messageType' => 'error'
                 ];
                 
@@ -1268,13 +1289,137 @@ class BookingController {
                 
             $response = [
                 'success' => true,
-                'title' => 'Start Booking Personnel Job Time Success',
+                'title' => 'Start Booking Personnel Job Success',
                 'message' => 'The job has been started successfully.',
                 'messageType' => 'success'
             ];
             
             echo json_encode($response);
             exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: startEndJob
+    # Description: 
+    # Starts or ends the booking personnel job time if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function startEndJob() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id']) && isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Start/End Booking Personnel Job Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+        
+            $checkBookingPersonnelViaEmployeeIDExist = $this->bookingModel->checkBookingPersonnelViaEmployeeIDExist($bookingID, $employeeID);
+            $total = $checkBookingPersonnelViaEmployeeIDExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'title' => 'Start/End Booking Personnel Job Error',
+                    'message' => 'The booking personnel does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $bookingPersonnelDetails = $this->bookingModel->getBookingPersonnelViaEmployeeID($bookingID, $employeeID);
+            $bookingPersonnelID = $bookingPersonnelDetails['booking_personnel_id'] ?? null;
+            $jobStartDate = $bookingPersonnelDetails['job_start_date'] ?? null;
+            $jobEndDate = $bookingPersonnelDetails['job_end_date'] ?? null;
+
+            if(empty($jobStartDate) && empty($jobEndDate)){
+                $checkBookingPersonnelAvailability = $this->bookingModel->checkBookingPersonnelAvailability($bookingID, $employeeID);
+                $total = $checkBookingPersonnelAvailability['total'] ?? 0;
+
+                if($total > 0){
+                    $response = [
+                        'success' => false,
+                        'title' => 'Start Booking Personnel Job Error',
+                        'message' => 'The selected personnel is already assigned to another ongoing job.',
+                        'messageType' => 'error'
+                    ];
+                    
+                    echo json_encode($response);
+                    exit;
+                }
+
+                $this->bookingModel->updateBookingPersonnelJobTime($bookingPersonnelID, 'Start', $userID);
+                    
+                $response = [
+                    'success' => true,
+                    'title' => 'Start Booking Personnel Job Success',
+                    'message' => 'The job has been started successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else if(!empty($jobStartDate) && empty($jobEndDate)){
+                $this->bookingModel->updateBookingPersonnelJobTime($bookingPersonnelID, 'End', $userID);
+                
+                $response = [
+                    'success' => true,
+                    'title' => 'End Booking Personnel Job Success',
+                    'message' => 'The job has been ended successfully.',
+                    'messageType' => 'success'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+            else{
+                $response = [
+                    'success' => false,
+                    'title' => 'Start/End Booking Personnel Job Error',
+                    'message' => 'The job has already been completed.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
         }
         else{
             $response = [
@@ -1322,7 +1467,7 @@ class BookingController {
                 $response = [
                     'success' => false,
                     'notExist' => true,
-                    'title' => 'End Booking Personnel Job Time Error',
+                    'title' => 'End Booking Personnel Job Error',
                     'message' => 'The booking does not exist.',
                     'messageType' => 'error'
                 ];
@@ -1335,7 +1480,7 @@ class BookingController {
                 
             $response = [
                 'success' => true,
-                'title' => 'End Booking Personnel Job Time Success',
+                'title' => 'End Booking Personnel Job Success',
                 'message' => 'The job has been ended successfully.',
                 'messageType' => 'success'
             ];

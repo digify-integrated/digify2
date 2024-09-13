@@ -290,6 +290,52 @@ class BookingModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: checkBookingPersonnelViaEmployeeIDExist
+    # Description: Checks if a booking personnel is available.
+    #
+    # Parameters:
+    # - $p_booking_id (int): The booking ID.
+    # - $p_employee_id (int): The employee ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkBookingPersonnelViaEmployeeIDExist($p_booking_id, $p_employee_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkBookingPersonnelViaEmployeeIDExist(:p_booking_id, :p_employee_id)');
+        $stmt->bindValue(':p_booking_id', $p_booking_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Check methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: checkBookingPersonnelAvailability
+    # Description: Checks if a booking personnel is available.
+    #
+    # Parameters:
+    # - $p_booking_id (int): The booking ID.
+    # - $p_employee_id (int): The employee ID.
+    #
+    # Returns: The result of the query as an associative array.
+    #
+    # -------------------------------------------------------------
+    public function checkBookingPersonnelAvailability($p_booking_id, $p_employee_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL checkBookingPersonnelAvailability(:p_booking_id, :p_employee_id)');
+        $stmt->bindValue(':p_booking_id', $p_booking_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Delete methods
     # -------------------------------------------------------------
 
@@ -348,6 +394,48 @@ class BookingModel {
     public function getBooking($p_booking_id) {
         $stmt = $this->db->getConnection()->prepare('CALL getBooking(:p_booking_id)');
         $stmt->bindValue(':p_booking_id', $p_booking_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getBookingPersonnel
+    # Description: Retrieves the details of a booking.
+    #
+    # Parameters:
+    # - $p_booking_personnel_id (int): The booking personnel ID.
+    #
+    # Returns:
+    # - An array containing the booking details.
+    #
+    # -------------------------------------------------------------
+    public function getBookingPersonnel($p_booking_personnel_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getBookingPersonnel(:p_booking_personnel_id)');
+        $stmt->bindValue(':p_booking_personnel_id', $p_booking_personnel_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getBookingPersonnelViaEmployeeID
+    # Description: Retrieves the details of a booking.
+    #
+    # Parameters:
+    # - $p_booking_id (int): The booking ID.
+    # - $p_employee_id (int): The employee ID.
+    #
+    # Returns:
+    # - An array containing the booking details.
+    #
+    # -------------------------------------------------------------
+    public function getBookingPersonnelViaEmployeeID($p_booking_id, $p_employee_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getBookingPersonnelViaEmployeeID(:p_booking_id, :p_employee_id)');
+        $stmt->bindValue(':p_booking_id', $p_booking_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

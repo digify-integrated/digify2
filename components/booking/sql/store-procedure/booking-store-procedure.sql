@@ -9,6 +9,25 @@ BEGIN
     WHERE booking_id = p_booking_id;
 END //
 
+CREATE PROCEDURE checkBookingPersonnelViaEmployeeIDExist(IN p_booking_id INT, IN p_employee_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM booking_personnel
+    WHERE booking_id = p_booking_id AND employee_id = p_employee_id;
+END //
+
+CREATE PROCEDURE checkBookingPersonnelAvailability(IN p_booking_id INT, IN p_employee_id INT)
+BEGIN
+	SELECT COUNT(*) AS total
+    FROM booking_personnel bp
+    JOIN booking b ON bp.booking_id = b.booking_id
+    WHERE bp.job_start_date IS NOT NULL
+    AND bp.job_end_date IS NULL
+    AND b.booking_status != 'Cancelled'
+    AND bp.booking_id != p_booking_id
+    AND bp.employee_id = p_employee_id;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Insert Stored Procedure */
@@ -182,6 +201,18 @@ CREATE PROCEDURE getBooking(IN p_booking_id INT)
 BEGIN
 	SELECT * FROM booking
 	WHERE booking_id = p_booking_id;
+END //
+
+CREATE PROCEDURE getBookingPersonnel(IN p_booking_personnel_id INT)
+BEGIN
+	SELECT * FROM booking_personnel
+	WHERE booking_personnel_id = p_booking_personnel_id;
+END //
+
+CREATE PROCEDURE getBookingPersonnelViaEmployeeID(IN p_booking_id INT, IN p_employee_id INT)
+BEGIN
+	SELECT * FROM booking_personnel
+	WHERE booking_id = p_booking_id AND employee_id = p_employee_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
