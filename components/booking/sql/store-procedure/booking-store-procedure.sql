@@ -20,6 +20,13 @@ BEGIN
 
     SET p_booking_id = LAST_INSERT_ID();
 END //
+
+CREATE PROCEDURE insertBookingPersonnel(IN p_booking_id INT, IN p_employee_id INT, IN p_last_log_by INT)
+BEGIN
+    INSERT INTO booking_personnel (booking_id, employee_id, last_log_by) 
+	VALUES(p_booking_id, p_employee_id, p_last_log_by);
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Update Stored Procedure */
@@ -137,13 +144,34 @@ BEGIN
     END IF;
 END //
 
+CREATE PROCEDURE updateBookingPersonnelJobTime(IN p_booking_personnel_id INT, IN p_job_type VARCHAR(20), IN p_last_log_by INT)
+BEGIN    
+    IF p_job_type = 'Start' THEN
+        UPDATE booking_personnel
+        SET job_start_date = NOW(),
+            last_log_by = p_last_log_by
+        WHERE booking_personnel_id = p_booking_personnel_id;
+    ELSE
+        UPDATE booking_personnel
+        SET job_end_date = NOW(),
+            last_log_by = p_last_log_by
+        WHERE booking_personnel_id = p_booking_personnel_id;
+    END IF;
+END //
+
 /* ----------------------------------------------------------------------------------------------------------------------------- */
 
 /* Delete Stored Procedure */
 
 CREATE PROCEDURE deleteBooking(IN p_booking_id INT)
 BEGIN
+    DELETE FROM booking_personnel WHERE booking_id = p_booking_id;
     DELETE FROM booking WHERE booking_id = p_booking_id;
+END //
+
+CREATE PROCEDURE deleteBookingPersonnel(IN p_booking_personnel_id INT)
+BEGIN
+    DELETE FROM booking_personnel WHERE booking_personnel_id = p_booking_personnel_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
@@ -343,6 +371,11 @@ BEGIN
     PREPARE stmt FROM query;
     EXECUTE stmt;
     DEALLOCATE PREPARE stmt;
+END //
+
+CREATE PROCEDURE generateBookingPersonnelList(IN p_booking_id INT)
+BEGIN
+    SELECT * FROM booking_personnel WHERE booking_id = p_booking_id;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

@@ -508,6 +508,12 @@ BEGIN
 	WHERE employee_address_id = p_employee_address_id;
 END //
 
+CREATE PROCEDURE getEmployeePrimaryAddress(IN p_employee_id INT)
+BEGIN
+	SELECT * FROM employee_address
+	WHERE employee_id = p_employee_id AND default_address = 'Primary';
+END //
+
 CREATE PROCEDURE getEmployeeBankAccount(IN p_employee_bank_account_id INT)
 BEGIN
 	SELECT * FROM employee_bank_account
@@ -689,6 +695,15 @@ BEGIN
             ORDER BY full_name;
         END IF;
     END IF;
+END //
+
+CREATE PROCEDURE generateEmployeeBookingOptions(IN p_booking_id INT)
+BEGIN
+    SELECT employee_id, full_name
+    FROM employee 
+    WHERE employee_id NOT IN (SELECT employee_id FROM booking_personnel WHERE booking_id = p_booking_id)
+    AND employment_status = 'Active'
+    ORDER BY full_name;
 END //
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */

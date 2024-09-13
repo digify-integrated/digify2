@@ -26,7 +26,7 @@
 ?>
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-lg-12">
         <form id="booking-form" method="post" action="#">
             <div class="card">
                 <div class="form-horizontal">
@@ -410,7 +410,7 @@
 </div>
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-lg-12">
         <div class="card">
             <div class="form-horizontal">
                 <hr class="m-0" />
@@ -422,268 +422,268 @@
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">Booking Reference Number</p>
+                                        <p class="mb-0 fs-2">Booking Reference Number</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="booking-reference-number-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">Payment Status</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="payment-status-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="booking-reference-number-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">Booking Status</p>
+                                        <p class="mb-0 fs-2">Payment Status</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="booking-status-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">Transaction Date</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="transaction-date-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="payment-status-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">Payment Amount</p>
+                                        <p class="mb-0 fs-2">Booking Status</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="payment-amount-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">Payment Reference Number</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="payment-reference-number-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="booking-status-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">Payment Date</p>
+                                        <p class="mb-0 fs-2">Transaction Date</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="payment-date-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">Discount Code</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="discount-code-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="transaction-date-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">In-Progress Date</p>
+                                        <p class="mb-0 fs-2">Payment Amount</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="in-progress-date-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">Completed Date</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="completed-date-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="payment-amount-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">Refund Amount</p>
+                                        <p class="mb-0 fs-2">Payment Reference Number</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="refund-amount-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="payment-reference-number-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">Payment Date</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="payment-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">Discount Code</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="discount-code-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">In-Progress Date</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="in-progress-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">Completed Date</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="completed-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">Refund Amount</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="refund-amount-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">For Refund Date</p>
+                                        <p class="mb-0 fs-2">For Refund Date</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-refund-date-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">For Refund Reason</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-refund-reason-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="for-refund-date-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">Refund Date</p>
+                                        <p class="mb-0 fs-2">For Refund Reason</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="refund-date-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">For Refund Rejection Date</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-refund-rejection-date-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="for-refund-reason-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">For Refund Rejection Reason</p>
+                                        <p class="mb-0 fs-2">Refund Date</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-refund-rejection-reason-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">Cancellation Window</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="cancellation-window-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="refund-date-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">Cancellation Request Date</p>
+                                        <p class="mb-0 fs-2">For Refund Rejection Date</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="cancellation-request-date-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">Cancellation Date</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="cancellation-date-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="for-refund-rejection-date-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">For Cancellation Rejection Date</p>
+                                        <p class="mb-0 fs-2">For Refund Rejection Reason</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-cancellation-rejection-date-summary">--</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <div class="mb-3">
-                                        <p class="mb-0 fs-3">For Cancellation Rejection Reason</p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-5">
-                                    <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="for-cancellation-rejection-reason-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="for-refund-rejection-reason-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-7">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <p class="mb-0 fs-3">Cancellation Reason</p>
+                                        <p class="mb-0 fs-2">Cancellation Window</p>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-6">
                                     <div class="mb-3">
-                                        <h6 class="mb-0 fs-3 fw-semibold" id="cancellation-reason-summary">--</h6>
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="cancellation-window-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">Cancellation Request Date</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="cancellation-request-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">Cancellation Date</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="cancellation-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">For Cancellation Rejection Date</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="for-cancellation-rejection-date-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">For Cancellation Rejection Reason</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="for-cancellation-rejection-reason-summary">--</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <p class="mb-0 fs-2">Cancellation Reason</p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mb-3">
+                                        <h6 class="mb-0 fs-2 fw-semibold" id="cancellation-reason-summary">--</h6>
                                     </div>
                                 </div>
                             </div>
@@ -692,6 +692,26 @@
                 </div>
             </div>
         </div>    
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="form-horizontal">
+                <div class="card-body d-flex align-items-center">
+                    <h5 class="card-title mb-0">Assigned Personnel</h5>
+                    <div class="card-actions cursor-pointer ms-auto d-flex button-group">
+                        <button type="button" class="btn btn-success mb-0" data-bs-toggle="modal" data-bs-target="#personnel-assignment-modal" id="assign-personnel">Assign Personnel</button>
+                        <button type="button" class="btn btn-warning mb-0" data-bs-toggle="modal" data-bs-target="#scan-qr-modal">Scan QR</button>
+                    </div>
+                </div>
+                <hr class="m-0" />
+                <div class="card-body mb-0">
+                    <div class="row" id="booking-personnel-container"></div>
+                </div>
+            </div>
+        </div>     
     </div>
 </div>
 
@@ -854,6 +874,47 @@
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="tag-for-refund-as-rejected-form" class="btn btn-success" id="submit-tag-for-refund-as-rejected-data">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="personnel-assignment-modal" class="modal fade" tabindex="-1" aria-labelledby="personnel-assignment-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-8">Tag For Refund As Rejected</h5>
+                <button type="button" class="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="personnel-assignment-form" method="post" action="#">
+                    <div class="row">
+                        <div class="col-12">
+                            <select multiple="multiple" size="20" id="employee_id" name="employee_id[]"></select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="personnel-assignment-form" class="btn btn-success" id="submit-personnel-assignment-data">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="scan-qr-modal" class="modal fade" tabindex="-1" aria-labelledby="scan-qr-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-8">Scan QR Code</h5>
+                <button type="button" class="btn-close fs-3" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="qr-scanner-container">
+                <div id="qr-reader" class="w-100"></div>
+            </div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

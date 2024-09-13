@@ -26,7 +26,8 @@
             </ul>
 
             <div class="d-block d-lg-none py-9 py-xl-0">
-                <img src="./assets/images/logos/dark-logo.svg" alt="matdash-img" />
+                <img src="./assets/images/logos/dark-logo.svg" alt="modernize-img" />
+                <img src="./assets/images/logos/light-logo.svg" alt="modernize-img" style="display: none;">
             </div>
             <a class="navbar-toggler p-0 border-0 nav-icon-hover-bg rounded-circle" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <iconify-icon icon="solar:menu-dots-bold-duotone" class="fs-6"></iconify-icon>
@@ -45,14 +46,14 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link" href="javascript:void(0)" id="drop1" aria-expanded="false">
                                 <div class="d-flex align-items-center gap-2 lh-base">
-                                    <img src="<?php echo $profilePicture; ?>" class="rounded-circle" width="35" height="35" alt="matdash-img" />
+                                    <img src="<?php echo $profilePicture; ?>" class="rounded-circle" width="35" height="35" alt="modernize-img" />
                                     <iconify-icon icon="solar:alt-arrow-down-bold" class="fs-2"></iconify-icon>
                                 </div>
                             </a>
                             <div class="dropdown-menu profile-dropdown dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop1">
                                 <div class="position-relative px-4 pt-3 pb-2">
                                     <div class="d-flex align-items-center mb-3 pb-3 border-bottom gap-6">
-                                        <img src="<?php echo $profilePicture; ?>" class="rounded-circle" width="56" height="56" alt="matdash-img" />
+                                        <img src="<?php echo $profilePicture; ?>" class="rounded-circle" width="56" height="56" alt="modernize-img" />
                                         <div>
                                             <h5 class="mb-0 fs-12"><?php echo $userFileAs; ?></h5>
                                             <small class="mb-0 text-dark text-wrap"><?php echo $userEmail; ?></small>

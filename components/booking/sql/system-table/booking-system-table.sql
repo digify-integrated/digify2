@@ -64,3 +64,22 @@ CREATE INDEX booking_index_booking_reference_number ON booking(booking_reference
 CREATE INDEX booking_index_discount_type ON booking(discount_type);
 
 /* ----------------------------------------------------------------------------------------------------------------------------- */
+
+/* Booking Personnel Table */
+
+CREATE TABLE booking_personnel (
+    booking_personnel_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    booking_id INT UNSIGNED NOT NULL,
+    employee_id INT UNSIGNED NOT NULL,
+    job_start_date DATETIME,
+    job_end_date DATETIME,
+    created_date DATETIME NOT NULL DEFAULT NOW(),
+    last_log_by INT UNSIGNED NOT NULL,
+    FOREIGN KEY (booking_id) REFERENCES booking(booking_id),
+    FOREIGN KEY (last_log_by) REFERENCES user_account(user_account_id)
+);
+
+CREATE INDEX booking_personnel_index_booking_personnel_id ON booking_personnel(booking_personnel_id);
+CREATE INDEX booking_personnel_index_booking_id ON booking_personnel(booking_id);
+
+/* ----------------------------------------------------------------------------------------------------------------------------- */

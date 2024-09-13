@@ -892,6 +892,36 @@ if(isset($_POST['type']) && !empty($_POST['type'])){
             echo json_encode($response);
         break;
         # -------------------------------------------------------------
+
+        # -------------------------------------------------------------
+        #
+        # Type: employee booking dual listbox options
+        # Description:
+        # Generates the employee booking dual listbox options.
+        #
+        # Parameters: None
+        #
+        # Returns: Array
+        #
+        # -------------------------------------------------------------
+        case 'employee booking dual listbox options':
+            $bookingID = isset($_POST['booking_id']) ? htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8') : null;
+            $sql = $databaseModel->getConnection()->prepare('CALL generateEmployeeBookingOptions(:bookingID)');
+            $sql->bindValue(':bookingID', $bookingID, PDO::PARAM_INT);
+            $sql->execute();
+            $options = $sql->fetchAll(PDO::FETCH_ASSOC);
+            $sql->closeCursor();
+
+            foreach ($options as $row) {
+                $response[] = [
+                    'id' => $row['employee_id'],
+                    'text' => $row['full_name']
+                ];
+            }
+
+            echo json_encode($response);
+        break;
+        # -------------------------------------------------------------
     }
 }
 

@@ -108,7 +108,7 @@ class CustomerInquiryController {
             $response = [
                 'success' => true,
                 'title' => 'Customer Inquiry Submission Success',
-                'message' => 'The customer inquiry has been submission successfully.'
+                'message' => 'The customer inquiry has been submitted successfully.'
             ];
             
             echo json_encode($response);

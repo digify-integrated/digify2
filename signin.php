@@ -6,7 +6,7 @@
     $databaseModel = new DatabaseModel();
     $systemSettingModel = new SystemSettingModel($databaseModel);
 
-    $pageTitle = 'CGMI Digital Solutions';
+    $pageTitle = 'Modernize';
 
     require('components/global/config/session-check.php');
 
@@ -30,7 +30,7 @@
                                 <a href="index.php" class="text-nowrap logo-img d-block w-100">
                                     <img src="./assets/images/logos/dark-logo.svg" class="dark-logo" alt="Logo-Dark" />
                                 </a>
-                                <h2 class="mb-2 mt-4 fs-7 fw-bolder">Welcome to <span class="text-primary">CGMI Digital Solutions</span></h2>
+                                <h2 class="mb-2 mt-4 fs-7 fw-bolder">Welcome to <span class="text-primary">Modernize</span></h2>
                                 <p class="mb-9">Empowering Futures, Crafting Digital Excellence</p>
                                 <form id="signin-form" method="post" action="#">
                                     <div class="mb-3">

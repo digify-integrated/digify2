@@ -289,6 +289,9 @@ class EmployeeController {
                 case 'get employee language details':
                     $this->getEmployeeLanguageDetails();
                     break;
+                case 'get employee QR code details':
+                    $this->getEmployeeQRCodeDetails();
+                    break;
                 case 'delete employee':
                     $this->deleteEmployee();
                     break;
@@ -3781,6 +3784,69 @@ class EmployeeController {
                 'success' => true,
                 'languageID' => $employeeLanguageDetails['language_id'] ?? null,
                 'languageProficiencyID' => $employeeLanguageDetails['language_proficiency_id'] ?? null
+            ];
+
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: getEmployeeQRCodeDetails
+    # Description: 
+    # Handles the retrieval of employee QR code details.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function getEmployeeQRCodeDetails() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+    
+        if (isset($_POST['employee_id']) && !empty($_POST['employee_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $employeeID = htmlspecialchars($_POST['employee_id'], ENT_QUOTES, 'UTF-8');
+
+            $checkEmployeeExist = $this->employeeModel->checkEmployeeExist($employeeID);
+            $total = $checkEmployeeExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Get Employee QR Code Details Error',
+                    'message' => 'The employee does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $employeeDetails = $this->employeeModel->getEmployee($employeeID);   
+            $employeeAddressDetails = $this->employeeModel->getEmployeePrimaryAddress($employeeID);
+
+            $response = [
+                'success' => true,
+                'fullName' => $employeeDetails['full_name'] ?? null,
+                'mobile' => $employeeAddressDetails['mobile'] ?? null,
+                'email' => $employeeAddressDetails['email'] ?? null
             ];
 
             echo json_encode($response);

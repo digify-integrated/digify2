@@ -142,6 +142,28 @@ class BookingModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: updateBookingPersonnelJobTime
+    # Description: Updates the booking personnel job time.
+    #
+    # Parameters:
+    # - $p_booking_personnel_id (int): The booking personnel ID.
+    # - $p_job_type (string): The job type.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function updateBookingPersonnelJobTime($p_booking_personnel_id, $p_job_type, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL updateBookingPersonnelJobTime(:p_booking_personnel_id, :p_job_type, :p_last_log_by)');
+        $stmt->bindValue(':p_booking_personnel_id', $p_booking_personnel_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_job_type', $p_job_type, PDO::PARAM_STR);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Insert methods
     # -------------------------------------------------------------
 
@@ -223,6 +245,28 @@ class BookingModel {
     # -------------------------------------------------------------
 
     # -------------------------------------------------------------
+    #
+    # Function: insertBookingPersonnel
+    # Description: Inserts the booking personnel.
+    #
+    # Parameters:
+    # - $p_booking_id (int): The booking ID.
+    # - $p_employee_id (int): The employee ID.
+    # - $p_last_log_by (int): The last logged user.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function insertBookingPersonnel($p_booking_id, $p_employee_id, $p_last_log_by) {
+        $stmt = $this->db->getConnection()->prepare('CALL insertBookingPersonnel(:p_booking_id, :p_employee_id, :p_last_log_by)');
+        $stmt->bindValue(':p_booking_id', $p_booking_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->bindValue(':p_last_log_by', $p_last_log_by, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
     #   Check exist methods
     # -------------------------------------------------------------
 
@@ -263,6 +307,24 @@ class BookingModel {
     public function deleteBooking($p_booking_id) {
         $stmt = $this->db->getConnection()->prepare('CALL deleteBooking(:p_booking_id)');
         $stmt->bindValue(':p_booking_id', $p_booking_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: deleteBookingPersonnel
+    # Description: Deletes the booking personnel.
+    #
+    # Parameters:
+    # - $p_booking_personnel_id (int): The booking personnel ID.
+    #
+    # Returns: None
+    #
+    # -------------------------------------------------------------
+    public function deleteBookingPersonnel($p_booking_personnel_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL deleteBookingPersonnel(:p_booking_personnel_id)');
+        $stmt->bindValue(':p_booking_personnel_id', $p_booking_personnel_id, PDO::PARAM_INT);
         $stmt->execute();
     }
     # -------------------------------------------------------------

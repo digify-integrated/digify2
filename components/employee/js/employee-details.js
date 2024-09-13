@@ -987,6 +987,10 @@
             }
         });
 
+        $(document).on('click','#generate-qr-code',function() {
+            displayDetails('get employee QR code details');
+        });
+
         if($('#experience-container').length){
             experienceList();
         }
@@ -3328,6 +3332,45 @@ function displayDetails(transaction){
                             $('#language-modal').modal('hide');
                             languageList();
                             resetModalForm('language-form');
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                }
+            });
+            break;
+        case 'get employee QR code details':
+            var employee_id = $('#details-id').text();
+            var page_link = document.getElementById('page-link').getAttribute('href');
+            
+            $.ajax({
+                url: 'components/employee/controller/employee-controller.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    employee_id : employee_id, 
+                    transaction : transaction
+                },
+                success: function(response) {
+                    if (response.success) {
+                        generateEmployeeQRCode(employee_id, response.fullName, response.mobile, response.email);
+                    } 
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
                         }
                         else {
                             showNotification(response.title, response.message, response.messageType);

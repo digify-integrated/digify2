@@ -32,6 +32,14 @@
             tagAsRefundedForm();
         }
 
+        if($('#personnel-assignment-form').length){
+            personnelAssignmentForm();
+        }
+
+        if($('#booking-personnel-container').length){
+            bookingPersonnelList();
+        }
+
         $(document).on('change', '#service', function() {
             const selectedValue = $(this).val();
             const serviceGroups = {
@@ -387,6 +395,193 @@
             });
         });
 
+        $(document).on('click','#assign-personnel',function() {
+            generateDropdownOptions('employee booking dual listbox options');
+        });
+
+        $(document).on('click','.unassign-personnel',function() {
+            const booking_id = $('#details-id').text();
+            const booking_personnel_id = $(this).data('booking-personnel-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'unassign booking personnel';
+    
+            Swal.fire({
+                title: 'Confirm Booking Personnel Unassign',
+                text: 'Are you sure you want to unassign this employee?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Unassign',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-danger mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/booking/controller/booking-controller.php',
+                        dataType: 'json',
+                        data: {
+                            booking_id : booking_id, 
+                            booking_personnel_id : booking_personnel_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                bookingPersonnelList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
+        $(document).on('click','.start-job',function() {
+            const booking_id = $('#details-id').text();
+            const booking_personnel_id = $(this).data('booking-personnel-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'start job';
+    
+            Swal.fire({
+                title: 'Confirm Job Start',
+                text: 'Are you sure you want to start the job this employee?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'Start',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-success mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/booking/controller/booking-controller.php',
+                        dataType: 'json',
+                        data: {
+                            booking_id : booking_id, 
+                            booking_personnel_id : booking_personnel_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                bookingPersonnelList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
+        $(document).on('click','.end-job',function() {
+            const booking_id = $('#details-id').text();
+            const booking_personnel_id = $(this).data('booking-personnel-id');
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'end job';
+    
+            Swal.fire({
+                title: 'Confirm Job End',
+                text: 'Are you sure you want to end the job this employee?',
+                icon: 'warning',
+                showCancelButton: !0,
+                confirmButtonText: 'End',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn btn-warning mt-2',
+                    cancelButton: 'btn btn-secondary ms-2 mt-2'
+                },
+                buttonsStyling: !1
+            }).then(function(result) {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: 'components/booking/controller/booking-controller.php',
+                        dataType: 'json',
+                        data: {
+                            booking_id : booking_id, 
+                            booking_personnel_id : booking_personnel_id, 
+                            transaction : transaction
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                showNotification(response.title, response.message, response.messageType);
+                                bookingPersonnelList();
+                            }
+                            else {
+                                if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = 'logout.php?logout';
+                                }
+                                else if (response.notExist) {
+                                    setNotification(response.title, response.message, response.messageType);
+                                    window.location = page_link;
+                                }
+                                else {
+                                    showNotification(response.title, response.message, response.messageType);
+                                }
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                            if (xhr.responseText) {
+                                fullErrorMessage += `, Response: ${xhr.responseText}`;
+                            }
+                            showErrorDialog(fullErrorMessage);
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
         if($('#log-notes-main').length){
             const booking_id = $('#details-id').text();
 
@@ -404,6 +599,77 @@
 
             internalNotesForm('booking', booking_id);
         }
+
+        // Initialize the QR scanner variable
+        let html5QrCode;
+
+        // Function to start the QR code scanner
+        function startAndScanQRCode() {
+            // Define the callback for successful QR code scan
+            const qrCodeSuccessCallback = function(decodedText, decodedResult) {
+                console.log('QR Code Data:', decodedText); // Debugging: Show scanned data in the console
+
+                // Extract the EMPID from the vCard data
+                const regex = /EMPID:([^\n]+)/; // Regular expression to find EMPID
+                const match = decodedText.match(regex);
+
+                if (match && match[1]) {
+                    document.getElementById('empid-output').innerText = match[1]; // Display EMPID
+                }
+
+                stopQRCodeScanner(); // Stop scanning after extraction
+            };
+
+            const qrCodeErrorCallback = function(errorMessage) {
+                // Debugging: Print any errors in the console
+                console.error(`QR Code Scan Error: ${errorMessage}`);
+            };
+
+            // Initialize the QR scanner
+            html5QrCode = new Html5Qrcode('qr-reader');
+
+            // Start scanning with the rear camera
+            html5QrCode.start(
+                { facingMode: 'environment' }, // Camera facing mode for best performance
+                {
+                    fps: 15, // Higher fps for smoother scanning (15 fps is usually a good balance)
+                    qrbox: function(viewfinderWidth, viewfinderHeight) {
+                        // Dynamically calculate qrbox size for best performance
+                        const minEdgeSize = Math.min(viewfinderWidth, viewfinderHeight);
+                        return {
+                            width: Math.floor(minEdgeSize * 0.8), // Use 80% of the smaller dimension
+                            height: Math.floor(minEdgeSize * 0.8)
+                        };
+                    },
+                    disableFlip: true, // Disable flip if not needed to improve performance
+                },
+                qrCodeSuccessCallback,
+                qrCodeErrorCallback
+            ).catch(err => {
+                console.error('Unable to start scanning:', err);
+            });
+        }
+
+        // Function to stop the QR code scanner
+        function stopQRCodeScanner() {
+            if (html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    console.log('QR Code scanning stopped.');
+                }).catch(err => {
+                    console.error('Unable to stop scanning:', err);
+                });
+            }
+        }
+
+        // Event listener to start the scanner when the modal is shown
+        document.getElementById('scan-qr-modal').addEventListener('shown.bs.modal', function () {
+            startAndScanQRCode();
+        });
+
+        // Event listener to stop the scanner when the modal is hidden
+        document.getElementById('scan-qr-modal').addEventListener('hidden.bs.modal', function () {
+            stopQRCodeScanner();
+        });
     });
 })(jQuery);
 
@@ -595,6 +861,25 @@ function bookingForm(){
             });
         
             return false;
+        }
+    });
+}
+
+function bookingPersonnelList(){
+    const booking_id = $('#details-id').text();
+    const page_id = $('#page-id').val();
+    const type = 'booking personnel list';
+
+    $.ajax({
+        type: 'POST',
+        url: 'components/booking/view/_booking_generation.php',
+        dataType: 'json',
+        data: { type: type, 'page_id' : page_id, 'booking_id': booking_id },
+        beforeSend: function(){
+            document.getElementById('booking-personnel-container').innerHTML = '<div class="text-center"><div class="spinner-grow text-dark" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+        },
+        success: function (result) {
+            document.getElementById('booking-personnel-container').innerHTML = result[0].PERSONNEL_LIST;
         }
     });
 }
@@ -1002,6 +1287,79 @@ function tagForRefundAsRejectedForm(){
     });
 }
 
+function personnelAssignmentForm(){
+    $('#personnel-assignment-form').validate({
+        errorPlacement: function(error, element) {
+            showNotification('Attention Required: Error Found', error, 'error', 2000);
+        },
+        highlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').addClass('is-invalid');
+            }
+            else {
+                inputElement.addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element) {
+            var inputElement = $(element);
+            if (inputElement.hasClass('select2-hidden-accessible')) {
+                inputElement.next().find('.select2-selection').removeClass('is-invalid');
+            }
+            else {
+                inputElement.removeClass('is-invalid');
+            }
+        },
+        submitHandler: function(form) {
+            const booking_id = $('#details-id').text();
+            const page_link = document.getElementById('page-link').getAttribute('href');
+            const transaction = 'assign booking personnel';
+          
+            $.ajax({
+                type: 'POST',
+                url: 'components/booking/controller/booking-controller.php',
+                data: $(form).serialize() + '&transaction=' + transaction + '&booking_id=' + booking_id,
+                dataType: 'json',
+                beforeSend: function() {
+                    disableFormSubmitButton('submit-personnel-assignment-data');
+                },
+                success: function (response) {
+                    if (response.success) {
+                        showNotification(response.title, response.message, response.messageType);
+                        bookingPersonnelList();
+                        $('#personnel-assignment-modal').modal('hide');
+                    }
+                    else {
+                        if (response.isInactive || response.userNotExist || response.userInactive || response.userLocked || response.sessionExpired) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = 'logout.php?logout';
+                        }
+                        else if (response.notExist) {
+                            setNotification(response.title, response.message, response.messageType);
+                            window.location = page_link;
+                        }
+                        else {
+                            showNotification(response.title, response.message, response.messageType);
+                        }
+                    }
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function() {
+                    enableFormSubmitButton('submit-personnel-assignment-data');
+                }
+            });
+        
+            return false;
+        }
+    });
+}
+
 function computeBookingAmount() {
     const service = $('#service').val();
     const duration = parseFloat($('#duration').val()) || 0;
@@ -1154,6 +1512,56 @@ function displayDetails(transaction){
                 },
                 complete: function(){
                     computeBookingAmount();
+                }
+            });
+            break;
+    }
+}
+
+function generateDropdownOptions(type){
+    switch (type) {
+        case 'employee booking dual listbox options':
+            var booking_id = $('#details-id').text();
+
+            $.ajax({
+                url: 'components/employee/view/_employee_generation.php',
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    type : type,
+                    booking_id : booking_id
+                },
+                success: function(response) {
+                    var select = document.getElementById('employee_id');
+
+                    select.options.length = 0;
+
+                    response.forEach(function(opt) {
+                        var option = new Option(opt.text, opt.id);
+                        select.appendChild(option);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    var fullErrorMessage = `XHR status: ${status}, Error: ${error}`;
+                    if (xhr.responseText) {
+                        fullErrorMessage += `, Response: ${xhr.responseText}`;
+                    }
+                    showErrorDialog(fullErrorMessage);
+                },
+                complete: function(){
+                    if($('#employee_id').length){
+                        $('#employee_id').bootstrapDualListbox({
+                            nonSelectedListLabel: 'Non-selected',
+                            selectedListLabel: 'Selected',
+                            preserveSelectionOnMove: 'moved',
+                            moveOnSelect: false,
+                            helperSelectNamePostfix: false
+                        });
+
+                        $('#employee_id').bootstrapDualListbox('refresh', true);
+
+                        initializeDualListBoxIcon();
+                    }
                 }
             });
             break;

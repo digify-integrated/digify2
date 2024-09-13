@@ -25,7 +25,7 @@
     <div class="col-lg-8">
         <div class="card overflow-hidden">
             <div class="card-body p-0">
-                <img src="./assets/images/backgrounds/profilebg.jpg" alt="matdash-img" class="img-fluid">
+                <img src="./assets/images/backgrounds/profilebg.jpg" alt="modernize-img" class="img-fluid">
                 <div class="row align-items-center">
                     <div class="col-lg-3 mt-n3 order-lg-2 order-1">
                         <div class="mt-n5">
@@ -55,7 +55,7 @@
                                 echo $archiveButton;
                             ?>
                             <li>
-                                <a class="dropdown-item" href="javascript:void(0)">QR Code</a>
+                                <a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#qr-code-modal" id="generate-qr-code">QR Code</a>
                             </li>
                         </ul>
                     </div>
@@ -1347,6 +1347,21 @@
             <div class="modal-footer border-top">
                 <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="archive-employee-form" class="btn btn-success" id="submit-archive-employee-data">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="qr-code-modal" class="modal fade" tabindex="-1" aria-labelledby="qr-code-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-r">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-8" id="qr-code-title">Employee QR Code</h5>
+                <button type="button" class="btn-close fs-2" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center align-items-center" id="qr-code-container"></div>
+            <div class="modal-footer border-top">
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

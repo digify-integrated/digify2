@@ -160,6 +160,18 @@ class BookingController {
                 case 'tag booking payment as refunded':
                     $this->tagBookingPaymentAsRefunded();
                     break;
+                case 'assign booking personnel':
+                    $this->assignBookingPersonnel();
+                    break;
+                case 'unassign booking personnel':
+                    $this->unassignBookingPersonnel();
+                    break;
+                case 'start job':
+                    $this->startJob();
+                    break;
+                case 'end job':
+                    $this->endJob();
+                    break;
                 case 'delete booking':
                     $this->deleteBooking();
                     break;
@@ -339,6 +351,71 @@ class BookingController {
                 'success' => false,
                 'title' => 'Error: Transaction Failed',
                 'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Assign methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: assignBookingPersonnel
+    # Description: 
+    # Assigns a booking personnel.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function assignBookingPersonnel() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id'])) {
+            if(!isset($_POST['employee_id']) || empty($_POST['employee_id'])){
+                $response = [
+                    'success' => false,
+                    'title' => 'Booking Personnel Selection Required',
+                    'message' => 'Please select the employee(s) you wish to assign to the booking.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $employeeIDs = $_POST['employee_id'];
+
+            foreach ($employeeIDs as $employeeID) {
+                $this->bookingModel->insertBookingPersonnel($bookingID, $employeeID, $userID);
+            }
+    
+            $response = [
+                'success' => true,
+                'title' => 'Assign Booking Personnel Success',
+                'message' => 'The booking personnel has been assigned successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again or contact our support team for assistance.',
                 'messageType' => 'error'
             ];
             
@@ -1059,6 +1136,207 @@ class BookingController {
                 'success' => true,
                 'title' => 'Delete Multiple Customer Inquiries Success',
                 'message' => 'The selected customer inquiries have been deleted successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Unassign methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: unassignBookingPersonnel
+    # Description: 
+    # Unassign the booking personnel if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function unassignBookingPersonnel() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id']) && isset($_POST['booking_personnel_id']) && !empty($_POST['booking_personnel_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $bookingPersonnelID = htmlspecialchars($_POST['booking_personnel_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Unassign Booking Personnel Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->bookingModel->deleteBookingPersonnel($bookingPersonnelID, 'Start', $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Unassign Booking Personnel Success',
+                'message' => 'The booking personnel has been unassigned successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   Start methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: startJob
+    # Description: 
+    # Starts the booking personnel job time if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function startJob() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id']) && isset($_POST['booking_personnel_id']) && !empty($_POST['booking_personnel_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $bookingPersonnelID = htmlspecialchars($_POST['booking_personnel_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'Start Booking Personnel Job Time Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->bookingModel->updateBookingPersonnelJobTime($bookingPersonnelID, 'Start', $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'Start Booking Personnel Job Time Success',
+                'message' => 'The job has been started successfully.',
+                'messageType' => 'success'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+        else{
+            $response = [
+                'success' => false,
+                'title' => 'Error: Transaction Failed',
+                'message' => 'An error occurred while processing your transaction. Please try again contact our support team for assistance.',
+                'messageType' => 'error'
+            ];
+            
+            echo json_encode($response);
+            exit;
+        }
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #   End methods
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
+    # Function: endJob
+    # Description: 
+    # Starts the booking personnel job time if it exists; otherwise, return an error message.
+    #
+    # Parameters: None
+    #
+    # Returns: Array
+    #
+    # -------------------------------------------------------------
+    public function endJob() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return;
+        }
+
+        if (isset($_POST['booking_id']) && !empty($_POST['booking_id']) && isset($_POST['booking_personnel_id']) && !empty($_POST['booking_personnel_id'])) {
+            $userID = $_SESSION['user_account_id'];
+            $bookingID = htmlspecialchars($_POST['booking_id'], ENT_QUOTES, 'UTF-8');
+            $bookingPersonnelID = htmlspecialchars($_POST['booking_personnel_id'], ENT_QUOTES, 'UTF-8');
+        
+            $checkBookingExist = $this->bookingModel->checkBookingExist($bookingID);
+            $total = $checkBookingExist['total'] ?? 0;
+
+            if($total === 0){
+                $response = [
+                    'success' => false,
+                    'notExist' => true,
+                    'title' => 'End Booking Personnel Job Time Error',
+                    'message' => 'The booking does not exist.',
+                    'messageType' => 'error'
+                ];
+                
+                echo json_encode($response);
+                exit;
+            }
+
+            $this->bookingModel->updateBookingPersonnelJobTime($bookingPersonnelID, 'End', $userID);
+                
+            $response = [
+                'success' => true,
+                'title' => 'End Booking Personnel Job Time Success',
+                'message' => 'The job has been ended successfully.',
                 'messageType' => 'success'
             ];
             

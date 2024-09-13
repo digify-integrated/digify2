@@ -1410,6 +1410,26 @@ class EmployeeModel {
 
     # -------------------------------------------------------------
     #
+    # Function: getEmployeePrimaryAddress
+    # Description: Retrieves the details of a primary employee address.
+    #
+    # Parameters:
+    # - $p_employee_id (int): The employee ID.
+    #
+    # Returns:
+    # - An array containing the employee details.
+    #
+    # -------------------------------------------------------------
+    public function getEmployeePrimaryAddress($p_employee_id) {
+        $stmt = $this->db->getConnection()->prepare('CALL getEmployeePrimaryAddress(:p_employee_id)');
+        $stmt->bindValue(':p_employee_id', $p_employee_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    # -------------------------------------------------------------
+
+    # -------------------------------------------------------------
+    #
     # Function: getEmployeeBankAccount
     # Description: Retrieves the details of a employee bank account.
     #
